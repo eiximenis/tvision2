@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Components.Draw;
 using Tvision2.Core.Components.Props;
@@ -15,7 +16,7 @@ namespace Tvision2.Core.Components
         private Dictionary<string, ITvDrawer> _drawers;
         private IPropertyBag _props;
 
-        private readonly List<ITvBehavior> _behaviors;
+        private readonly List<BehaviorMetadata> _behaviorsMetadata;
         public StyleSheet Style { get; }
 
         public bool IsDirty { get; private set; }
@@ -23,12 +24,12 @@ namespace Tvision2.Core.Components
         public bool HasFocus { get; internal set; }
         public string Name { get; }
 
-        internal IPropertyBag Properties => _props;
+        internal IPropertyBag Properties => _props; 
 
         public TvComponent(IPropertyBag initialProps, StyleSheet style, string name = null)
         {
             IsDirty = false;
-            _behaviors = new List<ITvBehavior>();
+            _behaviorsMetadata = new List<BehaviorMetadata>();
             Name = string.IsNullOrEmpty(name) ? $"TvComponent-{Guid.NewGuid().ToString()}" : name;
             _props = initialProps;
             Style = style ?? new StyleSheet();
@@ -36,10 +37,14 @@ namespace Tvision2.Core.Components
             HasFocus = false;
         }
 
-        public void AddBehavior(ITvBehavior behavior)
+        public void AddBehavior(ITvBehavior behavior, Action<BehaviorMetadata> metadataAction = null)
         {
-            _behaviors.Add(behavior);
+            var metadata = new BehaviorMetadata(behavior);
+            metadataAction?.Invoke(metadata);
+            _behaviorsMetadata.Add(metadata);
         }
+
+        public void AddBehavior(Func<BehaviorContext, IPropertyBag> behaviorFunc, Action<BehaviorMetadata> metadataAction = null) => AddBehavior(new ActionBehavior(behaviorFunc), metadataAction);
 
         public TvComponent AddDrawer(Action<RenderContext> action, string name = null) => AddDrawer(new ActionDrawer(action), name);
 
@@ -54,10 +59,10 @@ namespace Tvision2.Core.Components
         internal void Update(ITvDispatcher dispatcher, TvEventsCollection evts)
         {
             var props = _props;
-            foreach (var behavior in _behaviors)
+            foreach (var mdata in _behaviorsMetadata.Where(m => m.Schedule == BehaviorSchedule.OncePerFrame))
             {
                 var ctx = new BehaviorContext(props, dispatcher, evts);
-                props = behavior.Update(ctx) ?? props;
+                props = mdata.Behavior.Update(ctx) ?? props;
             }
 
             IsDirty = !_props.IsEqualTo(props);
