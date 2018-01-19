@@ -1,0 +1,3 @@
+[submodule "tvconsole"]
+	path = tvconsole
+	url = https://github.com/eiximenis/tvconsole.git
