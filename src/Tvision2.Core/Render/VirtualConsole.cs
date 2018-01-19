@@ -34,9 +34,9 @@ namespace Tvision2.Core.Render
             }
         }
 
-        public void DrawAt(string text, int col, int row, int zIndex, ConsoleColor foreColor, ConsoleColor backColor)
+        public void DrawAt(string text, TvPoint location, int zIndex, ConsoleColor foreColor, ConsoleColor backColor)
         {
-            var start = col + (Width * row);
+            var start = location.Left + (Width * location.Top);
             var end = start + text.Length;
             var textIdx = 0;
             for (var idx = start; idx < end; idx++)
@@ -53,6 +53,7 @@ namespace Tvision2.Core.Render
                 textIdx++;
             }
         }
+
 
         public VirtualConsoleUpdate[] DiffWith(VirtualConsole other)
         {

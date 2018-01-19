@@ -13,8 +13,6 @@ namespace Tvision2.Core.Components.Behaviors
 
         public TvEventsCollection Events { get; }
 
-        internal IPropertyBag UpdatedProperties { get; set; }
-
         public BehaviorContext(IPropertyBag props, ITvDispatcher dispatcher, TvEventsCollection events)
         {
             Properties = props;

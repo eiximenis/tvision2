@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
+using Tvision2.Core.Components;
+using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Components.Render;
 
 namespace Tvision2.Controls.Button
@@ -9,20 +12,20 @@ namespace Tvision2.Controls.Button
     {
         public TvButton(ButtonState state) : base(state)
         {
-            var definition = CreateDefinition();
-            CreateComponent(definition);
         }
 
-        protected override ComponentDefinition CreateDefinition()
+        protected override void AddComponentElements(TvComponent cmp)
         {
-            var definition = base.CreateDefinition();
-            definition.AddDrawer(new TextDrawer(options =>
+            cmp.AddBehavior(new ButtonBehavior(), options =>
+            {
+                options.UseScheduler(BehaviorSchedule.OnEvents);
+            });
+            cmp.AddDrawer(new TextDrawer(options =>
             {
                 options.PropertyName = "Text";
             }));
-
-            return definition;
         }
+
 
     }
 }

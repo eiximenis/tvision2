@@ -59,10 +59,14 @@ namespace Tvision2.Core.Components
         internal void Update(ITvDispatcher dispatcher, TvEventsCollection evts)
         {
             var props = _props;
-            foreach (var mdata in _behaviorsMetadata.Where(m => m.Schedule == BehaviorSchedule.OncePerFrame))
+            foreach (var mdata in _behaviorsMetadata)
             {
                 var ctx = new BehaviorContext(props, dispatcher, evts);
-                props = mdata.Behavior.Update(ctx) ?? props;
+                if (mdata.Schedule == BehaviorSchedule.OncePerFrame 
+                    || (mdata.Schedule == BehaviorSchedule.OnEvents && evts != null))
+                {
+                    props = mdata.Behavior.Update(ctx) ?? props;
+                }
             }
 
             IsDirty = !_props.IsEqualTo(props);

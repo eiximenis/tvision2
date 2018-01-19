@@ -13,20 +13,16 @@ namespace Tvision2.Controls.Label
 
         public TvLabel(LabelState state) : base(state)
         {
-            var definition = CreateDefinition();
-            CreateComponent(definition);
         }
 
-        protected override ComponentDefinition CreateDefinition()
+        protected override void AddComponentElements(TvComponent cmp)
         {
-            var definition = base.CreateDefinition();
-            definition.AddDrawer(new TextDrawer(options =>
+            cmp.AddDrawer(new TextDrawer(options =>
             {
                 options.PropertyName = "Text";
             }));
-
-            return definition;
         }
+
 
     }
 }

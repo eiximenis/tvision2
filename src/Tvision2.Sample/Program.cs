@@ -21,8 +21,10 @@ namespace Tvision2.Sample
             var lbl = new TvLabel(new LabelState()
             {
                 Text = "label",
-                Name = "Label1"
+                Name = "Label1",
             });
+
+            lbl.State.Style.Position = new Core.Render.TvPoint(3, 4);
 
             var button = new TvButton(new ButtonState()
             {

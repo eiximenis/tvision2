@@ -15,16 +15,12 @@ namespace Tvision2.Core.Components.Render
 
         private static void DrawFunc(RenderContext context, TextDrawerOptions options)
         {
-
-            var left = context.Style.Position.Left;
-            var top = context.Style.Position.Top;
-
             var value = string.Format("{0}{1}{2}",
                 new string(' ', context.Style.PaddingLeft),
                 context.Props.GetPropertyAs<string>(options.PropertyName) ?? "",
                 new string(' ', context.Style.PaddingRight));
 
-            context.Viewport.DrawAt(value, left, top, context.Style.ForeColor, context.Style.BackColor);
+            context.Viewport.DrawAt(value, new TvPoint(0,0), context.Style.ForeColor, context.Style.BackColor);
         }
     }
 }

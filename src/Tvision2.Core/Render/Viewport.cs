@@ -41,9 +41,10 @@ namespace Tvision2.Core.Render
             return new TvPoint(top, left);
         }
 
-        public void DrawAt(string text, int left, int top, ConsoleColor foreColor, ConsoleColor backColor)
+        public void DrawAt(string text, TvPoint location, ConsoleColor foreColor, ConsoleColor backColor)
         {
-            _console.DrawAt(text, left, top, ZIndex, foreColor, backColor);
+            var consoleLocation = ViewPointToConsolePoint(location);
+            _console.DrawAt(text, consoleLocation, ZIndex, foreColor, backColor);
         }
 
         public bool IsConsolePointInside(TvPoint consolePoint)

@@ -16,22 +16,19 @@ namespace Tvision2.Controls
         public TvControl(TState state)
         {
             State = state;
+            CreateComponent();
         }
 
         public TvComponent AsComponent() => _component;
 
-        protected virtual ComponentDefinition CreateDefinition()
-        {
-            var definition = new ComponentDefinition();
-            definition.AddBehavior(new ControlStateBehavior<TState>(State));
-            return definition;
-        }
-
-        protected void CreateComponent(IComponentDefinition definition)
+        protected void CreateComponent()
         {
             var cmp = new TvComponent(ImmutablePropertyBag.FromObject(State), State.Style, State.Name);
-            cmp.ApplyDefinition(definition);
+            cmp.AddBehavior(new ControlStateBehavior<TState>(State));
+            AddComponentElements(cmp);
             _component = cmp;
         }
+
+        protected abstract void AddComponentElements(TvComponent cmp);
     }
 }
