@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using Tvision2.Controls.Behavior;
 using Tvision2.Core.Components;
-using Tvision2.Core.Components.Props;
 using Tvision2.Core.Components.Render;
 
 namespace Tvision2.Controls.Label
@@ -15,9 +14,9 @@ namespace Tvision2.Controls.Label
         {
         }
 
-        protected override void AddComponentElements(TvComponent cmp)
+        protected override void AddComponentElements(TvComponent<LabelState> cmp)
         {
-            cmp.AddDrawer(new TextDrawer(options =>
+            cmp.AddDrawer(new TextDrawer<LabelState>(options =>
             {
                 options.PropertyName = "Text";
             }));

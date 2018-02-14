@@ -2,8 +2,8 @@
 
 namespace Tvision2.Core.Components.Draw
 {
-    public interface ITvDrawer
+    public interface ITvDrawer<T>
     {
-        void Draw(RenderContext context);
+        void Draw(RenderContext<T> context);
     }
 }

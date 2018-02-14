@@ -6,33 +6,33 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Core.Components.Draw
 {
-    public class ActionDrawer: ITvDrawer
+    public class ActionDrawer<T>: ITvDrawer<T>
     {
-        private readonly Action<RenderContext> _drawFunc;
+        private readonly Action<RenderContext<T>> _drawFunc;
 
-        public ActionDrawer(Action<RenderContext> drawFunc)
+        public ActionDrawer(Action<RenderContext<T>> drawFunc)
         {
             _drawFunc = drawFunc;
         }
 
-        public void Draw(RenderContext context) => _drawFunc.Invoke(context);
+        public void Draw(RenderContext<T> context) => _drawFunc.Invoke(context);
     }
 
 
-    public class ActionDrawer<TOptions> : ITvDrawer
+    public class ActionDrawer<T,TOptions> : ITvDrawer<T>
     where TOptions : class, new()
     {
 
         private TOptions _options;
-        private readonly Action<RenderContext, TOptions> _drawFunc;
+        private readonly Action<RenderContext<T>, TOptions> _drawFunc;
 
-        public ActionDrawer(Action<RenderContext, TOptions> drawFunc, Action<TOptions> optionsAction)
+        public ActionDrawer(Action<RenderContext<T>, TOptions> drawFunc, Action<TOptions> optionsAction)
         {
             _options = new TOptions();
             optionsAction?.Invoke(_options);
             _drawFunc = drawFunc;
         }
 
-        public void Draw(RenderContext context) => _drawFunc.Invoke(context, _options);
+        public void Draw(RenderContext<T> context) => _drawFunc.Invoke(context, _options);
     }
 }

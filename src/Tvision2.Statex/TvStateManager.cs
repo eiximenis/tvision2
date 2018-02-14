@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tvision2.Core.Stores;
 
-namespace Tvision2.Core.Engine
+namespace Tvision2.Statex
 {
     public class TvStateManager : ITvDispatcher, ITvStoreSelector
     {
@@ -34,6 +33,8 @@ namespace Tvision2.Core.Engine
         public ITvConfigurableStore<TState> GetStore<TState>(string name) where TState : class => _stores[name] as ITvConfigurableStore<TState>;
 
         ITvStore<TState> ITvStoreSelector.GetStore<TState>(string name) => _stores[name] as ITvStore<TState>;
+
+        ITvStore<TState> ITvStoreSelector.GetStore<TState>() => _stores.Values.SingleOrDefault(s => s.StateType == typeof(TState)) as ITvStore<TState>;
 
         internal void DoDispatchAllActions()
         {

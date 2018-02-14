@@ -4,18 +4,18 @@ using System.Text;
 
 namespace Tvision2.Core.Components.Behaviors
 {
-    public class BehaviorMetadata
+    public class BehaviorMetadata<T>
     {
-        public ITvBehavior Behavior { get; private set; }
+        public ITvBehavior<T> Behavior { get; private set; }
         public BehaviorSchedule Schedule { get; private set; }
 
-        public BehaviorMetadata UseScheduler(BehaviorSchedule schedule)
+        public BehaviorMetadata<T> UseScheduler(BehaviorSchedule schedule)
         {
             Schedule = schedule;
             return this;
         }
 
-        public BehaviorMetadata(ITvBehavior behavior)
+        public BehaviorMetadata(ITvBehavior<T> behavior)
         {
             Behavior = behavior;
             Schedule = BehaviorSchedule.OncePerFrame;

@@ -6,21 +6,21 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Core.Components.Render
 {
-    public class TextDrawer : ActionDrawer<TextDrawerOptions>
+    public class TextDrawer<T> : ActionDrawer<T, TextDrawerOptions>
     {
 
         public TextDrawer(Action<TextDrawerOptions> optionsAction = null) : base(DrawFunc, optionsAction)
         {
         }
 
-        private static void DrawFunc(RenderContext context, TextDrawerOptions options)
+        private static void DrawFunc(RenderContext<T> context, TextDrawerOptions options)
         {
             var value = string.Format("{0}{1}{2}",
                 new string(' ', context.Style.PaddingLeft),
-                context.Props.GetPropertyAs<string>(options.PropertyName) ?? "",
+                context.State.ToString() ?? "",
                 new string(' ', context.Style.PaddingRight));
 
-            context.Viewport.DrawAt(value, new TvPoint(0,0), context.Style.ForeColor, context.Style.BackColor);
+            context.Viewport.DrawAt(value, new TvPoint(0, 0), context.Style.ForeColor, context.Style.BackColor);
         }
     }
 }

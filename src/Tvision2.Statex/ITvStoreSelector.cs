@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Tvision2.Core.Stores;
 
-namespace Tvision2.Core.Engine
+namespace Tvision2.Statex
 {
     public interface ITvStoreSelector
     {
         ITvStore<TState> GetStore<TState>(string name) where TState : class;
+        ITvStore<TState> GetStore<TState>() where TState : class;
     }
 }

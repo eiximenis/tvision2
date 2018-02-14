@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using Tvision2.Controls.Behavior;
 using Tvision2.Core.Components;
-using Tvision2.Core.Components.Props;
 
 namespace Tvision2.Controls
 {
@@ -11,7 +10,7 @@ namespace Tvision2.Controls
         where TState : IControlState
     {
         public TState State { get; }
-        private TvComponent _component;
+        private TvComponent<TState> _component;
 
         public TvControl(TState state)
         {
@@ -19,16 +18,18 @@ namespace Tvision2.Controls
             CreateComponent();
         }
 
-        public TvComponent AsComponent() => _component;
+        TvComponent ITvControl.AsComponent() => _component;
+
+        public TvComponent<TState> AsComponent() => _component;
 
         protected void CreateComponent()
         {
-            var cmp = new TvComponent(ImmutablePropertyBag.FromObject(State), State.Style, State.Name);
+            var cmp = new TvComponent<TState>(State.Style, State, State.Name);
             cmp.AddBehavior(new ControlStateBehavior<TState>(State));
             AddComponentElements(cmp);
             _component = cmp;
         }
 
-        protected abstract void AddComponentElements(TvComponent cmp);
+        protected abstract void AddComponentElements(TvComponent<TState> cmp);
     }
 }

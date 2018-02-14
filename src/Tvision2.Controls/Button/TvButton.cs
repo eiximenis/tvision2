@@ -10,17 +10,20 @@ namespace Tvision2.Controls.Button
 {
     public class TvButton : TvControl<ButtonState>
     {
+        public ICommand<ButtonState> OnClick { get; set; }
+
         public TvButton(ButtonState state) : base(state)
-        {
+        {    
         }
 
-        protected override void AddComponentElements(TvComponent cmp)
+        protected override void AddComponentElements(TvComponent<ButtonState> cmp)
         {
-            cmp.AddBehavior(new ButtonBehavior(), options =>
+
+            cmp.AddBehavior(new ButtonBehavior<ButtonState>(async () => await OnClick.Invoke(State)), options =>
             {
                 options.UseScheduler(BehaviorSchedule.OnEvents);
             });
-            cmp.AddDrawer(new TextDrawer(options =>
+            cmp.AddDrawer(new TextDrawer<ButtonState>(options =>
             {
                 options.PropertyName = "Text";
             }));

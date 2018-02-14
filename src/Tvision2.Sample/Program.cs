@@ -12,11 +12,18 @@ namespace Tvision2.Sample
     {
         static async Task<int> Main(string[] args)
         {
-            var tui = new TuiEngineBuilder().Build();
+            var tui = new TuiEngineBuilder()
+                .AddStateManager(mgr =>
+                {
+                    mgr.AddStore<TasksStore, TasksList>("Tasks", new TasksStore())
+                        .AddReducer(TasksReducers.AddTask);
+                })
+                .Build();
 
-            tui.StateManager.
-                AddStore<TasksStore, TasksList>("Tasks", new TasksStore())
-                .AddReducer(TasksReducers.AddTask);
+            var cmp = new TestComponent(new Core.Styles.StyleSheet(), "test");
+            cmp.AddBehavior(new TestBehavior(tui.StoreSelector()));
+
+            tui.UI.Add(cmp);
 
             var lbl = new TvLabel(new LabelState()
             {

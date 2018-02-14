@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tvision2.Core.Stores
+namespace Tvision2.Statex
 {
     public static class DirtyCheckers
     {

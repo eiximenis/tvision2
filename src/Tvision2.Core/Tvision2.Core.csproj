@@ -4,4 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\tvconsole\src\TvConsole.Win32\TvConsole.Win32.csproj" />
+    <ProjectReference Include="..\..\tvconsole\src\TvConsole\TvConsole.csproj" />
+  </ItemGroup>
+
 </Project>

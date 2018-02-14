@@ -1,6 +1,4 @@
-﻿using Tvision2.Core.Stores;
-
-namespace Tvision2.Core.Engine
+﻿namespace Tvision2.Statex
 {
     public interface ITvDispatcher
     {

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Tvision2.Core.Components.Props;
 using Tvision2.Core.Engine;
 
 namespace Tvision2.Core.Components.Behaviors
 {
-    public abstract class OptionsBehavior<TOptions> : ITvBehavior
+    public abstract class OptionsBehavior<TOptions,T> : ITvBehavior<T>
         where TOptions : new()
     {
 
@@ -20,6 +19,6 @@ namespace Tvision2.Core.Components.Behaviors
             optionsAction?.Invoke(_options);
         }
 
-        public abstract IPropertyBag Update(BehaviorContext updateContext);
+        public abstract bool Update(BehaviorContext<T> updateContext);
     }
 }

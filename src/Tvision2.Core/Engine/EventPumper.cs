@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TvConsole;
+
 
 namespace Tvision2.Core.Engine
 {
@@ -15,16 +17,10 @@ namespace Tvision2.Core.Engine
 
         }
 
-        public TvEventsCollection ReadEvents()
+        public TvConsoleEvents ReadEvents()
         {
-            if (Console.KeyAvailable)
-            {
-                var key = Console.ReadKey(intercept: true);
-                var events = new TvEventsCollection();
-                events.AddEvent(new KeyEvent(key));
-                return events;
-            }
-            return null;
+            var events = TvConsole.TvConsole.Instance.ReadEvents();
+            return events;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Tvision2.Core.Stores;
+﻿
+
+using Tvision2.Statex;
 
 namespace Tvision2.Sample
 {

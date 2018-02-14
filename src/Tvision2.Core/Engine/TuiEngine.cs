@@ -16,14 +16,25 @@ namespace Tvision2.Core.Engine
         private VirtualConsole _currentConsole;
         private VirtualConsole _previousConsole;
 
+        private readonly IDictionary<string, object> _additionalItems;
+
         public ComponentTree UI { get; }
-        public TvStateManager StateManager { get; }
-        internal TuiEngine()
+        internal TuiEngine(IDictionary<string, object> additionalItems)
         {
-            StateManager = new TvStateManager();
+            _additionalItems = additionalItems ?? new Dictionary<string, object>();
             UI = new ComponentTree();
             _eventPumper = new EventPumper();
             _watcher = new Stopwatch();
+        }
+
+        public TItem GetCustomItem<TItem>(string key)
+        {
+            if (_additionalItems.TryGetValue(key, out object value))
+            {
+                return (TItem)value;
+            }
+
+            return default(TItem);
         }
 
 
@@ -37,9 +48,9 @@ namespace Tvision2.Core.Engine
             {
                 _watcher.Start();
                 var evts = _eventPumper.ReadEvents();
-                UI.Update(StateManager, evts);
+                UI.Update(evts);
                 PerformDrawOperations(force: false);
-                StateManager.DoDispatchAllActions();
+                // StateManager.DoDispatchAllActions();
                 _watcher.Stop();
                 var ellapsed = (int)_watcher.ElapsedTicks;
                 if (ellapsed < TIME_PER_FRAME)

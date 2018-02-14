@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Tvision2.Core.Components.Props;
 
 namespace Tvision2.Core.Components.Behaviors
 {
-    public class ActionBehavior : ITvBehavior
+    public class ActionBehavior<T> : ITvBehavior<T>
     {
-        private readonly Func<BehaviorContext, IPropertyBag> _behaviorFunc;
+        private readonly Func<BehaviorContext<T>, bool> _behaviorFunc;
 
-        public ActionBehavior(Func<BehaviorContext, IPropertyBag> behaviorFunc)
+        public ActionBehavior(Func<BehaviorContext<T>, bool> behaviorFunc)
         {
             _behaviorFunc = behaviorFunc;
         }
 
-        public IPropertyBag Update(BehaviorContext updateContext) => _behaviorFunc(updateContext);
+        public bool Update(BehaviorContext<T> updateContext) => _behaviorFunc(updateContext);
     }
 }

@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TvConsole;
 using Tvision2.Core.Components;
 using Tvision2.Core.Render;
 
 namespace Tvision2.Core.Engine
 {
-    public class ComponentTree 
+    public class ComponentTree
     {
         private readonly Dictionary<string, TvComponentMetadata> _components;
 
@@ -40,18 +41,18 @@ namespace Tvision2.Core.Engine
             }
         }
 
-        internal void Update(ITvDispatcher dispatcher, TvEventsCollection evts)
+        internal void Update(TvConsoleEvents evts)
         {
             foreach (var cdata in _components.Values)
             {
-                cdata.Component.Update(dispatcher, evts);
+                cdata.Component.Update(evts);
             }
         }
 
-        internal void Draw(VirtualConsole console, bool force )
+        internal void Draw(VirtualConsole console, bool force)
         {
             foreach (var cdata in _components.Values
-                .Where(c=> force || c.Component.IsDirty))
+                .Where(c => force || c.Component.IsDirty))
             {
                 cdata.Component.Draw(cdata.Viewport, console);
             }

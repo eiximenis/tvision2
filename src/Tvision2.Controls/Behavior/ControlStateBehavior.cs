@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using Tvision2.Core.Components.Behaviors;
-using Tvision2.Core.Components.Props;
 
 namespace Tvision2.Controls.Behavior
 {
-    public class ControlStateBehavior<TState> : ITvBehavior
+    public class ControlStateBehavior<TState> : ITvBehavior<TState>
         where TState : IControlState
     {
         private readonly TState _state;
@@ -15,16 +14,14 @@ namespace Tvision2.Controls.Behavior
             _state = state;
         }
 
-        public IPropertyBag Update(BehaviorContext updateContext)
+        public bool Update(BehaviorContext<TState> updateContext) 
         {
             if (_state.IsDirty)
             {
-                var newProps = _state.GetNewProperties(updateContext.Properties);
                 _state.Reset();
-                return newProps;
+                return true;
             }
-
-            return null;
+            return false;
         }
     }
 }

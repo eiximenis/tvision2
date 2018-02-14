@@ -1,24 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Tvision2.Core.Components.Props;
+using TvConsole;
 using Tvision2.Core.Engine;
 
 namespace Tvision2.Core.Components.Behaviors
 {
-    public abstract class KeyboardBehavior : ITvBehavior
+    public abstract class KeyboardBehavior<T> : ITvBehavior<T>
     {
-        public IPropertyBag Update(BehaviorContext updateContext)
+        public bool Update(BehaviorContext<T> updateContext)
         {
-            var events = updateContext.Events.KeyPressEvents();
-            var props = updateContext.Properties;
+            var events = updateContext.Events.KeyboardEvents;
+            var props = updateContext.State;
+            var updated = false;
+
             foreach (var evt in events)
             {
-                props = OnKeyDown(evt, updateContext, props) ?? props;
+                if (evt.IsKeyDown)
+                {
+                    updated = OnKeyDown(evt, updateContext) || updated;
+                }
+                else
+                {
+                    updated = OnKeyUp(evt, updateContext) || updated;
+                }
             }
-            return props;
+
+            return updated;
         }
 
-        protected abstract IPropertyBag OnKeyDown(KeyEvent evt, BehaviorContext updateContext, IPropertyBag currentProperties);
+        protected abstract bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<T> updateContext);
+        protected abstract bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<T> updateContext);
     }
 }

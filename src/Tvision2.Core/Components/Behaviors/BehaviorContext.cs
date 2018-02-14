@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Tvision2.Core.Components.Props;
+using TvConsole;
 using Tvision2.Core.Engine;
 
 namespace Tvision2.Core.Components.Behaviors
 {
-    public class BehaviorContext
+    public class BehaviorContext<T>
     {
-        public IPropertyBag Properties { get; }
-        public ITvDispatcher Dispatcher { get; }
+        public T State { get; }
 
-        public TvEventsCollection Events { get; }
+        public TvConsoleEvents Events { get; }
 
-        public BehaviorContext(IPropertyBag props, ITvDispatcher dispatcher, TvEventsCollection events)
+        public BehaviorContext(T state, TvConsoleEvents events)
         {
-            Properties = props;
-            Dispatcher = dispatcher;
+            State = state;
             Events = events;
         }
     }
+
 }
