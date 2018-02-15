@@ -7,42 +7,33 @@ using Tvision2.Core.Engine;
 
 namespace Tvision2.Controls.Button
 {
-    public class ButtonBehavior<T> : KeyboardBehavior<T>
+    public class ButtonBehavior : KeyboardBehavior<ButtonState>
     {
         private readonly Action _onClickAction;
         public ButtonBehavior(Action onClickAction) => _onClickAction = onClickAction;
 
-        protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<T> updateContext)
+        protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<ButtonState> updateContext)
         {
             var properties = updateContext.State;
 
-            /*
-            bool isPressed = properties.GetPropertyAs<bool>("IsPressed");
-            if (isPressed)
+            if (properties.IsPressed)
             {
-                _onClickAction?.Invoke();
-                properties.SetValues(new { IsPressed = false });
+                 _onClickAction?.Invoke();
+                properties.IsPressed = false;
                 return true;
             }
-
-            */
 
             return false;
         }
 
-        protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<T> updateContext)
+        protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<ButtonState> updateContext)
         {
             var properties = updateContext.State;
-
-            /*
-
-            bool isPressed = properties.GetPropertyAs<bool>("IsPressed");
-            if (isPressed)
+            if (properties.IsPressed)
             {
                 return false;
             }
-            currentProperties.SetValues(new { IsPressed = true });
-            */
+            properties.IsPressed = true;
             return true;
         }
 

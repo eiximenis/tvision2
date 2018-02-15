@@ -31,11 +31,16 @@ namespace Tvision2.Sample
                 Name = "Label1",
             });
 
-            lbl.State.Style.Position = new Core.Render.TvPoint(3, 4);
+            lbl.Data.Style.Position = new Core.Render.TvPoint(3, 4);
 
             var button = new TvButton(new ButtonState()
             {
-                Text="btn"
+                Text = "btn"
+            });
+
+            button.OnClick = new DelegateCommand<ButtonState>(async s =>
+            {
+                lbl.State.Text = "Fuck yeah!";
             });
 
             tui.UI.Add(lbl);

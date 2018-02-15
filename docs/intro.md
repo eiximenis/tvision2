@@ -2,32 +2,42 @@
 
 TVision2 is a library for building console based applications ([TUI](https://en.wikipedia.org/wiki/Text-based_user_interface)-based applications or console games). It is built based on concepts taken from Unity3D, React and Redux among others.
 
-It is built on top the netcore `System.Console` and it is a `netstandard` library, so it should be cross platform, **but right now all tests are being performed in Windows**.
-
 Its name is a tribute to [Turbo Vision](https://en.wikipedia.org/wiki/Turbo_Vision) an awesome library created by Borland in the DOS era. Despite its name TVision2 is not a new version of Turbo Vision, nor a revision.
 
 ## What I can do with TVision2
 
 **Any netcore console-based application**. It doesn't matter if is an application (i. e. a new clon of [FarManager](https://www.farmanager.com/)) or a console-based game (i. e. a competitor of the amazing [Dwarf Fortress](https://en.wikipedia.org/wiki/Dwarf_Fortress)). TVision2 can help you to make it.
 
+> Tvision2 is inteneded to help you creating console apps that behave like "full screen apps". For typical console apps, Tvision2 do not offer any value.
+
 ## What limitations it have?
 
-As TVision2 is built up on the `System.Console` inherits of all their limitations. The most important one is the **lack of mouse support**. To overcome this limitation (and some others) I started the [TvConsole project](https://github.com/eiximenis/tvconsole). TvConsole reimplements all `System.Console` APIs from the scratch using native OS calls and includes mouse support. Unfortunately TvConsole is Windows only and I don't want to make TVision2 Windows only. I am not sure about what to do at this point (the best solution would be make TvConsole cross-platform, of course).
+As TVision2 uses [TvConsole](https://github.com/eiximenis/tvconsole) project it shares the same limitations: currently **no Linux support**. Once TvConsole gets Linux support, TVision2 will get it too.
 
-## How it looks like?
+## Programming model
 
-In a TVision2 application yor UI is a set of components. Every component has a set of behaviors, a set of drawers and a property bag. TVision2 runs like a game engine, trying to update your UI at a fixed rate of 30 fps. At every frame:
+There are three different libraries:
 
-1. All behaviors of every component could be invoked giving them the opportunity to create a new property bag for the control
-2. Drawers of every component are invoked only if the property bag has been changed by one of the behaviors.
+* `Tvision2.Core`: Main library containing the core of the TVision2. Depending on the application this library is all you need.
+* `Tvision2.Controls`: A suit of controls created based on the foundations provided by _Tvision2.Core_.
+* `Tvision2.Statex`: A state management library that seamessly integrates with _Tvision2.Core_.
 
-Drawers don't draw directly to the console: instead they receive a _Viewport_ and draw onto it. Then the TVision2 engine combines all Viewports outputs to a virtual console. Finally the status of the Virtual Console is compared against the real console displayed on the screen and only the needed characters are updated.
+## Tvision2.Core
 
-TVision2 promotes composition over inheritance: components are customized by adding/removing behaviors and drawers instead of inheriting from a base class and override specific methods. Berhaviors and drawers are just functions, and should have no state.
+This library provides the foundational items of TVision2. Application GUI is envisioned as a set of _components_. Each component has its own behavior and knows how to draw itself. **There is no way for one component to interact with any other component**. Components are, deliberatly, isolated.
 
-Also, TVision2 promotes one-direction-data-flow: All application state is stored in objects called _stores_. When a state change occurs in one _store_ the desired behaviors are invoked, giving them the chance to update the property bags of their components to force a new redraw. Behaviors **can't update the state**, instead they have to publish _actions_. Actions are received by the stores, and every time an store receive an _action_ a set of _reducers_ is invoked. Reducers can generate a new state for the store, and if this happens desired behaviors are invoked, closing the circle.
-So, information only goes in one direction: from the stores to the behaviors. Behaviors can only publish actions to stores.
+Behavior of a component is specified by adding one or more _behavior_ objects to it. Tvision2 works like a game engine: continuously is rendering your current screen, so per each frame, all behaviors of your component will be invoked. A behavior has, basically, two options:
 
-## Ooof... this seems to complex.
+1. Change the state of the component
+2. Do not change the state of the component
 
-It is not! Take a time to be comfortable with all concepts, and you'll see how they fit and play well together. :)
+If any of the behaviors change the state of the component, the component will be redrawn on the screen.
+
+So, a typical frame iteration in Tvision2 looks like:
+
+1. Events are peeked
+2. All behaviors are invoked
+3. For any component that any of its behaviors changed its state, the component is redrawn
+
+To draw a component, Tvision2 relies on the _drawers_ objects: any component have one or more drawers. If the component has to be redrawn, all drawers are invoked. Drawers do not directly draw to the console. Instead every drawer  interact with its _viewport_. Then all viewports are projected and combined in a virtual console. Then contents of the virtual console are compared with the real console generating a set of differences that must be applied to real console to have the same content that the virtual console. Finally those differences are applied to real console.
+

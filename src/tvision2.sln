@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvConsole.Win32", "..\tvcon
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvConsole.Shared", "..\tvconsole\src\TvConsole.Shared\TvConsole.Shared.csproj", "{B5D0814A-D861-490B-AC8C-CAF367E4FE2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.Statex", "Tvision2.Statex\Tvision2.Statex.csproj", "{94EBB376-12C7-452C-B113-AFE175F1AFDD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Statex", "Tvision2.Statex\Tvision2.Statex.csproj", "{94EBB376-12C7-452C-B113-AFE175F1AFDD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

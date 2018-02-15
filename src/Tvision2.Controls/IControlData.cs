@@ -5,7 +5,7 @@ using Tvision2.Core.Styles;
 
 namespace Tvision2.Controls
 {
-    public interface IControlState
+    public interface IControlData
     {
         bool IsDirty {get;}
         string Name { get; }

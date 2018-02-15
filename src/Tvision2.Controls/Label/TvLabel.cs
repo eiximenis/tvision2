@@ -10,16 +10,13 @@ namespace Tvision2.Controls.Label
     public class TvLabel : TvControl<LabelState>
     {
 
-        public TvLabel(LabelState state) : base(state)
+        public TvLabel(LabelState state) : base(state, state)
         {
         }
 
         protected override void AddComponentElements(TvComponent<LabelState> cmp)
         {
-            cmp.AddDrawer(new TextDrawer<LabelState>(options =>
-            {
-                options.PropertyName = "Text";
-            }));
+            cmp.AddDrawer(new TextDrawer<LabelState>(lstate => lstate.Text));
         }
 
 

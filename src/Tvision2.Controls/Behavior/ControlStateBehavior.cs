@@ -6,19 +6,18 @@ using Tvision2.Core.Components.Behaviors;
 namespace Tvision2.Controls.Behavior
 {
     public class ControlStateBehavior<TState> : ITvBehavior<TState>
-        where TState : IControlState
     {
-        private readonly TState _state;
-        public ControlStateBehavior(TState state)
+        private readonly IControlData _controlData;
+        public ControlStateBehavior(IControlData controlData)
         {
-            _state = state;
+            _controlData = controlData;
         }
 
         public bool Update(BehaviorContext<TState> updateContext) 
         {
-            if (_state.IsDirty)
+            if (_controlData.IsDirty)
             {
-                _state.Reset();
+                _controlData.Reset();
                 return true;
             }
             return false;

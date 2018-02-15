@@ -6,14 +6,15 @@ using Tvision2.Core.Components;
 
 namespace Tvision2.Controls
 {
-    public abstract class TvControl<TState> : ITvControl
-        where TState : IControlState
+    public abstract class TvControl<TState> : ITvControl<TState>
     {
-        public TState State { get; }
+        public IControlData  Data { get; }
         private TvComponent<TState> _component;
+        public TState State { get; }
 
-        public TvControl(TState state)
+        public TvControl(TState state, IControlData data = null)
         {
+            Data = data ?? new TvControlData();
             State = state;
             CreateComponent();
         }
@@ -24,8 +25,8 @@ namespace Tvision2.Controls
 
         protected void CreateComponent()
         {
-            var cmp = new TvComponent<TState>(State.Style, State, State.Name);
-            cmp.AddBehavior(new ControlStateBehavior<TState>(State));
+            var cmp = new TvComponent<TState>(Data.Style, State, Data.Name);
+            cmp.AddBehavior(new ControlStateBehavior<TState>(Data));
             AddComponentElements(cmp);
             _component = cmp;
         }

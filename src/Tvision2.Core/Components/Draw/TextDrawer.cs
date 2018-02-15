@@ -6,14 +6,13 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Core.Components.Render
 {
-    public class TextDrawer<T> : ActionDrawer<T, TextDrawerOptions>
+    public class TextDrawer<T> : ConverterDrawer<T, string>
     {
-
-        public TextDrawer(Action<TextDrawerOptions> optionsAction = null) : base(DrawFunc, optionsAction)
+        public TextDrawer(Func<T, string> converter) : base(converter)
         {
         }
 
-        private static void DrawFunc(RenderContext<T> context, TextDrawerOptions options)
+        protected override void Draw(RenderContext<string> context)
         {
             var value = string.Format("{0}{1}{2}",
                 new string(' ', context.Style.PaddingLeft),

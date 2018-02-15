@@ -11,9 +11,9 @@ namespace Tvision2.Controls
     }
 
     public interface ITvControl<TState> : ITvControl
-        where TState : IControlState
     {
         TState State { get; }
+        new TvComponent<TState> AsComponent();
     }
 
 }

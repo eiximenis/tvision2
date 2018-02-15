@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Tvision2.Controls.Button
 {
-    public class ButtonState : TvControlState
+    public class ButtonState : TvControlData
     {
         public ButtonState()
         {
@@ -12,6 +12,13 @@ namespace Tvision2.Controls.Button
             Style.ForeColor = ConsoleColor.Black;
             Style.PaddingLeft = 1;
             Style.PaddingRight = 1;
+        }
+
+        private bool _isPressed;
+        public bool IsPressed
+        {
+            get => _isPressed;
+            set { _isPressed = value; IsDirty = true; }
         }
 
         private string _text;
