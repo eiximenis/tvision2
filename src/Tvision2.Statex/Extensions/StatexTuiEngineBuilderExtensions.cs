@@ -5,7 +5,7 @@ using Tvision2.Statex;
 
 namespace Tvision2.Core.Engine
 {
-    public static class TuiEngineBuilderExtensions
+    public static class StatexTuiEngineBuilderExtensions
     {
         public static TuiEngineBuilder AddStateManager(this TuiEngineBuilder builder, Action<TvStateManager> configAction)
         {

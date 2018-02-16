@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using TvConsole;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Engine;
+using Tvision2.Events;
 
 namespace Tvision2.Controls.Button
 {

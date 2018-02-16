@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using Tvision2.ConsoleDriver;
 using Tvision2.Core.Render;
 
 namespace Tvision2.Core.Engine
@@ -17,13 +18,15 @@ namespace Tvision2.Core.Engine
         private VirtualConsole _previousConsole;
 
         private readonly IDictionary<string, object> _additionalItems;
+        private readonly IConsoleDriver _consoleDriver;
 
         public ComponentTree UI { get; }
-        internal TuiEngine(IDictionary<string, object> additionalItems)
+        internal TuiEngine(IConsoleDriver consoleDriver, IDictionary<string, object> additionalItems)
         {
+            _consoleDriver = consoleDriver ?? throw new ArgumentNullException("consoleDriver");
             _additionalItems = additionalItems ?? new Dictionary<string, object>();
             UI = new ComponentTree();
-            _eventPumper = new EventPumper();
+            _eventPumper = new EventPumper(_consoleDriver);
             _watcher = new Stopwatch();
         }
 
@@ -78,7 +81,7 @@ namespace Tvision2.Core.Engine
             var diffs = _currentConsole.DiffWith(_previousConsole);
             if (diffs.Length > 0)
             {
-                VirtualConsoleRenderer.RenderToConsole(diffs);
+                VirtualConsoleRenderer.RenderToConsole(_consoleDriver, diffs);
             }
         }
 

@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvConsole.Shared", "..\tvco
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Statex", "Tvision2.Statex\Tvision2.Statex.csproj", "{94EBB376-12C7-452C-B113-AFE175F1AFDD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.ConsoleDriver", "Tvision2.ConsoleDriver\Tvision2.ConsoleDriver.csproj", "{2E3BAD7D-74B5-41A7-9F13-AC07DBF5ECC5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{94EBB376-12C7-452C-B113-AFE175F1AFDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94EBB376-12C7-452C-B113-AFE175F1AFDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94EBB376-12C7-452C-B113-AFE175F1AFDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E3BAD7D-74B5-41A7-9F13-AC07DBF5ECC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E3BAD7D-74B5-41A7-9F13-AC07DBF5ECC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E3BAD7D-74B5-41A7-9F13-AC07DBF5ECC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E3BAD7D-74B5-41A7-9F13-AC07DBF5ECC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

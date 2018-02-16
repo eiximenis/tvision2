@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TvConsole;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Components.Draw;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Core.Styles;
+using Tvision2.Events;
 
 namespace Tvision2.Core.Components
 {
@@ -15,6 +15,8 @@ namespace Tvision2.Core.Components
     public abstract class TvComponent
     {
         public StyleSheet Style { get; }
+
+
         public bool IsDirty { get; protected set; }
         public string Name { get; }
 
@@ -36,7 +38,7 @@ namespace Tvision2.Core.Components
         public T State { get; private set; }
 
         public bool HasFocus { get; internal set; }
-        
+
         public void SetState(T newState)
         {
             var oldState = State;
@@ -73,9 +75,9 @@ namespace Tvision2.Core.Components
         }
 
 
-        protected internal override void Update (TvConsoleEvents evts)
+        protected internal override void Update(TvConsoleEvents evts)
         {
-            bool updated = false;
+            bool updated = Style.IsDirty;
             foreach (var mdata in _behaviorsMetadata)
             {
                 var ctx = new BehaviorContext<T>(State, evts);
@@ -96,6 +98,8 @@ namespace Tvision2.Core.Components
             {
                 drawer.Draw(context);
             }
+            IsDirty = false;
+            Style.IsDirty = false;
         }
     }
 }
