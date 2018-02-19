@@ -18,7 +18,6 @@ namespace Tvision2.Sample
                     mgr.AddStore<TasksStore, TasksList>("Tasks", new TasksStore())
                         .AddReducer(TasksReducers.AddTask);
                 })
-                .UseConsoleDriver(ConsoleDriverType.NetDriver)
                 .Build();
 
             var cmp = new TestComponent(new Core.Styles.StyleSheet(), "test");

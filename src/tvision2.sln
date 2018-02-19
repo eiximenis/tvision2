@@ -9,14 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Sample", "Tvision2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Controls", "Tvision2.Controls\Tvision2.Controls.csproj", "{8725F868-C96B-41D5-8845-A339BBB45398}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TvConsole", "TvConsole", "{04D59546-DBCF-4A98-9A3F-B742FDA882F0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvConsole", "..\tvconsole\src\TvConsole\TvConsole.csproj", "{41421967-6E44-48EA-A86B-EA222B936E2C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvConsole.Win32", "..\tvconsole\src\TvConsole.Win32\TvConsole.Win32.csproj", "{2237D375-5D2D-48AC-A03F-E475DB2A3472}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvConsole.Shared", "..\tvconsole\src\TvConsole.Shared\TvConsole.Shared.csproj", "{B5D0814A-D861-490B-AC8C-CAF367E4FE2F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Statex", "Tvision2.Statex\Tvision2.Statex.csproj", "{94EBB376-12C7-452C-B113-AFE175F1AFDD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.ConsoleDriver", "Tvision2.ConsoleDriver\Tvision2.ConsoleDriver.csproj", "{2E3BAD7D-74B5-41A7-9F13-AC07DBF5ECC5}"
@@ -39,18 +31,6 @@ Global
 		{8725F868-C96B-41D5-8845-A339BBB45398}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8725F868-C96B-41D5-8845-A339BBB45398}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8725F868-C96B-41D5-8845-A339BBB45398}.Release|Any CPU.Build.0 = Release|Any CPU
-		{41421967-6E44-48EA-A86B-EA222B936E2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{41421967-6E44-48EA-A86B-EA222B936E2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{41421967-6E44-48EA-A86B-EA222B936E2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{41421967-6E44-48EA-A86B-EA222B936E2C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2237D375-5D2D-48AC-A03F-E475DB2A3472}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2237D375-5D2D-48AC-A03F-E475DB2A3472}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2237D375-5D2D-48AC-A03F-E475DB2A3472}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2237D375-5D2D-48AC-A03F-E475DB2A3472}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B5D0814A-D861-490B-AC8C-CAF367E4FE2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B5D0814A-D861-490B-AC8C-CAF367E4FE2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B5D0814A-D861-490B-AC8C-CAF367E4FE2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B5D0814A-D861-490B-AC8C-CAF367E4FE2F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{94EBB376-12C7-452C-B113-AFE175F1AFDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{94EBB376-12C7-452C-B113-AFE175F1AFDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94EBB376-12C7-452C-B113-AFE175F1AFDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -62,11 +42,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{41421967-6E44-48EA-A86B-EA222B936E2C} = {04D59546-DBCF-4A98-9A3F-B742FDA882F0}
-		{2237D375-5D2D-48AC-A03F-E475DB2A3472} = {04D59546-DBCF-4A98-9A3F-B742FDA882F0}
-		{B5D0814A-D861-490B-AC8C-CAF367E4FE2F} = {04D59546-DBCF-4A98-9A3F-B742FDA882F0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF2528A0-913B-4BF1-9136-4E8723945398}
