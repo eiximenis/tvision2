@@ -170,7 +170,7 @@ namespace Unix.Terminal {
 		extern static public int timeout (int delay);
 
         [DllImport("libncursesw.so.5")]
-        extern static public int nodelay(ref Curses.Window window, bool bf);
+        extern static public int nodelay(IntPtr win, bool bf);
 
 		//
 		// Internal, as they are exposed in Window

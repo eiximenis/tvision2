@@ -13,26 +13,26 @@ namespace Tvision2.ConsoleDriver
         private Curses.Window _console;
         public void Init() {
             _console = Curses.initscr();
-            Console.WriteLine("nodelay");
             var w = Window.Standard;
-            Curses.nodelay(ref w, bf: true);
-            Console.WriteLine("nodelay done");
+            Curses.nodelay(w.Handle, bf: true);
         }
 
         public TvConsoleEvents ReadEvents()
         {
             var code = Curses.get_wch(out int wch);
-            Console.WriteLine("-->" + code + " -->" + wch);
+
+            if (code == Curses.OK) {
+                var i =0;
+            }
+
             if (code == Curses.KEY_CODE_YES)
             {
                 if (wch == Curses.KeyMouse)
                 {
                     
                     Curses.getmouse(out Curses.MouseEvent ev);
-                    Debug.WriteLine("GETMOUSE!!!!");
                     return TvConsoleEvents.Empty;
                 }
-                Debug.WriteLine("GETKEY!!!!!!");
                 return TvConsoleEvents.Empty;
             }
 

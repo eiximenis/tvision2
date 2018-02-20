@@ -49,6 +49,7 @@ namespace Unix.Terminal {
 		public const int COLOR_CYAN = unchecked((int)0x6);
 		public const int COLOR_WHITE = unchecked((int)0x7);
 		public const int KEY_CODE_YES = unchecked((int)0x100);
+		
 		internal enum Event : long {
 			Button1Pressed = unchecked((int)0x2),
 			Button1Released = unchecked((int)0x1),
@@ -76,6 +77,8 @@ namespace Unix.Terminal {
 			ReportMousePosition = unchecked((int)0x8000000),
 			AllEvents = unchecked((int)0x7ffffff),
 		}
+
+		public const int OK = unchecked((int)0x0);		
 		public const int ERR = unchecked((int)0xffffffff);
 		public const int KeyBackspace = unchecked((int)0x107);
 		public const int KeyUp = unchecked((int)0x103);
