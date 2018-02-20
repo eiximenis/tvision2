@@ -1,0 +1,45 @@
+{
+   // Use IntelliSense to find out which attributes exist for C# debugging
+   // Use hover for the description of the existing attributes
+   // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+   "version": "0.2.0",
+   "configurations": [
+      {
+          "name": ".NET Core Launch @ WSL(console)",
+          "type": "coreclr",
+          "request": "launch",
+          "preLaunchTask": "build",
+          "program": "/mnt/c/Personal/Projects/Tvision2/src/Tvision2.Sample/bin/Debug/netcoreapp2.0/Tvision2.Sample.dll",
+          "args": [],
+          "cwd": "/mnt/c/Personal/Projects/Tvision2/src",
+          "stopAtEntry": false,
+          "console": "externalTerminal",
+          "pipeTransport": {
+              "pipeCwd": "${workspaceFolder}",
+              "pipeProgram": "bash.exe",
+              "pipeArgs": ["-c"],
+              "debuggerPath": "~/vsdbg/vsdbg",
+          }
+      },
+        {
+            "name": ".NET Core Launch (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/Tvision2.Sample/bin/Debug/netcoreapp2.0/Tvision2.Sample.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Tvision2.Sample",
+            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+            "console": "externalTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+        }
+    ]
+}

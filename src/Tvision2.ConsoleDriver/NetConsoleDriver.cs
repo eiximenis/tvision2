@@ -8,6 +8,8 @@ namespace Tvision2.ConsoleDriver
 {
     public class NetConsoleDriver : IConsoleDriver
     {
+
+        public void Init() {}
         public TvConsoleEvents ReadEvents()
         {
             if (Console.KeyAvailable)

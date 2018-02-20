@@ -43,7 +43,7 @@ namespace Unix.Terminal {
 
 #region Screen initialization
 
-		[DllImport ("ncurses", EntryPoint="initscr")]
+		[DllImport ("libncursesw.so.5", EntryPoint="initscr")]
 		extern static internal IntPtr real_initscr ();
 		static int lines, cols;
 
@@ -52,10 +52,12 @@ namespace Unix.Terminal {
 
 		static void FindNCurses ()
 		{
-			if (File.Exists ("/usr/lib/libncurses.dylib"))
-				curses_handle = dlopen ("libncurses.dylib", 1);
-			else
-				curses_handle = dlopen ("libncurses.so", 1);
+            if (File.Exists("/usr/lib/libncursesw.dylib"))
+                curses_handle = dlopen("libncursesw.dylib", 1);
+            else
+            {
+                curses_handle = dlopen("libncursesw.so.5", 1);
+            }
 			
 			if (curses_handle == IntPtr.Zero)
 				throw new Exception ("Could not dlopen ncurses");
@@ -113,129 +115,132 @@ namespace Unix.Terminal {
 			return false;
 		}
 		
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static public int endwin ();
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static public bool isendwin ();
 
 		//
 		// Screen operations are flagged as internal, as we need to
 		// catch all changes so we can update newscr, curscr, stdscr
 		//
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static public IntPtr internal_newterm (string type, IntPtr file_outfd, IntPtr file_infd);
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static public IntPtr internal_set_term (IntPtr newscreen);
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 	        extern static internal void internal_delscreen (IntPtr sp);
 #endregion
 
 #region Input Options
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static public int cbreak ();
 		
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static public int nocbreak ();
 		
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static public int echo ();
 		
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static public int noecho ();
 		
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static public int halfdelay (int t);
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static public int raw ();
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static public int noraw ();
 		
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static public void noqiflush ();
 		
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static public void qiflush ();
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static public int typeahead (IntPtr fd);
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static public int timeout (int delay);
+
+        [DllImport("libncursesw.so.5")]
+        extern static public int nodelay(ref Curses.Window window, bool bf);
 
 		//
 		// Internal, as they are exposed in Window
 		//
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static internal int wtimeout (IntPtr win, int delay);
 	       
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static internal int notimeout (IntPtr win, bool bf);
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static internal int keypad (IntPtr win, bool bf);
 		
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static internal int meta (IntPtr win, bool bf);
 		
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern static internal int intrflush (IntPtr win, bool bf);
 #endregion
 
 #region Output Options
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static int clearok (IntPtr win, bool bf);
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static int idlok (IntPtr win, bool bf);
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static void idcok (IntPtr win, bool bf);
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static void immedok (IntPtr win, bool bf);
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static int leaveok (IntPtr win, bool bf);
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static int wsetscrreg (IntPtr win, int top, int bot);
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static int scrollok (IntPtr win, bool bf);
 		
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern public static int nl();
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern public static int nonl();
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern public static int setscrreg (int top, int bot);
 		
 #endregion
 
 #region refresh functions
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern public static int refresh ();
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern public static int doupdate();
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static int wrefresh (IntPtr win);
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static int redrawwin (IntPtr win);
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static int wredrawwin (IntPtr win, int beg_line, int num_lines);
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static int wnoutrefresh (IntPtr win);
 #endregion
 
 #region Output
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern public static int move (int line, int col);
 
-		[DllImport ("ncurses", EntryPoint="addch")]
+		[DllImport ("libncursesw.so.5", EntryPoint="addch")]
 		extern internal static int _addch (int ch);
 		
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern public static int addstr (string s);
 
 		public static int addstr (string format, params object [] args)
@@ -260,54 +265,54 @@ namespace Unix.Terminal {
 			return addstr (new String (c, 1));
 		}
 		
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static int wmove (IntPtr win, int line, int col);
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static int waddch (IntPtr win, int ch);
 #endregion
 
 #region Attributes
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern public static int attron (int attrs);
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern public static int attroff (int attrs);
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern public static int attrset (int attrs);
 #endregion
 
 #region Input
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern public static int getch ();
 		
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern public static int get_wch (out int sequence);
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern public static int ungetch (int ch);
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern public static int mvgetch (int y, int x);
 #endregion
 		
 #region Colors
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static bool has_colors ();
 		public static bool HasColors => has_colors ();
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static int start_color ();
 		public static int StartColor () => start_color ();
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static int init_pair (short pair, short f, short b);
 		public static int InitColorPair (short pair, short foreground, short background) => init_pair (pair, foreground, background);
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static int use_default_colors ();
 		public static int UseDefaultColors () => use_default_colors ();
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		extern internal static int COLOR_PAIRS();
 		public static int ColorPairs => COLOR_PAIRS();
 		
@@ -351,7 +356,7 @@ namespace Unix.Terminal {
 			cols = Marshal.ReadInt32 (cols_ptr);
 		}
 
-		[DllImport ("ncurses", EntryPoint="mousemask")]
+		[DllImport ("libncursesw.so.5", EntryPoint="mousemask")]
 		extern static IntPtr call_mousemask (IntPtr newmask, out IntPtr oldmask);
 		
 		public static Event mousemask (Event newmask, out Event oldmask)
@@ -362,13 +367,13 @@ namespace Unix.Terminal {
 			return ret;
 		}
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		public extern static uint getmouse (out MouseEvent ev);
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		public extern static uint ungetmouse (ref MouseEvent ev);
 
-		[DllImport ("ncurses")]
+		[DllImport ("libncursesw.so.5")]
 		public extern static int mouseinterval (int interval);
 #endregion
 

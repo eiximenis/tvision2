@@ -18,6 +18,7 @@ namespace Tvision2.ConsoleDriver
             _hstdout = ConsoleNative.GetStdHandle(STDOUT);
         }
 
+        public void Init() {}
         public TvConsoleEvents ReadEvents()
         {
             ConsoleNative.GetNumberOfConsoleInputEvents(_hstdin, out uint numEvents);

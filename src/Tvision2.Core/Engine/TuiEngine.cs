@@ -43,6 +43,7 @@ namespace Tvision2.Core.Engine
 
         public async Task<int> Start()
         {
+            _consoleDriver.Init();
             _previousConsole = new VirtualConsole();
             _currentConsole = new VirtualConsole();
             PerformDrawOperations(force: true);
