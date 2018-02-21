@@ -10,9 +10,19 @@ Its name is a tribute to [Turbo Vision](https://en.wikipedia.org/wiki/Turbo_Visi
 
 > Tvision2 is inteneded to help you creating console apps that behave like "full screen apps". For typical console apps, Tvision2 do not offer any value.
 
-## What limitations it have?
+## Wich platforms are supported?
 
-As TVision2 uses [TvConsole](https://github.com/eiximenis/tvconsole) project it shares the same limitations: currently **no Linux support**. Once TvConsole gets Linux support, TVision2 will get it too.
+TVision2 is cross-platform but, as this is WIP, there are some limitations.
+
+Console management differs a lot between operating systems and unfortunately DotNet do not offer any advanced capability. So TVision2 uses specific "console adapters" for every operating system (there is an additional "console adapter" that uses `System.Console`).
+
+* For Windows-based systems, TVision2 uses the Win32 low-level Console API, so there is no any special requirement and there is full support for keyboard and mouse.
+
+* For Linux-based systems TVision2 relies on NCurses for terminal-input management, so there is a dependency on `libncurses.so.5` library. NCurses provides advanced support for keyboard and mouse. So, ensure `libncurses.so.5` is installed in your Linux distro.
+
+* For MacOS there is no special support (NCurses is planned to be used in near future) so default `System.Console` capabilities are used, providing support for keyboard but not mouse.
+
+> **Note** Using the default DotNet `System.Console` APIs is opt-in in any platform.
 
 ## Programming model
 
@@ -41,3 +51,22 @@ So, a typical frame iteration in Tvision2 looks like:
 
 To draw a component, Tvision2 relies on the _drawers_ objects: any component have one or more drawers. If the component has to be redrawn, all drawers are invoked. Drawers do not directly draw to the console. Instead every drawer  interact with its _viewport_. Then all viewports are projected and combined in a virtual console. Then contents of the virtual console are compared with the real console generating a set of differences that must be applied to real console to have the same content that the virtual console. Finally those differences are applied to real console.
 
+## Thanks to...
+
+1. NCurses people
+2. Miguel de Icaza for its [MonoCurses](https://github.com/mono/mono-curses/) project, which is currently being used to interoperate with NCurses.
+
+## TODO for 1st version
+
+A huge lot of things like...
+
+1. Enable NCurses on MacOS
+2. Test in other Linux distros other than Ubuntu
+3. Integrate mouse events into TVision2
+4. Create a basic set of controls in TVision2.Controls
+
+## TODO for following versions
+
+1. Styling system
+2. Layout system
+3. ???
