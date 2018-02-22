@@ -19,7 +19,11 @@ namespace Tvision2.Core.Engine
 
         public void Add(TvComponent component, int zIndex = 0)
         {
-            var viewport = new Viewport(component.Style.Position, 1, 0, zIndex);
+            if (zIndex != 0)
+            {
+                component.Style.ZIndex = zIndex;
+            }
+            var viewport = new Viewport(component.Style);
             _components.Add(component.Name, new TvComponentMetadata(component, viewport));
         }
 

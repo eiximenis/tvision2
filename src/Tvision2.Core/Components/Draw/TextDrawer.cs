@@ -19,7 +19,7 @@ namespace Tvision2.Core.Components.Render
                 context.State.ToString() ?? "",
                 new string(' ', context.Style.PaddingRight));
 
-            context.Viewport.DrawAt(value, new TvPoint(0, 0), context.Style.ForeColor, context.Style.BackColor);
+            context.Viewport.DrawStringAt(value, new TvPoint(0, 0), context.Style.ForeColor, context.Style.BackColor);
         }
     }
 }

@@ -25,10 +25,9 @@ namespace Tvision2.Sample
 
             tui.UI.Add(cmp);
 
-            var lbl = new TvLabel(new LabelState()
+            var lbl = new TvLabel(new LabelState("Label1")
             {
                 Text = "label",
-                Name = "Label1",
             });
 
             lbl.Data.Style.Position = new Core.Render.TvPoint(3, 4);
@@ -38,13 +37,16 @@ namespace Tvision2.Sample
                 Text = "btn"
             });
 
+            button.Data.Style.Position = new Core.Render.TvPoint(0, 0);
+            button.Data.Style.Columns = 4;
+
             button.OnClick = new DelegateCommand<ButtonState>(async s =>
             {
                 lbl.State.Text = "Fuck yeah!";
             });
 
             tui.UI.Add(lbl);
-            tui.UI.Add(button, -1);
+            tui.UI.Add(button, 0);
 
             var t = tui.Start();
             await Task.Delay(6000);

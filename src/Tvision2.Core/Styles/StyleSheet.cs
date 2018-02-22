@@ -5,12 +5,15 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Core.Styles
 {
-    public class StyleSheet
+    public class StyleSheet : IBoxModel
     {
-        public StyleSheet()
+        public ClippingMode Clipping { get; }
+
+        public StyleSheet(ClippingMode clippingMode = ClippingMode.Clip)
         {
             _backColor = ConsoleColor.Black;
             _foreColor = ConsoleColor.Gray;
+            Clipping = clippingMode;
         }
 
         public bool IsDirty { get; internal set; }
@@ -49,6 +52,25 @@ namespace Tvision2.Core.Styles
             set { _paddingRight = value; IsDirty = true; }
         }
 
+        private int _columns;
+        public int Columns
+        {
+            get => _columns;
+            set { _columns = value; IsDirty = true; }
+        }
 
+        private int _rows;
+        public int Rows
+        {
+            get => _rows;
+            set { _rows = value; IsDirty = true; }
+        }
+
+        private int _zindex;
+        public int ZIndex
+        {
+            get => _zindex;
+            set { _zindex = value; IsDirty = true; }
+        }
     }
 }
