@@ -29,12 +29,28 @@ namespace Tvision2.Core.Engine
             IEnumerable<IEventHook> initialHooks)
         {
             _consoleDriver = consoleDriver ?? throw new ArgumentNullException("consoleDriver");
-            _additionalItems = additionalItems ?? new Dictionary<Type, object>();
+            _additionalItems = new Dictionary<Type, object>();
             UI = new ComponentTree(this);
+            _additionalItems.Add(typeof(IComponentTree), UI);
+            AddAdditionalItems(additionalItems);
             _eventPumper = new EventPumper(_consoleDriver);
             _watcher = new Stopwatch();
             var hookContext = new HookContext(this);
             EventHookManager = new EventHookManager(initialHooks ?? Enumerable.Empty<IEventHook>(), hookContext);
+        }
+
+        private void AddAdditionalItems(IDictionary<Type, object> additionalItems)
+        {
+            foreach (var kvp in additionalItems)
+            {
+                var item = kvp.Value;
+                _additionalItems.Add(kvp.Key, item);
+                var client = item as ICustomItemsProviderClient;
+                if (client != null)
+                {
+                    client.ReceiveProvider(this);
+                }
+            }
         }
 
         public TItem GetCustomItem<TItem>()

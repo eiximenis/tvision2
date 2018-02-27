@@ -7,12 +7,13 @@ namespace Tvision2.Controls
 {
     public class TvControlMetadata
     {
-        private readonly TvComponentMetadata _metadata;
         public ITvControl Control { get; }
+
+        internal TvComponentMetadata ComponentMetadata { get; }
 
         public TvControlMetadata(TvComponentMetadata cdata, ITvControl control)
         {
-            _metadata = cdata;
+            ComponentMetadata = cdata;
             Control = control;
         }
     }

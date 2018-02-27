@@ -73,12 +73,21 @@ namespace Tvision2.Core.Engine
             _responders.Add(metadata);
         }
 
+        void IComponentTree.AddToResponderChain(TvComponentMetadata componentToAdd)
+        {
+            _responders.Add(componentToAdd);
+        }
+
         void IComponentTree.RemoveFromRespondersChain(TvComponent componentToRemove)
         {
             var metadata = _components[componentToRemove.Name];
             _responders.Remove(metadata);
         }
 
+        void IComponentTree.RemoveFromRespondersChain(TvComponentMetadata componentToRemove)
+        {
+            _responders.Remove(componentToRemove);
+        }
 
     }
 }
