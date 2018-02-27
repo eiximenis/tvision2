@@ -8,16 +8,26 @@ using Tvision2.Core.Components.Render;
 
 namespace Tvision2.Controls.Label
 {
-    public class TvLabel : TvControl<LabelState>
+    public class TvLabel : TvControlString<LabelState>
     {
 
         public TvLabel(LabelState state) : base(state, state)
         {
         }
 
-        protected override void AddComponentElements(TvComponent<LabelState> cmp)
+        protected override string GetStringToRender(LabelState state)
         {
-            cmp.AddDrawer(new ControlTextDrawer<LabelState>(lstate => lstate.Text));
+            var focused = state.Style.ContainsClass("focused");
+            var style = state.Style;
+
+            var value = string.Format("{0}{1}{2}{3}{4}",
+                new string(' ', style.PaddingLeft),
+                focused ? ">" : "",
+                state.Text.ToString() ?? "",
+                focused ? "<" : "",
+                new string(' ', style.PaddingRight));
+
+            return value;
         }
 
 

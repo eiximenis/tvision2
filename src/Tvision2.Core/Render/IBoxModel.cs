@@ -11,5 +11,8 @@ namespace Tvision2.Core.Render
         int Columns { get; }
         int Rows { get; }
         ClippingMode Clipping { get; }
+
+        bool Grow(int cols, int rows);
+
     }
 }

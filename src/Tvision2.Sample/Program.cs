@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Tvision2.Controls;
 using Tvision2.Controls.Button;
+using Tvision2.Controls.Checkbox;
 using Tvision2.Controls.Label;
 using Tvision2.Core;
 using Tvision2.Core.Engine;
@@ -47,6 +48,11 @@ namespace Tvision2.Sample
 
             lbl.Data.Style.Position = new Core.Render.TvPoint(3, 4);
 
+            var check = new TvCheckbox(new CheckboxState());
+            check.Data.Style.Position = new TvPoint(7, 8);
+            tui.UI.Add(check);
+
+
             var button = new TvButton(new ButtonState()
             {
                 Text = "btn"
@@ -58,10 +64,12 @@ namespace Tvision2.Sample
             button.OnClick = new DelegateCommand<ButtonState>(async s =>
             {
                 lbl.State.Text = "Fuck yeah!";
+                check.State.Checked = TvCheckboxState.Checked;
             });
 
             tui.UI.Add(lbl);
             tui.UI.Add(button, 0);
+
 
             var t = tui.Start();
             await Task.Delay(6000);

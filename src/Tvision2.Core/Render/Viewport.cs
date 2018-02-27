@@ -42,12 +42,18 @@ namespace Tvision2.Core.Render
 
             var maxCharsToDraw = text.Length;
             var clippingMode = _boxModel.Clipping;
+            var consoleLocation = ViewPointToConsolePoint(location);
 
             if ((clippingMode == ClippingMode.Clip || clippingMode == ClippingMode.ExpandVertical) && _boxModel.Columns < maxCharsToDraw)
             {
                 maxCharsToDraw = _boxModel.Columns;
             }
-            var consoleLocation = ViewPointToConsolePoint(location);
+            else
+            {
+                _boxModel.Grow(maxCharsToDraw, _boxModel.Rows);
+                Clear(backColor, consoleLocation);
+            }
+            
             _console.DrawAt(text.Substring(0, maxCharsToDraw), consoleLocation, _boxModel.ZIndex, foreColor, backColor);
         }
 
@@ -57,6 +63,12 @@ namespace Tvision2.Core.Render
             var viewPoint = ConsolePointToViewport(consolePoint);
             return consolePoint.Top >= pos.Top && consolePoint.Left >= pos.Left;
         }
+
+        private void Clear(ConsoleColor color, TvPoint location)
+        {
+            _console.DrawAt(new string(' ', _boxModel.Columns), location, _boxModel.ZIndex, color, color);
+        }
+
 
 
     }

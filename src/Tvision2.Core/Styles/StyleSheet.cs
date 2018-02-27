@@ -89,6 +89,27 @@ namespace Tvision2.Core.Styles
             }
         }
 
+
+        public bool Grow(int cols, int rows)
+        {
+            var grown = false;
+            if (rows > _rows)
+            {
+                _rows = rows;
+                IsDirty = true;
+                grown = true;
+            }
+            if (cols > _columns)
+            {
+                _columns = cols;
+                IsDirty = true;
+                grown = true;
+            }
+
+            return grown;
+        }
+
+
         public bool ContainsClass(string name) => _classes.Contains(name);
 
         public IEnumerable<string> Classes => _classes;

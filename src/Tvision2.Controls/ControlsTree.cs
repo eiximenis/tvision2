@@ -36,7 +36,8 @@ namespace Tvision2.Controls
 
         public TvControlMetadata NextControl(TvControlMetadata current)
         {
-            return _controls.Find(current)?.Next?.Value;
+            var next = _controls.Find(current)?.Next;
+            return next != null ? next.Value : _controls.First.Value;
         }
 
         public TvControlMetadata PreviousControl(TvControlMetadata current)
@@ -55,11 +56,10 @@ namespace Tvision2.Controls
 
         public void MoveFocusToNext()
         {
-            var current = CurrentFocused();
-            var next = current != null ? NextControl(current) : _controls.First?.Value;
+            var next = _focused != null ? NextControl(_focused) : _controls.First?.Value;
             if (next != null)
             {
-                current?.Control.Data.Style.RemoveClass("focused");
+                _focused?.Control.Data.Style.RemoveClass("focused");
                 next.Control.Data.Style.AddClass("focused");
                 _focused = next;
             }
