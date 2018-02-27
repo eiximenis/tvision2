@@ -12,9 +12,9 @@ namespace Tvision2.Controls
         private TvComponent<TState> _component;
         public TState State { get; }
 
-        public TvControl(TState state, IControlData data = null)
+        public TvControl(TState state, IControlData data)
         {
-            Data = data ?? new TvControlData();
+            Data = data;
             State = state;
             CreateComponent();
         }

@@ -8,12 +8,17 @@ namespace Tvision2.Core.Styles
     public class StyleSheet : IBoxModel
     {
         public ClippingMode Clipping { get; }
+        private IBaseStyles _parent;
 
-        public StyleSheet(ClippingMode clippingMode = ClippingMode.Clip)
+        private readonly List<string> _classes;
+
+        public StyleSheet(ClippingMode clippingMode, IBaseStyles parent = null)
         {
-            _backColor = ConsoleColor.Black;
-            _foreColor = ConsoleColor.Gray;
+            _backColor = null;
+            _foreColor = null;
             Clipping = clippingMode;
+            _parent = parent ?? DefaultBaseStyles.Instance;
+            _classes = new List<string>();
         }
 
         public bool IsDirty { get; internal set; }
@@ -25,17 +30,17 @@ namespace Tvision2.Core.Styles
             set { _pos = value; IsDirty = true; }
         }
 
-        private ConsoleColor _foreColor;
+        private ConsoleColor? _foreColor;
         public ConsoleColor ForeColor
         {
-            get => _foreColor;
+            get => _foreColor ?? _parent.ForeColor;
             set { _foreColor = value; IsDirty = true; }
         }
 
-        private ConsoleColor _backColor;
+        private ConsoleColor? _backColor;
         public ConsoleColor BackColor
         {
-            get => _backColor;
+            get => _backColor ?? _parent.BackColor;
             set { _backColor = value; IsDirty = true; }
         }
 
@@ -65,6 +70,28 @@ namespace Tvision2.Core.Styles
             get => _rows;
             set { _rows = value; IsDirty = true; }
         }
+
+        public void AddClass(string name)
+        {
+            if (!_classes.Contains(name))
+            {
+                _classes.Add(name);
+                IsDirty = true;
+            }
+        }
+
+        public void RemoveClass(string name)
+        {
+            if (_classes.Contains(name))
+            {
+                _classes.Remove(name);
+                IsDirty = true;
+            }
+        }
+
+        public bool ContainsClass(string name) => _classes.Contains(name);
+
+        public IEnumerable<string> Classes => _classes;
 
         private int _zindex;
         public int ZIndex

@@ -7,6 +7,21 @@ namespace Tvision2.Core.Engine
 {
     public static class ComponentTreeExtensions
     {
-        public static void Add(this ComponentTree componentTree, ITvControl control, int zIndex = 0) => componentTree.Add(control.AsComponent(), zIndex);
+        public static void Add(this ComponentTree componentTree, ITvControl control, int zindex = 0)
+        {
+            var metadata = componentTree.Add(control.AsComponent(), zindex);
+            var ctree = componentTree.Controls() as ControlsTree;
+            var cdata = new TvControlMetadata(metadata, control);
+            ctree.Add(cdata);
+        }
+        public static void InsertAfter(this ComponentTree componentTree, ITvControl control, int position, int zindex = 0)
+        {
+            var metadata = componentTree.Add(control.AsComponent(), zindex);
+            var ctree = componentTree.Controls() as ControlsTree;
+            var cdata = new TvControlMetadata(metadata, control);
+            ctree.InsertAfter(cdata, position);
+        }
+
+        public static IControlsTree Controls(this ComponentTree componentTree) => componentTree.Engine.GetCustomItem<IControlsTree>();
     }
 }

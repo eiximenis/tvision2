@@ -2,24 +2,33 @@
 using System.Collections.Generic;
 using System.Text;
 using Tvision2.ConsoleDriver;
+using Tvision2.Core.Hooks;
 
 namespace Tvision2.Core.Engine
 {
     public class TuiEngineBuilder
     {
-        private readonly Dictionary<string, object> _customItems;
+        private readonly Dictionary<Type, object> _customItems;
         private ConsoleDriverType _consoleDriverType;
+        private readonly List<IEventHook> _hooks;
 
         public TuiEngineBuilder()
         {
-            _customItems = new Dictionary<string, object>();
+            _customItems = new Dictionary<Type, object>();
             _consoleDriverType = ConsoleDriverType.PlatformDriver;
+            _hooks = new List<IEventHook>();
         }
 
         public TuiEngine Build()
         {
             var consoleDriver = BuildConsoleDriver();
-            return new TuiEngine(consoleDriver, _customItems);
+            return new TuiEngine(consoleDriver, _customItems, _hooks);
+        }
+
+        public TuiEngineBuilder AddEventHook(IEventHook hook)
+        {
+            _hooks.Add(hook);
+            return this;
         }
 
         public TuiEngineBuilder UseConsoleDriver(ConsoleDriverType driverToUse)
@@ -45,9 +54,9 @@ namespace Tvision2.Core.Engine
             }
         }
 
-        public void SetCustomItem(string key, object item)
+        public void SetCustomItem<T>(T item)
         {
-            _customItems.Add(key, item);
+            _customItems.Add(typeof(T),item);
         }
     }
 }

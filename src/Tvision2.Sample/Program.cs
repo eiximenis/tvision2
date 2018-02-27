@@ -5,6 +5,8 @@ using Tvision2.Controls.Button;
 using Tvision2.Controls.Label;
 using Tvision2.Core;
 using Tvision2.Core.Engine;
+using Tvision2.Core.Render;
+using Tvision2.Core.Styles;
 
 namespace Tvision2.Sample
 {
@@ -13,14 +15,27 @@ namespace Tvision2.Sample
         static async Task<int> Main(string[] args)
         {
             var tui = new TuiEngineBuilder()
+                .AddTvControls()
                 .AddStateManager(mgr =>
                 {
                     mgr.AddStore<TasksStore, TasksList>("Tasks", new TasksStore())
                         .AddReducer(TasksReducers.AddTask);
                 })
+                .AddSkinSupport(opt =>
+                {
+                    opt.AddSkin("Ugly", b =>
+                    {
+                        b.AddStyle("Test", s =>
+                        {
+                            s.WithBackgroundColor(ConsoleColor.Red);
+                            s.WithForegroundColor(ConsoleColor.Yellow);
+                        });
+                    });
+
+                })
                 .Build();
 
-            var cmp = new TestComponent(new Core.Styles.StyleSheet(), "test");
+            var cmp = new TestComponent(new StyleSheet(ClippingMode.Clip), "test");
             cmp.AddBehavior(new TestBehavior(tui.StoreSelector()));
 
             tui.UI.Add(cmp);
@@ -54,6 +69,11 @@ namespace Tvision2.Sample
             await t;
 
             return 0;
+        }
+
+        private static StyleSheet StyleSheet()
+        {
+            throw new NotImplementedException();
         }
     }
 }

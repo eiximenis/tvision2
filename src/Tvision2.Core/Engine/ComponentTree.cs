@@ -8,42 +8,42 @@ using Tvision2.Events;
 
 namespace Tvision2.Core.Engine
 {
-    public class ComponentTree
+    public class ComponentTree : IComponentTree
     {
         private readonly Dictionary<string, TvComponentMetadata> _components;
+        private List<TvComponentMetadata> _responders;
 
-        public ComponentTree()
+        public TuiEngine Engine { get; }
+
+
+        public ComponentTree(TuiEngine owner)
         {
             _components = new Dictionary<string, TvComponentMetadata>();
+            _responders = new List<TvComponentMetadata>();
+            Engine = owner;
         }
 
-        public void Add(TvComponent component, int zIndex = 0)
+        public TvComponentMetadata Add(TvComponent component, int zindex = 0)
         {
-            if (zIndex != 0)
+            var metadata = MetadataFromComponent(component, zindex);
+            _components.Add(component.Name, metadata);
+            return metadata;
+        }
+
+
+
+        private TvComponentMetadata MetadataFromComponent(TvComponent component, int zindex)
+        {
+            if (zindex != 0)
             {
-                component.Style.ZIndex = zIndex;
+                component.Style.ZIndex = zindex;
             }
             var viewport = new Viewport(component.Style);
-            _components.Add(component.Name, new TvComponentMetadata(component, viewport));
+            var newMetadata = new TvComponentMetadata(component, viewport);
+            return newMetadata;
         }
 
-        public void Focus(TvComponent componentToFocus) => Focus(componentToFocus, unfocusOthers: true);
-        public void Focus(TvComponent componentToFocus, bool unfocusOthers)
-        {
-            TvComponentMetadata metadata = null;
-            if (unfocusOthers)
-            {
-                foreach (var cdata in _components.Values)
-                {
-                    cdata.Focused = false;
-                    if (metadata == null && cdata.Component == componentToFocus)
-                    {
-                        metadata = cdata;
-                        metadata.Focused = true;
-                    }
-                }
-            }
-        }
+
 
         internal void Update(TvConsoleEvents evts)
         {
@@ -60,6 +60,23 @@ namespace Tvision2.Core.Engine
             {
                 cdata.Component.Draw(cdata.Viewport, console);
             }
+        }
+
+
+        IEnumerable<TvComponent> IComponentTree.Responders => _responders.Select(m => m.Component);
+
+
+        void IComponentTree.ClearResponders() => _responders.Clear();
+        void IComponentTree.AddToResponderChain(TvComponent componentToAdd)
+        {
+            var metadata = _components[componentToAdd.Name];
+            _responders.Add(metadata);
+        }
+
+        void IComponentTree.RemoveFromRespondersChain(TvComponent componentToRemove)
+        {
+            var metadata = _components[componentToRemove.Name];
+            _responders.Remove(metadata);
         }
 
 

@@ -7,11 +7,13 @@ namespace Tvision2.Controls
 {
     public interface ITvControl
     {
+        IControlData Data { get; }
         TvComponent AsComponent();
     }
 
     public interface ITvControl<TState> : ITvControl
     {
+
         TState State { get; }
         new TvComponent<TState> AsComponent();
     }

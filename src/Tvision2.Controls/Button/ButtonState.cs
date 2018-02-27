@@ -8,13 +8,11 @@ namespace Tvision2.Controls.Button
 {
     public class ButtonState : TvControlData
     {
-        public ButtonState(string name = null) : base(new StyleSheet(ClippingMode.Clip), name ?? "Button" + Guid.NewGuid().ToString())
+        public ButtonState(string name = null) : base(new StyleSheet(ClippingMode.ExpandHorizontal), name ?? "Button" + Guid.NewGuid().ToString())
         {
             Style.BackColor = ConsoleColor.White;
             Style.ForeColor = ConsoleColor.Black;
-            Style.PaddingLeft = 1;
-            Style.PaddingRight = 1;
-            Style.Columns = 4;
+            Style.Columns = 12;
         }
 
         private bool _isPressed;

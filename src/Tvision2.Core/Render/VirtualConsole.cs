@@ -12,12 +12,25 @@ namespace Tvision2.Core.Render
         public int Width { get; }
         public int Height { get; }
 
+        public bool IsDirty { get; private set; }
+
+        public void NoDirty()
+        {
+            IsDirty = false;
+            _diffs.Clear();
+        }
+
+        private readonly List<VirtualConsoleUpdate> _diffs;
+
+        public IEnumerable<VirtualConsoleUpdate> GetDiffs() => _diffs;
+
         public VirtualConsole()
         {
             Width = Console.WindowWidth;
             Height = Console.WindowHeight;
             _buffer = new ConsoleCharacter[Height * Width];
             InitEmpty();
+            _diffs = new List<VirtualConsoleUpdate>(Height * Width);
         }
 
         private void InitEmpty()
@@ -32,6 +45,7 @@ namespace Tvision2.Core.Render
                     ZIndex = int.MinValue
                 };
             }
+            IsDirty = false;
         }
 
         public void DrawAt(string text, TvPoint location, int zIndex, ConsoleColor foreColor, ConsoleColor backColor)
@@ -39,53 +53,29 @@ namespace Tvision2.Core.Render
             var start = location.Left + (Width * location.Top);
             var end = start + text.Length;
             var textIdx = 0;
+            var dirty = false;
+            var charCol = location.Left;
+            var charRow = location.Top;
             for (var idx = start; idx < end; idx++)
             {
-                if (_buffer[idx].ZIndex <= zIndex)
+                var cchar = _buffer[idx];
+                if (cchar.ZIndex <= zIndex)
                 {
-                    _buffer[idx] = new ConsoleCharacter()
-                    {
-                        Character = text[textIdx],
-                        Background = backColor,
-                        Foreground = foreColor
-                    };
+                    // TODO: Compare cchar with values passed if we 
+                    // want to avoid to redraw all changed characters to console
+                    // even if they are the same as before
+                    cchar.Character = text[textIdx];
+                    cchar.Background = backColor;
+                    cchar.Foreground = foreColor;
+                    cchar.ZIndex = zIndex;
+                    dirty = true;
+                    _diffs.Add(new VirtualConsoleUpdate(cchar, charRow, charCol));
                 }
                 textIdx++;
-            }
-        }
-
-
-        public VirtualConsoleUpdate[] DiffWith(VirtualConsole other)
-        {
-            var diff = new VirtualConsoleUpdate[_buffer.Length];
-            var count = 0;
-            for (var row = 0; row < Height; row++)
-            {
-                for (var col = 0; col < Width; col++)
-                {
-                    var idx = col + (Width * row);
-                    var currentChar = _buffer[idx];
-                    var otherChar = other._buffer[idx];
-                    if (!currentChar.Equals(otherChar))
-                    {
-                        diff[count++] = new VirtualConsoleUpdate(otherChar, currentChar, row, col);
-                    }
-                }
+                charCol++;
             }
 
-            if (count > 0)
-            {
-                var retVal = new VirtualConsoleUpdate[count];
-                Array.Copy(diff, retVal, count);
-                return retVal;
-            }
-
-            return Array.Empty<VirtualConsoleUpdate>();
-        }
-
-        public void FillWith(VirtualConsole other)
-        {
-            Array.Copy(other._buffer, _buffer, _buffer.Length);
+            IsDirty = dirty;
         }
     }
 }

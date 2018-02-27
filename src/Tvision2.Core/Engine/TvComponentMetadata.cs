@@ -10,7 +10,6 @@ namespace Tvision2.Core.Engine
     {
         public TvComponent Component { get; }
         public Viewport Viewport { get; }
-        public bool Focused { get; set; }
 
         public TvComponentMetadata(TvComponent component, Viewport viewport)
         {
@@ -18,4 +17,5 @@ namespace Tvision2.Core.Engine
             Viewport = viewport;
         }
     }
+
 }

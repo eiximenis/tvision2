@@ -18,7 +18,7 @@ namespace Tvision2.Controls.Button
 
             if (properties.IsPressed)
             {
-                 _onClickAction?.Invoke();
+                _onClickAction?.Invoke();
                 properties.IsPressed = false;
                 return true;
             }
@@ -28,6 +28,12 @@ namespace Tvision2.Controls.Button
 
         protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<ButtonState> updateContext)
         {
+            if (evt.AsConsoleKeyInfo().Key != ConsoleKey.Spacebar)
+            {
+                return false;
+            }
+
+
             var properties = updateContext.State;
             if (properties.IsPressed)
             {

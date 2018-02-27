@@ -24,7 +24,7 @@ namespace Tvision2.Core.Components
         public TvComponent(StyleSheet style, string name)
         {
             Name = string.IsNullOrEmpty(name) ? $"TvComponent-{Guid.NewGuid().ToString()}" : name;
-            Style = style ?? new StyleSheet();
+            Style = style ?? new StyleSheet(ClippingMode.Clip);
         }
 
         protected internal abstract void Update(TvConsoleEvents evts);

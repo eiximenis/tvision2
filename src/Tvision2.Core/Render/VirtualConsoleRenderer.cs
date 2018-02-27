@@ -11,7 +11,7 @@ namespace Tvision2.Core.Render
         {
             foreach (var diff in diffs)
             {
-                RendererManager.DrawAt(console, diff.New, diff.Column, diff.Row);
+                RendererManager.DrawAt(console, diff.NewCharacter, diff.Column, diff.Row);
             }
         }
     }

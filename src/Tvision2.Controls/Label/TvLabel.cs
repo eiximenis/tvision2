@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Tvision2.Controls.Behavior;
+using Tvision2.Controls.Draw;
 using Tvision2.Core.Components;
 using Tvision2.Core.Components.Render;
 
@@ -16,7 +17,7 @@ namespace Tvision2.Controls.Label
 
         protected override void AddComponentElements(TvComponent<LabelState> cmp)
         {
-            cmp.AddDrawer(new TextDrawer<LabelState>(lstate => lstate.Text));
+            cmp.AddDrawer(new ControlTextDrawer<LabelState>(lstate => lstate.Text));
         }
 
 

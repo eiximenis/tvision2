@@ -11,7 +11,8 @@ namespace Tvision2.Core.Engine
         {
             var manager = new TvStateManager();
             configAction?.Invoke(manager);
-            builder.SetCustomItem("__StateManager", manager);
+            builder.SetCustomItem<TvStateManager>(manager);
+            builder.SetCustomItem<ITvStoreSelector>(manager);
             return builder;
         }
     }

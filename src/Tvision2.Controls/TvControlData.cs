@@ -1,4 +1,5 @@
-﻿using Tvision2.Core.Styles;
+﻿using System;
+using Tvision2.Core.Styles;
 
 namespace Tvision2.Controls
 {
@@ -10,13 +11,9 @@ namespace Tvision2.Controls
         public string Name { get; }
         public void Reset() { IsDirty = false; }
 
-        public TvControlData() : this (null, null)
-        {
-        }
-
         public TvControlData(StyleSheet style, string name)
         {
-            Style = style ?? new StyleSheet();
+            Style = style ?? throw new ArgumentNullException(nameof(style));
             Name = name ?? string.Empty;
         }
     }

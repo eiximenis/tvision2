@@ -14,7 +14,7 @@ namespace Tvision2.Controls.Button
         public ICommand<ButtonState> OnClick { get; set; }
 
         public TvButton(ButtonState state) : base(state, state)
-        {    
+        {
         }
 
         protected override void AddComponentElements(TvComponent<ButtonState> cmp)
@@ -24,7 +24,7 @@ namespace Tvision2.Controls.Button
             {
                 options.UseScheduler(BehaviorSchedule.OnEvents);
             });
-            cmp.AddDrawer(new TextDrawer<ButtonState>(bstate => bstate.Text));
+            cmp.AddDrawer(new TextDrawer<ButtonState>(bstate => "[" + bstate.Text + "]"));
         }
 
 
