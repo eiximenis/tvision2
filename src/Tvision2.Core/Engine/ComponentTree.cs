@@ -49,9 +49,11 @@ namespace Tvision2.Core.Engine
         {
             foreach (var cdata in _components.Values)
             {
-                cdata.Component.Update(evts);
+                cdata.Component.Update(cdata.IsResponder ? evts : null);
             }
         }
+
+
 
         internal void Draw(VirtualConsole console, bool force)
         {
@@ -66,27 +68,42 @@ namespace Tvision2.Core.Engine
         IEnumerable<TvComponent> IComponentTree.Responders => _responders.Select(m => m.Component);
 
 
-        void IComponentTree.ClearResponders() => _responders.Clear();
+        void IComponentTree.ClearResponders()
+        {
+            foreach (var responder in _responders)
+            {
+                responder.IsResponder = false;
+            }
+            _responders.Clear();
+        }
         void IComponentTree.AddToResponderChain(TvComponent componentToAdd)
         {
             var metadata = _components[componentToAdd.Name];
-            _responders.Add(metadata);
+            ((IComponentTree)this).AddToResponderChain(metadata);
         }
 
         void IComponentTree.AddToResponderChain(TvComponentMetadata componentToAdd)
         {
-            _responders.Add(componentToAdd);
+            if (!componentToAdd.IsResponder)
+            {
+                componentToAdd.IsResponder = true;
+                _responders.Add(componentToAdd);
+            }
         }
 
         void IComponentTree.RemoveFromRespondersChain(TvComponent componentToRemove)
         {
             var metadata = _components[componentToRemove.Name];
-            _responders.Remove(metadata);
+            ((IComponentTree)this).RemoveFromRespondersChain(metadata);
         }
 
         void IComponentTree.RemoveFromRespondersChain(TvComponentMetadata componentToRemove)
         {
-            _responders.Remove(componentToRemove);
+            if (componentToRemove.IsResponder)
+            {
+                componentToRemove.IsResponder = false;
+                _responders.Remove(componentToRemove);
+            }
         }
 
     }
