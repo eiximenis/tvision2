@@ -12,7 +12,7 @@ namespace Tvision2.Sample
 
     class TestComponent : TvComponent<string>
     {
-        public TestComponent(StyleSheet style, string initialState, string name = null) : base(style, initialState, name)
+        public TestComponent(AppliedStyle style, string initialState, string name = null) : base(style, initialState, name)
         {
         }
 

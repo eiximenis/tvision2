@@ -8,7 +8,7 @@ namespace Tvision2.Controls.Button
 {
     public class ButtonState : TvControlData
     {
-        public ButtonState(string name = null) : base(new StyleSheet(ClippingMode.ExpandHorizontal), name ?? "Button" + Guid.NewGuid().ToString())
+        public ButtonState(string name = null) : base(new AppliedStyle(ClippingMode.ExpandHorizontal), name ?? "Button" + Guid.NewGuid().ToString())
         {
             Style.BackColor = ConsoleColor.White;
             Style.ForeColor = ConsoleColor.Black;

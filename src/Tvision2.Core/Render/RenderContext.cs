@@ -5,13 +5,13 @@ namespace Tvision2.Core.Render
 {
     public class RenderContext<T>
     {
-        public StyleSheet Style { get; }
+        public AppliedStyle Style { get; }
         public Viewport Viewport { get; }
         public T State { get; }
 
         private VirtualConsole _console;
 
-        public RenderContext(StyleSheet style, Viewport viewport, VirtualConsole console, T state)
+        public RenderContext(AppliedStyle style, Viewport viewport, VirtualConsole console, T state)
         {
             _console = console;
             viewport.AttachConsole(console);

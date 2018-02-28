@@ -36,7 +36,7 @@ namespace Tvision2.Sample
                 })
                 .Build();
 
-            var cmp = new TestComponent(new StyleSheet(ClippingMode.Clip), "test");
+            var cmp = new TestComponent(new AppliedStyle(ClippingMode.Clip), "test");
             cmp.AddBehavior(new TestBehavior(tui.StoreSelector()));
 
             tui.UI.Add(cmp);
@@ -79,7 +79,7 @@ namespace Tvision2.Sample
             return 0;
         }
 
-        private static StyleSheet StyleSheet()
+        private static AppliedStyle StyleSheet()
         {
             throw new NotImplementedException();
         }

@@ -5,14 +5,14 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Core.Styles
 {
-    public class StyleSheet : IBoxModel
+    public class AppliedStyle : IBoxModel
     {
         public ClippingMode Clipping { get; }
         private IBaseStyles _parent;
 
         private readonly List<string> _classes;
 
-        public StyleSheet(ClippingMode clippingMode, IBaseStyles parent = null)
+        public AppliedStyle(ClippingMode clippingMode, IBaseStyles parent = null)
         {
             _backColor = null;
             _foreColor = null;

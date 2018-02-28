@@ -14,17 +14,17 @@ namespace Tvision2.Core.Components
 
     public abstract class TvComponent
     {
-        public StyleSheet Style { get; }
+        public AppliedStyle Style { get; }
 
 
         public bool IsDirty { get; protected set; }
         public string Name { get; }
 
 
-        public TvComponent(StyleSheet style, string name)
+        public TvComponent(AppliedStyle style, string name)
         {
             Name = string.IsNullOrEmpty(name) ? $"TvComponent-{Guid.NewGuid().ToString()}" : name;
-            Style = style ?? new StyleSheet(ClippingMode.Clip);
+            Style = style ?? new AppliedStyle(ClippingMode.Clip);
         }
 
         protected internal abstract void Update(TvConsoleEvents evts);
@@ -47,7 +47,7 @@ namespace Tvision2.Core.Components
         }
 
 
-        public TvComponent(StyleSheet style, T initialState, string name = null) : base(style, name)
+        public TvComponent(AppliedStyle style, T initialState, string name = null) : base(style, name)
         {
             IsDirty = false;
             _behaviorsMetadata = new List<BehaviorMetadata<T>>();

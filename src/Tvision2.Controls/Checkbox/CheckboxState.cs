@@ -8,7 +8,7 @@ namespace Tvision2.Controls.Checkbox
 {
     public class CheckboxState : TvControlData
     {
-        public CheckboxState(string name = null) : base(new StyleSheet(ClippingMode.Clip), name ?? "Check" + Guid.NewGuid().ToString())
+        public CheckboxState(string name = null) : base(new AppliedStyle(ClippingMode.Clip), name ?? "Check" + Guid.NewGuid().ToString())
         {
             Style.Columns = 3;
             _checked = TvCheckboxState.Unchecked;

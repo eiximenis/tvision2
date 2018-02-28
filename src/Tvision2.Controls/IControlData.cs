@@ -11,6 +11,6 @@ namespace Tvision2.Controls
         string Name { get; }
         void Reset();
 
-        StyleSheet Style { get; }
+        AppliedStyle Style { get; }
     }
 }
