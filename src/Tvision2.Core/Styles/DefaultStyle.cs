@@ -4,13 +4,13 @@ using System.Text;
 
 namespace Tvision2.Core.Styles
 {
-    class DefaultBaseStyles : IBaseStyles
+    class DefaultStyle : IStyle
     {
-        private static IBaseStyles _instance;
+        private static IStyle _instance;
 
-        static DefaultBaseStyles() => _instance = new DefaultBaseStyles();
+        static DefaultStyle() => _instance = new DefaultStyle();
 
-        public static IBaseStyles Instance => _instance;
+        public static IStyle Instance => _instance;
 
         public ConsoleColor ForeColor => ConsoleColor.White;
 

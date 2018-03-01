@@ -6,6 +6,6 @@ namespace Tvision2.Core.Styles
 {
     public interface ISkin
     {
-        IBaseStyles this[string name] { get; }
+        IStyleSheet this[string name] { get; }
     }
 }

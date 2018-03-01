@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Tvision2.Core.Styles
 {
-    public interface IBaseStyles
+    public interface IStyle
     {
         ConsoleColor ForeColor { get; }
         ConsoleColor BackColor { get; }

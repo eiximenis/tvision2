@@ -26,10 +26,13 @@ namespace Tvision2.Sample
                 {
                     opt.AddSkin("Ugly", b =>
                     {
-                        b.AddStyle("Test", s =>
+                        b.AddStyleSheet("Test", ss =>
                         {
-                            s.WithBackgroundColor(ConsoleColor.Red);
-                            s.WithForegroundColor(ConsoleColor.Yellow);
+                            ss.AddClass("focused", s =>
+                            {
+                                s.WithBackgroundColor(ConsoleColor.Yellow);
+                                s.WithForegroundColor(ConsoleColor.Black);
+                            });
                         });
                     });
 

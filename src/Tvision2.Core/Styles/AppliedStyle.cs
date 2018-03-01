@@ -8,16 +8,16 @@ namespace Tvision2.Core.Styles
     public class AppliedStyle : IBoxModel
     {
         public ClippingMode Clipping { get; }
-        private IBaseStyles _parent;
+        private IStyle _parent;
 
         private readonly List<string> _classes;
 
-        public AppliedStyle(ClippingMode clippingMode, IBaseStyles parent = null)
+        public AppliedStyle(ClippingMode clippingMode, IStyle parent = null)
         {
             _backColor = null;
             _foreColor = null;
             Clipping = clippingMode;
-            _parent = parent ?? DefaultBaseStyles.Instance;
+            _parent = parent ?? DefaultStyle.Instance;
             _classes = new List<string>();
         }
 

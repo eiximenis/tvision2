@@ -9,30 +9,30 @@ namespace Tvision2.Core.Styles
         private readonly Skin _skin;
         public SkinBuilder() => _skin = new Skin();
 
-        public ISkinBuilder UseDefaultStyle(IBaseStyles styles)
+        public ISkinBuilder UseDefaultStyles(IStyleSheet sheet)
         {
-            _skin.SetDefaultStyle(styles);
+            _skin.SetDefaultStyleSheet(sheet);
             return this;
         }
 
-        public ISkinBuilder AddStyle(string name, IBaseStyles style)
+        public ISkinBuilder AddStyleSheet(string name, IStyleSheet sheet)
         {
            if (string.IsNullOrWhiteSpace(name))
             {
                 throw new ArgumentException("must enter name",  nameof(name));
             }
 
-            _skin.AddNamedStyle(name, style);
+            _skin.AddNamedStyleSheet(name, sheet);
 
             return this;
         }
 
-        public ISkinBuilder AddStyle(string name, Action<IBaseStylesBuilder> builderOptions)
+        public ISkinBuilder AddStyleSheet(string name, Action<IStyleSheetBuilder> builderOptions)
         {
-            var styleBuilder = new BaseStylesBuilder();
-            builderOptions.Invoke(styleBuilder);
-            var style = styleBuilder.Build();
-            return AddStyle(name, style);
+            var builder = new StyleSheetBuilder();
+            builderOptions.Invoke(builder);
+            var sheet = builder.Build();
+            return AddStyleSheet(name, sheet);
         }
 
         public ISkin Build() => _skin;

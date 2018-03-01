@@ -6,25 +6,25 @@ namespace Tvision2.Core.Styles
 {
     class Skin : ISkin
     {
-        private readonly Dictionary<string, IBaseStyles> _styles;
-        private IBaseStyles _defaultStyle;
+        private readonly Dictionary<string, IStyleSheet> _styleSheets;
+        private IStyleSheet _defaultSheet;
 
         public Skin()
         {
-            _styles = new Dictionary<string, IBaseStyles>();
-            _defaultStyle = DefaultBaseStyles.Instance;
+            _styleSheets = new Dictionary<string, IStyleSheet>();
+            _defaultSheet = StyleSheet.Default;
         }
 
-        internal void AddNamedStyle(string name, IBaseStyles style) => _styles.Add(name, style);
+        internal void AddNamedStyleSheet(string name, IStyleSheet sheet) => _styleSheets.Add(name, sheet);
 
-        internal void SetDefaultStyle(IBaseStyles styles) => _defaultStyle = styles ?? DefaultBaseStyles.Instance;
+        internal void SetDefaultStyleSheet(IStyleSheet sheet) => _defaultSheet = sheet;
 
-        public IBaseStyles this[string name]
+        public IStyleSheet this[string name]
         {
             get
             {
-                var found = _styles.TryGetValue(name, out var style);
-                return found ? style : _defaultStyle;
+                var found = _styleSheets.TryGetValue(name, out var sheet);
+                return found ? sheet : _defaultSheet;
             }
         }
     }

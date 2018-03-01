@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Tvision2.Core.Styles
 {
-    class BaseStyles : IBaseStyles
+    class Style : IStyle
     {
-        private readonly IBaseStyles _parent;
+        private readonly IStyle _parent;
         private ConsoleColor? _foreColor;
         private ConsoleColor? _backColor;
 
@@ -26,7 +26,7 @@ namespace Tvision2.Core.Styles
                 _backColor = value;
             }
         }
-        public BaseStyles(IBaseStyles parent) => _parent = parent ?? DefaultBaseStyles.Instance;
+        public Style(IStyle parent) => _parent = parent ?? DefaultStyle.Instance;
 
     }
 }
