@@ -8,12 +8,11 @@ using Tvision2.Core.Engine;
 
 namespace Tvision2.Controls
 {
-    class ControlsTree : IControlsTree, ICustomItemsProviderClient
+    class ControlsTree : IControlsTree
     {
         private readonly LinkedList<TvControlMetadata> _controls;
-
-        private TvControlMetadata _focused;
         private IComponentTree _componentTree;
+        private TvControlMetadata _focused;
 
         public ControlsTree()
         {
@@ -33,10 +32,8 @@ namespace Tvision2.Controls
             _controls.AddAfter(current, cdata);
         }
 
-        public void Add(TvControlMetadata cdata)
-        {
-            _controls.AddLast(cdata);
-        }
+
+        public void Add(TvControlMetadata cdata) => _controls.AddLast(cdata);
 
         public TvControlMetadata NextControl(TvControlMetadata current)
         {
@@ -65,19 +62,32 @@ namespace Tvision2.Controls
             {
                 if (_focused != null)
                 {
-                    _focused.Control.Data.Style.RemoveClass("focused");
+                    _focused.Control.Style.RemoveClass("focused");
                     _componentTree.RemoveFromRespondersChain(_focused.ComponentMetadata);
                 }
-                next.Control.Data.Style.AddClass("focused");
+                next.Control.Style.AddClass("focused");
                 _componentTree.AddToResponderChain(next.ComponentMetadata);
                 _focused = next;
             }
 
         }
 
-        void ICustomItemsProviderClient.ReceiveProvider(ICustomItemsProvider provider)
+
+        internal void AttachToComponentTree(IComponentTree componentTree)
         {
-            _componentTree = provider.GetCustomItem<IComponentTree>();
+            _componentTree = componentTree;
+            _componentTree.ComponentAdded += ComponenTree_ComponentAdded;
+        }
+
+        private void ComponenTree_ComponentAdded(object sender, TreeUpdatedEventArgs e)
+        {
+            var metadata = e.ComponentMetadata;
+            var control = metadata.Component as ITvControl;
+            if (control != null)
+            {
+                var cdata = new TvControlMetadata(metadata, control);
+                _controls.AddLast(cdata);
+            }
         }
     }
 }

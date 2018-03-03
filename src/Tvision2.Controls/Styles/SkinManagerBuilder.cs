@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tvision2.Core.Styles
+namespace Tvision2.Controls.Styles
 {
     class SkinManagerBuilder : ISkinManagerBuilder
     {
@@ -13,18 +13,14 @@ namespace Tvision2.Core.Styles
             _skins = new Dictionary<string, ISkin>();
         }
 
-        public ISkinManagerBuilder AddSkin(string name, Action<ISkinBuilder> builderOptions)
+        public ISkinManagerBuilder AddSkin(string name, Action<ISkinBuilder> builderOptions = null)
         {
-            if (builderOptions == null)
-            {
-                throw new ArgumentNullException(nameof(builderOptions));
-            }
-
             var skinBuilder = new SkinBuilder();
-            builderOptions.Invoke(skinBuilder);
+            builderOptions?.Invoke(skinBuilder);
             var skin = skinBuilder.Build();
             return AddSkin(name, skin);
         }
+
 
         public ISkinManager Build()
         {

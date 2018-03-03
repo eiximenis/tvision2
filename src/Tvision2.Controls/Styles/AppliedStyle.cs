@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using System.Text;
 using Tvision2.Core.Render;
 
-namespace Tvision2.Core.Styles
+namespace Tvision2.Controls.Styles
 {
-    public class AppliedStyle : IBoxModel
+    public class AppliedStyle : IBoxModel, IDirtyObject
     {
         public ClippingMode Clipping { get; }
-        private IStyle _parent;
-
         private readonly List<string> _classes;
 
-        public AppliedStyle(ClippingMode clippingMode, IStyle parent = null)
+        public AppliedStyle(IBoxModel boxModel)
         {
-            _backColor = null;
-            _foreColor = null;
-            Clipping = clippingMode;
-            _parent = parent ?? DefaultStyle.Instance;
+            _foreColor = DefaultStyle.Instance.ForeColor;
+            _foreColor = DefaultStyle.Instance.BackColor;
+            Clipping = boxModel.Clipping;
+            Position = boxModel.Position;
             _classes = new List<string>();
         }
 
-        public bool IsDirty { get; internal set; }
+        public bool IsDirty { get; private set; }
+        public void Validate() => IsDirty = false;
+
 
         private TvPoint _pos;
         public TvPoint Position
@@ -30,17 +30,17 @@ namespace Tvision2.Core.Styles
             set { _pos = value; IsDirty = true; }
         }
 
-        private ConsoleColor? _foreColor;
+        private ConsoleColor _foreColor;
         public ConsoleColor ForeColor
         {
-            get => _foreColor ?? _parent.ForeColor;
+            get => _foreColor;
             set { _foreColor = value; IsDirty = true; }
         }
 
-        private ConsoleColor? _backColor;
+        private ConsoleColor _backColor;
         public ConsoleColor BackColor
         {
-            get => _backColor ?? _parent.BackColor;
+            get => _backColor;
             set { _backColor = value; IsDirty = true; }
         }
 

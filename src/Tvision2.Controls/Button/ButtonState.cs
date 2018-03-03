@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Tvision2.Core.Render;
-using Tvision2.Core.Styles;
 
 namespace Tvision2.Controls.Button
 {
-    public class ButtonState : TvControlData
+    public class ButtonState : IDirtyObject
     {
-        public ButtonState(string name = null) : base(new AppliedStyle(ClippingMode.ExpandHorizontal), name ?? "Button" + Guid.NewGuid().ToString())
-        {
-            Style.BackColor = ConsoleColor.White;
-            Style.ForeColor = ConsoleColor.Black;
-            Style.Columns = 12;
-        }
+        public bool IsDirty { get; private set; }
+
+        void IDirtyObject.Validate() => IsDirty = false;
 
         private bool _isPressed;
         public bool IsPressed
@@ -23,7 +18,6 @@ namespace Tvision2.Controls.Button
         }
 
         private string _text;
-
         public string Text
         {
             get => _text;

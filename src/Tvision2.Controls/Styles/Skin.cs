@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Tvision2.Core.Styles
+namespace Tvision2.Controls.Styles
 {
     class Skin : ISkin
     {
-        private readonly Dictionary<string, IStyleSheet> _styleSheets;
+        private readonly IDictionary<string, IStyleSheet> _styleSheets;
         private IStyleSheet _defaultSheet;
 
-        public Skin()
+        public Skin(IDictionary<string, IStyleSheet> styleSheets)
         {
-            _styleSheets = new Dictionary<string, IStyleSheet>();
+            _styleSheets = styleSheets ?? throw new ArgumentNullException(nameof(styleSheets));
             _defaultSheet = StyleSheet.Default;
         }
 
-        internal void AddNamedStyleSheet(string name, IStyleSheet sheet) => _styleSheets.Add(name, sheet);
+        public void SetDefaultStyleSheet(IStyleSheet sheet) => _defaultSheet = sheet;
 
-        internal void SetDefaultStyleSheet(IStyleSheet sheet) => _defaultSheet = sheet;
+        public IStyleSheet DefaultStyles => _defaultSheet;
 
         public IStyleSheet this[string name]
         {

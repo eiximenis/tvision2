@@ -7,17 +7,20 @@ namespace Tvision2.Controls.Behavior
 {
     public class ControlStateBehavior<TState> : ITvBehavior<TState>
     {
-        private readonly IControlData _controlData;
-        public ControlStateBehavior(IControlData controlData)
+        private readonly TvControlData _controlData;
+
+        public ControlStateBehavior(TvControlData controlData)
         {
             _controlData = controlData;
         }
 
         public bool Update(BehaviorContext<TState> updateContext) 
         {
+            var isDirty = _controlData.IsDirty;
+
             if (_controlData.IsDirty)
             {
-                _controlData.Reset();
+                _controlData.Validate();
                 return true;
             }
             return false;

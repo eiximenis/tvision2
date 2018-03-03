@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Tvision2.Core.Render;
 
-namespace Tvision2.Core.Styles
+namespace Tvision2.Controls.Styles
 {
     public interface IStyleSheet
     {
@@ -11,6 +12,6 @@ namespace Tvision2.Core.Styles
         ConsoleColor GetForeColor(IEnumerable<string> classes);
         ConsoleColor GetBackColor(IEnumerable<string> classes);
 
-
+        AppliedStyle BuildStyle(IBoxModel boxModel);
     }
 }

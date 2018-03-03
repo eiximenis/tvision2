@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Tvision2.Controls.Styles;
 using Tvision2.Core.Render;
-using Tvision2.Core.Styles;
 
 namespace Tvision2.Controls.Checkbox
 {
-    public class CheckboxState : TvControlData
+    public class CheckboxState : IDirtyObject
     {
-        public CheckboxState(string name = null) : base(new AppliedStyle(ClippingMode.Clip), name ?? "Check" + Guid.NewGuid().ToString())
-        {
-            Style.Columns = 3;
-            _checked = TvCheckboxState.Unchecked;
-        }
+        public bool IsDirty { get; private set; }
 
+        void IDirtyObject.Validate() => IsDirty = false;
 
 
         private TvCheckboxState _checked;

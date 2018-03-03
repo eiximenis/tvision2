@@ -45,11 +45,6 @@ namespace Tvision2.Core.Engine
             {
                 var item = kvp.Value;
                 _additionalItems.Add(kvp.Key, item);
-                var client = item as ICustomItemsProviderClient;
-                if (client != null)
-                {
-                    client.ReceiveProvider(this);
-                }
             }
         }
 

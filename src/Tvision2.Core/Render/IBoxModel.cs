@@ -7,7 +7,7 @@ namespace Tvision2.Core.Render
     public interface IBoxModel
     {
         TvPoint Position { get; }
-        int ZIndex { get; }
+        int ZIndex { get; set; }
         int Columns { get; }
         int Rows { get; }
         ClippingMode Clipping { get; }

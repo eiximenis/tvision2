@@ -7,6 +7,7 @@ namespace Tvision2.Core.Engine
 {
     public interface IComponentTree
     {
+        event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
         IEnumerable<TvComponent> Responders { get; }
         void ClearResponders();
         void AddToResponderChain(TvComponent componentToAdd);

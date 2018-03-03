@@ -11,18 +11,42 @@ namespace Tvision2.Core.Engine
         private readonly Dictionary<Type, object> _customItems;
         private ConsoleDriverType _consoleDriverType;
         private readonly List<IEventHook> _hooks;
+        private readonly List<Action<TuiEngine>> _afterCreateActions;
+        private readonly List<Action<TuiEngineBuilder>> _beforeCreateActions;
 
         public TuiEngineBuilder()
         {
             _customItems = new Dictionary<Type, object>();
             _consoleDriverType = ConsoleDriverType.PlatformDriver;
             _hooks = new List<IEventHook>();
+            _afterCreateActions = new List<Action<TuiEngine>>();
+            _beforeCreateActions = new List<Action<TuiEngineBuilder>>();
         }
+
+        public void AfterCreateInvoke(Action<TuiEngine> action)
+        {
+            _afterCreateActions.Add(action);
+        }
+
+        public void BeforeCreateInvoke(Action<TuiEngineBuilder> action)
+        {
+            _beforeCreateActions.Add(action);
+        }
+
 
         public TuiEngine Build()
         {
+            foreach (var action in _beforeCreateActions)
+            {
+                action.Invoke(this);
+            }
             var consoleDriver = BuildConsoleDriver();
-            return new TuiEngine(consoleDriver, _customItems, _hooks);
+            var engine = new TuiEngine(consoleDriver, _customItems, _hooks);
+            foreach (var action in _afterCreateActions)
+            {
+                action.Invoke(engine);
+            }
+            return engine;
         }
 
         public TuiEngineBuilder AddEventHook(IEventHook hook)
@@ -56,7 +80,9 @@ namespace Tvision2.Core.Engine
 
         public void SetCustomItem<T>(T item)
         {
-            _customItems.Add(typeof(T),item);
+            _customItems.Add(typeof(T), item);
         }
+
+        public T GetCustomItem<T>() => _customItems.TryGetValue(typeof(T), out object value) ? (T)value : default(T);
     }
 }

@@ -4,10 +4,10 @@ using Tvision2.Controls;
 using Tvision2.Controls.Button;
 using Tvision2.Controls.Checkbox;
 using Tvision2.Controls.Label;
+using Tvision2.Controls.Styles;
 using Tvision2.Core;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
-using Tvision2.Core.Styles;
 
 namespace Tvision2.Sample
 {
@@ -39,30 +39,29 @@ namespace Tvision2.Sample
                 })
                 .Build();
 
-            var cmp = new TestComponent(new AppliedStyle(ClippingMode.Clip), "test");
-            cmp.AddBehavior(new TestBehavior(tui.StoreSelector()));
+            var skin = tui.SkinManager().CurrentSkin;
 
-            tui.UI.Add(cmp);
-
-            var lbl = new TvLabel(new LabelState("Label1")
+            var lbl = new TvLabel(skin, new BoxModel(new TvPoint(0,0),4,1),  new LabelState()
             {
                 Text = "label",
             });
 
-            lbl.Data.Style.Position = new Core.Render.TvPoint(3, 4);
+            lbl.Style.Position = new Core.Render.TvPoint(3, 4);
 
-            var check = new TvCheckbox(new CheckboxState());
-            check.Data.Style.Position = new TvPoint(7, 8);
+            tui.UI.Add(lbl);
+
+            var check = new TvCheckbox(skin, new BoxModel(new TvPoint(0, 0), 4, 1), new CheckboxState());
+            check.Style.Position = new TvPoint(7, 8);
             tui.UI.Add(check);
 
 
-            var button = new TvButton(new ButtonState()
+            var button = new TvButton(skin, new BoxModel(new TvPoint(0, 0), 4, 1), new ButtonState()
             {
                 Text = "btn"
             });
 
-            button.Data.Style.Position = new Core.Render.TvPoint(0, 0);
-            button.Data.Style.Columns = 4;
+            button.Style.Position = new Core.Render.TvPoint(0, 0);
+            button.Style.Columns = 4;
 
             button.OnClick = new DelegateCommand<ButtonState>(async s =>
             {

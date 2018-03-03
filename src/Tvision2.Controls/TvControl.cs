@@ -2,35 +2,51 @@
 using System.Collections.Generic;
 using System.Text;
 using Tvision2.Controls.Behavior;
+using Tvision2.Controls.Styles;
 using Tvision2.Core.Components;
+using Tvision2.Core.Render;
+using Tvision2.Events;
 
 namespace Tvision2.Controls
 {
     public abstract class TvControl<TState> : ITvControl<TState>
+        where TState : IDirtyObject
     {
-        public IControlData  Data { get; }
+
+        private IStyleSheet _currentStyles;
         private TvComponent<TState> _component;
+        private TvControlData _controlData;
+
         public TState State { get; }
 
-        public TvControl(TState state, IControlData data)
+        public string ControlType { get; }
+        public AppliedStyle Style { get; }
+
+        public TvControl(ISkin skin, IBoxModel boxModel, TState initialState)
         {
-            Data = data;
-            State = state;
-            CreateComponent();
+            ControlType = GetType().Name.ToLowerInvariant();
+            _currentStyles = skin.GetControlStyle(this);
+            Style = _currentStyles.BuildStyle(boxModel);
+            State = initialState;
+            _component = new TvComponent<TState>(Style, initialState);
+            _controlData = new TvControlData(Style, initialState);
+
+            AddElements();
         }
 
-        TvComponent ITvControl.AsComponent() => _component;
+        protected void AddElements()
+        {
+            _component.AddBehavior(new ControlStateBehavior<TState>(_controlData));
+            _component.AddDrawer(OnDraw);
+            AddCustomElements(_component);
+        }
+
+        protected abstract void OnDraw(RenderContext<TState> context);
+
+        protected virtual void AddCustomElements(TvComponent<TState> component) { }
 
         public TvComponent<TState> AsComponent() => _component;
 
-        protected void CreateComponent()
-        {
-            var cmp = new TvComponent<TState>(Data.Style, State, Data.Name);
-            cmp.AddBehavior(new ControlStateBehavior<TState>(Data));
-            AddComponentElements(cmp);
-            _component = cmp;
-        }
-
-        protected abstract void AddComponentElements(TvComponent<TState> cmp);
+        TvComponent ITvControl.AsComponent() => _component;
     }
 }

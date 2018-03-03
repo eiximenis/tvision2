@@ -1,20 +1,26 @@
 ﻿using System;
-using Tvision2.Core.Styles;
+using System.Collections.Generic;
+using System.Text;
+using Tvision2.Controls.Styles;
 
 namespace Tvision2.Controls
 {
-
-    public class TvControlData : IControlData
+    public class TvControlData
     {
-        public bool IsDirty { get; protected set; }
-        public AppliedStyle Style { get; private set; }
-        public string Name { get; }
-        public void Reset() { IsDirty = false; }
-
-        public TvControlData(AppliedStyle style, string name)
+        private AppliedStyle _style;
+        private readonly IDirtyObject _state;
+        public TvControlData(AppliedStyle style, IDirtyObject state)
         {
-            Style = style ?? throw new ArgumentNullException(nameof(style));
-            Name = name ?? string.Empty;
+            _style = style;
+            _state = state;
+        }
+
+        public bool IsDirty => _state.IsDirty || _style.IsDirty;
+
+        public void Validate()
+        {
+            _state.Validate();
+            _style.Validate();
         }
     }
 }

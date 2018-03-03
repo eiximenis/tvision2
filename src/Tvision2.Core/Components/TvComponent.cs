@@ -5,7 +5,6 @@ using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Components.Draw;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
-using Tvision2.Core.Styles;
 using Tvision2.Events;
 
 namespace Tvision2.Core.Components
@@ -14,17 +13,16 @@ namespace Tvision2.Core.Components
 
     public abstract class TvComponent
     {
-        public AppliedStyle Style { get; }
 
-
-        public bool IsDirty { get; protected set; }
+        public IBoxModel BoxModel { get; }
+        public bool NeedToRedraw { get; protected set; }
         public string Name { get; }
+        public void Invalidate() => NeedToRedraw = true;
 
-
-        public TvComponent(AppliedStyle style, string name)
+        public TvComponent(IBoxModel boxModel, string name)
         {
             Name = string.IsNullOrEmpty(name) ? $"TvComponent-{Guid.NewGuid().ToString()}" : name;
-            Style = style ?? new AppliedStyle(ClippingMode.Clip);
+            BoxModel = boxModel;
         }
 
         protected internal abstract void Update(TvConsoleEvents evts);
@@ -43,13 +41,13 @@ namespace Tvision2.Core.Components
         {
             var oldState = State;
             State = newState;
-            IsDirty = Object.ReferenceEquals(oldState, State);
+            NeedToRedraw = Object.ReferenceEquals(oldState, State);
         }
 
 
-        public TvComponent(AppliedStyle style, T initialState, string name = null) : base(style, name)
+        public TvComponent(IBoxModel boxModel, T initialState, string name = null) : base(boxModel, name)
         {
-            IsDirty = false;
+            NeedToRedraw = false;
             _behaviorsMetadata = new List<BehaviorMetadata<T>>();
             _drawers = new Dictionary<string, ITvDrawer<T>>();
             HasFocus = false;
@@ -77,7 +75,7 @@ namespace Tvision2.Core.Components
 
         protected internal override void Update(TvConsoleEvents evts)
         {
-            bool updated = Style.IsDirty;
+            bool updated = NeedToRedraw;
             foreach (var mdata in _behaviorsMetadata)
             {
                 var ctx = new BehaviorContext<T>(State, evts);
@@ -88,19 +86,22 @@ namespace Tvision2.Core.Components
                 }
             }
 
-            IsDirty = updated;
+            NeedToRedraw = updated;
         }
+
+ 
 
         protected internal override void Draw(Viewport viewport, VirtualConsole console)
         {
-            var context = new RenderContext<T>(Style, viewport, console, State);
+            var context = new RenderContext<T>(BoxModel, viewport, console, State);
             foreach (var drawer in _drawers.Values)
             {
                 drawer.Draw(context);
             }
-            IsDirty = false;
-            Style.IsDirty = false;
+            NeedToRedraw = false;
         }
+
+  
     }
 }
 

@@ -15,6 +15,7 @@ namespace Tvision2.Core.Engine
 
         public TuiEngine Engine { get; }
 
+        public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
 
         public ComponentTree(TuiEngine owner)
         {
@@ -27,18 +28,22 @@ namespace Tvision2.Core.Engine
         {
             var metadata = MetadataFromComponent(component, zindex);
             _components.Add(component.Name, metadata);
+            OnComponentAdded(metadata);
             return metadata;
         }
 
-
+        private void OnComponentAdded(TvComponentMetadata metadata)
+        {
+            ComponentAdded?.Invoke(this, new TreeUpdatedEventArgs(metadata));
+        }
 
         private TvComponentMetadata MetadataFromComponent(TvComponent component, int zindex)
         {
             if (zindex != 0)
             {
-                component.Style.ZIndex = zindex;
+                component.BoxModel.ZIndex = zindex;
             }
-            var viewport = new Viewport(component.Style);
+            var viewport = new Viewport(component.BoxModel);
             var newMetadata = new TvComponentMetadata(component, viewport);
             return newMetadata;
         }
@@ -58,7 +63,7 @@ namespace Tvision2.Core.Engine
         internal void Draw(VirtualConsole console, bool force)
         {
             foreach (var cdata in _components.Values
-                .Where(c => force || c.Component.IsDirty))
+                .Where(c => force || c.Component.NeedToRedraw))
             {
                 cdata.Component.Draw(cdata.Viewport, console);
             }

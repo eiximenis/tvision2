@@ -1,18 +1,17 @@
 ﻿using System;
+using Tvision2.Controls.Styles;
 using Tvision2.Core.Render;
-using Tvision2.Core.Styles;
 
 namespace Tvision2.Controls.Label
 {
-    public class LabelState : TvControlData
+    public class LabelState : IDirtyObject
     {
 
-        public LabelState(string name = null) : base (new AppliedStyle(ClippingMode.ExpandBoth), name ?? "Label_" + Guid.NewGuid().ToString())
-        {
-        }
+        public bool IsDirty { get; private set; }
+
+        void IDirtyObject.Validate() => IsDirty = false;
 
         private string _text;
-
         public string Text
         {
             get => _text;

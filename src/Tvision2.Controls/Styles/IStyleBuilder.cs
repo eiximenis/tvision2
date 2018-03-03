@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tvision2.Core.Styles
+namespace Tvision2.Controls.Styles
 {
     public interface IStyleBuilder
     {

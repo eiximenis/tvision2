@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Tvision2.Controls.Styles;
 using Tvision2.Core.Components;
 
 namespace Tvision2.Controls
 {
     public interface ITvControl
     {
-        IControlData Data { get; }
         TvComponent AsComponent();
+        string ControlType { get; }
+        AppliedStyle Style { get; }
     }
 
     public interface ITvControl<TState> : ITvControl
     {
-
-        TState State { get; }
         new TvComponent<TState> AsComponent();
     }
-
 }

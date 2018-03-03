@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Tvision2.Core.Render;
 
-namespace Tvision2.Core.Styles
+namespace Tvision2.Controls.Styles
 {
     public class StyleSheet : IStyleSheet
     {
@@ -67,6 +68,15 @@ namespace Tvision2.Core.Styles
             }
 
             return DefaultStyle.Instance.BackColor;
+        }
+
+        public AppliedStyle BuildStyle(IBoxModel boxModel)
+        {
+            var style = new AppliedStyle(boxModel);
+            var classes = style.Classes;
+            style.BackColor = GetBackColor(classes);
+            style.ForeColor = GetForeColor(classes);
+            return style;
         }
     }
 }
