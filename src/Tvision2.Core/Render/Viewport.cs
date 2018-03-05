@@ -9,7 +9,10 @@ namespace Tvision2.Core.Render
 
         private VirtualConsole _console;
         private readonly IBoxModel _boxModel;
-        
+
+        public IBoxModel BoxModel => _boxModel;
+
+
 
         public void AttachConsole(VirtualConsole consoleToAttach)
         {

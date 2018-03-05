@@ -22,7 +22,11 @@ namespace Tvision2.Core.Engine
                     AddDefaultSkinManager(b);
                 }
             });
-            builder.AfterCreateInvoke(engine => tree.AttachToComponentTree(engine.UI));
+            builder.AfterCreateInvoke(engine =>
+            {
+                var ctltree = engine.GetCustomItem<ControlsTree>();
+                ctltree.AttachTo(engine.UI);
+            });
             return builder;
         }
 

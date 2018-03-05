@@ -70,6 +70,8 @@ namespace Tvision2.Core.Engine
         }
 
 
+        public TvComponentMetadata FirstResponderMetadata => _responders.FirstOrDefault();
+
         IEnumerable<TvComponent> IComponentTree.Responders => _responders.Select(m => m.Component);
 
 

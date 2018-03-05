@@ -9,9 +9,9 @@ namespace Tvision2.Controls.Styles
     {
         void AddClassStyle(string name, IStyle style);
         void RemoveClassStyle(string name);
-        ConsoleColor GetForeColor(IEnumerable<string> classes);
-        ConsoleColor GetBackColor(IEnumerable<string> classes);
-
+        IStyle GetStyle(IEnumerable<string> classes);
         AppliedStyle BuildStyle(IBoxModel boxModel);
+
+        void UpdateStyle(AppliedStyle styleToUpdate);
     }
 }

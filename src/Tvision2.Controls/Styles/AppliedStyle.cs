@@ -9,13 +9,18 @@ namespace Tvision2.Controls.Styles
     {
         public ClippingMode Clipping { get; }
         private readonly List<string> _classes;
+        private readonly IStyleSheet _provider;
 
-        public AppliedStyle(IBoxModel boxModel)
+        public AppliedStyle(IBoxModel boxModel, IStyleSheet provider)
         {
+            _provider = provider;
             _foreColor = DefaultStyle.Instance.ForeColor;
             _foreColor = DefaultStyle.Instance.BackColor;
             Clipping = boxModel.Clipping;
             Position = boxModel.Position;
+            Columns = boxModel.Columns;
+            ZIndex = boxModel.ZIndex;
+            Rows = boxModel.Rows;
             _classes = new List<string>();
         }
 
@@ -76,6 +81,7 @@ namespace Tvision2.Controls.Styles
             if (!_classes.Contains(name))
             {
                 _classes.Add(name);
+                _provider.UpdateStyle(this);
                 IsDirty = true;
             }
         }
@@ -85,6 +91,7 @@ namespace Tvision2.Controls.Styles
             if (_classes.Contains(name))
             {
                 _classes.Remove(name);
+                _provider.UpdateStyle(this);
                 IsDirty = true;
             }
         }

@@ -22,38 +22,24 @@ namespace Tvision2.Sample
                     mgr.AddStore<TasksStore, TasksList>("Tasks", new TasksStore())
                         .AddReducer(TasksReducers.AddTask);
                 })
-                .AddSkinSupport(opt =>
+                .AddSkinSupport(sb =>
                 {
-                    opt.AddSkin("Ugly", b =>
-                    {
-                        b.AddStyleSheet("Test", ss =>
-                        {
-                            ss.AddClass("focused", s =>
-                            {
-                                s.WithBackgroundColor(ConsoleColor.Yellow);
-                                s.WithForegroundColor(ConsoleColor.Black);
-                            });
-                        });
-                    });
-
+                    sb.AddMcStyles();
                 })
                 .Build();
 
             var skin = tui.SkinManager().CurrentSkin;
 
-            var lbl = new TvLabel(skin, new BoxModel(new TvPoint(0,0),4,1),  new LabelState()
+            var lbl = new TvLabel(skin, new BoxModel(new TvPoint(0,0),20,1),  new LabelState()
             {
                 Text = "label",
             });
-
             lbl.Style.Position = new Core.Render.TvPoint(3, 4);
+            tui.UI.Add(lbl, 2);
 
-            tui.UI.Add(lbl);
-
-            var check = new TvCheckbox(skin, new BoxModel(new TvPoint(0, 0), 4, 1), new CheckboxState());
+            var check = new TvCheckbox(skin, new BoxModel(new TvPoint(0, 0), 10, 1), new CheckboxState());
             check.Style.Position = new TvPoint(7, 8);
-            tui.UI.Add(check);
-
+            tui.UI.Add(check, 1);
 
             var button = new TvButton(skin, new BoxModel(new TvPoint(0, 0), 4, 1), new ButtonState()
             {
@@ -69,7 +55,6 @@ namespace Tvision2.Sample
                 check.State.Checked = TvCheckboxState.Checked;
             });
 
-            tui.UI.Add(lbl);
             tui.UI.Add(button, 0);
 
 

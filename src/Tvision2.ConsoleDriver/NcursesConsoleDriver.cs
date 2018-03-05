@@ -70,5 +70,10 @@ namespace Tvision2.ConsoleDriver
             Console.SetCursorPosition(x, y);
             Console.Write(character);
         }
+
+        public void SetCursorAt(int x, int y)
+        {
+            Console.SetCursorPosition(x, y);
+        }
     }
 }

@@ -32,6 +32,10 @@ namespace Tvision2.Controls
             _controls.AddAfter(current, cdata);
         }
 
+        internal void AttachTo(ComponentTree comtree)
+        {
+            _componentTree = comtree;
+        }
 
         public void Add(TvControlMetadata cdata) => _controls.AddLast(cdata);
 
@@ -72,22 +76,5 @@ namespace Tvision2.Controls
 
         }
 
-
-        internal void AttachToComponentTree(IComponentTree componentTree)
-        {
-            _componentTree = componentTree;
-            _componentTree.ComponentAdded += ComponenTree_ComponentAdded;
-        }
-
-        private void ComponenTree_ComponentAdded(object sender, TreeUpdatedEventArgs e)
-        {
-            var metadata = e.ComponentMetadata;
-            var control = metadata.Component as ITvControl;
-            if (control != null)
-            {
-                var cdata = new TvControlMetadata(metadata, control);
-                _controls.AddLast(cdata);
-            }
-        }
     }
 }

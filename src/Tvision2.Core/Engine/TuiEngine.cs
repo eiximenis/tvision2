@@ -90,6 +90,12 @@ namespace Tvision2.Core.Engine
         private void PerformDrawOperations(bool force)
         {
             UI.Draw(_currentConsole, force);
+            var firstResponder = UI.FirstResponderMetadata;
+            if (firstResponder != null)
+            {
+                var pos = firstResponder.Viewport.BoxModel.Position;
+                _consoleDriver.SetCursorAt(pos.Left, pos.Top);
+            }
             FlushToRealConsole();
         }
 

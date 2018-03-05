@@ -19,9 +19,12 @@ namespace Tvision2.Core.Engine
 
         public void ProcessEvents(TvConsoleEvents evts)
         {
-            foreach (var hook in _hooks)
+            if (evts.HasKeyboardEvents)
             {
-                hook.ProcessEvents(evts, _context);
+                foreach (var hook in _hooks)
+                {
+                    hook.ProcessEvents(evts, _context);
+                }
             }
         }
     }

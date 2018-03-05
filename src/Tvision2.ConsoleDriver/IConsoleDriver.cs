@@ -9,6 +9,7 @@ namespace Tvision2.ConsoleDriver
     {
         void WriteCharacterAt(int x, int y, char character);
         void WriteCharacterAt(int x, int y, char character, ConsoleColor foreColor, ConsoleColor backColor);
+        void SetCursorAt(int x, int y);
         TvConsoleEvents ReadEvents();
         void Init();
     }

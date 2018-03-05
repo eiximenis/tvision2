@@ -19,6 +19,8 @@ namespace Tvision2.Events
 
         public bool HasEvents => _keyboardEvents.Any() || _mouseEvents.Any();
 
+        public bool HasKeyboardEvents => _keyboardEvents.Any();
+
         public TvConsoleEvents()
         {
             _keyboardEvents = new List<TvConsoleKeyboardEvent>();

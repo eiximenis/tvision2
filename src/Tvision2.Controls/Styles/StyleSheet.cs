@@ -43,40 +43,32 @@ namespace Tvision2.Controls.Styles
             }
         }
 
-
-        public ConsoleColor GetForeColor(IEnumerable<string> classes)
+        public IStyle GetStyle(IEnumerable<string> classes)
         {
             foreach (var className in classes)
             {
                 if (_styles.ContainsKey(className))
                 {
-                    return _styles[className].ForeColor;
+                    return _styles[className];
                 }
             }
 
-            return DefaultStyle.Instance.ForeColor;
-        }
-
-        public ConsoleColor GetBackColor(IEnumerable<string> classes)
-        {
-            foreach (var className in classes)
-            {
-                if (_styles.ContainsKey(className))
-                {
-                    return _styles[className].BackColor;
-                }
-            }
-
-            return DefaultStyle.Instance.BackColor;
+            return _styles.ContainsKey("") ? _styles[""] : DefaultStyle.Instance;
         }
 
         public AppliedStyle BuildStyle(IBoxModel boxModel)
         {
-            var style = new AppliedStyle(boxModel);
-            var classes = style.Classes;
-            style.BackColor = GetBackColor(classes);
-            style.ForeColor = GetForeColor(classes);
-            return style;
+            var runtimeStyle = new AppliedStyle(boxModel, this);
+            UpdateStyle(runtimeStyle);
+            return runtimeStyle;
+        }
+
+        public void UpdateStyle(AppliedStyle styleToUpdate)
+        {
+            var classes = styleToUpdate.Classes;
+            var style = GetStyle(classes);
+            styleToUpdate.BackColor = style.BackColor;
+            styleToUpdate.ForeColor = style.ForeColor;
         }
     }
 }

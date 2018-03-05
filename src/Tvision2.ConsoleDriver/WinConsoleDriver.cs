@@ -50,5 +50,10 @@ namespace Tvision2.ConsoleDriver
             ConsoleNative.FillConsoleOutputCharacter(_hstdout, character, (uint)1, coord, out var numWritten);
 
         }
+
+        public void SetCursorAt(int x, int y)
+        {
+            ConsoleNative.SetConsoleCursorPosition(_hstdout, new COORD((short)x, (short)y));
+        }
     }
 }
