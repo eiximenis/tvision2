@@ -43,8 +43,7 @@ namespace Tvision2.Core.Engine
             {
                 component.BoxModel.ZIndex = zindex;
             }
-            var viewport = new Viewport(component.BoxModel);
-            var newMetadata = new TvComponentMetadata(component, viewport);
+            var newMetadata = new TvComponentMetadata(component);
             return newMetadata;
         }
 
@@ -65,7 +64,7 @@ namespace Tvision2.Core.Engine
             foreach (var cdata in _components.Values
                 .Where(c => force || c.Component.NeedToRedraw))
             {
-                cdata.Component.Draw(cdata.Viewport, console);
+                cdata.Component.Draw(console);
             }
         }
 

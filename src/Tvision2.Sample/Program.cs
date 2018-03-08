@@ -30,7 +30,7 @@ namespace Tvision2.Sample
 
             var skin = tui.SkinManager().CurrentSkin;
 
-            var lbl = new TvLabel(skin, new BoxModel(new TvPoint(0,0),20,1),  new LabelState()
+            var lbl = new TvLabel(skin, new BoxModel(new TvPoint(0,0),2,1),  new LabelState()
             {
                 Text = "label",
             });

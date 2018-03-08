@@ -1,75 +1,57 @@
-﻿using System; 
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Tvision2.Core.Render
 {
-    public class Viewport 
+    public static class Viewport
     {
 
-        private VirtualConsole _console;
-        private readonly IBoxModel _boxModel;
-
-        public IBoxModel BoxModel => _boxModel;
-
-
-
-        public void AttachConsole(VirtualConsole consoleToAttach)
+        public static TvPoint ViewPointToConsolePoint(TvPoint viewPoint, TvPoint viewportPosition)
         {
-            _console = consoleToAttach;
-        }
-
-        public Viewport(IBoxModel boxModel)
-        {
-            _boxModel = boxModel;
-        }
-
-        public TvPoint ViewPointToConsolePoint(TvPoint viewPoint)
-        {
-            var pos = _boxModel.Position;
-            var top = viewPoint.Top + pos.Top;
-            var left = viewPoint.Left + pos.Left;
+            var top = viewPoint.Top + viewportPosition.Top;
+            var left = viewPoint.Left + viewportPosition.Left;
             return new TvPoint(top, left);
         }
 
-        public TvPoint ConsolePointToViewport(TvPoint consolePoint)
+        public static TvPoint ConsolePointToViewport(TvPoint consolePoint, TvPoint viewportPosition)
         {
-            var pos = _boxModel.Position;
-            var top = consolePoint.Top - pos.Top;
-            var left = consolePoint.Left - pos.Left;
+            var top = consolePoint.Top - viewportPosition.Top;
+            var left = consolePoint.Left - viewportPosition.Left;
             return new TvPoint(top, left);
         }
 
-        public void DrawStringAt(string text, TvPoint location, ConsoleColor foreColor, ConsoleColor backColor)
+        public static void DrawStringAt(string text, TvPoint location, ConsoleColor foreColor, ConsoleColor backColor, IBoxModel boxModel, VirtualConsole console)
         {
+            var clippingMode = boxModel.Clipping;
+            var consoleLocation = ViewPointToConsolePoint(location, boxModel.Position);
+            var zindex = boxModel.ZIndex;
 
-            var maxCharsToDraw = text.Length;
-            var clippingMode = _boxModel.Clipping;
-            var consoleLocation = ViewPointToConsolePoint(location);
+            if ((clippingMode == ClippingMode.Clip || clippingMode == ClippingMode.ExpandVertical) && boxModel.Columns < text.Length)
+            {
+                text = text.Substring(0, boxModel.Columns);
+            }
 
-            if ((clippingMode == ClippingMode.Clip || clippingMode == ClippingMode.ExpandVertical) && _boxModel.Columns < maxCharsToDraw)
-            {
-                maxCharsToDraw = _boxModel.Columns;
-            }
-            else
-            {
-                _boxModel.Grow(maxCharsToDraw, _boxModel.Rows);
-                Clear(backColor, consoleLocation);
-            }
-            
-            _console.DrawAt(text.Substring(0, maxCharsToDraw), consoleLocation, _boxModel.ZIndex, foreColor, backColor);
+            console.DrawAt(text, consoleLocation, zindex, foreColor, backColor);
         }
 
-        public bool IsConsolePointInside(TvPoint consolePoint)
+        public static bool IsConsolePointInside(TvPoint consolePoint, TvPoint viewportPosition)
         {
-            var pos = _boxModel.Position;
-            var viewPoint = ConsolePointToViewport(consolePoint);
-            return consolePoint.Top >= pos.Top && consolePoint.Left >= pos.Left;
+            var viewPoint = ConsolePointToViewport(consolePoint, viewportPosition);
+            return consolePoint.Top >= viewportPosition.Top && consolePoint.Left >= viewportPosition.Left;
         }
 
-        private void Clear(ConsoleColor color, TvPoint location)
+        public static void Fill(ConsoleColor color, IBoxModel boxModel, VirtualConsole console)
         {
-            _console.DrawAt(new string(' ', _boxModel.Columns), location, _boxModel.ZIndex, color, color);
+            var location = ViewPointToConsolePoint(new TvPoint(0, 0), boxModel.Position);
+            console.DrawAt(new string(' ', boxModel.Columns), location, boxModel.ZIndex, color, color);
+        }
+
+        public static void Clear(IBoxModel boxModel, VirtualConsole console)
+        {
+            var location = ViewPointToConsolePoint(new TvPoint(0, 0), boxModel.Position);
+            var color = ConsoleColor.Black;
+            console.DrawAt(new string(' ', boxModel.Columns), location, int.MinValue, color, color);
         }
 
 

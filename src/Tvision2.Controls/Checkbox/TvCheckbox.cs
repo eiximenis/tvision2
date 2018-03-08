@@ -7,14 +7,15 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Controls.Checkbox
 {
-    public class TvCheckbox : TvControlString<CheckboxState>
+    public class TvCheckbox : TvControl<CheckboxState>
     {
         public TvCheckbox(ISkin skin, IBoxModel boxModel, CheckboxState state) : base(skin, boxModel, state)
         {
         }
 
-        protected override string GetStringToRender(CheckboxState state)
+        protected override void OnDraw(RenderContext<CheckboxState> context)
         {
+            var state = context.State;
             char value = ' ';
             switch (state.Checked)
             {
@@ -25,7 +26,8 @@ namespace Tvision2.Controls.Checkbox
                     value = '#';
                     break;
             }
-            return $"[{value}]";
+
+            context.DrawStringAt($"[{value}]", new TvPoint(0, 0), Style.ForeColor, Style.BackColor);
         }
 
     }

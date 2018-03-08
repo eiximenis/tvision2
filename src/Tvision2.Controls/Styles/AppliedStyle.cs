@@ -97,27 +97,30 @@ namespace Tvision2.Controls.Styles
         }
 
 
-        public bool Grow(int cols, int rows)
+        public IBoxModel ResizeUp(int cols, int rows)
         {
-            var grown = false;
             if (rows > _rows)
             {
                 _rows = rows;
                 IsDirty = true;
-                grown = true;
             }
             if (cols > _columns)
             {
                 _columns = cols;
                 IsDirty = true;
-                grown = true;
             }
 
-            return grown;
+            return this;
         }
 
 
         public bool ContainsClass(string name) => _classes.Contains(name);
+
+        public IBoxModel Translate(TvPoint newPos)
+        {
+            Position = newPos;
+            return this;
+        }
 
         public IEnumerable<string> Classes => _classes;
 

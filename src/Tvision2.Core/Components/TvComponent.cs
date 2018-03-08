@@ -26,12 +26,12 @@ namespace Tvision2.Core.Components
         }
 
         protected internal abstract void Update(TvConsoleEvents evts);
-        protected internal abstract void Draw(Viewport viewport, VirtualConsole console);
+        protected internal abstract void Draw(VirtualConsole console);
     }
 
     public class TvComponent<T> : TvComponent
     {
-        private Dictionary<string, ITvDrawer<T>> _drawers;
+        private ITvDrawer<T> _drawer;
         private readonly List<BehaviorMetadata<T>> _behaviorsMetadata;
         public T State { get; private set; }
 
@@ -49,7 +49,7 @@ namespace Tvision2.Core.Components
         {
             NeedToRedraw = false;
             _behaviorsMetadata = new List<BehaviorMetadata<T>>();
-            _drawers = new Dictionary<string, ITvDrawer<T>>();
+            _drawer = null;
             HasFocus = false;
             State = initialState;
         }
@@ -63,12 +63,11 @@ namespace Tvision2.Core.Components
 
         public void AddBehavior(Func<BehaviorContext<T>, bool> behaviorFunc, Action<BehaviorMetadata<T>> metadataAction = null) => AddBehavior(new ActionBehavior<T>(behaviorFunc), metadataAction);
 
-        public TvComponent<T> AddDrawer(Action<RenderContext<T>> action, string name = null) => AddDrawer(new ActionDrawer<T>(action), name);
+        public TvComponent<T> UseDrawer(Action<RenderContext<T>> action) => UseDrawer(new ActionDrawer<T>(action));
 
-        public TvComponent<T> AddDrawer(ITvDrawer<T> drawer, string name = null)
+        public TvComponent<T> UseDrawer(ITvDrawer<T> drawer)
         {
-            var drawerName = string.IsNullOrEmpty(name) ? $"{drawer.GetType().Name}-{Guid.NewGuid().ToString()}" : name;
-            _drawers.Add(drawerName, drawer);
+            _drawer = drawer;
             return this;
         }
 
@@ -89,19 +88,15 @@ namespace Tvision2.Core.Components
             NeedToRedraw = updated;
         }
 
- 
 
-        protected internal override void Draw(Viewport viewport, VirtualConsole console)
+        protected internal override void Draw(VirtualConsole console)
         {
-            var context = new RenderContext<T>(BoxModel, viewport, console, State);
-            foreach (var drawer in _drawers.Values)
-            {
-                drawer.Draw(context);
-            }
+
+            var context = new RenderContext<T>(BoxModel, console, State);
+            _drawer.Draw(context);
             NeedToRedraw = false;
         }
 
-  
     }
 }
 

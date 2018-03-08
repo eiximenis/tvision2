@@ -9,13 +9,11 @@ namespace Tvision2.Core.Engine
     public class TvComponentMetadata
     {
         public TvComponent Component { get; }
-        public Viewport Viewport { get; }
         public bool IsResponder { get; internal set; }
 
-        public TvComponentMetadata(TvComponent component, Viewport viewport)
+        public TvComponentMetadata(TvComponent component)
         {
             Component = component;
-            Viewport = viewport;
             IsResponder = false;
         }
     }

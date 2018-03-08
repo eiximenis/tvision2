@@ -36,7 +36,7 @@ namespace Tvision2.Controls.Button
                 focused ? "<" : "",
                 new string(' ', Style.PaddingRight));
 
-            context.Viewport.DrawStringAt(value, new TvPoint(0, 0), Style.ForeColor, Style.BackColor);
+            context.DrawStringAt(value, new TvPoint(0, 0), Style.ForeColor, Style.BackColor);
         }
     }
 }

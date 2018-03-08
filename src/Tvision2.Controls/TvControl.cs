@@ -37,8 +37,16 @@ namespace Tvision2.Controls
         protected void AddElements()
         {
             _component.AddBehavior(new ControlStateBehavior<TState>(_controlData));
-            _component.AddDrawer(OnDraw);
+            _component.UseDrawer(OnDraw);
             AddCustomElements(_component);
+        }
+
+
+        protected void ApplyNewBoxModel(RenderContext<TState> context, IBoxModel newBoxModel)
+        {
+            context.Clear();
+            context.ApplyBoxModel(newBoxModel);
+            context.Fill(Style.BackColor);
         }
 
         protected abstract void OnDraw(RenderContext<TState> context);

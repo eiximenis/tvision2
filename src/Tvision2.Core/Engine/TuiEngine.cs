@@ -93,7 +93,7 @@ namespace Tvision2.Core.Engine
             var firstResponder = UI.FirstResponderMetadata;
             if (firstResponder != null)
             {
-                var pos = firstResponder.Viewport.BoxModel.Position;
+                var pos = firstResponder.Component.BoxModel.Position;
                 _consoleDriver.SetCursorAt(pos.Left, pos.Top);
             }
             FlushToRealConsole();

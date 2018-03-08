@@ -12,7 +12,9 @@ namespace Tvision2.Core.Render
         int Rows { get; }
         ClippingMode Clipping { get; }
 
-        bool Grow(int cols, int rows);
+        IBoxModel Translate(TvPoint newPos);
+
+        IBoxModel ResizeUp(int cols, int rows);
 
     }
 }

@@ -16,18 +16,25 @@ namespace Tvision2.Core.Render
 
         public ClippingMode Clipping { get; }
 
-        public bool Grow(int cols, int rows)
+        public IBoxModel ResizeUp(int cols, int rows)
         {
-            return true;
+            var ncols = cols > Columns ? cols : Columns;
+            var nrows = rows > Rows ? rows : Rows;
+
+            return new BoxModel(Position, ncols, nrows);
         }
 
-        public BoxModel(TvPoint point, int cols, int rows = 1)
+        public IBoxModel Translate(TvPoint newPos) => new BoxModel(newPos, Columns, Rows);
+
+        public BoxModel(TvPoint point, int cols, int rows, ClippingMode clipping)
         {
             Position = point;
-            Clipping = ClippingMode.Clip;
+            Clipping = clipping;
             Columns = cols;
             Rows = rows;
             ZIndex = 0;
         }
+
+        public BoxModel(TvPoint point, int cols, int rows = 1) : this(point, cols, rows, ClippingMode.Clip) { }
     }
 }

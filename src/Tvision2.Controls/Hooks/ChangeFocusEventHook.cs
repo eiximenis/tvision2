@@ -11,7 +11,7 @@ namespace Tvision2.Controls.Hooks
     {
         protected override void ProcessEvents(IEnumerable<TvConsoleKeyboardEvent> keyboardEvents, HookContext context)
         {
-            var tab = keyboardEvents.FirstOrDefault(ke => !ke.IsKeyDown && ke.AsConsoleKeyInfo().Key == ConsoleKey.Tab);
+            var tab = keyboardEvents.FirstOrDefault(ke => ke.IsKeyDown && ke.AsConsoleKeyInfo().Key == ConsoleKey.Tab);
             if (tab != null)
             {
                 var controls = context.ItemsProvider.GetCustomItem<IControlsTree>();

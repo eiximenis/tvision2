@@ -8,15 +8,28 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Controls.Label
 {
-    public class TvLabel : TvControlString<LabelState>
+    public class TvLabel : TvControl<LabelState>
     {
 
         public TvLabel(ISkin skin, IBoxModel boxModel, LabelState state) : base(skin, boxModel, state)
         {
         }
 
-        protected override string GetStringToRender(LabelState state)
+        private IBoxModel RequestNewBoxModel(IBoxModel current, string toRender)
         {
+            var needed = toRender.Length;
+            if (current.Clipping == ClippingMode.ExpandBoth || current.Clipping == ClippingMode.ExpandHorizontal)
+            {
+                return needed > current.Columns ? current.ResizeUp(needed, current.Rows) : null;
+            }
+
+            return null;
+        }
+
+        protected override void OnDraw(RenderContext<LabelState> context)
+        {
+            var state = context.State;
+            var currentcols = context.BoxModel.Columns;
             var focused = Style.ContainsClass("focused");
             var value = string.Format("{0}{1}{2}{3}{4}",
                 new string(' ', Style.PaddingLeft),
@@ -25,9 +38,15 @@ namespace Tvision2.Controls.Label
                 focused ? "<" : "",
                 new string(' ', Style.PaddingRight));
 
-            return value;
+            context.Fill(Style.BackColor);
+
+            var boxModel = RequestNewBoxModel(context.BoxModel, value);
+            if (boxModel != null)
+            {
+                ApplyNewBoxModel(context, boxModel);
+            }
+
+            context.DrawStringAt(value, new TvPoint(0, 0), Style.ForeColor, Style.BackColor);
         }
-
-
     }
 }

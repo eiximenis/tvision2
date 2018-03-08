@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Statex", "Tvision2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.ConsoleDriver", "Tvision2.ConsoleDriver\Tvision2.ConsoleDriver.csproj", "{2E3BAD7D-74B5-41A7-9F13-AC07DBF5ECC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.Controls.Styles.Mc", "Tvision2.Controls.Styles.Mc\Tvision2.Controls.Styles.Mc.csproj", "{E699CC45-1BA8-49D2-8F79-352B3EDC8006}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Controls.Styles.Mc", "Tvision2.Controls.Styles.Mc\Tvision2.Controls.Styles.Mc.csproj", "{E699CC45-1BA8-49D2-8F79-352B3EDC8006}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.Layouts", "Tvision2.Layouts\Tvision2.Layouts.csproj", "{000C91CB-2B68-41ED-B293-590E848C5BCC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{E699CC45-1BA8-49D2-8F79-352B3EDC8006}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E699CC45-1BA8-49D2-8F79-352B3EDC8006}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E699CC45-1BA8-49D2-8F79-352B3EDC8006}.Release|Any CPU.Build.0 = Release|Any CPU
+		{000C91CB-2B68-41ED-B293-590E848C5BCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{000C91CB-2B68-41ED-B293-590E848C5BCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{000C91CB-2B68-41ED-B293-590E848C5BCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{000C91CB-2B68-41ED-B293-590E848C5BCC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
