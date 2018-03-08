@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Core", "Tvision2.Core\Tvision2.Core.csproj", "{6E632521-A667-4A56-9C13-DB3D78E44485}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Core", "src\Tvision2.Core\Tvision2.Core.csproj", "{6E632521-A667-4A56-9C13-DB3D78E44485}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Sample", "Tvision2.Sample\Tvision2.Sample.csproj", "{61E9C69A-D298-4A62-80FA-4EA8318C4C3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Sample", "src\Tvision2.Sample\Tvision2.Sample.csproj", "{61E9C69A-D298-4A62-80FA-4EA8318C4C3A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Controls", "Tvision2.Controls\Tvision2.Controls.csproj", "{8725F868-C96B-41D5-8845-A339BBB45398}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Controls", "src\Tvision2.Controls\Tvision2.Controls.csproj", "{8725F868-C96B-41D5-8845-A339BBB45398}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Statex", "Tvision2.Statex\Tvision2.Statex.csproj", "{94EBB376-12C7-452C-B113-AFE175F1AFDD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Statex", "src\Tvision2.Statex\Tvision2.Statex.csproj", "{94EBB376-12C7-452C-B113-AFE175F1AFDD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.ConsoleDriver", "Tvision2.ConsoleDriver\Tvision2.ConsoleDriver.csproj", "{2E3BAD7D-74B5-41A7-9F13-AC07DBF5ECC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.ConsoleDriver", "src\Tvision2.ConsoleDriver\Tvision2.ConsoleDriver.csproj", "{2E3BAD7D-74B5-41A7-9F13-AC07DBF5ECC5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Controls.Styles.Mc", "Tvision2.Controls.Styles.Mc\Tvision2.Controls.Styles.Mc.csproj", "{E699CC45-1BA8-49D2-8F79-352B3EDC8006}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Controls.Styles.Mc", "src\Tvision2.Controls.Styles.Mc\Tvision2.Controls.Styles.Mc.csproj", "{E699CC45-1BA8-49D2-8F79-352B3EDC8006}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.Layouts", "Tvision2.Layouts\Tvision2.Layouts.csproj", "{000C91CB-2B68-41ED-B293-590E848C5BCC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.Layouts", "src\Tvision2.Layouts\Tvision2.Layouts.csproj", "{000C91CB-2B68-41ED-B293-590E848C5BCC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
