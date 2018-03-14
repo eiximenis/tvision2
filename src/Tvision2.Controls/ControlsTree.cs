@@ -74,6 +74,7 @@ namespace Tvision2.Controls
                 _focused = next;
             }
 
+
         }
 
     }

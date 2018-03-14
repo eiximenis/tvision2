@@ -21,6 +21,8 @@ namespace Tvision2.Core.Engine
         private readonly IDictionary<Type, object> _additionalItems;
         private readonly IConsoleDriver _consoleDriver;
 
+        public IConsoleDriver ConsoleDriver => _consoleDriver;
+
         public IEventHookManager EventHookManager { get; }
 
         public ComponentTree UI { get; }
@@ -90,12 +92,6 @@ namespace Tvision2.Core.Engine
         private void PerformDrawOperations(bool force)
         {
             UI.Draw(_currentConsole, force);
-            var firstResponder = UI.FirstResponderMetadata;
-            if (firstResponder != null)
-            {
-                var pos = firstResponder.Component.BoxModel.Position;
-                _consoleDriver.SetCursorAt(pos.Left, pos.Top);
-            }
             FlushToRealConsole();
         }
 

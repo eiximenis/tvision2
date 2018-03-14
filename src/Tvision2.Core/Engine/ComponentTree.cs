@@ -27,6 +27,7 @@ namespace Tvision2.Core.Engine
         public TvComponentMetadata Add(TvComponent component, int zindex = 0)
         {
             var metadata = MetadataFromComponent(component, zindex);
+            component.Metadata = metadata;
             _components.Add(component.Name, metadata);
             OnComponentAdded(metadata);
             return metadata;
@@ -43,7 +44,7 @@ namespace Tvision2.Core.Engine
             {
                 component.BoxModel.ZIndex = zindex;
             }
-            var newMetadata = new TvComponentMetadata(component);
+            var newMetadata = new TvComponentMetadata(component, Engine.ConsoleDriver);
             return newMetadata;
         }
 

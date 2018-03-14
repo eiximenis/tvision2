@@ -77,5 +77,34 @@ namespace Tvision2.Core.Render
 
             IsDirty = dirty;
         }
+
+        public void CopyCharacter(TvPoint location, ConsoleCharacter charToCopy, int count)
+        {
+            var start = location.Left + (Width * location.Top);
+            var zindex = charToCopy.ZIndex;
+            var end = start + count;
+            var charCol = location.Left;
+            var charRow = location.Top;
+            var dirty = false;
+            for (var idx = start; idx < end; idx++)
+            {
+                var cchar = _buffer[idx];
+                if (cchar.ZIndex <= zindex)
+                {
+                    // TODO: Compare cchar with values passed if we 
+                    // want to avoid to redraw all changed characters to console
+                    // even if they are the same as before
+                    cchar.Character = charToCopy.Character;
+                    cchar.Background = charToCopy.Background;
+                    cchar.Foreground = charToCopy.Foreground;
+                    cchar.ZIndex = charToCopy.ZIndex;
+                    dirty = true;
+                    _diffs.Add(new VirtualConsoleUpdate(cchar, charRow, charCol));
+                }
+                charCol++;
+            }
+
+            IsDirty = dirty;
+        }
     }
 }

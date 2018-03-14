@@ -35,6 +35,16 @@ namespace Tvision2.Core.Render
             console.DrawAt(text, consoleLocation, zindex, foreColor, backColor);
         }
 
+        internal static void DrawChars(char value, int count, TvPoint location, ConsoleColor foreColor, ConsoleColor backColor, IBoxModel boxModel, VirtualConsole console)
+        {
+
+            var chars = new ConsoleCharacter[count];
+            var zindex = boxModel.ZIndex;
+            var cc = new ConsoleCharacter() { Character = value, Background = backColor, Foreground = foreColor, ZIndex = zindex };
+            var pos = ViewPointToConsolePoint(location, boxModel.Position);
+            console.CopyCharacter(pos, cc, count);
+        }
+
         public static bool IsConsolePointInside(TvPoint consolePoint, TvPoint viewportPosition)
         {
             var viewPoint = ConsolePointToViewport(consolePoint, viewportPosition);

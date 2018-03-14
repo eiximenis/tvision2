@@ -8,6 +8,8 @@ namespace Tvision2.Controls
         TvComponent AsComponent();
         string ControlType { get; }
         AppliedStyle Style { get; }
+
+        void OnFocus();
     }
 
     public interface ITvControl<TState> : ITvControl

@@ -53,6 +53,12 @@ namespace Tvision2.Controls
 
         protected virtual void AddCustomElements(TvComponent<TState> component) { }
 
+        public void OnFocus()
+        {
+            var pos = Style.Position;
+            _component.Metadata.Console.SetCursorAt(pos.Left, pos.Top);
+        }
+
         public TvComponent<TState> AsComponent() => _component;
 
         TvComponent ITvControl.AsComponent() => _component;

@@ -15,7 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.ConsoleDriver", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Controls.Styles.Mc", "src\Tvision2.Controls.Styles.Mc\Tvision2.Controls.Styles.Mc.csproj", "{E699CC45-1BA8-49D2-8F79-352B3EDC8006}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.Layouts", "src\Tvision2.Layouts\Tvision2.Layouts.csproj", "{000C91CB-2B68-41ED-B293-590E848C5BCC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Layouts", "src\Tvision2.Layouts\Tvision2.Layouts.csproj", "{000C91CB-2B68-41ED-B293-590E848C5BCC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{31E0103B-CAA7-43A4-89C3-BEE4C29A6363}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.Core.Tests", "tests\Tvision2.Core.Tests\Tvision2.Core.Tests.csproj", "{63234481-D20C-40EA-ABC4-57F42482DA3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,9 +55,16 @@ Global
 		{000C91CB-2B68-41ED-B293-590E848C5BCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{000C91CB-2B68-41ED-B293-590E848C5BCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{000C91CB-2B68-41ED-B293-590E848C5BCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63234481-D20C-40EA-ABC4-57F42482DA3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63234481-D20C-40EA-ABC4-57F42482DA3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63234481-D20C-40EA-ABC4-57F42482DA3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63234481-D20C-40EA-ABC4-57F42482DA3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{63234481-D20C-40EA-ABC4-57F42482DA3C} = {31E0103B-CAA7-43A4-89C3-BEE4C29A6363}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF2528A0-913B-4BF1-9136-4E8723945398}

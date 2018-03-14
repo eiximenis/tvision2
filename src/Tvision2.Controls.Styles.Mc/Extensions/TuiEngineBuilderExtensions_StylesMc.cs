@@ -24,6 +24,21 @@ namespace Tvision2.Controls.Styles
                     });
 
                 });
+
+                sb.AddStyleSheet("tvtextbox", shb =>
+                {
+                    shb.AddClass("", style =>
+                    {
+                        style.WithBackgroundColor(ConsoleColor.White);
+                        style.WithForegroundColor(ConsoleColor.Black);
+                    });
+                    shb.AddClass("focused", style =>
+                    {
+                        style.WithBackgroundColor(ConsoleColor.Blue);
+                        style.WithForegroundColor(ConsoleColor.Black);
+                    });
+
+                });
             });
 
             return builder;

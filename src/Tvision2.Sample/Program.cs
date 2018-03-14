@@ -5,6 +5,7 @@ using Tvision2.Controls.Button;
 using Tvision2.Controls.Checkbox;
 using Tvision2.Controls.Label;
 using Tvision2.Controls.Styles;
+using Tvision2.Controls.Textbox;
 using Tvision2.Core;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
@@ -57,6 +58,8 @@ namespace Tvision2.Sample
 
             tui.UI.Add(button, 0);
 
+            var textbox = new TvTextbox(skin, new BoxModel(new TvPoint(9, 12), 8, 1), new TextboxState());
+            tui.UI.Add(textbox, 0);
 
             var t = tui.Start();
             await Task.Delay(6000);

@@ -24,6 +24,11 @@ namespace Tvision2.Core.Render
             Viewport.DrawStringAt(value, location, foreColor, backColor, BoxModel, _console);
         }
 
+        public void DrawChars(char value, int count, TvPoint location, ConsoleColor foreColor, ConsoleColor backColor)
+        {
+            Viewport.DrawChars(value, count, location, foreColor, backColor, BoxModel, _console);
+        }
+
         public void ApplyBoxModel(IBoxModel newBoxModel)
         {
             BoxModel = newBoxModel;

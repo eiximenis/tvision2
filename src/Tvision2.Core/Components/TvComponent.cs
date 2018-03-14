@@ -18,6 +18,9 @@ namespace Tvision2.Core.Components
         public bool NeedToRedraw { get; protected set; }
         public string Name { get; }
         public void Invalidate() => NeedToRedraw = true;
+        
+
+        public TvComponentMetadata Metadata { get; internal set; }
 
         public TvComponent(IBoxModel boxModel, string name)
         {

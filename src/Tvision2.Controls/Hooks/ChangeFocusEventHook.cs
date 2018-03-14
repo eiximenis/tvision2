@@ -16,6 +16,7 @@ namespace Tvision2.Controls.Hooks
             {
                 var controls = context.ItemsProvider.GetCustomItem<IControlsTree>();
                 controls.MoveFocusToNext();
+                controls.CurrentFocused().Control.OnFocus();
             }
 
         }
