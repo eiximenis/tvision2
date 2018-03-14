@@ -17,7 +17,7 @@ namespace Tvision2.Controls.Text
 
         public override string ToString() => _sb.ToString();
 
-        public void AppendChar(char value) => InsertChar(value, -1);
+        public void AppendChar(char value) => InsertChar(value, _sb.Length);
 
         public void InsertChar(char value, int index)
         {

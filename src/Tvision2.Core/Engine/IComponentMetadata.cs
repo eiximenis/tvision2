@@ -7,7 +7,6 @@ namespace Tvision2.Core.Engine
 {
     public interface IComponentMetadata
     {
-        bool IsResponder { get; }
         IConsoleDriver Console { get; }
     }
 }

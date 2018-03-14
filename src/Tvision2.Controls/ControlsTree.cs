@@ -55,6 +55,8 @@ namespace Tvision2.Controls
         public void Focus(TvControlMetadata controlToFocus)
         {
             _focused = controlToFocus;
+            _focused.Control.Style.AddClass("focused");
+            _focused.Control.OnFocus();
         }
 
         public TvControlMetadata First() => _controls.First?.Value;
@@ -67,14 +69,9 @@ namespace Tvision2.Controls
                 if (_focused != null)
                 {
                     _focused.Control.Style.RemoveClass("focused");
-                    _componentTree.RemoveFromRespondersChain(_focused.ComponentMetadata);
                 }
-                next.Control.Style.AddClass("focused");
-                _componentTree.AddToResponderChain(next.ComponentMetadata);
-                _focused = next;
+                Focus(next);
             }
-
-
         }
 
     }

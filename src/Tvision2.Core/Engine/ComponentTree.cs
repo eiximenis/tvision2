@@ -54,7 +54,7 @@ namespace Tvision2.Core.Engine
         {
             foreach (var cdata in _components.Values)
             {
-                cdata.Component.Update(cdata.IsResponder ? evts : null);
+                cdata.Component.Update(evts);
             }
         }
 
@@ -66,50 +66,6 @@ namespace Tvision2.Core.Engine
                 .Where(c => force || c.Component.NeedToRedraw))
             {
                 cdata.Component.Draw(console);
-            }
-        }
-
-
-        public TvComponentMetadata FirstResponderMetadata => _responders.FirstOrDefault();
-
-        IEnumerable<TvComponent> IComponentTree.Responders => _responders.Select(m => m.Component);
-
-
-        void IComponentTree.ClearResponders()
-        {
-            foreach (var responder in _responders)
-            {
-                responder.IsResponder = false;
-            }
-            _responders.Clear();
-        }
-        void IComponentTree.AddToResponderChain(TvComponent componentToAdd)
-        {
-            var metadata = _components[componentToAdd.Name];
-            ((IComponentTree)this).AddToResponderChain(metadata);
-        }
-
-        void IComponentTree.AddToResponderChain(TvComponentMetadata componentToAdd)
-        {
-            if (!componentToAdd.IsResponder)
-            {
-                componentToAdd.IsResponder = true;
-                _responders.Add(componentToAdd);
-            }
-        }
-
-        void IComponentTree.RemoveFromRespondersChain(TvComponent componentToRemove)
-        {
-            var metadata = _components[componentToRemove.Name];
-            ((IComponentTree)this).RemoveFromRespondersChain(metadata);
-        }
-
-        void IComponentTree.RemoveFromRespondersChain(TvComponentMetadata componentToRemove)
-        {
-            if (componentToRemove.IsResponder)
-            {
-                componentToRemove.IsResponder = false;
-                _responders.Remove(componentToRemove);
             }
         }
 

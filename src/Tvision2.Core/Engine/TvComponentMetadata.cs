@@ -10,7 +10,6 @@ namespace Tvision2.Core.Engine
     public class TvComponentMetadata : IComponentMetadata
     {
         public TvComponent Component { get; }
-        public bool IsResponder { get; internal set; }
 
         public IConsoleDriver Console { get; }
 
@@ -18,7 +17,6 @@ namespace Tvision2.Core.Engine
         {
             Component = component;
             Console = consoleDriver;
-            IsResponder = false;
         }
     }
 

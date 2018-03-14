@@ -1,4 +1,5 @@
-﻿using Tvision2.Controls.Text;
+﻿using System;
+using Tvision2.Controls.Text;
 
 namespace Tvision2.Controls.Textbox
 {
@@ -21,6 +22,12 @@ namespace Tvision2.Controls.Textbox
         public string Text
         {
             get => _textProcessor.ToString();
+        }
+
+        internal void ProcessKey(ConsoleKeyInfo consoleKeyInfo)
+        {
+            _textProcessor.AppendChar(consoleKeyInfo.KeyChar);
+            IsDirty = true;
         }
     }
 }
