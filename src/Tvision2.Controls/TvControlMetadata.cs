@@ -11,10 +11,26 @@ namespace Tvision2.Controls
 
         internal TvComponentMetadata ComponentMetadata { get; }
 
+        public bool IsFocused { get; private set; }
+
+        public void Focus()
+        {
+            IsFocused = true;
+            Control.Style.AddClass("focused");
+            Control.OnFocus();
+        }
+
+        public void Unfocus()
+        {
+            IsFocused = true;
+            Control.Style.RemoveClass("focused");
+        }
+
         public TvControlMetadata(TvComponentMetadata cdata, ITvControl control)
         {
             ComponentMetadata = cdata;
             Control = control;
+            IsFocused = false;
         }
     }
 }
