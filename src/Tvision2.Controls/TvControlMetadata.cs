@@ -9,8 +9,6 @@ namespace Tvision2.Controls
     {
         public ITvControl Control { get; }
 
-        internal TvComponentMetadata ComponentMetadata { get; }
-
         public bool IsFocused { get; private set; }
 
         public void Focus()
@@ -22,13 +20,12 @@ namespace Tvision2.Controls
 
         public void Unfocus()
         {
-            IsFocused = true;
+            IsFocused = false;
             Control.Style.RemoveClass("focused");
         }
 
-        public TvControlMetadata(TvComponentMetadata cdata, ITvControl control)
+        public TvControlMetadata(ITvControl control)
         {
-            ComponentMetadata = cdata;
             Control = control;
             IsFocused = false;
         }

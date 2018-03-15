@@ -12,18 +12,14 @@ namespace Tvision2.Core.Engine
         {
             var metadata = componentTree.Add(control.AsComponent(), zindex);
             var ctree = componentTree.Controls() as ControlsTree;
-            var cdata = new TvControlMetadata(metadata, control);
-            ctree.InsertAfter(cdata, position);
+            ctree.InsertAfter(control.Metadata, position);
         }
         public static void Add(this ComponentTree componentTree, ITvControl control, int zindex = 0)
         {
             var metadata = componentTree.Add(control.AsComponent(), zindex);
             var ctree = componentTree.Controls() as ControlsTree;
-            var cdata = new TvControlMetadata(metadata, control);
-            ctree.Add(cdata);
+            ctree.Add(control.Metadata);
         }
-
-
 
         public static IControlsTree Controls(this ComponentTree componentTree) => componentTree.Engine.GetCustomItem<IControlsTree>();
     }

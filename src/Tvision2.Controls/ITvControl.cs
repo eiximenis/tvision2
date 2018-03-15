@@ -9,6 +9,8 @@ namespace Tvision2.Controls
         string ControlType { get; }
         AppliedStyle Style { get; }
 
+        TvControlMetadata Metadata { get; }
+
         void OnFocus();
     }
 

@@ -18,12 +18,10 @@ namespace Tvision2.Controls.Button
         {
         }
 
-        protected override void AddCustomElements(TvComponent<ButtonState> component)
+
+        protected override IEnumerable<ITvBehavior<ButtonState>> GetEventedBehaviors()
         {
-            component.AddBehavior(new ButtonBehavior(async () => await (OnClick?.Invoke(State) ?? Task.CompletedTask)), options =>
-            {
-                options.UseScheduler(BehaviorSchedule.OnEvents);
-            });
+            yield return new ButtonBehavior(async () => await (OnClick?.Invoke(State) ?? Task.CompletedTask));
         }
 
         protected override void OnDraw(RenderContext<ButtonState> context)

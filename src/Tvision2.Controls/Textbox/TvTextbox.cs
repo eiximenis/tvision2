@@ -14,9 +14,10 @@ namespace Tvision2.Controls.Textbox
         {
         }
 
-        protected override void AddCustomElements(TvComponent<TextboxState> component)
+
+        protected override IEnumerable<ITvBehavior<TextboxState>> GetEventedBehaviors()
         {
-            component.AddBehavior(new TextboxBehavior(), opt => opt.UseScheduler(BehaviorSchedule.OnEvents));
+            yield return new TextboxBehavior();
         }
 
         protected override void OnDraw(RenderContext<TextboxState> context)
