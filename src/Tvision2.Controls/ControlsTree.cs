@@ -59,8 +59,8 @@ namespace Tvision2.Controls
                 if (_focused != null)
                 {
                     _focused.Unfocus();
-                    controlToFocus.Focus();
                 }
+                controlToFocus.Focus();
                 _focused = controlToFocus;
             }
         }

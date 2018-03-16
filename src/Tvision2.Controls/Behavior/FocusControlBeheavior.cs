@@ -22,7 +22,7 @@ namespace Tvision2.Controls.Behavior
                 return _inner.Update(updateContext);
             }
 
-            return true;
+            return false;
         }
     }
 }
