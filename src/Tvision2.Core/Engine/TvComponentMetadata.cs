@@ -16,6 +16,7 @@ namespace Tvision2.Core.Engine
         public TvComponentMetadata(TvComponent component, IConsoleDriver consoleDriver)
         {
             Component = component;
+            Component.Metadata = this;
             Console = consoleDriver;
         }
     }

@@ -24,13 +24,17 @@ namespace Tvision2.Core.Engine
             Engine = owner;
         }
 
-        public TvComponentMetadata Add(TvComponent component, int zindex = 0)
+        public TvComponentMetadata Add (TvComponentMetadata metadata)
         {
-            var metadata = MetadataFromComponent(component, zindex);
-            component.Metadata = metadata;
-            _components.Add(component.Name, metadata);
+            _components.Add(metadata.Component.Name, metadata);
             OnComponentAdded(metadata);
             return metadata;
+        }
+
+        public TvComponentMetadata Add(TvComponent component)
+        {
+            var metadata = MetadataFromComponent(component);
+            return Add(metadata);
         }
 
         private void OnComponentAdded(TvComponentMetadata metadata)
@@ -38,12 +42,8 @@ namespace Tvision2.Core.Engine
             ComponentAdded?.Invoke(this, new TreeUpdatedEventArgs(metadata));
         }
 
-        private TvComponentMetadata MetadataFromComponent(TvComponent component, int zindex)
+        private TvComponentMetadata MetadataFromComponent(TvComponent component)
         {
-            if (zindex != 0)
-            {
-                component.BoxModel.ZIndex = zindex;
-            }
             var newMetadata = new TvComponentMetadata(component, Engine.ConsoleDriver);
             return newMetadata;
         }

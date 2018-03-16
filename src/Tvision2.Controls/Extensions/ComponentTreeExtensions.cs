@@ -8,15 +8,15 @@ namespace Tvision2.Core.Engine
     public static class ComponentTreeExtensions_Controls
     {
         
-        public static void InsertAfter(this ComponentTree componentTree, ITvControl control, int position, int zindex = 0)
+        public static void InsertAfter(this ComponentTree componentTree, ITvControl control, int position)
         {
-            var metadata = componentTree.Add(control.AsComponent(), zindex);
+            var metadata = componentTree.Add(control.AsComponent());
             var ctree = componentTree.Controls() as ControlsTree;
             ctree.InsertAfter(control.Metadata, position);
         }
-        public static void Add(this ComponentTree componentTree, ITvControl control, int zindex = 0)
+        public static void Add(this ComponentTree componentTree, ITvControl control)
         {
-            var metadata = componentTree.Add(control.AsComponent(), zindex);
+            var metadata = componentTree.Add(control.AsComponent());
             var ctree = componentTree.Controls() as ControlsTree;
             ctree.Add(control.Metadata);
         }

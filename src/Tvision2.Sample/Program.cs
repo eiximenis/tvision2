@@ -36,11 +36,11 @@ namespace Tvision2.Sample
                 Text = "label",
             });
             lbl.Style.Position = new Core.Render.TvPoint(3, 4);
-            tui.UI.Add(lbl, 2);
+            tui.UI.Add(lbl);
 
             var check = new TvCheckbox(skin, new BoxModel(new TvPoint(0, 0), 10, 1), new CheckboxState());
             check.Style.Position = new TvPoint(7, 8);
-            tui.UI.Add(check, 1);
+            tui.UI.Add(check);
 
             var button = new TvButton(skin, new BoxModel(new TvPoint(0, 0), 4, 1), new ButtonState()
             {
@@ -56,10 +56,10 @@ namespace Tvision2.Sample
                 check.State.Checked = TvCheckboxState.Checked;
             });
 
-            tui.UI.Add(button, 0);
+            tui.UI.Add(button);
 
             var textbox = new TvTextbox(skin, new BoxModel(new TvPoint(9, 12), 8, 1), new TextboxState());
-            tui.UI.Add(textbox, 0);
+            tui.UI.Add(textbox);
 
             var t = tui.Start();
             await Task.Delay(6000);
