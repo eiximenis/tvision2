@@ -15,7 +15,7 @@ namespace Tvision2.Controls.Styles
         {
             _provider = provider;
             _foreColor = DefaultStyle.Instance.ForeColor;
-            _foreColor = DefaultStyle.Instance.BackColor;
+            _backColor = DefaultStyle.Instance.BackColor;
             Clipping = boxModel.Clipping;
             Position = boxModel.Position;
             Columns = boxModel.Columns;

@@ -3,16 +3,24 @@ using System.Collections.Generic;
 using System.Text;
 using Tvision2.Controls.Styles;
 using Tvision2.Core.Components;
+using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Render;
 
 namespace Tvision2.Controls.Checkbox
 {
     public class TvCheckbox : TvControl<CheckboxState>
     {
+        private static TvPoint _focusOffset = new TvPoint(0, 1);
         public TvCheckbox(ISkin skin, IBoxModel boxModel, CheckboxState state) : base(skin, boxModel, state)
         {
         }
 
+        protected override IEnumerable<ITvBehavior<CheckboxState>> GetEventedBehaviors()
+        {
+            yield return new CheckBoxBehavior();
+        }
+
+        protected override TvPoint CalculateFocusOffset() => _focusOffset;
         protected override void OnDraw(RenderContext<CheckboxState> context)
         {
             var state = context.State;

@@ -37,7 +37,6 @@ namespace Tvision2.Controls.Styles
                         style.WithBackgroundColor(ConsoleColor.Blue);
                         style.WithForegroundColor(ConsoleColor.Black);
                     });
-
                 });
             });
 
