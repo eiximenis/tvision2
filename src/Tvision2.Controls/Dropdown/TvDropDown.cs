@@ -8,13 +8,13 @@ namespace Tvision2.Controls.Dropdown
 {
     public class TvDropdown : TvControl<DropdownState>
     {
-        public TvDropdown(ISkin skin, IBoxModel boxModel, DropdownState initialState) : base(skin, boxModel, initialState)
+        public TvDropdown(ISkin skin, IViewport boxModel, DropdownState initialState) : base(skin, boxModel, initialState)
         {
         }
 
         protected override void OnDraw(RenderContext<DropdownState> context)
         {
-            context.DrawChars(' ', Style.Columns, new TvPoint(0, 0), Style.ForeColor, Style.BackColor);
+            context.DrawChars(' ', Viewport.Columns, new TvPoint(0, 0), Style.ForeColor, Style.BackColor);
             int row = 1;
             foreach (var value in State.Values)
             {

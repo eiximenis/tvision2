@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Tvision2.ConsoleDriver;
+﻿using Tvision2.Engine.Console;
 
 namespace Tvision2.Core.Render
 {

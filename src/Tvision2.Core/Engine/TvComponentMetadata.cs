@@ -1,23 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Tvision2.ConsoleDriver;
 using Tvision2.Core.Components;
-using Tvision2.Core.Render;
+using Tvision2.Engine.Console;
 
 namespace Tvision2.Core.Engine
 {
-    public class TvComponentMetadata : IComponentMetadata
+    internal class TvComponentMetadata : IComponentMetadata
     {
         public TvComponent Component { get; }
 
         public IConsoleDriver Console { get; }
 
+        public event EventHandler ViewportChanged;
+
         public TvComponentMetadata(TvComponent component, IConsoleDriver consoleDriver)
         {
             Component = component;
-            Component.Metadata = this;
+            Component.SetMetadata(this);
             Console = consoleDriver;
+        }
+
+        public void OnViewportChanged()
+        {
+            var handler = ViewportChanged;
+            handler?.Invoke(this, EventArgs.Empty);
         }
     }
 

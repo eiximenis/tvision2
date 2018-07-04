@@ -56,9 +56,9 @@ namespace Tvision2.Controls.Styles
             return _styles.ContainsKey("") ? _styles[""] : DefaultStyle.Instance;
         }
 
-        public AppliedStyle BuildStyle(IBoxModel boxModel)
+        public AppliedStyle BuildStyle()
         {
-            var runtimeStyle = new AppliedStyle(boxModel, this);
+            var runtimeStyle = new AppliedStyle(this);
             UpdateStyle(runtimeStyle);
             return runtimeStyle;
         }

@@ -11,16 +11,16 @@ namespace Tvision2.Controls.Label
     public class TvLabel : TvControl<LabelState>
     {
 
-        public TvLabel(ISkin skin, IBoxModel boxModel, LabelState state) : base(skin, boxModel, state)
+        public TvLabel(ISkin skin, IViewport boxModel, LabelState state) : base(skin, boxModel, state)
         {
         }
 
-        private IBoxModel RequestNewBoxModel(IBoxModel current, string toRender)
+        private IViewport RequestNewBoxModel(IViewport current, string toRender)
         {
             var needed = toRender.Length;
             if (current.Clipping == ClippingMode.ExpandBoth || current.Clipping == ClippingMode.ExpandHorizontal)
             {
-                return needed > current.Columns ? current.ResizeUp(needed, current.Rows) : null;
+                return needed > current.Columns ? current.ResizeTo(needed, current.Rows) : null;
             }
 
             return null;
@@ -29,7 +29,7 @@ namespace Tvision2.Controls.Label
         protected override void OnDraw(RenderContext<LabelState> context)
         {
             var state = context.State;
-            var currentcols = context.BoxModel.Columns;
+            var currentcols = context.Viewport.Columns;
             var focused = Style.ContainsClass("focused");
             var value = string.Format("{0}{1}{2}{3}{4}",
                 new string(' ', Style.PaddingLeft),
@@ -40,7 +40,7 @@ namespace Tvision2.Controls.Label
 
             context.Fill(Style.BackColor);
 
-            var boxModel = RequestNewBoxModel(context.BoxModel, value);
+            var boxModel = RequestNewBoxModel(context.Viewport, value);
             if (boxModel != null)
             {
                 ApplyNewBoxModel(context, boxModel);

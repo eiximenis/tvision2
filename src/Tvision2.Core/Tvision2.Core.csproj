@@ -8,8 +8,4 @@
     <LangVersion>default</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Tvision2.ConsoleDriver\Tvision2.ConsoleDriver.csproj" />
-  </ItemGroup>
-
 </Project>

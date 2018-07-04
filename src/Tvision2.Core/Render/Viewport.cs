@@ -4,67 +4,34 @@ using System.Text;
 
 namespace Tvision2.Core.Render
 {
-    public static class Viewport
+    public class Viewport : IViewport
     {
+        public TvPoint Position { get; }
 
-        public static TvPoint ViewPointToConsolePoint(TvPoint viewPoint, TvPoint viewportPosition)
+        public int ZIndex { get; set; }
+
+        public int Columns { get; }
+
+        public int Rows { get; }
+
+        public ClippingMode Clipping { get; }
+
+        public Viewport(TvPoint point, int cols, int rows, ClippingMode clipping)
         {
-            var top = viewPoint.Top + viewportPosition.Top;
-            var left = viewPoint.Left + viewportPosition.Left;
-            return new TvPoint(top, left);
+            Position = point;
+            Clipping = clipping;
+            Columns = cols;
+            Rows = rows;
+            ZIndex = 0;
         }
 
-        public static TvPoint ConsolePointToViewport(TvPoint consolePoint, TvPoint viewportPosition)
-        {
-            var top = consolePoint.Top - viewportPosition.Top;
-            var left = consolePoint.Left - viewportPosition.Left;
-            return new TvPoint(top, left);
-        }
+        public IViewport ResizeTo(int cols, int rows) => new Viewport(Position, cols, rows, Clipping);
+        public IViewport Grow(int ncols, int nrows) => new Viewport(Position, Columns + ncols, Rows + nrows, Clipping);
 
-        public static void DrawStringAt(string text, TvPoint location, ConsoleColor foreColor, ConsoleColor backColor, IBoxModel boxModel, VirtualConsole console)
-        {
-            var clippingMode = boxModel.Clipping;
-            var consoleLocation = ViewPointToConsolePoint(location, boxModel.Position);
-            var zindex = boxModel.ZIndex;
+        public IViewport MoveTo(TvPoint newPos) => new Viewport(newPos, Columns, Rows, Clipping);
 
-            if ((clippingMode == ClippingMode.Clip || clippingMode == ClippingMode.ExpandVertical) && boxModel.Columns < text.Length)
-            {
-                text = text.Substring(0, boxModel.Columns);
-            }
+        public IViewport Translate(TvPoint translation) => new Viewport(Position + translation, Columns, Rows, Clipping);
 
-            console.DrawAt(text, consoleLocation, zindex, foreColor, backColor);
-        }
-
-        internal static void DrawChars(char value, int count, TvPoint location, ConsoleColor foreColor, ConsoleColor backColor, IBoxModel boxModel, VirtualConsole console)
-        {
-
-            var chars = new ConsoleCharacter[count];
-            var zindex = boxModel.ZIndex;
-            var cc = new ConsoleCharacter() { Character = value, Background = backColor, Foreground = foreColor, ZIndex = zindex };
-            var pos = ViewPointToConsolePoint(location, boxModel.Position);
-            console.CopyCharacter(pos, cc, count);
-        }
-
-        public static bool IsConsolePointInside(TvPoint consolePoint, TvPoint viewportPosition)
-        {
-            var viewPoint = ConsolePointToViewport(consolePoint, viewportPosition);
-            return consolePoint.Top >= viewportPosition.Top && consolePoint.Left >= viewportPosition.Left;
-        }
-
-        public static void Fill(ConsoleColor color, IBoxModel boxModel, VirtualConsole console)
-        {
-            var location = ViewPointToConsolePoint(new TvPoint(0, 0), boxModel.Position);
-            console.DrawAt(new string(' ', boxModel.Columns), location, boxModel.ZIndex, color, color);
-        }
-
-        public static void Clear(IBoxModel boxModel, VirtualConsole console)
-        {
-            var location = ViewPointToConsolePoint(new TvPoint(0, 0), boxModel.Position);
-            var color = ConsoleColor.Black;
-            console.DrawAt(new string(' ', boxModel.Columns), location, int.MinValue, color, color);
-        }
-
-
-
+        public Viewport(TvPoint point, int cols, int rows = 1) : this(point, cols, rows, ClippingMode.Clip) { }
     }
 }

@@ -10,13 +10,13 @@ namespace Tvision2.Controls.Textbox
     {
         protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<TextboxState> updateContext)
         {
+            var character = evt.Character;
+            updateContext.State.ProcessKey(evt.AsConsoleKeyInfo());
             return true;
         }
 
         protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<TextboxState> updateContext)
         {
-            var character = evt.Character;
-            updateContext.State.ProcessKey(evt.AsConsoleKeyInfo());
             return true;
         }
     }

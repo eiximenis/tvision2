@@ -7,42 +7,42 @@ namespace Tvision2.Core.Render
     {
         private readonly VirtualConsole _console;
 
-        public IBoxModel BoxModel { get; private set; }
+        public IViewport Viewport { get; private set; }
         public T State { get; }
 
-        public RenderContext(IBoxModel boxModel, VirtualConsole console, T state)
+        public RenderContext(IViewport viewport, VirtualConsole console, T state)
         {
             _console = console;
-            BoxModel = boxModel;
+            Viewport = viewport;
             State = state;
         }
 
-        public RenderContext<TD> CloneWithNewState<TD>(TD newState) => new RenderContext<TD>(BoxModel, _console, newState);
+        public RenderContext<TD> CloneWithNewState<TD>(TD newState) => new RenderContext<TD>(Viewport, _console, newState);
 
         public void DrawStringAt(string value, TvPoint location, ConsoleColor foreColor, ConsoleColor backColor)
         {
-            Viewport.DrawStringAt(value, location, foreColor, backColor, BoxModel, _console);
+            ViewportHelper.DrawStringAt(value, location, foreColor, backColor, Viewport, _console);
         }
 
         public void DrawChars(char value, int count, TvPoint location, ConsoleColor foreColor, ConsoleColor backColor)
         {
-            Viewport.DrawChars(value, count, location, foreColor, backColor, BoxModel, _console);
+            ViewportHelper.DrawChars(value, count, location, foreColor, backColor, Viewport, _console);
         }
 
-        public void ApplyBoxModel(IBoxModel newBoxModel)
+        public void ApplyBoxModel(IViewport newBoxModel)
         {
-            BoxModel = newBoxModel;
+            Viewport = newBoxModel;
         }
 
 
         public void Clear()
         {
-            Viewport.Clear(BoxModel, _console);
+            ViewportHelper.Clear(Viewport, _console);
         }
 
         public void Fill(ConsoleColor backColor)
         {
-            Viewport.Fill(backColor, BoxModel, _console);
+            ViewportHelper.Fill(backColor, Viewport, _console);
         }
     }
 }

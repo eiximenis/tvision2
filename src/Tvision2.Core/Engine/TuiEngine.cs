@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Tvision2.ConsoleDriver;
 using Tvision2.Core.Hooks;
 using Tvision2.Core.Render;
+using Tvision2.Engine.Console;
 
 namespace Tvision2.Core.Engine
 {
@@ -26,22 +25,21 @@ namespace Tvision2.Core.Engine
         public IEventHookManager EventHookManager { get; }
 
         public ComponentTree UI { get; }
-        internal TuiEngine(IConsoleDriver consoleDriver,
-            IDictionary<Type, object> additionalItems,
-            IEnumerable<IEventHook> initialHooks)
+
+        internal TuiEngine(TuiEngineBuildOptions options)
         {
-            _consoleDriver = consoleDriver ?? throw new ArgumentNullException("consoleDriver");
+            _consoleDriver = options.ConsoleDriver ?? throw new ArgumentException("No console driver defined");
             _additionalItems = new Dictionary<Type, object>();
             UI = new ComponentTree(this);
             _additionalItems.Add(typeof(IComponentTree), UI);
-            AddAdditionalItems(additionalItems);
+            AddAdditionalItems(options.AdditionalValues);
             _eventPumper = new EventPumper(_consoleDriver);
             _watcher = new Stopwatch();
             var hookContext = new HookContext(this);
-            EventHookManager = new EventHookManager(initialHooks ?? Enumerable.Empty<IEventHook>(), hookContext);
+            EventHookManager = new EventHookManager(options.Hooks ?? Enumerable.Empty<IEventHook>(), hookContext);
         }
 
-        private void AddAdditionalItems(IDictionary<Type, object> additionalItems)
+        private void AddAdditionalItems(IEnumerable<KeyValuePair<Type, object>> additionalItems)
         {
             foreach (var kvp in additionalItems)
             {

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+using Tvision2.Engine.Console;
 using Tvision2.Events;
 using Tvision2.Events.NCurses;
 using Unix.Terminal;
@@ -12,7 +10,12 @@ namespace Tvision2.ConsoleDriver
     public class NcursesConsoleDriver : IConsoleDriver
     {
         private Curses.Window _console;
-        public void Init() 
+        private readonly ConsoleDriverOptions _options;
+        public NcursesConsoleDriver(ConsoleDriverOptions options)
+        {
+            _options = options;
+        }
+        public void Init()
         {
             _console = Curses.initscr();
             Curses.raw();
@@ -29,7 +32,7 @@ namespace Tvision2.ConsoleDriver
             var code = Curses.get_wch(out int wch);
             TvConsoleEvents events = null;
 
-            if (code == Curses.OK) 
+            if (code == Curses.OK)
             {
                 events = new TvConsoleEvents();
                 var alt = false;
@@ -38,8 +41,8 @@ namespace Tvision2.ConsoleDriver
                     Curses.get_wch(out wch);
                     alt = true;
                 }
-                 events.Add(new NCursesConsoleKeyboardEvent(wch, alt: alt, isDown: true));
-                 events.Add(new NCursesConsoleKeyboardEvent(wch, alt: alt, isDown: false));
+                events.Add(new NCursesConsoleKeyboardEvent(wch, alt: alt, isDown: true));
+                events.Add(new NCursesConsoleKeyboardEvent(wch, alt: alt, isDown: false));
             }
 
             if (code == Curses.KEY_CODE_YES)
@@ -47,7 +50,7 @@ namespace Tvision2.ConsoleDriver
                 events = new TvConsoleEvents();
                 if (wch == Curses.KeyMouse)
                 {
-                    
+
                     Curses.getmouse(out Curses.MouseEvent ev);
                     return TvConsoleEvents.Empty;
                 }

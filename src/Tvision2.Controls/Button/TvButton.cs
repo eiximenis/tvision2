@@ -14,7 +14,7 @@ namespace Tvision2.Controls.Button
     {
         public ICommand<ButtonState> OnClick { get; set; }
 
-        public TvButton(ISkin skin, IBoxModel boxModel, ButtonState data) : base(skin, boxModel, data)
+        public TvButton(ISkin skin, IViewport boxModel, ButtonState data) : base(skin, boxModel, data)
         {
         }
 

@@ -10,7 +10,7 @@ namespace Tvision2.Controls.Textbox
 {
     public class TvTextbox : TvControl<TextboxState>
     {
-        public TvTextbox(ISkin skin, IBoxModel boxModel, TextboxState initialState) : base(skin, boxModel, initialState)
+        public TvTextbox(ISkin skin, IViewport boxModel, TextboxState initialState) : base(skin, boxModel, initialState)
         {
         }
 
@@ -22,7 +22,7 @@ namespace Tvision2.Controls.Textbox
 
         protected override void OnDraw(RenderContext<TextboxState> context)
         {
-            context.DrawChars(' ', context.BoxModel.Columns, new TvPoint(0, 0), Style.ForeColor, Style.BackColor);
+            context.DrawChars(' ', context.Viewport.Columns, new TvPoint(0, 0), Style.ForeColor, Style.BackColor);
             if (!string.IsNullOrEmpty(State.Text))
             {
                 context.DrawStringAt(State.Text, new TvPoint(0, 0), ConsoleColor.Black, Style.BackColor);

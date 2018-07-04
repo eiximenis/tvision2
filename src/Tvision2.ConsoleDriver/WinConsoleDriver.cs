@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Tvision2.ConsoleDriver.Win32;
+using Tvision2.Engine.Console;
 using Tvision2.Events;
 
 namespace Tvision2.ConsoleDriver
@@ -12,13 +11,17 @@ namespace Tvision2.ConsoleDriver
         private const int STDOUT = -11;
         private readonly IntPtr _hstdin;
         private readonly IntPtr _hstdout;
-        public WinConsoleDriver()
+
+        private readonly ConsoleDriverOptions _options;
+
+        public WinConsoleDriver(ConsoleDriverOptions options)
         {
             _hstdin = ConsoleNative.GetStdHandle(STDIN);
             _hstdout = ConsoleNative.GetStdHandle(STDOUT);
+            _options = options;
         }
 
-        public void Init() {}
+        public void Init() { }
         public TvConsoleEvents ReadEvents()
         {
             ConsoleNative.GetNumberOfConsoleInputEvents(_hstdin, out uint numEvents);

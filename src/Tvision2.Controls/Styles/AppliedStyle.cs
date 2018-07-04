@@ -5,35 +5,21 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Controls.Styles
 {
-    public class AppliedStyle : IBoxModel, IDirtyObject
+    public class AppliedStyle : IDirtyObject
     {
         public ClippingMode Clipping { get; }
         private readonly List<string> _classes;
         private readonly IStyleSheet _provider;
-
-        public AppliedStyle(IBoxModel boxModel, IStyleSheet provider)
+        public AppliedStyle(IStyleSheet provider)
         {
             _provider = provider;
             _foreColor = DefaultStyle.Instance.ForeColor;
             _backColor = DefaultStyle.Instance.BackColor;
-            Clipping = boxModel.Clipping;
-            Position = boxModel.Position;
-            Columns = boxModel.Columns;
-            ZIndex = boxModel.ZIndex;
-            Rows = boxModel.Rows;
             _classes = new List<string>();
         }
 
         public bool IsDirty { get; private set; }
         public void Validate() => IsDirty = false;
-
-
-        private TvPoint _pos;
-        public TvPoint Position
-        {
-            get => _pos;
-            set { _pos = value; IsDirty = true; }
-        }
 
         private ConsoleColor _foreColor;
         public ConsoleColor ForeColor
@@ -62,20 +48,6 @@ namespace Tvision2.Controls.Styles
             set { _paddingRight = value; IsDirty = true; }
         }
 
-        private int _columns;
-        public int Columns
-        {
-            get => _columns;
-            set { _columns = value; IsDirty = true; }
-        }
-
-        private int _rows;
-        public int Rows
-        {
-            get => _rows;
-            set { _rows = value; IsDirty = true; }
-        }
-
         public void AddClass(string name)
         {
             if (!_classes.Contains(name))
@@ -95,40 +67,7 @@ namespace Tvision2.Controls.Styles
                 IsDirty = true;
             }
         }
-
-
-        public IBoxModel ResizeUp(int cols, int rows)
-        {
-            if (rows > _rows)
-            {
-                _rows = rows;
-                IsDirty = true;
-            }
-            if (cols > _columns)
-            {
-                _columns = cols;
-                IsDirty = true;
-            }
-
-            return this;
-        }
-
-
         public bool ContainsClass(string name) => _classes.Contains(name);
-
-        public IBoxModel Translate(TvPoint newPos)
-        {
-            Position = newPos;
-            return this;
-        }
-
         public IEnumerable<string> Classes => _classes;
-
-        private int _zindex;
-        public int ZIndex
-        {
-            get => _zindex;
-            set { _zindex = value; IsDirty = true; }
-        }
     }
 }

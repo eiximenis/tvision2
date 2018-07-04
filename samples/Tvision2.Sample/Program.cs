@@ -6,17 +6,18 @@ using Tvision2.Controls.Checkbox;
 using Tvision2.Controls.Label;
 using Tvision2.Controls.Styles;
 using Tvision2.Controls.Textbox;
-using Tvision2.Core;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 
 namespace Tvision2.Sample
 {
-    class Program
+    internal class Program
     {
-        static async Task<int> Main(string[] args)
+        private static async Task<int> Main(string[] args)
         {
             var tui = new TuiEngineBuilder()
+                .UsePlatformConsoleDriver()
+                .UseViewportManager()
                 .AddTvControls()
                 .AddStateManager(mgr =>
                 {
@@ -31,24 +32,24 @@ namespace Tvision2.Sample
 
             var skin = tui.SkinManager().CurrentSkin;
 
-            var lbl = new TvLabel(skin, new BoxModel(new TvPoint(0,0),2,1),  new LabelState()
+            var lbl = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 2, 1), new LabelState()
             {
                 Text = "label",
             });
-            lbl.Style.Position = new Core.Render.TvPoint(3, 4);
+            lbl.Viewport.MoveTo(new TvPoint(3, 4));
             tui.UI.Add(lbl);
 
-            var check = new TvCheckbox(skin, new BoxModel(new TvPoint(0, 0), 10, 1), new CheckboxState());
-            check.Style.Position = new TvPoint(7, 8);
+            var check = new TvCheckbox(skin, new Viewport(new TvPoint(0, 0), 10, 1), new CheckboxState());
+            check.Viewport.MoveTo(new TvPoint(7, 8));
             tui.UI.Add(check);
 
-            var button = new TvButton(skin, new BoxModel(new TvPoint(0, 0), 4, 1), new ButtonState()
+            var button = new TvButton(skin, new Viewport(new TvPoint(0, 0), 4, 1), new ButtonState()
             {
                 Text = "btn"
             });
 
-            button.Style.Position = new Core.Render.TvPoint(0, 0);
-            button.Style.Columns = 4;
+            button.Viewport.MoveTo(new TvPoint(6, 4));
+            button.Viewport.Grow(4, 0);
 
             button.OnClick = new DelegateCommand<ButtonState>(async s =>
             {
@@ -56,9 +57,11 @@ namespace Tvision2.Sample
                 check.State.Checked = TvCheckboxState.Checked;
             });
 
+            button.AsComponent().AddViewport(new Viewport(new TvPoint(8, 7), 10));
+
             tui.UI.Add(button);
 
-            var textbox = new TvTextbox(skin, new BoxModel(new TvPoint(9, 12), 8, 1), new TextboxState());
+            var textbox = new TvTextbox(skin, new Viewport(new TvPoint(9, 12), 8, 1), new TextboxState());
             tui.UI.Add(textbox);
 
             var t = tui.Start();

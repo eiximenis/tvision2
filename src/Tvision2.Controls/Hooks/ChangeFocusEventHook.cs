@@ -7,11 +7,11 @@ using Tvision2.Events;
 
 namespace Tvision2.Controls.Hooks
 {
-    public class ChangeFocusEventHook : KeyboardHook
+    public class ChangeFocusEventHook : IEventHook
     {
-        protected override void ProcessEvents(IEnumerable<TvConsoleKeyboardEvent> keyboardEvents, HookContext context)
+        public void ProcessEvents(TvConsoleEvents events, HookContext context)
         {
-            var tab = keyboardEvents.FirstOrDefault(ke => ke.IsKeyDown && ke.AsConsoleKeyInfo().Key == ConsoleKey.Tab);
+            var tab = events.AcquireFirstKeyboard(ke => ke.IsKeyDown && ke.AsConsoleKeyInfo().Key == ConsoleKey.Tab);
             if (tab != null)
             {
                 var controls = context.ItemsProvider.GetCustomItem<IControlsTree>();

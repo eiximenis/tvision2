@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Tvision2.ConsoleDriver;
+﻿using Tvision2.Engine.Console;
 using Tvision2.Events;
 
 namespace Tvision2.Core.Engine

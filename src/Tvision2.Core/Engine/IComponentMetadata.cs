@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Tvision2.ConsoleDriver;
+using Tvision2.Core.Components;
+using Tvision2.Engine.Console;
 
 namespace Tvision2.Core.Engine
 {
     public interface IComponentMetadata
     {
+        TvComponent Component { get; }
         IConsoleDriver Console { get; }
+        event EventHandler ViewportChanged;
     }
 }

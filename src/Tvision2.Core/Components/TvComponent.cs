@@ -13,21 +13,42 @@ namespace Tvision2.Core.Components
 
     public abstract class TvComponent
     {
-
-        public IBoxModel BoxModel { get; }
+        private TvComponentMetadata _metadata;
+        protected Dictionary<Guid, IViewport> _viewports;
         public bool NeedToRedraw { get; protected set; }
         public string Name { get; }
         public void Invalidate() => NeedToRedraw = true;
-        
 
-        public TvComponentMetadata Metadata { get; internal set; }
+        public IComponentMetadata Metadata  => _metadata;
+        internal void SetMetadata(TvComponentMetadata metadata) => _metadata = metadata;
 
-        public TvComponent(IBoxModel boxModel, string name)
+        public TvComponent(string name)
         {
+            _viewports = new Dictionary<Guid, IViewport>();
             Name = string.IsNullOrEmpty(name) ? $"TvComponent-{Guid.NewGuid().ToString()}" : name;
-            BoxModel = boxModel;
         }
 
+        public Guid AddViewport(IViewport viewport)
+        {
+            var key = _viewports.Any() ? Guid.NewGuid() : Guid.Empty;
+            _viewports.Add(key, viewport);
+            _metadata?.OnViewportChanged();
+            return key;
+        }
+        public IViewport Viewport => _viewports.TryGetValue(Guid.Empty, out IViewport value) ? value : null;
+        public IViewport GetViewport(Guid guid) => _viewports.TryGetValue(guid, out IViewport value) ? value : null;
+        public IEnumerable<IViewport> Viewports => _viewports.Values;
+
+        public void UpdateViewport(IViewport newViewport) => UpdateViewport(Guid.Empty, newViewport);
+
+        public void UpdateViewport(Guid guid, IViewport newViewport)
+        {
+            if (_viewports.TryGetValue(guid, out IViewport viewport))
+            {
+                _viewports[guid] = newViewport;
+                _metadata?.OnViewportChanged();
+            }
+        }
         protected internal abstract void Update(TvConsoleEvents evts);
         protected internal abstract void Draw(VirtualConsole console);
     }
@@ -48,7 +69,7 @@ namespace Tvision2.Core.Components
         }
 
 
-        public TvComponent(IBoxModel boxModel, T initialState, string name = null) : base(boxModel, name)
+        public TvComponent(T initialState, string name = null) : base(name)
         {
             NeedToRedraw = false;
             _behaviorsMetadata = new List<BehaviorMetadata<T>>();
@@ -94,10 +115,13 @@ namespace Tvision2.Core.Components
 
         protected internal override void Draw(VirtualConsole console)
         {
-
-            var context = new RenderContext<T>(BoxModel, console, State);
-            _drawer.Draw(context);
+            foreach (var vpnk in _viewports)
+            {
+                var context = new RenderContext<T>(vpnk.Value, console, State);
+                _drawer.Draw(context);
+            }
             NeedToRedraw = false;
+
         }
 
     }

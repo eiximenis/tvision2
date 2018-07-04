@@ -10,7 +10,7 @@ namespace Tvision2.Controls.Styles
         void AddClassStyle(string name, IStyle style);
         void RemoveClassStyle(string name);
         IStyle GetStyle(IEnumerable<string> classes);
-        AppliedStyle BuildStyle(IBoxModel boxModel);
+        AppliedStyle BuildStyle();
 
         void UpdateStyle(AppliedStyle styleToUpdate);
     }

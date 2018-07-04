@@ -2,13 +2,19 @@
 using System.Collections.Generic;
 using System.Text;
 using Tvision2.ConsoleDriver.DotNet;
+using Tvision2.Engine.Console;
 using Tvision2.Events;
 
 namespace Tvision2.ConsoleDriver
 {
     public class NetConsoleDriver : IConsoleDriver
     {
+        private readonly ConsoleDriverOptions _options;
 
+        public NetConsoleDriver(ConsoleDriverOptions options)
+        {
+            _options = options;
+        }
         public void Init() {}
         public TvConsoleEvents ReadEvents()
         {

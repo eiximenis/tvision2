@@ -10,8 +10,8 @@ namespace Tvision2.Core.Engine
 {
     public class ComponentTree : IComponentTree
     {
-        private readonly Dictionary<string, TvComponentMetadata> _components;
-        private List<TvComponentMetadata> _responders;
+        private readonly Dictionary<string, IComponentMetadata> _components;
+        private List<IComponentMetadata> _responders;
 
         public TuiEngine Engine { get; }
 
@@ -19,25 +19,25 @@ namespace Tvision2.Core.Engine
 
         public ComponentTree(TuiEngine owner)
         {
-            _components = new Dictionary<string, TvComponentMetadata>();
-            _responders = new List<TvComponentMetadata>();
+            _components = new Dictionary<string, IComponentMetadata>();
+            _responders = new List<IComponentMetadata>();
             Engine = owner;
         }
 
-        public TvComponentMetadata Add (TvComponentMetadata metadata)
+        public IComponentMetadata Add (IComponentMetadata metadata)
         {
             _components.Add(metadata.Component.Name, metadata);
             OnComponentAdded(metadata);
             return metadata;
         }
 
-        public TvComponentMetadata Add(TvComponent component)
+        public IComponentMetadata Add(TvComponent component)
         {
             var metadata = MetadataFromComponent(component);
             return Add(metadata);
         }
 
-        private void OnComponentAdded(TvComponentMetadata metadata)
+        private void OnComponentAdded(IComponentMetadata metadata)
         {
             ComponentAdded?.Invoke(this, new TreeUpdatedEventArgs(metadata));
         }
@@ -47,8 +47,6 @@ namespace Tvision2.Core.Engine
             var newMetadata = new TvComponentMetadata(component, Engine.ConsoleDriver);
             return newMetadata;
         }
-
-
 
         internal void Update(TvConsoleEvents evts)
         {

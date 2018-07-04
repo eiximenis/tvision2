@@ -1,24 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using Tvision2.ConsoleDriver;
 using Tvision2.Core.Hooks;
+using Tvision2.Core.Render;
+using Tvision2.Engine.Console;
 
 namespace Tvision2.Core.Engine
 {
     public class TuiEngineBuilder
     {
-        private readonly Dictionary<Type, object> _customItems;
-        private ConsoleDriverType _consoleDriverType;
-        private readonly List<IEventHook> _hooks;
+        private readonly TuiEngineBuildOptions _options;
         private readonly List<Action<TuiEngine>> _afterCreateActions;
         private readonly List<Action<TuiEngineBuilder>> _beforeCreateActions;
 
         public TuiEngineBuilder()
         {
-            _customItems = new Dictionary<Type, object>();
-            _consoleDriverType = ConsoleDriverType.PlatformDriver;
-            _hooks = new List<IEventHook>();
+            _options = new TuiEngineBuildOptions();
             _afterCreateActions = new List<Action<TuiEngine>>();
             _beforeCreateActions = new List<Action<TuiEngineBuilder>>();
         }
@@ -40,8 +36,7 @@ namespace Tvision2.Core.Engine
             {
                 action.Invoke(this);
             }
-            var consoleDriver = BuildConsoleDriver();
-            var engine = new TuiEngine(consoleDriver, _customItems, _hooks);
+            var engine = new TuiEngine(_options);
             foreach (var action in _afterCreateActions)
             {
                 action.Invoke(engine);
@@ -51,38 +46,21 @@ namespace Tvision2.Core.Engine
 
         public TuiEngineBuilder AddEventHook(IEventHook hook)
         {
-            _hooks.Add(hook);
+            _options.AddHook(hook);
             return this;
         }
 
-        public TuiEngineBuilder UseConsoleDriver(ConsoleDriverType driverToUse)
+        public TuiEngineBuilder UseConsoleDriver(IConsoleDriver driverToUse)
         {
-            _consoleDriverType = driverToUse;
+            _options.ConsoleDriver = driverToUse;
             return this;
-        }
-
-        private IConsoleDriver BuildConsoleDriver()
-        {
-            switch (_consoleDriverType)
-            {
-                case ConsoleDriverType.NCursesDriver:
-                    return new NcursesConsoleDriver();
-                case ConsoleDriverType.NetDriver:
-                    return new NetConsoleDriver();
-                case ConsoleDriverType.WindowsDriver:
-                    return new WinConsoleDriver();
-                default:
-                    var platform = Environment.OSVersion.Platform;
-                    var useWin = (platform == PlatformID.Win32NT || platform == PlatformID.Win32S || platform == PlatformID.Win32Windows);
-                    return useWin ? new WinConsoleDriver() as IConsoleDriver : new NcursesConsoleDriver() as IConsoleDriver;
-            }
         }
 
         public void SetCustomItem<T>(T item)
         {
-            _customItems.Add(typeof(T), item);
+            _options.SetCustomItem(item);
         }
 
-        public T GetCustomItem<T>() => _customItems.TryGetValue(typeof(T), out object value) ? (T)value : default(T);
+        public T GetCustomItem<T>() => _options.GetCustomItem<T>();
     }
 }

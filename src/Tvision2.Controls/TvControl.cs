@@ -18,22 +18,23 @@ namespace Tvision2.Controls
         private IStyleSheet _currentStyles;
         private TvComponent<TState> _component;
         private TvControlData _controlData;
-
+        private MutableViewport _defaultViewport;
         public TvControlMetadata Metadata { get; }
-
         public TState State { get; }
-
         public string ControlType { get; }
         public AppliedStyle Style { get; }
+        public IViewport Viewport => _defaultViewport;
 
-        public TvControl(ISkin skin, IBoxModel boxModel, TState initialState)
+        public TvControl(ISkin skin, IViewport viewport, TState initialState)
         {
             Metadata = new TvControlMetadata(this);
             ControlType = GetType().Name.ToLowerInvariant();
             _currentStyles = skin.GetControlStyle(this);
-            Style = _currentStyles.BuildStyle(boxModel);
+            Style = _currentStyles.BuildStyle();
             State = initialState;
-            _component = new TvComponent<TState>(Style, initialState);
+            _component = new TvComponent<TState>(initialState);
+            _defaultViewport = new MutableViewport(viewport);
+            _component.AddViewport(_defaultViewport);
             _controlData = new TvControlData(Style, initialState);
 
             AddElements();
@@ -51,7 +52,7 @@ namespace Tvision2.Controls
         }
 
 
-        protected void ApplyNewBoxModel(RenderContext<TState> context, IBoxModel newBoxModel)
+        protected void ApplyNewBoxModel(RenderContext<TState> context, IViewport newBoxModel)
         {
             context.Clear();
             context.ApplyBoxModel(newBoxModel);
@@ -71,7 +72,7 @@ namespace Tvision2.Controls
 
         public void OnFocus()
         {
-            var pos = Style.Position + CalculateFocusOffset();
+            var pos = Viewport.Position + CalculateFocusOffset();
             _component.Metadata.Console.SetCursorAt(pos.Left, pos.Top);
         }
 
