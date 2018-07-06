@@ -1,20 +1,28 @@
-﻿using Tvision2.Viewports;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
+using Tvision2.Viewports;
 
 namespace Tvision2.Core.Engine
 {
     public static class TuiEngineBuilderExtensions_Viewports
     {
 
-        public static TuiEngineBuilder UseViewportManager(this TuiEngineBuilder builder)
+        public static Tvision2Setup UseViewportManager(this Tvision2Setup setup)
         {
-            builder.SetCustomItem<IViewportManager>(new ViewportManager());
 
-            builder.AfterCreateInvoke(engine =>
+            setup.Builder.ConfigureServices(sc =>
             {
-                var viewportManager = engine.GetCustomItem<IViewportManager>() as ViewportManager;
+                sc.AddSingleton<IViewportManager, ViewportManager>();
+            });
+            
+
+            setup.Options.AfterCreateInvoke((engine, sp) =>
+            {
+                var viewportManager = sp.GetRequiredService<IViewportManager>() as ViewportManager;
                 viewportManager.AttachTo(engine.UI);
             });
-            return builder;
+            return setup;
         }
     }
 }

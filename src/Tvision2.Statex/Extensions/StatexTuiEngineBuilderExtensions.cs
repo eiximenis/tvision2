@@ -1,19 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
+using Tvision2.Core;
 using Tvision2.Statex;
 
-namespace Tvision2.Core.Engine
+namespace Tvision2.DependencyInjection
 {
     public static class StatexTuiEngineBuilderExtensions
     {
-        public static TuiEngineBuilder AddStateManager(this TuiEngineBuilder builder, Action<TvStateManager> configAction)
+        public static Tvision2Setup AddStateManager(this Tvision2Setup setup, Action<TvStateManager> configAction)
         {
             var manager = new TvStateManager();
             configAction?.Invoke(manager);
-            builder.SetCustomItem<TvStateManager>(manager);
-            builder.SetCustomItem<ITvStoreSelector>(manager);
-            return builder;
+            setup.Builder.ConfigureServices(sc =>
+            {
+                sc.AddSingleton<TvStateManager>(manager);
+                sc.AddSingleton<ITvStoreSelector>(manager);
+
+            });
+            return setup;
         }
     }
 }

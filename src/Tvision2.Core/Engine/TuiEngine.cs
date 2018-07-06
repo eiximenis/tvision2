@@ -1,71 +1,63 @@
-﻿using System;
+﻿using Microsoft.Extensions.Hosting;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Tvision2.Core.Hooks;
 using Tvision2.Core.Render;
 using Tvision2.Engine.Console;
 
 namespace Tvision2.Core.Engine
 {
-    public class TuiEngine : ICustomItemsProvider
+    public class TuiEngine : ITuiEngine
     {
+        
         private const long TIME_PER_FRAME = (int)((1.0f / 30.0f) * 1000) * TimeSpan.TicksPerMillisecond;
         private readonly EventPumper _eventPumper;
         private readonly Stopwatch _watcher;
+        private readonly Tvision2Options _options;
 
         private VirtualConsole _currentConsole;
-
-        private readonly IDictionary<Type, object> _additionalItems;
-        private readonly IConsoleDriver _consoleDriver;
-
-        public IConsoleDriver ConsoleDriver => _consoleDriver;
-
+        public IConsoleDriver ConsoleDriver { get; }
         public IEventHookManager EventHookManager { get; }
-
         public ComponentTree UI { get; }
+        public IServiceProvider ServiceProvider { get; }
 
-        internal TuiEngine(TuiEngineBuildOptions options)
+        public TuiEngine(Tvision2Options options, IServiceProvider serviceProvider)
         {
-            _consoleDriver = options.ConsoleDriver ?? throw new ArgumentException("No console driver defined");
-            _additionalItems = new Dictionary<Type, object>();
+            ConsoleDriver = options.ConsoleDriver ?? throw new ArgumentException("No console driver defined");
             UI = new ComponentTree(this);
-            _additionalItems.Add(typeof(IComponentTree), UI);
-            AddAdditionalItems(options.AdditionalValues);
-            _eventPumper = new EventPumper(_consoleDriver);
+            //_additionalItems.Add(typeof(IComponentTree), UI);
+            _eventPumper = new EventPumper(ConsoleDriver);
             _watcher = new Stopwatch();
             var hookContext = new HookContext(this);
-            EventHookManager = new EventHookManager(options.Hooks ?? Enumerable.Empty<IEventHook>(), hookContext);
+            ServiceProvider = serviceProvider;
+            _options = options;
+            EventHookManager = new EventHookManager(options.HookTypes ?? Enumerable.Empty<Type>(), hookContext, ServiceProvider);
         }
 
-        private void AddAdditionalItems(IEnumerable<KeyValuePair<Type, object>> additionalItems)
+        public async Task Start(CancellationToken cancellationToken)
         {
-            foreach (var kvp in additionalItems)
-            {
-                var item = kvp.Value;
-                _additionalItems.Add(kvp.Key, item);
-            }
-        }
-
-        public TItem GetCustomItem<TItem>()
-        {
-            if (_additionalItems.TryGetValue(typeof(TItem), out object value))
-            {
-                return (TItem)value;
-            }
-
-            return default(TItem);
-        }
-
-
-        public async Task<int> Start()
-        {
-            _consoleDriver.Init();
+            ConsoleDriver.Init();
             _currentConsole = new VirtualConsole();
+
+            if (_options.StartupFunc != null)
+            {
+                await _options.StartupFunc(ServiceProvider, this);
+            }
+
+            var startup = ServiceProvider.GetService<ITvisionAppStartup>();
+
+            if (startup != null)
+            {
+                await startup.Startup(this);
+            }
+
             PerformDrawOperations(force: true);
-            var end = false;
-            do
+            while (!cancellationToken.IsCancellationRequested)
             {
                 _watcher.Start();
                 var evts = _eventPumper.ReadEvents();
@@ -77,15 +69,11 @@ namespace Tvision2.Core.Engine
                 var ellapsed = (int)_watcher.ElapsedTicks;
                 if (ellapsed < TIME_PER_FRAME)
                 {
-                    await Task.Delay(TimeSpan.FromTicks(TIME_PER_FRAME - ellapsed));
+                    await Task.Delay(TimeSpan.FromTicks(TIME_PER_FRAME - ellapsed), cancellationToken);
                 }
                 _watcher.Reset();
-
-            } while (!end);
-
-            return 0;
+            }
         }
-
 
         private void PerformDrawOperations(bool force)
         {
@@ -104,7 +92,7 @@ namespace Tvision2.Core.Engine
                 var diffs = _currentConsole.GetDiffs();
                 if (diffs.Any())
                 {
-                    VirtualConsoleRenderer.RenderToConsole(_consoleDriver, diffs);
+                    VirtualConsoleRenderer.RenderToConsole(ConsoleDriver, diffs);
                 }
                 _currentConsole.NoDirty();
             }

@@ -8,12 +8,9 @@ namespace Tvision2.Core.Hooks
     public class HookContext
     {
         public IComponentTree Components { get; }
-        public ICustomItemsProvider ItemsProvider { get; }
-
-        public HookContext(TuiEngine engine)
+        public HookContext(ITuiEngine engine)
         {
             Components = engine.UI;
-            ItemsProvider = engine;
         }
     }
 }

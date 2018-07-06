@@ -12,9 +12,7 @@ namespace Tvision2.Core.Engine
     {
         private readonly Dictionary<string, IComponentMetadata> _components;
         private List<IComponentMetadata> _responders;
-
         public TuiEngine Engine { get; }
-
         public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
 
         public ComponentTree(TuiEngine owner)

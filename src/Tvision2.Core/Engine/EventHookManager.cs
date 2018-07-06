@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Tvision2.Core.Hooks;
 using Tvision2.Events;
@@ -11,9 +13,10 @@ namespace Tvision2.Core.Engine
         private readonly List<IEventHook> _hooks;
         private readonly HookContext _context;
 
-        public EventHookManager(IEnumerable<IEventHook> hooks, HookContext context)
+        public EventHookManager(IEnumerable<Type> hookTypes, HookContext context, IServiceProvider serviceProvider)
         {
-            _hooks = new List<IEventHook>(hooks);
+
+            _hooks = hookTypes.Select(ht => serviceProvider.GetService(ht) as IEventHook).ToList();
             _context = context;
         }
 

@@ -7,6 +7,9 @@ namespace Tvision2.Core.Engine
 {
     public interface IComponentTree
     {
+
+
+
         event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
     }
 }

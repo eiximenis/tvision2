@@ -6,8 +6,11 @@ using Tvision2.Viewports;
 
 namespace Tvision2.Core.Engine
 {
+    // TODO: Remove this
+    /*
     public static class TuiEngineExtensions_Viewports
     {
         public static IViewportManager ViewportManager(this TuiEngine tui) => tui.GetCustomItem<IViewportManager>();
     }
+    */
 }

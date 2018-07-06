@@ -32,7 +32,7 @@ namespace Tvision2.Controls
             _controls.AddAfter(current, cdata);
         }
 
-        internal void AttachTo(ComponentTree comtree)
+        internal void AttachTo(IComponentTree comtree)
         {
             _componentTree = comtree;
         }
