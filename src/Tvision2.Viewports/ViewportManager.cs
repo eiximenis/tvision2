@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 
@@ -7,8 +8,13 @@ namespace Tvision2.Viewports
     internal class ViewportManager : IViewportManager
     {
         private IComponentTree _attachedComponentTree;
-        public void InvalidateViewport(IViewport vieportToInvalidate)
+        public void InvalidateViewport(IViewport viewportToInvalidate)
         {
+            var components = _attachedComponentTree.Components.Where(c => c.Viewports.Any(vp => vp.Intersects(viewportToInvalidate)));
+            foreach (var component in components)
+            {
+                component.Invalidate();
+            }
         }
 
         public void AttachTo(IComponentTree componentTree)

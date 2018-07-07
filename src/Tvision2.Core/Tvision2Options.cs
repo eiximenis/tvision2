@@ -11,7 +11,6 @@ namespace Tvision2.Core
     {
         ITvision2Options UseConsoleDriver(IConsoleDriver driverToUse);
         ITvision2Options UseStartup(Func<IServiceProvider, ITuiEngine, Task> startupAction);
-        ITvision2Options UseStartup<TStartup>() where TStartup : ITvisionAppStartup;
         ITvision2Options AfterCreateInvoke(Action<ITuiEngine, IServiceProvider> invoker);
 
     }
@@ -52,13 +51,6 @@ namespace Tvision2.Core
             StartupFunc = startupAction;
             return this;
         }
-
-        ITvision2Options ITvision2Options.UseStartup<TStartup>()
-        {
-            StartupType = typeof(TStartup);
-            return this;
-        }
-
         public ITvision2Options AddHook<T>() where T : class, IEventHook
         {
             if (!_hookTypes.Contains(typeof(T)))

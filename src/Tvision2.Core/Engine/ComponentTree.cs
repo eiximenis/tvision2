@@ -15,6 +15,8 @@ namespace Tvision2.Core.Engine
         public TuiEngine Engine { get; }
         public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
 
+        public IEnumerable<TvComponent> Components => _components.Values.Select(cm => cm.Component);
+
         public ComponentTree(TuiEngine owner)
         {
             _components = new Dictionary<string, IComponentMetadata>();

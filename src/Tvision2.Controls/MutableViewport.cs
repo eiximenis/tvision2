@@ -43,5 +43,7 @@ namespace Tvision2.Controls
             _viewport = _viewport.Translate(translation);
             return this;
         }
+
+        public bool Intersects(IViewport another) => _viewport.Intersects(another);
     }
 }

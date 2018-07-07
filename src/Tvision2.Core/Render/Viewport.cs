@@ -33,5 +33,22 @@ namespace Tvision2.Core.Render
         public IViewport Translate(TvPoint translation) => new Viewport(Position + translation, Columns, Rows, Clipping);
 
         public Viewport(TvPoint point, int cols, int rows = 1) : this(point, cols, rows, ClippingMode.Clip) { }
+
+        public bool Intersects(IViewport another)
+        {
+            var otherPos = another.Position;
+
+            var x1 = Position.Left;
+            var y1 = Position.Top;
+            var x2 = x1 + Columns;
+            var y2 = y1 + Rows;
+
+            var x1o = otherPos.Left;
+            var y1o = otherPos.Top;
+            var x2o = x1o + another.Columns;
+            var y2o = y1o + another.Rows;
+
+            return (x2o >= x1 && x1o <= x2) && (y2o >= y1 && y1o <= y2);
+        }
     }
 }

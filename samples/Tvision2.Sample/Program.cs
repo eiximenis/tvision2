@@ -41,7 +41,11 @@ namespace Tvision2.Sample
             {
                 setup.UsePlatformConsoleDriver()
                     .AddTvision2Startup<Startup>()
-                    .AddTvControls();
+                    .AddTvControls()
+                    .AddSkinSupport(sb =>
+                    {
+                        sb.AddMcStyles();
+                    });
             }).UseConsoleLifetime();
             await builder.RunTvisionConsoleApp();
             return 1;

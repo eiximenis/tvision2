@@ -12,6 +12,8 @@ namespace Tvision2.Core.Render
         int Rows { get; }
         ClippingMode Clipping { get; }
 
+        bool Intersects(IViewport another);
+
         IViewport ResizeTo(int cols, int rows);
         IViewport Grow(int ncols, int nrows);
         IViewport MoveTo(TvPoint newPos);
