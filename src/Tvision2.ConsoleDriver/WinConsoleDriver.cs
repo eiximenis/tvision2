@@ -21,7 +21,19 @@ namespace Tvision2.ConsoleDriver
             _options = options;
         }
 
-        public void Init() { }
+        public void Init()
+        {
+            /*
+            var rect = new SMALL_RECT();
+            rect.Top = 0;
+            rect.Left = 0;
+            rect.Bottom = 20;
+            rect.Right = 20;
+            ConsoleNative.SetConsoleWindowInfo(_hstdout, true, ref rect);
+            ConsoleNative.SetConsoleScreenBufferSize(_hstdout, new COORD((short)(rect.Right + 1), (short)(rect.Bottom + 1)));
+            */
+        }
+
         public TvConsoleEvents ReadEvents()
         {
             ConsoleNative.GetNumberOfConsoleInputEvents(_hstdin, out uint numEvents);

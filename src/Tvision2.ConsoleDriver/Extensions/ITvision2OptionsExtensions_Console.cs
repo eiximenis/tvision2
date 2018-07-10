@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using Tvision2.ConsoleDriver;
 using Tvision2.Engine.Console;
 
@@ -11,7 +12,12 @@ namespace Tvision2.Core
         {
             var options = new ConsoleDriverOptions();
             config?.Invoke(options);
-            tv2.Options.UseConsoleDriver(new WinConsoleDriver(options));
+            var driver = new WinConsoleDriver(options);
+            tv2.Options.UseConsoleDriver(driver);
+            tv2.Builder.ConfigureServices((hc, sc) => 
+            {
+                sc.AddSingleton<IConsoleDriver>(driver);
+            });
             return tv2;
         }
 
@@ -19,7 +25,12 @@ namespace Tvision2.Core
         {
             var options = new ConsoleDriverOptions();
             config?.Invoke(options);
-            tv2.Options.UseConsoleDriver(new NcursesConsoleDriver(options));
+            var driver = new WinConsoleDriver(options);
+            tv2.Options.UseConsoleDriver(driver);
+            tv2.Builder.ConfigureServices((hc, sc) =>
+            {
+                sc.AddSingleton<IConsoleDriver>(driver);
+            });
             return tv2;
         }
 
@@ -27,7 +38,12 @@ namespace Tvision2.Core
         {
             var options = new ConsoleDriverOptions();
             config?.Invoke(options);
-            tv2.Options.UseConsoleDriver(new NetConsoleDriver(options));
+            var driver = new NetConsoleDriver(options);
+            tv2.Options.UseConsoleDriver(driver);
+            tv2.Builder.ConfigureServices((hc, sc) =>
+            {
+                sc.AddSingleton<IConsoleDriver>(driver);
+            });
             return tv2;
         }
 
@@ -39,6 +55,10 @@ namespace Tvision2.Core
             var useWin = (platform == PlatformID.Win32NT || platform == PlatformID.Win32S || platform == PlatformID.Win32Windows);
             var driver = useWin ? new WinConsoleDriver(options) as IConsoleDriver : new NcursesConsoleDriver(options) as IConsoleDriver;
             tv2.Options.UseConsoleDriver(driver);
+            tv2.Builder.ConfigureServices((hc, sc) =>
+            {
+                sc.AddSingleton<IConsoleDriver>(driver);
+            });
             return tv2;
         }
     }

@@ -404,7 +404,7 @@ namespace Tvision2.ConsoleDriver.Win32
         OEMClear = 0xFE
     }
 
-    enum ControlKeyStates : uint
+    internal enum ControlKeyStates : uint
     {
         RIGHT_ALT_PRESSED = 0x1,
         LEFT_ALT_PRESSED = 0x2,
@@ -418,7 +418,7 @@ namespace Tvision2.ConsoleDriver.Win32
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    struct COORD
+    internal struct COORD
     {
         public short X;
         public short Y;
@@ -430,7 +430,7 @@ namespace Tvision2.ConsoleDriver.Win32
         }
     };
 
-    enum ConsoleEventTypes : ushort
+    internal enum ConsoleEventTypes : ushort
     {
         FOCUS_EVENT = 0x0010,
         KEY_EVENT = 0x0001,
@@ -440,7 +440,7 @@ namespace Tvision2.ConsoleDriver.Win32
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    struct INPUT_RECORD
+    internal struct INPUT_RECORD
     {
         [FieldOffset(0)]
         public ConsoleEventTypes EventType;
@@ -457,7 +457,7 @@ namespace Tvision2.ConsoleDriver.Win32
     };
 
     [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Unicode)]
-    struct KEY_EVENT_RECORD
+    internal struct KEY_EVENT_RECORD
     {
         [FieldOffset(0), MarshalAs(UnmanagedType.Bool)]
         public bool bKeyDown;
@@ -474,7 +474,7 @@ namespace Tvision2.ConsoleDriver.Win32
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    struct MOUSE_EVENT_RECORD
+    internal struct MOUSE_EVENT_RECORD
     {
         [FieldOffset(0)]
         public COORD dwMousePosition;
@@ -486,7 +486,7 @@ namespace Tvision2.ConsoleDriver.Win32
         public uint dwEventFlags;
     }
 
-    struct WINDOW_BUFFER_SIZE_RECORD
+    internal struct WINDOW_BUFFER_SIZE_RECORD
     {
         public COORD dwSize;
 
@@ -509,7 +509,7 @@ namespace Tvision2.ConsoleDriver.Win32
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    struct CONSOLE_READCONSOLE_CONTROL
+    internal struct CONSOLE_READCONSOLE_CONTROL
     {
         public ulong nLength;
         public ulong nInitialChars;
@@ -526,7 +526,7 @@ namespace Tvision2.ConsoleDriver.Win32
     }
 
     [Flags]
-    enum ConsoleInputModes : uint
+    internal enum ConsoleInputModes : uint
     {
         ENABLE_ECHO_INPUT = 0x0004,
         ENABLE_INSERT_MODE = 0x0020,
@@ -538,7 +538,7 @@ namespace Tvision2.ConsoleDriver.Win32
         ENABLE_VIRTUAL_TERMINAL_INPUT = 0x0200
     }
 
-    enum ConsoleOutputModes : uint
+    internal enum ConsoleOutputModes : uint
     {
         ENABLE_PROCESSED_OUTPUT = 0x001,
         ENABLE_WRAP_AT_EOL_OUTPUT = 0x0002,
@@ -548,7 +548,7 @@ namespace Tvision2.ConsoleDriver.Win32
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    class CONSOLE_FONT_INFOEX
+    internal class CONSOLE_FONT_INFOEX
     {
         private int cbSize;
         public CONSOLE_FONT_INFOEX()
@@ -572,19 +572,19 @@ namespace Tvision2.ConsoleDriver.Win32
         GENERIC_WRITE = 0x40000000
     }
 
-    enum ShareMode : uint
+    internal enum ShareMode : uint
     {
         FILE_SHARE_READ = 0x00000001,
         FILE_SHARE_WRITE = 0x00000002
     }
 
-    enum ScreenBufferFlags : uint
+    internal enum ScreenBufferFlags : uint
     {
         CONSOLE_TEXTMODE_BUFFER = 0x00000001
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    struct SMALL_RECT
+    internal struct SMALL_RECT
     {
 
         public short Left;
@@ -594,7 +594,7 @@ namespace Tvision2.ConsoleDriver.Win32
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    struct CONSOLE_SCREEN_BUFFER_INFO
+    internal struct CONSOLE_SCREEN_BUFFER_INFO
     {
 
         public COORD dwSize;
@@ -605,7 +605,7 @@ namespace Tvision2.ConsoleDriver.Win32
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    struct CONSOLE_SCREEN_BUFFER_INFO_EX
+    internal struct CONSOLE_SCREEN_BUFFER_INFO_EX
     {
         public uint cbSize;
         public COORD dwSize;
@@ -630,13 +630,13 @@ namespace Tvision2.ConsoleDriver.Win32
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    struct CONSOLE_CURSOR_INFO
+    internal struct CONSOLE_CURSOR_INFO
     {
-        uint Size;
-        bool Visible;
+        private uint Size;
+        private bool Visible;
     }
 
-    static class ConsoleNative
+    internal static class ConsoleNative
     {
         [DllImport("kernel32.dll", EntryPoint = "ReadConsoleInputW", CharSet = CharSet.Unicode)]
         public static extern bool ReadConsoleInput(IntPtr hConsoleInput, [Out] INPUT_RECORD[] lpBuffer, uint nLength, out uint lpNumberOfEventsRead);
@@ -722,7 +722,12 @@ namespace Tvision2.ConsoleDriver.Win32
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool FillConsoleOutputAttribute(IntPtr hConsoleOutput, ushort wAttribute, uint nLength, COORD dwWriteCoord, out uint lpNumberOfAttrsWritten);
 
-    
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool SetConsoleScreenBufferSize(IntPtr hConsoleOutput, COORD dwSize);
+
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool SetConsoleWindowInfo(IntPtr hConsoleOutput, bool bAbsolute, [In] ref SMALL_RECT lpConsoleWindow);
     }
 
 }

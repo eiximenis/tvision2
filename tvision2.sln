@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Sample", "samples\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TVision2.ViewportSample", "samples\TVision2.ViewportSample\TVision2.ViewportSample.csproj", "{31CD9618-E4C2-4BA8-AFAB-20278E132490}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.Debug", "src\Tvision2.Debug\Tvision2.Debug.csproj", "{0B67C2E1-76ED-486C-87BD-F7091C897B4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{31CD9618-E4C2-4BA8-AFAB-20278E132490}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31CD9618-E4C2-4BA8-AFAB-20278E132490}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31CD9618-E4C2-4BA8-AFAB-20278E132490}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B67C2E1-76ED-486C-87BD-F7091C897B4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B67C2E1-76ED-486C-87BD-F7091C897B4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B67C2E1-76ED-486C-87BD-F7091C897B4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B67C2E1-76ED-486C-87BD-F7091C897B4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

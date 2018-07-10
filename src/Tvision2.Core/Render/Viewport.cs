@@ -34,6 +34,11 @@ namespace Tvision2.Core.Render
 
         public Viewport(TvPoint point, int cols, int rows = 1) : this(point, cols, rows, ClippingMode.Clip) { }
 
+        public IViewport Clone()
+        {
+            return new Viewport(Position, Columns, Rows, Clipping) { ZIndex = ZIndex };
+        }
+
         public bool Intersects(IViewport another)
         {
             var otherPos = another.Position;

@@ -19,12 +19,11 @@ namespace Tvision2.ConsoleDriver.Win32
                     case ConsoleEventTypes.KEY_EVENT:
                         events.Add(new Win32ConsoleKeyboardEvent(record.KeyEvent));
                         break;
-                    case ConsoleEventTypes.MENU_EVENT:
-                        break;
                     case ConsoleEventTypes.MOUSE_EVENT:
                         events.Add(new Win32ConsoleMouseEvent(record.MouseEvent));
                         break;
                     case ConsoleEventTypes.WINDOW_BUFFER_SIZE_EVENT:
+                        events.Add(new Win32WindowsEvent(record.WindowBufferSizeEvent));
                         break;
                 }
             }

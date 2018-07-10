@@ -33,19 +33,13 @@ namespace Tvision2.Core.Engine
 
         public IComponentMetadata Add(TvComponent component)
         {
-            var metadata = MetadataFromComponent(component);
-            return Add(metadata);
+            ((TvComponentMetadata)component.Metadata).Console = Engine.ConsoleDriver;
+            return Add(component.Metadata);
         }
 
         private void OnComponentAdded(IComponentMetadata metadata)
         {
             ComponentAdded?.Invoke(this, new TreeUpdatedEventArgs(metadata));
-        }
-
-        private TvComponentMetadata MetadataFromComponent(TvComponent component)
-        {
-            var newMetadata = new TvComponentMetadata(component, Engine.ConsoleDriver);
-            return newMetadata;
         }
 
         internal void Update(TvConsoleEvents evts)

@@ -13,17 +13,19 @@ namespace Tvision2.Core.Components
 
     public abstract class TvComponent
     {
-        private TvComponentMetadata _metadata;
+        private readonly TvComponentMetadata _metadata;
         protected Dictionary<Guid, IViewport> _viewports;
         public bool NeedToRedraw { get; protected set; }
         public string Name { get; }
         public void Invalidate() => NeedToRedraw = true;
+        public IComponentMetadata Metadata => _metadata;
 
-        public IComponentMetadata Metadata  => _metadata;
-        internal void SetMetadata(TvComponentMetadata metadata) => _metadata = metadata;
+        protected readonly List<ITvDrawer> _drawers;
 
         public TvComponent(string name)
         {
+            _metadata = new TvComponentMetadata(this);
+            _drawers = new List<ITvDrawer>();
             _viewports = new Dictionary<Guid, IViewport>();
             Name = string.IsNullOrEmpty(name) ? $"TvComponent-{Guid.NewGuid().ToString()}" : name;
         }
@@ -39,23 +41,37 @@ namespace Tvision2.Core.Components
         public IViewport GetViewport(Guid guid) => _viewports.TryGetValue(guid, out IViewport value) ? value : null;
         public IEnumerable<IViewport> Viewports => _viewports.Values;
 
-        public void UpdateViewport(IViewport newViewport) => UpdateViewport(Guid.Empty, newViewport);
+        public void UpdateViewport(IViewport newViewport, bool addIfNotExists = false) => UpdateViewport(Guid.Empty, newViewport, addIfNotExists);
 
-        public void UpdateViewport(Guid guid, IViewport newViewport)
+        public void UpdateViewport(Guid guid, IViewport newViewport, bool addIfNotExists = false)
         {
-            if (_viewports.TryGetValue(guid, out IViewport viewport))
+            if (_viewports.ContainsKey(guid))
             {
                 _viewports[guid] = newViewport;
                 _metadata?.OnViewportChanged();
             }
+            else if (addIfNotExists)
+            {
+                _viewports.Add(guid, newViewport);
+                _metadata?.OnViewportChanged();
+            }
         }
+
+
+        public void AddDrawer(ITvDrawer drawer) => _drawers.Add(drawer);
+
+        public void InsertDrawerAt(ITvDrawer drawer, int index)
+        {
+            _drawers.Insert(0, drawer);
+        }
+
         protected internal abstract void Update(TvConsoleEvents evts);
         protected internal abstract void Draw(VirtualConsole console);
+     
     }
 
     public class TvComponent<T> : TvComponent
     {
-        private ITvDrawer<T> _drawer;
         private readonly List<BehaviorMetadata<T>> _behaviorsMetadata;
         public T State { get; private set; }
 
@@ -73,7 +89,6 @@ namespace Tvision2.Core.Components
         {
             NeedToRedraw = false;
             _behaviorsMetadata = new List<BehaviorMetadata<T>>();
-            _drawer = null;
             HasFocus = false;
             State = initialState;
         }
@@ -91,7 +106,7 @@ namespace Tvision2.Core.Components
 
         public TvComponent<T> UseDrawer(ITvDrawer<T> drawer)
         {
-            _drawer = drawer;
+            _drawers.Add(drawer);
             return this;
         }
 
@@ -118,7 +133,10 @@ namespace Tvision2.Core.Components
             foreach (var vpnk in _viewports)
             {
                 var context = new RenderContext<T>(vpnk.Value, console, State);
-                _drawer.Draw(context);
+                foreach (var drawer in _drawers)
+                {
+                    drawer?.Draw(context);
+                }
             }
             NeedToRedraw = false;
 

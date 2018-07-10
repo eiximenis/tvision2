@@ -8,5 +8,7 @@ namespace Tvision2.Layouts
     public interface ITvContainer
     {
         TvComponent AsComponent();
+
+        void AddChild(TvComponent component);
     }
 }

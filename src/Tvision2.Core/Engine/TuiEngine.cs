@@ -56,6 +56,11 @@ namespace Tvision2.Core.Engine
                 await startup.Startup(this);
             }
 
+            foreach (var afterCreateTask in _options.AfterCreateInvokers)
+            {
+                afterCreateTask.Invoke(this, ServiceProvider);
+            }
+
             PerformDrawOperations(force: true);
             while (!cancellationToken.IsCancellationRequested)
             {

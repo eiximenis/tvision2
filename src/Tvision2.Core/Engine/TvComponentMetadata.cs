@@ -8,15 +8,13 @@ namespace Tvision2.Core.Engine
     {
         public TvComponent Component { get; }
 
-        public IConsoleDriver Console { get; }
+        public IConsoleDriver Console { get; internal set; }
 
         public event EventHandler ViewportChanged;
 
-        public TvComponentMetadata(TvComponent component, IConsoleDriver consoleDriver)
+        public TvComponentMetadata(TvComponent component)
         {
             Component = component;
-            Component.SetMetadata(this);
-            Console = consoleDriver;
         }
 
         public void OnViewportChanged()

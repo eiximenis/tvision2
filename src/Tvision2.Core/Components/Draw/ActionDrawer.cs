@@ -16,6 +16,12 @@ namespace Tvision2.Core.Components.Draw
         }
 
         public void Draw(RenderContext<T> context) => _drawFunc.Invoke(context);
+
+
+        void ITvDrawer.Draw(RenderContext context)
+        {
+            Draw(context as RenderContext<T>);
+        }
     }
 
 
@@ -34,5 +40,10 @@ namespace Tvision2.Core.Components.Draw
         }
 
         public void Draw(RenderContext<T> context) => _drawFunc.Invoke(context, _options);
+
+        void ITvDrawer.Draw(RenderContext context)
+        {
+            Draw(context as RenderContext<T>);
+        }
     }
 }

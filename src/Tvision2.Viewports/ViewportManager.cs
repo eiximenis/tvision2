@@ -20,6 +20,13 @@ namespace Tvision2.Viewports
         public void AttachTo(IComponentTree componentTree)
         {
             _attachedComponentTree = componentTree;
+
+            foreach (var component in componentTree.Components)
+            {
+                component.Invalidate();
+                component.Metadata.ViewportChanged += OnViewportChanged;
+            }
+
             componentTree.ComponentAdded += OnComponentAdded;
         }
 

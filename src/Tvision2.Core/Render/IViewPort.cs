@@ -18,6 +18,7 @@ namespace Tvision2.Core.Render
         IViewport Grow(int ncols, int nrows);
         IViewport MoveTo(TvPoint newPos);
         IViewport Translate(TvPoint translation);
+        IViewport Clone();
 
     }
 }

@@ -20,5 +20,10 @@ namespace Tvision2.Core.Render
         {
             return new TvPoint(first.Top + second.Top, first.Left + second.Left);
         }
+
+        public static TvPoint operator -(TvPoint first, TvPoint second)
+        {
+            return new TvPoint(first.Top - second.Top, first.Left - second.Left);
+        }
     }
 }

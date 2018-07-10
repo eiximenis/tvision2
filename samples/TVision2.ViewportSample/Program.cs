@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
+using Tvision2.Core;
 using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
-using Tvision2.Core;
+using Tvision2.Layouts.Grid;
 
 namespace TVision2.ViewportSample
 {
@@ -17,23 +18,36 @@ namespace TVision2.ViewportSample
             builder.UseTvision2(setup =>
             {
                 setup.UsePlatformConsoleDriver()
-                    .UseViewportManager();
+                    .UseDebug()
+                    .UseViewportManager()
+                    .UseLayoutManager();
 
                 setup.Options.UseStartup(async (sp, tui) =>
                 {
-                    var asterisk = new TvComponent<string>("*");
 
+                    var grid = new TvGrid(tui.UI, new GridState(2, 2), "MyGrid");
+                    grid.AsComponent().AddViewport(new Viewport(new TvPoint(0, 0), 20, 10));
+
+                    var asterisk = new TvComponent<string>("*");
                     asterisk.UseDrawer(ctx =>
                     {
                         ctx.DrawStringAt(ctx.State, new TvPoint(0, 0), ConsoleColor.White, ConsoleColor.Black);
                     });
 
-                    asterisk.AddViewport(new Viewport(new TvPoint(10, 10), 1, 1));
-                    asterisk.AddViewport(new Viewport(new TvPoint(12, 12), 1, 1));
-                    var guid = asterisk.AddViewport(new Viewport(new TvPoint(13, 20), 1, 1));
-                    tui.UI.Add(asterisk);
+                    var dollar = new TvComponent<string>("$");
+                    dollar.UseDrawer(ctx =>
+                    {
+                        ctx.DrawStringAt(ctx.State, new TvPoint(1, 2), ConsoleColor.Red, ConsoleColor.Black);
+                    });
+
+                    grid.AddChild(asterisk, 1, 1);
+                    grid.AddChild(dollar, 0, 0);
+                    tui.UI.Add(grid.AsComponent());
+
                 });
             }).UseConsoleLifetime();
+
+
             await builder.RunTvisionConsoleApp();
             return 1;
 
@@ -42,9 +56,7 @@ namespace TVision2.ViewportSample
             // we should see two asterisks moving right-to-left and one more fixed at 12,12
             for (int idx = 0; idx < 9; idx++)
             {
-                await Task.Delay(2000);
-                asterisk.UpdateViewport(asterisk.Viewport.Translate(new TvPoint(0, -1)));
-                asterisk.UpdateViewport(guid, asterisk.GetViewport(guid).Translate(new TvPoint(0, -1)));
+
             }
             */
         }

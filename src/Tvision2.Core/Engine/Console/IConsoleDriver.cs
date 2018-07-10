@@ -12,5 +12,7 @@ namespace Tvision2.Engine.Console
         void SetCursorAt(int x, int y);
         TvConsoleEvents ReadEvents();
         void Init();
+
+
     }
 }

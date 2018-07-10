@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Tvision2.Layouts
 {
-    class DynamicViewportManager
+    class LayoutManager : ILayoutManager
     {
     }
 }

@@ -24,7 +24,6 @@ namespace Microsoft.Extensions.Hosting
             {
                 sc.AddSingleton<Tvision2Options>(setup.Options as Tvision2Options);
                 sc.AddSingleton<ITuiEngine, TuiEngine>();
-                sc.AddHostedService<TuiEngineHost>();
             });
 
             return builder;

@@ -3,21 +3,16 @@ using Tvision2.Core.Components;
 
 namespace Tvision2.Core.Render
 {
-    public class RenderContext<T>
+
+    public class RenderContext
     {
-        private readonly VirtualConsole _console;
-
+        protected readonly VirtualConsole _console;
         public IViewport Viewport { get; private set; }
-        public T State { get; }
-
-        public RenderContext(IViewport viewport, VirtualConsole console, T state)
+        public RenderContext(IViewport viewport, VirtualConsole console)
         {
             _console = console;
             Viewport = viewport;
-            State = state;
         }
-
-        public RenderContext<TD> CloneWithNewState<TD>(TD newState) => new RenderContext<TD>(Viewport, _console, newState);
 
         public void DrawStringAt(string value, TvPoint location, ConsoleColor foreColor, ConsoleColor backColor)
         {
@@ -29,12 +24,6 @@ namespace Tvision2.Core.Render
             ViewportHelper.DrawChars(value, count, location, foreColor, backColor, Viewport, _console);
         }
 
-        public void ApplyBoxModel(IViewport newBoxModel)
-        {
-            Viewport = newBoxModel;
-        }
-
-
         public void Clear()
         {
             ViewportHelper.Clear(Viewport, _console);
@@ -44,5 +33,22 @@ namespace Tvision2.Core.Render
         {
             ViewportHelper.Fill(backColor, Viewport, _console);
         }
+
+        public void ApplyBoxModel(IViewport newBoxModel)
+        {
+            Viewport = newBoxModel;
+        }
+    }
+
+    public class RenderContext<T> : RenderContext
+    {       
+        public T State { get; }
+
+        public RenderContext(IViewport viewport, VirtualConsole console, T state) : base(viewport, console)
+        {
+
+            State = state;
+        }
+        public RenderContext<TD> CloneWithNewState<TD>(TD newState) => new RenderContext<TD>(Viewport, _console, newState);
     }
 }

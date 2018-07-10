@@ -5,7 +5,7 @@ using Tvision2.Core.Hooks;
 
 namespace Tvision2.Core
 {
-    public class Tvision2Setup : ITvision2Setup
+    public class Tvision2Setup 
     {
         private readonly Tvision2Options _options;
         public ITvision2Options Options => _options;

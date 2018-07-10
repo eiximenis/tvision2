@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tvision2.Core.Render
 {
@@ -54,7 +52,10 @@ namespace Tvision2.Core.Render
         public static void Fill(ConsoleColor color, IViewport boxModel, VirtualConsole console)
         {
             var location = ViewPointToConsolePoint(new TvPoint(0, 0), boxModel.Position);
-            console.DrawAt(new string(' ', boxModel.Columns), location, boxModel.ZIndex, color, color);
+            for (var rows = 0; rows < boxModel.Rows; rows++)
+            {
+                console.DrawAt(new string(' ', boxModel.Columns), location + new TvPoint(rows, 0), boxModel.ZIndex, color, color);
+            }
         }
 
         public static void Clear(IViewport boxModel, VirtualConsole console)

@@ -27,6 +27,8 @@ namespace Tvision2.Core
         public Func<IServiceProvider, ITuiEngine, Task> StartupFunc{ get; private set; }
         public Type StartupType { get; private set; }
 
+        public IEnumerable<Action<ITuiEngine, IServiceProvider>> AfterCreateInvokers => _afterCreateInvokers;
+
         public Tvision2Options()
         {
             _hookTypes = new List<Type>();

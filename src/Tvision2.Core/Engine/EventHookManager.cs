@@ -22,7 +22,7 @@ namespace Tvision2.Core.Engine
 
         public void ProcessEvents(TvConsoleEvents evts)
         {
-            if (evts.HasKeyboardEvents)
+            if (evts.HasEvents)
             {
                 foreach (var hook in _hooks)
                 {
