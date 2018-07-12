@@ -6,9 +6,13 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Core.Engine
 {
-    public interface IComponentTree
+    public interface IComponentTree 
     {
-        IEnumerable<TvComponent> Components { get; }
         event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
+        TuiEngine Engine { get; }
+        IComponentMetadata Add(IComponentMetadata metadata);
+        IComponentMetadata Add(TvComponent component);
+        TvComponent GetComponent(string name);
+        IEnumerable<TvComponent> Components { get; }
     }
 }

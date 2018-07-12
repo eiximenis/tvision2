@@ -20,6 +20,7 @@ namespace Tvision2.Layouts
             var evt = events.WindowEvents.LastOrDefault();
             if (evt != null)
             {
+
             }
         }
     }

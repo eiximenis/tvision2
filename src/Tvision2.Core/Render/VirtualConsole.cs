@@ -9,20 +9,22 @@ namespace Tvision2.Core.Render
     public class VirtualConsole
     {
         private readonly ConsoleCharacter[] _buffer;
+        public VirtualConsoleUpdateActions UpdateActions { get; }
         public int Width { get; }
         public int Height { get; }
 
         public bool IsDirty { get; private set; }
 
+        public VirtualConsoleCursor Cursor { get; }
+
         public void NoDirty()
         {
             IsDirty = false;
             _diffs.Clear();
+            Cursor.MovementPending = false;
         }
 
         private readonly List<VirtualConsoleUpdate> _diffs;
-
-        public IEnumerable<VirtualConsoleUpdate> GetDiffs() => _diffs;
 
         public VirtualConsole()
         {
@@ -31,6 +33,8 @@ namespace Tvision2.Core.Render
             _buffer = new ConsoleCharacter[Height * Width];
             InitEmpty();
             _diffs = new List<VirtualConsoleUpdate>(Height * Width);
+            Cursor = new VirtualConsoleCursor();
+            UpdateActions = new VirtualConsoleUpdateActions(_diffs, Cursor);
         }
 
         private void InitEmpty()

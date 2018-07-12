@@ -29,11 +29,11 @@ namespace Tvision2.Sample
             {
                 Text = "label",
             });
-            lbl.Viewport.MoveTo(new TvPoint(3, 4));
+            lbl.Viewport.MoveTo(new TvPoint(4, 3));
             tui.UI.Add(lbl);
 
             var check = new TvCheckbox(skin, new Viewport(new TvPoint(0, 0), 10, 1), new CheckboxState());
-            check.Viewport.MoveTo(new TvPoint(7, 8));
+            check.Viewport.MoveTo(new TvPoint(8, 7));
             tui.UI.Add(check);
 
             var button = new TvButton(skin, new Viewport(new TvPoint(0, 0), 4, 1), new ButtonState()
@@ -41,7 +41,7 @@ namespace Tvision2.Sample
                 Text = "btn"
             });
 
-            button.Viewport.MoveTo(new TvPoint(6, 4));
+            button.Viewport.MoveTo(new TvPoint(4, 6));
             button.Viewport.Grow(4, 0);
 
             button.OnClick = new DelegateCommand<ButtonState>(async s =>
@@ -50,11 +50,11 @@ namespace Tvision2.Sample
                 check.State.Checked = TvCheckboxState.Checked;
             });
 
-            button.AsComponent().AddViewport(new Viewport(new TvPoint(8, 7), 10));
+            button.AsComponent().AddViewport(new Viewport(new TvPoint(7, 8), 10));
 
             tui.UI.Add(button);
 
-            var textbox = new TvTextbox(skin, new Viewport(new TvPoint(9, 12), 8, 1), new TextboxState());
+            var textbox = new TvTextbox(skin, new Viewport(new TvPoint(12, 9), 8, 1), new TextboxState());
             tui.UI.Add(textbox);
             //await Task.Delay(6000);
             //button.State.Text = "---Uuuups";

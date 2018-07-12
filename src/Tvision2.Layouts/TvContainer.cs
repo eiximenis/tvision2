@@ -7,36 +7,60 @@ namespace Tvision2.Layouts
 {
     public class TvContainer : ITvContainer
     {
-        private readonly TvComponent<IComponentTree> _thisComponent;
+        private readonly TvComponent<LayoutsComponentTree> _thisComponent;
         private readonly LayoutsComponentTree _childs;
-        public TvContainer(ComponentTree root, string name = null)
+        public string Name { get; }
+
+        public TvContainer(IComponentTree root, string name = null)
         {
             _childs = new LayoutsComponentTree(root);
-            _thisComponent = new TvComponent<IComponentTree>(_childs, name);
-            _thisComponent.Metadata.ViewportChanged += OnChildViewportChanged;
-            _thisComponent.UseDrawer(ct => { });
+            _thisComponent = new TvComponent<LayoutsComponentTree>(_childs, name ?? $"TvContainer{Guid.NewGuid()}");
+            Name = _thisComponent.Name;
+            _thisComponent.Metadata.ViewportChanged += OnViewportChange;
+            _thisComponent.AddDrawer(ct => { });
         }
 
         public void AddChild(TvComponent child)
         {
             _childs.Add(child);
-            RecalculateChildren();
+            InsertChildInside(child);
+            RepositionChildren(TvPoint.Zero);
         }
 
-        protected virtual void RecalculateChildren()
+        private void InsertChildInside(TvComponent child)
+        {
+            if (_thisComponent.Viewport != null)
+            {
+                child.UpdateViewport(_thisComponent.Viewport.Inner(child.Viewport), addIfNotExists: true);
+            }
+        }
+
+        protected virtual void RepositionChildren(TvPoint displacement)
         {
             if (_thisComponent.Viewport != null)
             {
                 foreach (var child in _childs.Components)
                 {
-                    child.UpdateViewport(_thisComponent.Viewport.Inner(child.Viewport), addIfNotExists: true);
+                    var childvp = child.Viewport;
+                    child.UpdateViewport(childvp.Translate(displacement));
                 }
             }
         }
 
-        private void OnChildViewportChanged(object sender, EventArgs e)
+        private void OnViewportChange(object sender, ViewportUpdatedEventArgs e)
         {
-            RecalculateChildren();
+            if (e.Previous == Viewport.NullViewport)
+            {
+                foreach (var child in _childs.Components)
+                {
+                    InsertChildInside(child);
+                }
+            }
+            else
+            {
+                var displacement = e.Current.Position - e.Previous.Position;
+                RepositionChildren(displacement);
+            }
         }
 
         public TvComponent AsComponent() => _thisComponent;

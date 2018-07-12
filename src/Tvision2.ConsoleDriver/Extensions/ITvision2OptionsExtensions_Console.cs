@@ -8,7 +8,7 @@ namespace Tvision2.Core
 
     public static class ITvision2OptionsExtensions_Console
     {
-        public static Tvision2Setup UseWin32ConsoleDriver(this Tvision2Setup tv2, Action<ConsoleDriverOptions> config = null)
+        public static Tvision2Setup UseWin32ConsoleDriver(this Tvision2Setup tv2, Action<IConsoleDriverOptions> config = null)
         {
             var options = new ConsoleDriverOptions();
             config?.Invoke(options);
@@ -21,7 +21,7 @@ namespace Tvision2.Core
             return tv2;
         }
 
-        public static Tvision2Setup UseNcursesConsoleDriver(this Tvision2Setup tv2, Action<ConsoleDriverOptions> config = null)
+        public static Tvision2Setup UseNcursesConsoleDriver(this Tvision2Setup tv2, Action<IConsoleDriverOptions> config = null)
         {
             var options = new ConsoleDriverOptions();
             config?.Invoke(options);
@@ -34,7 +34,7 @@ namespace Tvision2.Core
             return tv2;
         }
 
-        public static Tvision2Setup UseDotNetConsoleDriver(this Tvision2Setup tv2, Action<ConsoleDriverOptions> config = null)
+        public static Tvision2Setup UseDotNetConsoleDriver(this Tvision2Setup tv2, Action<IConsoleDriverOptions> config = null)
         {
             var options = new ConsoleDriverOptions();
             config?.Invoke(options);
@@ -47,7 +47,7 @@ namespace Tvision2.Core
             return tv2;
         }
 
-        public static Tvision2Setup UsePlatformConsoleDriver(this Tvision2Setup tv2, Action<ConsoleDriverOptions> config = null)
+        public static Tvision2Setup UsePlatformConsoleDriver(this Tvision2Setup tv2, Action<IConsoleDriverOptions> config = null)
         {
             var options = new ConsoleDriverOptions();
             config?.Invoke(options);

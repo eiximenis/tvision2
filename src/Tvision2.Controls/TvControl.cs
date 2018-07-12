@@ -25,25 +25,27 @@ namespace Tvision2.Controls
         public AppliedStyle Style { get; }
         public IViewport Viewport => _defaultViewport;
 
-        public TvControl(ISkin skin, IViewport viewport, TState initialState)
+        private bool _setFocusPending;
+
+        public TvControl(ISkin skin, IViewport viewport, TState initialState, string name = null)
         {
             Metadata = new TvControlMetadata(this);
             ControlType = GetType().Name.ToLowerInvariant();
             _currentStyles = skin.GetControlStyle(this);
             Style = _currentStyles.BuildStyle();
             State = initialState;
-            _component = new TvComponent<TState>(initialState);
+            _component = new TvComponent<TState>(initialState, name ?? $"TvControl_{Guid.NewGuid()}");
             _defaultViewport = new MutableViewport(viewport);
             _component.AddViewport(_defaultViewport);
             _controlData = new TvControlData(Style, initialState);
-
+            _setFocusPending = false;
             AddElements();
         }
 
-        protected void AddElements()
+        private void AddElements()
         {
             _component.AddBehavior(new ControlStateBehavior<TState>(_controlData));
-            _component.UseDrawer(OnDraw);
+            _component.AddDrawer(OnDraw);
             foreach (var behavior in GetEventedBehaviors())
             {
                 _component.AddBehavior(new FocusControlBeheavior<TState>(Metadata, behavior), opt => opt.UseScheduler(BehaviorSchedule.OnEvents));
@@ -64,6 +66,17 @@ namespace Tvision2.Controls
             return Enumerable.Empty<ITvBehavior<TState>>();
         }
 
+
+        private void BeginOnDraw(RenderContext<TState> context)
+        {
+            if (_setFocusPending)
+            {
+                var pos = CalculateFocusOffset();
+                context.SetCursorAt(pos.Left, pos.Top);
+                _setFocusPending = false;
+            }
+        }
+
         protected abstract void OnDraw(RenderContext<TState> context);
 
         protected virtual void AddCustomElements(TvComponent<TState> component) { }
@@ -73,7 +86,7 @@ namespace Tvision2.Controls
         public void OnFocus()
         {
             var pos = Viewport.Position + CalculateFocusOffset();
-            _component.Metadata.Console.SetCursorAt(pos.Left, pos.Top);
+            _setFocusPending = true;
         }
 
         public TvComponent<TState> AsComponent() => _component;

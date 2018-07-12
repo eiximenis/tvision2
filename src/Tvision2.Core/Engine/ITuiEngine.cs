@@ -7,7 +7,7 @@ namespace Tvision2.Core.Engine
     public interface ITuiEngine
     {
         Task Start(CancellationToken cancellationToken);
-        ComponentTree UI { get; }
+        IComponentTree UI { get; }
 
         IServiceProvider ServiceProvider { get; }
     }

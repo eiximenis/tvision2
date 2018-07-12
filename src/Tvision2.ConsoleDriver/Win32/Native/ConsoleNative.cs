@@ -728,6 +728,9 @@ namespace Tvision2.ConsoleDriver.Win32
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool SetConsoleWindowInfo(IntPtr hConsoleOutput, bool bAbsolute, [In] ref SMALL_RECT lpConsoleWindow);
+
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr GetConsoleWindow();
     }
 
 }

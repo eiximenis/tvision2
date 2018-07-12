@@ -10,7 +10,7 @@ namespace Tvision2.Core.Render
         public int Left { get; } 
         public int Top { get; }
 
-        public TvPoint(int top, int left)
+        public TvPoint(int left, int top)
         {
             Left = left;
             Top = top;
@@ -18,12 +18,27 @@ namespace Tvision2.Core.Render
 
         public static TvPoint operator+ (TvPoint first, TvPoint second)
         {
-            return new TvPoint(first.Top + second.Top, first.Left + second.Left);
+            return new TvPoint(first.Left + second.Left, first.Top + second.Top);
         }
 
         public static TvPoint operator -(TvPoint first, TvPoint second)
         {
-            return new TvPoint(first.Top - second.Top, first.Left - second.Left);
+            return new TvPoint(first.Left - second.Left, first.Top - second.Top);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is TvPoint)
+            {
+                var other = (TvPoint)obj;
+                return other.Left == Left && other.Top == Top;
+            }
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Top << 16) & (Left);
         }
     }
 }

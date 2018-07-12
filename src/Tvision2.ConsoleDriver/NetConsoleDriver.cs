@@ -50,5 +50,10 @@ namespace Tvision2.ConsoleDriver
         {
             Console.SetCursorPosition(x, y);
         }
+
+        public (int rows, int cols) GetConsoleWindowSize()
+        {
+            return (Console.WindowHeight, Console.WindowWidth);
+        }
     }
 }

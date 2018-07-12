@@ -5,20 +5,9 @@ namespace Tvision2.Core.Render
     public static class ViewportHelper
     {
 
-        public static TvPoint ViewPointToConsolePoint(TvPoint viewPoint, TvPoint viewportPosition)
-        {
-            var top = viewPoint.Top + viewportPosition.Top;
-            var left = viewPoint.Left + viewportPosition.Left;
-            return new TvPoint(top, left);
-        }
-
-        public static TvPoint ConsolePointToViewport(TvPoint consolePoint, TvPoint viewportPosition)
-        {
-            var top = consolePoint.Top - viewportPosition.Top;
-            var left = consolePoint.Left - viewportPosition.Left;
-            return new TvPoint(top, left);
-        }
-
+        public static TvPoint ViewPointToConsolePoint(TvPoint viewPoint, TvPoint viewportPosition) => viewPoint + viewportPosition;
+        public static TvPoint ConsolePointToViewport(TvPoint consolePoint, TvPoint viewportPosition) => consolePoint - viewportPosition;
+        
         public static void DrawStringAt(string text, TvPoint location, ConsoleColor foreColor, ConsoleColor backColor, IViewport boxModel, VirtualConsole console)
         {
             var clippingMode = boxModel.Clipping;
@@ -54,7 +43,7 @@ namespace Tvision2.Core.Render
             var location = ViewPointToConsolePoint(new TvPoint(0, 0), boxModel.Position);
             for (var rows = 0; rows < boxModel.Rows; rows++)
             {
-                console.DrawAt(new string(' ', boxModel.Columns), location + new TvPoint(rows, 0), boxModel.ZIndex, color, color);
+                console.DrawAt(new string(' ', boxModel.Columns), location + new TvPoint(0, rows), boxModel.ZIndex, color, color);
             }
         }
 

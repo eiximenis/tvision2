@@ -36,7 +36,7 @@ namespace Tvision2.Viewports
             data.ViewportChanged += OnViewportChanged;
         }
 
-        private void OnViewportChanged(object sender, EventArgs e)
+        private void OnViewportChanged(object sender, ViewportUpdatedEventArgs e)
         {
             // TODO: process viewportchange
             var data = sender as IComponentMetadata;

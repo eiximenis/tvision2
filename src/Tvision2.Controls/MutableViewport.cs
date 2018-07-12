@@ -45,5 +45,10 @@ namespace Tvision2.Controls
         }
 
         public bool Intersects(IViewport another) => _viewport.Intersects(another);
+
+        public IViewport Clone()
+        {
+            return this;
+        }
     }
 }

@@ -4,6 +4,6 @@ namespace Tvision2.Debug
 {
     public interface ITvision2Debugger
     {
-        void AttachTo(ComponentTree uI);
+        void AttachTo(IComponentTree uI);
     }
 }

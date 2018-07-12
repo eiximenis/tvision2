@@ -24,6 +24,11 @@ namespace Tvision2.Core.Render
             ViewportHelper.DrawChars(value, count, location, foreColor, backColor, Viewport, _console);
         }
 
+        public void SetCursorAt(int left, int top)
+        {
+            _console.Cursor.MoveTo(left, top);
+        }
+
         public void Clear()
         {
             ViewportHelper.Clear(Viewport, _console);
@@ -49,6 +54,6 @@ namespace Tvision2.Core.Render
 
             State = state;
         }
-        public RenderContext<TD> CloneWithNewState<TD>(TD newState) => new RenderContext<TD>(Viewport, _console, newState);
+
     }
 }

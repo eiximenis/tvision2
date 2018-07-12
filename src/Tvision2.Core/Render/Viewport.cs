@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Tvision2.Core.Render
+﻿namespace Tvision2.Core.Render
 {
     public class Viewport : IViewport
     {
+        private static Viewport _nullViewport = new Viewport(new TvPoint(0, 0), 0, 0, ClippingMode.Clip);
         public TvPoint Position { get; }
 
         public int ZIndex { get; set; }
@@ -15,6 +12,8 @@ namespace Tvision2.Core.Render
         public int Rows { get; }
 
         public ClippingMode Clipping { get; }
+
+        public static IViewport NullViewport => _nullViewport;
 
         public Viewport(TvPoint point, int cols, int rows, ClippingMode clipping)
         {

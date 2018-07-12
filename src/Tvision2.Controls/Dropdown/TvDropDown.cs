@@ -18,7 +18,7 @@ namespace Tvision2.Controls.Dropdown
             int row = 1;
             foreach (var value in State.Values)
             {
-                context.DrawStringAt(value, new TvPoint(row++, 0), Style.ForeColor, Style.BackColor);
+                context.DrawStringAt(value, new TvPoint(0, row++), Style.ForeColor, Style.BackColor);
             }
         }
     }

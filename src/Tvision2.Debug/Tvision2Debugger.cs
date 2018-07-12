@@ -1,17 +1,19 @@
-﻿using Tvision2.Core.Engine;
+﻿using System.Linq;
+using Tvision2.Core.Engine;
 
 namespace Tvision2.Debug
 {
     internal class Tvision2Debugger : ITvision2Debugger
     {
-        public void AttachTo(ComponentTree componentTree)
+
+        private readonly Tvision2DebugOptions _options;
+        public Tvision2Debugger(Tvision2DebugOptions options) => _options = options;
+
+        public void AttachTo(IComponentTree componentTree)
         {
-            foreach (var component in componentTree.Components)
+            foreach (var component in componentTree.Components.Where(c => _options.ComponentDebuggable(c)))
             {
-                if (component.Name.StartsWith("TvComponent"))
-                {
-                    component.InsertDrawerAt(new DebugDrawer(), 0);
-                }
+                component.InsertDrawerAt(new DebugDrawer(), 0);
             }
             componentTree.ComponentAdded += OnComponentAdded;
         }
@@ -19,9 +21,8 @@ namespace Tvision2.Debug
         private void OnComponentAdded(object sender, TreeUpdatedEventArgs e)
         {
             var component = e.ComponentMetadata.Component;
-            if (component.Name.StartsWith("TvComponent"))
+            if (_options.ComponentDebuggable(component))
             {
-
                 component.InsertDrawerAt(new DebugDrawer(), 0);
             }
         }

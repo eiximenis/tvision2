@@ -7,7 +7,11 @@ namespace Tvision2.Core.Engine
     public interface IComponentMetadata
     {
         TvComponent Component { get; }
-        IConsoleDriver Console { get; }
-        event EventHandler ViewportChanged;
+        event EventHandler<ViewportUpdatedEventArgs> ViewportChanged;
+    }
+
+    public interface IComponentMetadata<TExtra> : IComponentMetadata
+    {
+        TExtra ExtraData { get; }
     }
 }

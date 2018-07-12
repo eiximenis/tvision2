@@ -14,6 +14,16 @@ namespace Tvision2.ConsoleDriver
 
         private readonly ConsoleDriverOptions _options;
 
+        public (int rows, int cols) GetConsoleWindowSize()
+        {
+            CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+            ConsoleNative.GetConsoleScreenBufferInfo(_hstdout, out csbi);
+            var columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+            var rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+            return (rows, columns);
+        }
+
         public WinConsoleDriver(ConsoleDriverOptions options)
         {
             _hstdin = ConsoleNative.GetStdHandle(STDIN);
@@ -23,15 +33,21 @@ namespace Tvision2.ConsoleDriver
 
         public void Init()
         {
-            /*
-            var rect = new SMALL_RECT();
-            rect.Top = 0;
-            rect.Left = 0;
-            rect.Bottom = 20;
-            rect.Right = 20;
-            ConsoleNative.SetConsoleWindowInfo(_hstdout, true, ref rect);
+            var (rows, cols) = GetConsoleWindowSize();
+            var requestedCols = _options.WindowOptions.Cols > 0 ? _options.WindowOptions.Cols : cols;
+            var requestedRows = _options.WindowOptions.Rows > 0 ? _options.WindowOptions.Rows : rows;
+            var rect = new SMALL_RECT()
+            {
+                Left = 0,
+                Top = 0,
+                Bottom = (short)requestedRows,
+                Right = (short)requestedCols
+            };
+            if (_options.WindowOptions.Cols > 0 || _options.WindowOptions.Rows > 0)
+            {
+                ConsoleNative.SetConsoleWindowInfo(_hstdout, true, ref rect);
+            }
             ConsoleNative.SetConsoleScreenBufferSize(_hstdout, new COORD((short)(rect.Right + 1), (short)(rect.Bottom + 1)));
-            */
         }
 
         public TvConsoleEvents ReadEvents()

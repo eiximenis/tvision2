@@ -34,7 +34,7 @@ namespace Tvision2.Core.Components
         {
             var key = _viewports.Any() ? Guid.NewGuid() : Guid.Empty;
             _viewports.Add(key, viewport);
-            _metadata?.OnViewportChanged();
+            _metadata?.OnViewportChanged(key, null, viewport);
             return key;
         }
         public IViewport Viewport => _viewports.TryGetValue(Guid.Empty, out IViewport value) ? value : null;
@@ -45,15 +45,15 @@ namespace Tvision2.Core.Components
 
         public void UpdateViewport(Guid guid, IViewport newViewport, bool addIfNotExists = false)
         {
-            if (_viewports.ContainsKey(guid))
+            if (_viewports.TryGetValue(guid, out IViewport oldvp))
             {
                 _viewports[guid] = newViewport;
-                _metadata?.OnViewportChanged();
+                _metadata?.OnViewportChanged(guid, oldvp, newViewport);
             }
             else if (addIfNotExists)
             {
                 _viewports.Add(guid, newViewport);
-                _metadata?.OnViewportChanged();
+                _metadata?.OnViewportChanged(guid, null, newViewport);
             }
         }
 
@@ -102,9 +102,9 @@ namespace Tvision2.Core.Components
 
         public void AddBehavior(Func<BehaviorContext<T>, bool> behaviorFunc, Action<BehaviorMetadata<T>> metadataAction = null) => AddBehavior(new ActionBehavior<T>(behaviorFunc), metadataAction);
 
-        public TvComponent<T> UseDrawer(Action<RenderContext<T>> action) => UseDrawer(new ActionDrawer<T>(action));
+        public TvComponent<T> AddDrawer(Action<RenderContext<T>> action) => AddDrawer(new ActionDrawer<T>(action));
 
-        public TvComponent<T> UseDrawer(ITvDrawer<T> drawer)
+        public TvComponent<T> AddDrawer(ITvDrawer<T> drawer)
         {
             _drawers.Add(drawer);
             return this;

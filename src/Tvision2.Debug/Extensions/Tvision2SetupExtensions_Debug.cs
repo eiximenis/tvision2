@@ -9,11 +9,14 @@ namespace Tvision2.Core.Engine
 {
     public static class Tvision2SetupExtensions_Debug
     {
-        public static Tvision2Setup UseDebug(this Tvision2Setup setup)
+        public static Tvision2Setup UseDebug(this Tvision2Setup setup, Action<ITvision2DebugOptions> optionsSetup = null)
         {
             setup.Builder.ConfigureServices((hc, sc) =>
             {
-                sc.AddSingleton<ITvision2Debugger, Tvision2Debugger>();
+                var options = new Tvision2DebugOptions();
+                optionsSetup?.Invoke(options);
+                var debugger = new Tvision2Debugger(options);
+                sc.AddSingleton<ITvision2Debugger>(debugger);
             });
 
             setup.Options.AfterCreateInvoke((engine, sp) =>

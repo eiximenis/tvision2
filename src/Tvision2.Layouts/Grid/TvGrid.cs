@@ -1,41 +1,51 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 
 namespace Tvision2.Layouts.Grid
 {
-    public class TvGrid
+    public class TvGrid:  ITvContainer
     {
         private readonly TvComponent<GridState> _component;
-        private readonly ComponentTree _root;
-        private readonly Dictionary<(int Row, int Column), TvContainer> _containers;
+        private readonly IComponentTree _root;
+        private readonly TvGridComponentTree _ui;
+        
         private readonly GridState _state;
+        public string Name { get; }
         public TvComponent AsComponent() => _component;
 
-        public TvGrid(ComponentTree root) : this(root, new GridState(1, 1), null)
+        public TvGrid(IComponentTree root) : this(root, new GridState(1, 1), null)
         {
         }
-        public TvGrid(ComponentTree root, GridState state, string name = null)
+        public TvGrid(IComponentTree root, GridState state, string name = null)
         {
             _state = state;
-            _component = new TvComponent<GridState>(_state, name);
-            _containers = new Dictionary<(int, int), TvContainer>();
+            _component = new TvComponent<GridState>(_state, name ?? $"TvGrid_{Guid.NewGuid()}");
+            Name = _component.Name;
+            _component.Metadata.ViewportChanged += OnViewportChanged;
             _root = root;
+            _ui = new TvGridComponentTree(_root);
+            _ui.ComponentAdded += OnComponentAdded;
+        }
+
+        private void OnComponentAdded(object sender, TreeUpdatedEventArgs e)
+        {
             ResizeRowsAndCols();
         }
 
-        public void AddChild(TvComponent child, int row, int col)
+        private void OnViewportChanged(object sender, ViewportUpdatedEventArgs e)
         {
-            var containerToUse = _containers.TryGetValue((row, col), out TvContainer value) ? value : null;
-            if (containerToUse == null)
-            {
-                containerToUse = new TvContainer(_root, $"{_component.Name}_{row}_{col}");
-                _containers.Add((row, col), containerToUse);
-                _root.Add(containerToUse.AsComponent());
-            }
-            containerToUse.AddChild(child);
             ResizeRowsAndCols();
+        }
+
+
+        public IComponentTree Use(int row, int col)
+        {
+            _ui.CurrentRow = row;
+            _ui.CurrentColumn = col;
+            return _ui;
         }
 
         private void ResizeRowsAndCols()
@@ -49,13 +59,13 @@ namespace Tvision2.Layouts.Grid
             var cellHeight = myViewport.Rows / _state.Rows;
             var cellWidth = myViewport.Columns / _state.Cols;
 
-            foreach (var kvpContainer in _containers)
+            foreach (var kvpChild in _ui.Values)
             {
-                var ctrRow = kvpContainer.Key.Row;
-                var ctrCol = kvpContainer.Key.Column;
-                var ctr = kvpContainer.Value;
+                var ctrRow = kvpChild.Key.Row;
+                var ctrCol = kvpChild.Key.Column;
+                var child = kvpChild.Value;
                 var viewport = CalculateViewportFor(myViewport, ctrRow, ctrCol, cellHeight, cellWidth);
-                ctr.AsComponent().UpdateViewport(viewport, addIfNotExists: true);
+                child.UpdateViewport(viewport, addIfNotExists: true);
             }
 
         }
@@ -65,7 +75,7 @@ namespace Tvision2.Layouts.Grid
             var startCol = ctrCol * cellWidth;
             var startRow = ctrRow * cellHeight;
 
-            return myViewport.Inner(new TvPoint(startRow, startCol), cellWidth, cellHeight);
+            return myViewport.Inner(new TvPoint(startCol, startRow), cellWidth, cellHeight);
 
         }
     }

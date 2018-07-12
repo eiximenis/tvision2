@@ -8,7 +8,7 @@ using Tvision2.Events;
 
 namespace Tvision2.Core.Engine
 {
-    public class ComponentTree : IComponentTree
+    class ComponentTree : IComponentTree
     {
         private readonly Dictionary<string, IComponentMetadata> _components;
         private List<IComponentMetadata> _responders;
@@ -16,6 +16,8 @@ namespace Tvision2.Core.Engine
         public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
 
         public IEnumerable<TvComponent> Components => _components.Values.Select(cm => cm.Component);
+
+        public TvComponent GetComponent(string name) => _components.TryGetValue(name, out IComponentMetadata metadata) ? metadata.Component : null;
 
         public ComponentTree(TuiEngine owner)
         {
@@ -33,7 +35,6 @@ namespace Tvision2.Core.Engine
 
         public IComponentMetadata Add(TvComponent component)
         {
-            ((TvComponentMetadata)component.Metadata).Console = Engine.ConsoleDriver;
             return Add(component.Metadata);
         }
 

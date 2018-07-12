@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Tvision2.Core.Hooks;
 using Tvision2.Core.Render;
 using Tvision2.Engine.Console;
+using Tvision2.Core.Components.Draw;
 
 namespace Tvision2.Core.Engine
 {
@@ -20,16 +21,18 @@ namespace Tvision2.Core.Engine
         private readonly Stopwatch _watcher;
         private readonly Tvision2Options _options;
 
+        private readonly ComponentTree _ui;
+
         private VirtualConsole _currentConsole;
         public IConsoleDriver ConsoleDriver { get; }
         public IEventHookManager EventHookManager { get; }
-        public ComponentTree UI { get; }
+        public IComponentTree UI => _ui;
         public IServiceProvider ServiceProvider { get; }
 
         public TuiEngine(Tvision2Options options, IServiceProvider serviceProvider)
         {
             ConsoleDriver = options.ConsoleDriver ?? throw new ArgumentException("No console driver defined");
-            UI = new ComponentTree(this);
+            _ui = new ComponentTree(this);
             //_additionalItems.Add(typeof(IComponentTree), UI);
             _eventPumper = new EventPumper(ConsoleDriver);
             _watcher = new Stopwatch();
@@ -44,6 +47,11 @@ namespace Tvision2.Core.Engine
             ConsoleDriver.Init();
             _currentConsole = new VirtualConsole();
 
+            foreach (var afterCreateTask in _options.AfterCreateInvokers)
+            {
+                afterCreateTask.Invoke(this, ServiceProvider);
+            }
+
             if (_options.StartupFunc != null)
             {
                 await _options.StartupFunc(ServiceProvider, this);
@@ -56,18 +64,13 @@ namespace Tvision2.Core.Engine
                 await startup.Startup(this);
             }
 
-            foreach (var afterCreateTask in _options.AfterCreateInvokers)
-            {
-                afterCreateTask.Invoke(this, ServiceProvider);
-            }
-
             PerformDrawOperations(force: true);
             while (!cancellationToken.IsCancellationRequested)
             {
                 _watcher.Start();
                 var evts = _eventPumper.ReadEvents();
                 EventHookManager.ProcessEvents(evts);
-                UI.Update(evts);
+                _ui.Update(evts);
                 PerformDrawOperations(force: false);
                 // StateManager.DoDispatchAllActions();
                 _watcher.Stop();
@@ -82,7 +85,7 @@ namespace Tvision2.Core.Engine
 
         private void PerformDrawOperations(bool force)
         {
-            UI.Draw(_currentConsole, force);
+            _ui.Draw(_currentConsole, force);
             FlushToRealConsole();
         }
 
@@ -94,10 +97,15 @@ namespace Tvision2.Core.Engine
             if (_currentConsole.IsDirty)
             {
                 flushed = true;
-                var diffs = _currentConsole.GetDiffs();
-                if (diffs.Any())
+                var updateActions = _currentConsole.UpdateActions;
+                if (updateActions.Diffs.Any())
                 {
-                    VirtualConsoleRenderer.RenderToConsole(ConsoleDriver, diffs);
+                    VirtualConsoleRenderer.RenderToConsole(ConsoleDriver, updateActions.Diffs);
+                }
+                var (pendingCursorMovement, pos) = updateActions.CursorMovement;
+                if (pendingCursorMovement)
+                {
+                    ConsoleDriver.SetCursorAt(pos.Left, pos.Top);
                 }
                 _currentConsole.NoDirty();
             }

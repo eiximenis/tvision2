@@ -10,7 +10,7 @@ namespace Tvision2.Controls.Checkbox
 {
     public class TvCheckbox : TvControl<CheckboxState>
     {
-        private static TvPoint _focusOffset = new TvPoint(0, 1);
+        private static TvPoint _focusOffset = new TvPoint(1, 0);
         public TvCheckbox(ISkin skin, IViewport boxModel, CheckboxState state) : base(skin, boxModel, state)
         {
         }
