@@ -3,46 +3,52 @@ using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 
-namespace Tvision2.Layouts
+namespace Tvision2.Layouts.Stack
 {
-    public class TvContainer : ITvContainer
+    public class TvStackPanel : ITvContainer
     {
         private readonly TvComponent<LayoutsComponentTree> _thisComponent;
         private readonly LayoutsComponentTree _childs;
         public string Name { get; }
 
-        public TvContainer(IComponentTree root, string name = null)
+        public IComponentTree Children => _childs;
+
+        public TvStackPanel(IComponentTree root, string name = null)
         {
             _childs = new LayoutsComponentTree(root);
             _thisComponent = new TvComponent<LayoutsComponentTree>(_childs, name ?? $"TvContainer{Guid.NewGuid()}");
             Name = _thisComponent.Name;
             _thisComponent.Metadata.ViewportChanged += OnViewportChange;
-            _thisComponent.AddDrawer(ct => { });
+            _childs.ComponentAdded += OnChildAdded;
         }
 
-        public void AddChild(TvComponent child)
+        private void OnChildAdded(object sender, TreeUpdatedEventArgs e)
         {
-            _childs.Add(child);
+            var child = e.ComponentMetadata.Component;
             InsertChildInside(child);
             RepositionChildren(TvPoint.Zero);
         }
 
+
         private void InsertChildInside(TvComponent child)
         {
-            if (_thisComponent.Viewport != null)
-            {
-                child.UpdateViewport(_thisComponent.Viewport.Inner(child.Viewport), addIfNotExists: true);
-            }
+            //if (_thisComponent.Viewport != null)
+            //{
+            //    child.UpdateViewport(_thisComponent.Viewport.Inner(child.Viewport), addIfNotExists: true);
+            //}
         }
 
-        protected virtual void RepositionChildren(TvPoint displacement)
+
+        private void RepositionChildren(TvPoint displacement)
         {
             if (_thisComponent.Viewport != null)
             {
+                var current = 0;
+                var height = _thisComponent.Viewport.Rows / _childs.Count;
                 foreach (var child in _childs.Components)
                 {
                     var childvp = child.Viewport;
-                    child.UpdateViewport(childvp.Translate(displacement));
+                    child.UpdateViewport(_thisComponent.Viewport.TakeRows(height, height * current));
                 }
             }
         }
@@ -53,7 +59,7 @@ namespace Tvision2.Layouts
             {
                 foreach (var child in _childs.Components)
                 {
-                    InsertChildInside(child);
+                    RepositionChildren(TvPoint.Zero);
                 }
             }
             else

@@ -15,16 +15,6 @@ namespace Tvision2.Controls.Label
         {
         }
 
-        private IViewport RequestNewBoxModel(IViewport current, string toRender)
-        {
-            var needed = toRender.Length;
-            if (current.Clipping == ClippingMode.ExpandBoth || current.Clipping == ClippingMode.ExpandHorizontal)
-            {
-                return needed > current.Columns ? current.ResizeTo(needed, current.Rows) : null;
-            }
-
-            return null;
-        }
 
         protected override void OnDraw(RenderContext<LabelState> context)
         {
@@ -37,15 +27,7 @@ namespace Tvision2.Controls.Label
                 state.Text.ToString() ?? "",
                 focused ? "<" : "",
                 new string(' ', Style.PaddingRight));
-
             context.Fill(Style.BackColor);
-
-            var boxModel = RequestNewBoxModel(context.Viewport, value);
-            if (boxModel != null)
-            {
-                ApplyNewBoxModel(context, boxModel);
-            }
-
             context.DrawStringAt(value, new TvPoint(0, 0), Style.ForeColor, Style.BackColor);
         }
     }

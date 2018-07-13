@@ -29,18 +29,29 @@ namespace Tvision2.Controls.Text
             _sb.Insert(index, value);
         }
 
+        internal void ProcessKey(ConsoleKeyInfo consoleKeyInfo)
+        {
+            var key = consoleKeyInfo.Key;
+            var special = ProcessSpecialKey(key, _sb.Length);
+            if (!special)
+            {
+                AppendChar(consoleKeyInfo.KeyChar);
+            }
+        }
 
-        private void InsertKey(ConsoleKey key, int position)
+        private bool ProcessSpecialKey(ConsoleKey key, int position)
         {
             switch (key)
             {
                 case ConsoleKey.Backspace:
                     RemoveChars(position - 1);
-                    break;
+                    return true;
                 case ConsoleKey.Delete:
                     RemoveChars(position);
-                    break;
+                    return true;
             }
+
+            return false;
         }
 
         public void RemoveChars(int offset, int count = 1)

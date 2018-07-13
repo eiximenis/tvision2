@@ -13,6 +13,7 @@ using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Layouts;
 using Tvision2.Layouts.Grid;
+using Tvision2.Layouts.Stack;
 
 namespace Tvision2.MidnightCommander
 {
@@ -31,13 +32,18 @@ namespace Tvision2.MidnightCommander
             var vpf = _layoutManager.ViewportFactory;
             var grid = new TvGrid(tui.UI, new GridState(1, 2));
             grid.AsComponent().AddViewport(vpf.FullViewport().Grow(0, -2));
-            var textbox = new TvTextbox(skin, vpf.BottomViewport(2), new TextboxState());
+            var textbox = new TvTextbox(skin, null, new TextboxState());
 
             var left = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 10, 1), new LabelState() { Text = "Left" });
             var right = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 10, 1), new LabelState() { Text = "Right" });
-            grid.Use(0,0).Add(left.AsComponent());
-            grid.Use(0, 1).Add(textbox);
+            grid.Use(0, 0).Add(left);
+            grid.Use(0, 1).Add(right);
             tui.UI.Add(grid);
+            var bottom = new TvStackPanel(tui.UI, "BottomContainer");
+            bottom.AsComponent().AddViewport(vpf.BottomViewport(2));
+            bottom.Children.Add(textbox);
+            tui.UI.Add(bottom);
+
             return Task.CompletedTask;
         }
     }

@@ -26,7 +26,7 @@ namespace Tvision2.Controls.Textbox
 
         internal void ProcessKey(ConsoleKeyInfo consoleKeyInfo)
         {
-            _textProcessor.AppendChar(consoleKeyInfo.KeyChar);
+            _textProcessor.ProcessKey(consoleKeyInfo);
             IsDirty = true;
         }
     }

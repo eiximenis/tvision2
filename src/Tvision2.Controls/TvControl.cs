@@ -18,12 +18,11 @@ namespace Tvision2.Controls
         private IStyleSheet _currentStyles;
         private TvComponent<TState> _component;
         private TvControlData _controlData;
-        private MutableViewport _defaultViewport;
         public TvControlMetadata Metadata { get; }
         public TState State { get; }
         public string ControlType { get; }
         public AppliedStyle Style { get; }
-        public IViewport Viewport => _defaultViewport;
+        public IViewport Viewport => _component.Viewport;
 
         private bool _setFocusPending;
 
@@ -35,8 +34,7 @@ namespace Tvision2.Controls
             Style = _currentStyles.BuildStyle();
             State = initialState;
             _component = new TvComponent<TState>(initialState, name ?? $"TvControl_{Guid.NewGuid()}");
-            _defaultViewport = new MutableViewport(viewport);
-            _component.AddViewport(_defaultViewport);
+            _component.AddViewport(viewport);
             _controlData = new TvControlData(Style, initialState);
             _setFocusPending = false;
             AddElements();
@@ -54,12 +52,6 @@ namespace Tvision2.Controls
         }
 
 
-        protected void ApplyNewBoxModel(RenderContext<TState> context, IViewport newBoxModel)
-        {
-            context.Clear();
-            context.ApplyBoxModel(newBoxModel);
-            context.Fill(Style.BackColor);
-        }
 
         protected virtual IEnumerable<ITvBehavior<TState>> GetEventedBehaviors()
         {

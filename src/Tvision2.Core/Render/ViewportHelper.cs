@@ -10,15 +10,14 @@ namespace Tvision2.Core.Render
         
         public static void DrawStringAt(string text, TvPoint location, ConsoleColor foreColor, ConsoleColor backColor, IViewport boxModel, VirtualConsole console)
         {
-            var clippingMode = boxModel.Clipping;
             var consoleLocation = ViewPointToConsolePoint(location, boxModel.Position);
+            var clippingMode = boxModel.Clipping;
             var zindex = boxModel.ZIndex;
 
             if ((clippingMode == ClippingMode.Clip || clippingMode == ClippingMode.ExpandVertical) && boxModel.Columns < text.Length)
             {
                 text = text.Substring(0, boxModel.Columns);
             }
-
             console.DrawAt(text, consoleLocation, zindex, foreColor, backColor);
         }
 

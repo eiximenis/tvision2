@@ -31,5 +31,16 @@ namespace Tvision2.Core.Render
                 return containerViewport.Inner(innerViewport.Position, innerViewport.Columns, innerViewport.Rows);
             }
         }
+
+        public static IViewport TakeRows(this IViewport viewport, int rowsToTake, int startingRow)
+        {
+            var availableRows = viewport.Rows - startingRow;
+            if (rowsToTake > availableRows)
+            {
+                rowsToTake = availableRows;
+            }
+
+            return new Viewport(viewport.Position + new TvPoint(0, startingRow), viewport.Columns, rowsToTake);
+        }
     }
 }
