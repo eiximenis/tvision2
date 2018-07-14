@@ -6,6 +6,7 @@ using Tvision2.DependencyInjection;
 using Tvision2.Controls.Styles;
 using Tvision2.Core.Engine;
 using Tvision2.Debug;
+using System.Text;
 
 namespace Tvision2.MidnightCommander
 {
@@ -16,13 +17,13 @@ namespace Tvision2.MidnightCommander
             var builder = new HostBuilder();
             builder.UseTvision2(setup =>
             {
-                setup.UsePlatformConsoleDriver()
+                setup.UseDotNetConsoleDriver()
                     .UseViewportManager()
                     .UseLayoutManager()
-                    .UseDebug(opt =>
-                    {
-                        opt.UseDebugFilter(c => c.Name.StartsWith("TvControl"));
-                    })
+                    //.UseDebug(opt =>
+                    //{
+                    //    opt.UseDebugFilter(c => c.Name.StartsWith("TvControl"));
+                    //})
                     .AddTvision2Startup<Startup>()
                     .AddTvControls()
                     .AddSkinSupport(sb =>

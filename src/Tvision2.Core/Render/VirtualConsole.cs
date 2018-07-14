@@ -63,12 +63,10 @@ namespace Tvision2.Core.Render
             for (var idx = start; idx < end; idx++)
             {
                 var cchar = _buffer[idx];
-                if (cchar.ZIndex <= zIndex)
+                var newchar = text[textIdx];
+                if (cchar.ZIndex <= zIndex && !cchar.Equals(newchar, foreColor, backColor, zIndex))
                 {
-                    // TODO: Compare cchar with values passed if we 
-                    // want to avoid to redraw all changed characters to console
-                    // even if they are the same as before
-                    cchar.Character = text[textIdx];
+                    cchar.Character = newchar;
                     cchar.Background = backColor;
                     cchar.Foreground = foreColor;
                     cchar.ZIndex = zIndex;
@@ -93,11 +91,8 @@ namespace Tvision2.Core.Render
             for (var idx = start; idx < end; idx++)
             {
                 var cchar = _buffer[idx];
-                if (cchar.ZIndex <= zindex)
+                if (cchar.ZIndex <= zindex && !cchar.Equals(charToCopy))
                 {
-                    // TODO: Compare cchar with values passed if we 
-                    // want to avoid to redraw all changed characters to console
-                    // even if they are the same as before
                     cchar.Character = charToCopy.Character;
                     cchar.Background = charToCopy.Background;
                     cchar.Foreground = charToCopy.Foreground;

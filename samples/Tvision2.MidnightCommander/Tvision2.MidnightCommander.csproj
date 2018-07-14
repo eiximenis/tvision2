@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Tvision2.ConsoleDriver\Tvision2.ConsoleDriver.csproj" />
     <ProjectReference Include="..\..\src\Tvision2.Controls.Styles.Mc\Tvision2.Controls.Styles.Mc.csproj" />
     <ProjectReference Include="..\..\src\Tvision2.Controls\Tvision2.Controls.csproj" />

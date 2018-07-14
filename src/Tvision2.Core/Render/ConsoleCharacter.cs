@@ -16,7 +16,17 @@ namespace Tvision2.Core.Render
         {
             return Character == other.Character &&
                 Foreground == other.Foreground &&
-                Background == other.Background;
+                Background == other.Background &&
+                ZIndex == other.ZIndex;
+        }
+
+        public bool Equals(char otherChar, ConsoleColor otherForeColor, ConsoleColor otherBackColor, int otherZIndex)
+        {
+            return Character == otherChar &&
+                Foreground == otherForeColor &&
+                Background == otherBackColor &&
+                ZIndex == otherZIndex;
+
         }
     }
 }
