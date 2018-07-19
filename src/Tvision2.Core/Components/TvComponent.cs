@@ -148,7 +148,7 @@ namespace Tvision2.Core.Components
                 foreach (var drawer in _drawers)
                 {
                     drawer?.Draw(context);
-                }
+               }
             }
             NeedToRedraw = false;
 

@@ -18,6 +18,7 @@ using Tvision2.Layouts;
 using Tvision2.Layouts.Grid;
 using Tvision2.Layouts.Stack;
 using Tvision2.MidnightCommander.Stores;
+using Tvision2.Statex;
 using Tvision2.Statex.Controls;
 
 namespace Tvision2.MidnightCommander
@@ -26,10 +27,12 @@ namespace Tvision2.MidnightCommander
     {
         private readonly ISkinManager _skinManager;
         private readonly ILayoutManager _layoutManager;
-        public Startup(ISkinManager skinManager, ILayoutManager layoutManager)
+        private readonly ITvStoreSelector _storeSelector;
+        public Startup(ISkinManager skinManager, ILayoutManager layoutManager, ITvStoreSelector storeSelector)
         {
             _skinManager = skinManager;
             _layoutManager = layoutManager;
+            _storeSelector = storeSelector;
         }
         Task ITvisionAppStartup.Startup(ITuiEngine tui)
         {
@@ -38,13 +41,7 @@ namespace Tvision2.MidnightCommander
             var grid = new TvGrid(tui.UI, new GridState(1, 2));
             grid.AsComponent().AddViewport(vpf.FullViewport().Grow(0, -2));
             var textbox = new TvTextbox(skin, null, new TextboxState());
-
-
-            var f1 = System.IO.Directory.GetFileSystemEntries("C:\\", "*.*");
-            var f2 = System.IO.Directory.GetFileSystemEntries("D:\\", "*.*");
-
-
-            //var left = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 10, 1), new LabelState() { Text = "Left" });
+            
             var left = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1), new ListState(Enumerable.Empty<string>()));
             var right = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1), new ListState(Enumerable.Empty<string>()));
 
@@ -53,12 +50,18 @@ namespace Tvision2.MidnightCommander
                 opt.UseStore("left");
                 opt.UseStatexTransformation((fl, cs) =>
                 {
-                    int i = 0;
+                    cs.Clear();
+                    cs.AddRange(fl.Items);
                 });
             });
             var sright = TvStatexControl.Wrap<TvList, ListState, FileList>(right, opt =>
             {
                 opt.UseStore("right");
+                opt.UseStatexTransformation((fl, cs) =>
+                {
+                    cs.Clear();
+                    cs.AddRange(fl.Items);
+                });
             });
 
             grid.Use(0, 0).Add(left);
@@ -68,6 +71,8 @@ namespace Tvision2.MidnightCommander
             bottom.AsComponent().AddViewport(vpf.BottomViewport(2));
             bottom.Children.Add(textbox);
             tui.UI.Add(bottom);
+            _storeSelector.GetStore<FileList>("left").Dispatch(new TvAction<string>("FETCH_DIR", "C:\\"));
+            _storeSelector.GetStore<FileList>("right").Dispatch(new TvAction<string>("FETCH_DIR", "D:\\"));
             return Task.CompletedTask;
         }
     }

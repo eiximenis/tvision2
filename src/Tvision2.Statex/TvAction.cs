@@ -12,7 +12,9 @@ namespace Tvision2.Statex
         {
             Name = name;
         }
-    }
+
+        public TvAction<T> WithData<T>() => this as TvAction<T>;
+   }
 
     public class TvAction<T> : TvAction
     {

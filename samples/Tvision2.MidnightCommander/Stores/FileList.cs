@@ -1,10 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Tvision2.MidnightCommander.Stores
 {
-    class FileList
+    internal class FileList
     {
+        public static FileList Empty { get;  }
+        static FileList()
+        {
+            Empty = new FileList(new string[0]);
+        }
+
+        private readonly string[] _items;
+
+        public IEnumerable<string> Items => _items;
+
+        public FileList(string[] items)
+        {
+            this._items = items;
+        }
     }
 }

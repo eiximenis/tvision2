@@ -57,7 +57,7 @@ namespace Tvision2.Core.Render
             var start = location.Left + (Width * location.Top);
             var end = start + text.Length;
             var textIdx = 0;
-            var dirty = false;
+            var dirty = IsDirty;
             var charCol = location.Left;
             var charRow = location.Top;
             for (var idx = start; idx < end; idx++)
@@ -87,7 +87,7 @@ namespace Tvision2.Core.Render
             var end = start + count;
             var charCol = location.Left;
             var charRow = location.Top;
-            var dirty = false;
+            var dirty = IsDirty;
             for (var idx = start; idx < end; idx++)
             {
                 var cchar = _buffer[idx];

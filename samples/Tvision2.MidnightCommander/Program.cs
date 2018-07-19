@@ -1,19 +1,16 @@
 ﻿using Microsoft.Extensions.Hosting;
-using System;
 using System.Threading.Tasks;
-using Tvision2.Core;
-using Tvision2.DependencyInjection;
 using Tvision2.Controls.Styles;
+using Tvision2.Core;
 using Tvision2.Core.Engine;
-using Tvision2.Debug;
-using System.Text;
+using Tvision2.DependencyInjection;
 using Tvision2.MidnightCommander.Stores;
 
 namespace Tvision2.MidnightCommander
 {
-    class Program
+    internal class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             var builder = new HostBuilder();
             builder.UseTvision2(setup =>
@@ -33,8 +30,10 @@ namespace Tvision2.MidnightCommander
                     })
                     .AddStateManager(sm =>
                     {
-                        sm.AddStore<FileListStore, FileList>("left", new FileListStore(new FileList()));
-                        sm.AddStore<FileListStore, FileList>("right", new FileListStore(new FileList()));
+                        var ls = sm.AddStore<FileListStore, FileList>("left", new FileListStore(FileList.Empty));
+                        ls.AddReducer(FileListReducers.RefreshFolder);
+                        var rs = sm.AddStore<FileListStore, FileList>("right", new FileListStore(FileList.Empty));
+                        rs.AddReducer(FileListReducers.RefreshFolder);
                     });
             }).UseConsoleLifetime();
             await builder.RunTvisionConsoleApp();
