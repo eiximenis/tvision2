@@ -13,6 +13,9 @@ namespace Tvision2.Core.Components.Behaviors
             _behaviorFunc = behaviorFunc;
         }
 
+
+        bool ITvBehavior.Update(BehaviorContext updateContext) => Update((BehaviorContext<T>)updateContext);
+
         public bool Update(BehaviorContext<T> updateContext) => _behaviorFunc(updateContext);
     }
 }

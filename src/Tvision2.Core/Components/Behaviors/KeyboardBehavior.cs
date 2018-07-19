@@ -8,6 +8,7 @@ namespace Tvision2.Core.Components.Behaviors
 {
     public abstract class KeyboardBehavior<T> : ITvBehavior<T>
     {
+        bool ITvBehavior.Update(BehaviorContext updateContext) => Update((BehaviorContext<T>)updateContext);
         public bool Update(BehaviorContext<T> updateContext)
         {
             var events = updateContext.Events.KeyboardEvents;

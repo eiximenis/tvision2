@@ -29,8 +29,18 @@ namespace Tvision2.Core.Engine
         public IComponentMetadata Add (IComponentMetadata metadata)
         {
             _components.Add(metadata.Component.Name, metadata);
+            CreateNeededBehaviors(metadata.Component);
             OnComponentAdded(metadata);
             return metadata;
+        }
+
+        private void CreateNeededBehaviors(TvComponent component)
+        {
+            var behaviorsToBeCreated = component.BehaviorsMetadatas.Where(bm => !bm.Created);
+            foreach (var bm in behaviorsToBeCreated)
+            {
+                bm.CreateBehavior(Engine.ServiceProvider);
+            }
         }
 
         public IComponentMetadata Add(TvComponent component)

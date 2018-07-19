@@ -8,7 +8,7 @@ namespace Tvision2.Controls.List
 
         public void Validate() => IsDirty = false;
 
-        public IEnumerable<string> Values { get; }
+        public IEnumerable<string> Values { get; }  
 
         public ListState(IEnumerable<string> values)
         {

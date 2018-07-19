@@ -22,10 +22,6 @@ namespace Tvision2.Statex
             where TState : class
 
         {
-            if (_stores.Values.Select(s => s.StateType).Contains(store.StateType))
-            {
-                throw new ArgumentException($"There is already one store with StateType: {store.StateType.Name}");
-            }
             _stores.Add(name, store);
             return store;
         }

@@ -12,7 +12,7 @@ namespace Tvision2.Statex
         void Cycle();
     }
 
-    public interface ITvStore<TState> 
+    public interface ITvStore<TState> : ITvStore
         where TState : class
     {
         void Subscribe(Action<TState> action);

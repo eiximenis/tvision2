@@ -15,6 +15,7 @@ namespace Tvision2.Controls.Behavior
             _metadata = metadata;
         }
 
+        bool ITvBehavior.Update(BehaviorContext updateContext) => Update((BehaviorContext<TState>)updateContext);
         public bool Update(BehaviorContext<TState> updateContext)
         {
             if (_metadata.IsFocused)

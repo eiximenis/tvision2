@@ -7,6 +7,7 @@ using Tvision2.Controls.Styles;
 using Tvision2.Core.Engine;
 using Tvision2.Debug;
 using System.Text;
+using Tvision2.MidnightCommander.Stores;
 
 namespace Tvision2.MidnightCommander
 {
@@ -29,6 +30,11 @@ namespace Tvision2.MidnightCommander
                     .AddSkinSupport(sb =>
                     {
                         sb.AddMcStyles();
+                    })
+                    .AddStateManager(sm =>
+                    {
+                        sm.AddStore<FileListStore, FileList>("left", new FileListStore(new FileList()));
+                        sm.AddStore<FileListStore, FileList>("right", new FileListStore(new FileList()));
                     });
             }).UseConsoleLifetime();
             await builder.RunTvisionConsoleApp();

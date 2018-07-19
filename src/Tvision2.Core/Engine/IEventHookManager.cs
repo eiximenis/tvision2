@@ -9,5 +9,6 @@ namespace Tvision2.Core.Engine
     public interface IEventHookManager
     {
         void ProcessEvents(TvConsoleEvents evts);
+        void ProcessAfterUpdateActions();
     }
 }

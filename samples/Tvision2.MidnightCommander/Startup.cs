@@ -17,6 +17,8 @@ using Tvision2.Core.Render;
 using Tvision2.Layouts;
 using Tvision2.Layouts.Grid;
 using Tvision2.Layouts.Stack;
+using Tvision2.MidnightCommander.Stores;
+using Tvision2.Statex.Controls;
 
 namespace Tvision2.MidnightCommander
 {
@@ -43,8 +45,22 @@ namespace Tvision2.MidnightCommander
 
 
             //var left = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 10, 1), new LabelState() { Text = "Left" });
-            var left = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1), new ListState(f1.Select(fs => Path.GetFileName(fs))));
-            var right = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1), new ListState(f2.Select(fs => Path.GetFileName(fs))));
+            var left = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1), new ListState(Enumerable.Empty<string>()));
+            var right = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1), new ListState(Enumerable.Empty<string>()));
+
+            var sleft = TvStatexControl.Wrap<TvList, ListState, FileList>(left, opt =>
+            {
+                opt.UseStore("left");
+                opt.UseStatexTransformation((fl, cs) =>
+                {
+                    int i = 0;
+                });
+            });
+            var sright = TvStatexControl.Wrap<TvList, ListState, FileList>(right, opt =>
+            {
+                opt.UseStore("right");
+            });
+
             grid.Use(0, 0).Add(left);
             grid.Use(0, 1).Add(right);
             tui.UI.Add(grid);

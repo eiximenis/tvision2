@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Debug", "src\Tvisi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.MidnightCommander", "samples\Tvision2.MidnightCommander\Tvision2.MidnightCommander.csproj", "{B272F9AF-7C0E-448E-B68A-163A2CC39EAE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.Statex.Controls", "src\Tvision2.Statex.Controls\Tvision2.Statex.Controls.csproj", "{DA8CBE9D-5614-4FB9-BD8D-70B6A0BE5390}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{B272F9AF-7C0E-448E-B68A-163A2CC39EAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B272F9AF-7C0E-448E-B68A-163A2CC39EAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B272F9AF-7C0E-448E-B68A-163A2CC39EAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA8CBE9D-5614-4FB9-BD8D-70B6A0BE5390}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA8CBE9D-5614-4FB9-BD8D-70B6A0BE5390}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA8CBE9D-5614-4FB9-BD8D-70B6A0BE5390}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA8CBE9D-5614-4FB9-BD8D-70B6A0BE5390}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

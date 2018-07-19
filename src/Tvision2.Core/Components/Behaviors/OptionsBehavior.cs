@@ -19,6 +19,8 @@ namespace Tvision2.Core.Components.Behaviors
             optionsAction?.Invoke(_options);
         }
 
+        bool ITvBehavior.Update(BehaviorContext updateContext) => Update((BehaviorContext<T>)updateContext);
+
         public abstract bool Update(BehaviorContext<T> updateContext);
     }
 }

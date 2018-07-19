@@ -14,6 +14,8 @@ namespace Tvision2.Controls.Behavior
             _controlData = controlData;
         }
 
+        bool ITvBehavior.Update(BehaviorContext updateContext) => Update((BehaviorContext<TState>)updateContext);
+
         public bool Update(BehaviorContext<TState> updateContext) 
         {
             var isDirty = _controlData.IsDirty;

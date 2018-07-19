@@ -6,16 +6,23 @@ using Tvision2.Events;
 
 namespace Tvision2.Core.Components.Behaviors
 {
-    public class BehaviorContext<T>
+    public class BehaviorContext
+    {
+        public BehaviorContext(TvConsoleEvents events)
+        {
+            Events = events;
+        }
+        public TvConsoleEvents Events { get; }
+    }
+
+    public class BehaviorContext<T> : BehaviorContext
     {
         public T State { get; }
 
-        public TvConsoleEvents Events { get; }
 
-        public BehaviorContext(T state, TvConsoleEvents events)
+        public BehaviorContext(T state, TvConsoleEvents events) : base(events)
         {
             State = state;
-            Events = events;
         }
     }
 

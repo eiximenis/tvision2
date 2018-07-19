@@ -12,12 +12,14 @@ namespace Tvision2.Core
         ITvision2Options UseConsoleDriver(IConsoleDriver driverToUse);
         ITvision2Options UseStartup(Func<IServiceProvider, ITuiEngine, Task> startupAction);
         ITvision2Options AfterCreateInvoke(Action<ITuiEngine, IServiceProvider> invoker);
+        ITvision2Options AddAfterUpdateAction(Action actionToDo);
 
     }
     public class Tvision2Options : ITvision2Options
     {
         private readonly List<Type> _hookTypes;
         private readonly List<Action<ITuiEngine, IServiceProvider>> _afterCreateInvokers;
+        private readonly List<Action> _afterUpdateActions;
 
         public const string PropertyKey = "__Tvision2Options";
 
@@ -29,11 +31,13 @@ namespace Tvision2.Core
 
         public IEnumerable<Action<ITuiEngine, IServiceProvider>> AfterCreateInvokers => _afterCreateInvokers;
 
+        public IEnumerable<Action> AfterUpdates => _afterUpdateActions;
+
         public Tvision2Options()
         {
             _hookTypes = new List<Type>();
             _afterCreateInvokers = new List<Action<ITuiEngine, IServiceProvider>>();
-
+            _afterUpdateActions = new List<Action>();
         }
 
         ITvision2Options ITvision2Options.AfterCreateInvoke(Action<ITuiEngine, IServiceProvider> invoker)
@@ -62,6 +66,12 @@ namespace Tvision2.Core
             return this;
         }
 
+
+        ITvision2Options ITvision2Options.AddAfterUpdateAction(Action actionToDo)
+        {
+            _afterUpdateActions.Add(actionToDo);
+            return this;
+        }
     }
 }
 

@@ -16,8 +16,9 @@ namespace Tvision2.DependencyInjection
             {
                 sc.AddSingleton<TvStateManager>(manager);
                 sc.AddSingleton<ITvStoreSelector>(manager);
-
             });
+
+            setup.Options.AddAfterUpdateAction(() => manager.DoDispatchAllActions());
             return setup;
         }
     }

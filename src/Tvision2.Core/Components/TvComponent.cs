@@ -21,11 +21,13 @@ namespace Tvision2.Core.Components
         public IComponentMetadata Metadata => _metadata;
 
         protected readonly List<ITvDrawer> _drawers;
+        protected readonly List<IBehaviorMetadata> _behaviorsMetadata;
 
         public TvComponent(string name)
         {
             _metadata = new TvComponentMetadata(this);
             _drawers = new List<ITvDrawer>();
+            _behaviorsMetadata = new List<IBehaviorMetadata>();
             _viewports = new Dictionary<Guid, IViewport>();
             Name = string.IsNullOrEmpty(name) ? $"TvComponent-{Guid.NewGuid().ToString()}" : name;
         }
@@ -40,6 +42,8 @@ namespace Tvision2.Core.Components
         public IViewport Viewport => _viewports.TryGetValue(Guid.Empty, out IViewport value) ? value : null;
         public IViewport GetViewport(Guid guid) => _viewports.TryGetValue(guid, out IViewport value) ? value : null;
         public IEnumerable<IViewport> Viewports => _viewports.Values;
+
+        public IEnumerable<IBehaviorMetadata> BehaviorsMetadatas => _behaviorsMetadata;
 
         public void UpdateViewport(IViewport newViewport, bool addIfNotExists = false) => UpdateViewport(Guid.Empty, newViewport, addIfNotExists);
 
@@ -72,10 +76,7 @@ namespace Tvision2.Core.Components
 
     public class TvComponent<T> : TvComponent
     {
-        private readonly List<BehaviorMetadata<T>> _behaviorsMetadata;
         public T State { get; private set; }
-
-        public bool HasFocus { get; internal set; }
 
         public void SetState(T newState)
         {
@@ -88,19 +89,30 @@ namespace Tvision2.Core.Components
         public TvComponent(T initialState, string name = null) : base(name)
         {
             NeedToRedraw = false;
-            _behaviorsMetadata = new List<BehaviorMetadata<T>>();
-            HasFocus = false;
             State = initialState;
         }
 
-        public void AddBehavior(ITvBehavior<T> behavior, Action<BehaviorMetadata<T>> metadataAction = null)
+        public void AddBehavior(ITvBehavior<T> behavior, Action<IBehaviorMetadata<T>> metadataAction = null)
         {
             var metadata = new BehaviorMetadata<T>(behavior);
             metadataAction?.Invoke(metadata);
             _behaviorsMetadata.Add(metadata);
         }
 
-        public void AddBehavior(Func<BehaviorContext<T>, bool> behaviorFunc, Action<BehaviorMetadata<T>> metadataAction = null) => AddBehavior(new ActionBehavior<T>(behaviorFunc), metadataAction);
+        public void AddBehavior(Func<BehaviorContext<T>, bool> behaviorFunc, Action<IBehaviorMetadata<T>> metadataAction = null) => AddBehavior(new ActionBehavior<T>(behaviorFunc), metadataAction);
+
+        public void AddBehavior<TB>(Action<IFactoryBehaviorMetadata<TB,T>> metadataAction = null)
+            where TB : ITvBehavior<T>
+        {
+            var metadata = new FactoryBehaviorMetadata<TB, T>();
+            metadataAction?.Invoke(metadata);
+            _behaviorsMetadata.Add(metadata);
+        }
+
+        public bool HasBehavior<TBehaviorMetadata>()
+        {
+            return _behaviorsMetadata.Any(bm => bm is IBehaviorMetadata<TBehaviorMetadata>);
+        }
 
         public TvComponent<T> AddDrawer(Action<RenderContext<T>> action) => AddDrawer(new ActionDrawer<T>(action));
 

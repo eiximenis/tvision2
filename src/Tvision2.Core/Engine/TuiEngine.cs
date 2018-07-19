@@ -33,13 +33,12 @@ namespace Tvision2.Core.Engine
         {
             ConsoleDriver = options.ConsoleDriver ?? throw new ArgumentException("No console driver defined");
             _ui = new ComponentTree(this);
-            //_additionalItems.Add(typeof(IComponentTree), UI);
             _eventPumper = new EventPumper(ConsoleDriver);
             _watcher = new Stopwatch();
             var hookContext = new HookContext(this);
             ServiceProvider = serviceProvider;
             _options = options;
-            EventHookManager = new EventHookManager(options.HookTypes ?? Enumerable.Empty<Type>(), hookContext, ServiceProvider);
+            EventHookManager = new EventHookManager(options.HookTypes ?? Enumerable.Empty<Type>(), options.AfterUpdates ?? Enumerable.Empty<Action>(), hookContext, ServiceProvider);
         }
 
         public async Task Start(CancellationToken cancellationToken)
@@ -72,6 +71,7 @@ namespace Tvision2.Core.Engine
                 EventHookManager.ProcessEvents(evts);
                 _ui.Update(evts);
                 PerformDrawOperations(force: false);
+                EventHookManager.ProcessAfterUpdateActions();
                 // StateManager.DoDispatchAllActions();
                 _watcher.Stop();
                 var ellapsed = (int)_watcher.ElapsedTicks;

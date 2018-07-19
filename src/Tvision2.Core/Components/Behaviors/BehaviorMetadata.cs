@@ -4,12 +4,16 @@ using System.Text;
 
 namespace Tvision2.Core.Components.Behaviors
 {
-    public class BehaviorMetadata<T>
+    public class BehaviorMetadata<T> : IBehaviorMetadata<T>
     {
-        public ITvBehavior<T> Behavior { get; private set; }
+        public ITvBehavior Behavior { get; private set; }
         public BehaviorSchedule Schedule { get; private set; }
 
-        public BehaviorMetadata<T> UseScheduler(BehaviorSchedule schedule)
+        public bool Created => true;
+
+        void IBehaviorMetadata.CreateBehavior(IServiceProvider sp) { }          // No need to do anything as behavior is always creeated.
+
+        public IBehaviorMetadata<T> UseScheduler(BehaviorSchedule schedule)
         {
             Schedule = schedule;
             return this;

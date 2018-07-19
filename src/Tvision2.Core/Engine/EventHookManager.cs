@@ -12,12 +12,14 @@ namespace Tvision2.Core.Engine
     {
         private readonly List<IEventHook> _hooks;
         private readonly HookContext _context;
+        private readonly List<Action> _postUpdateActions;
 
-        public EventHookManager(IEnumerable<Type> hookTypes, HookContext context, IServiceProvider serviceProvider)
+        public EventHookManager(IEnumerable<Type> hookTypes, IEnumerable<Action> afterUpdates, HookContext context, IServiceProvider serviceProvider)
         {
 
             _hooks = hookTypes.Select(ht => serviceProvider.GetService(ht) as IEventHook).ToList();
             _context = context;
+            _postUpdateActions = afterUpdates.ToList();
         }
 
         public void ProcessEvents(TvConsoleEvents evts)
@@ -28,6 +30,14 @@ namespace Tvision2.Core.Engine
                 {
                     hook.ProcessEvents(evts, _context);
                 }
+            }
+        }
+
+        public void ProcessAfterUpdateActions()
+        {
+            foreach (var action in _postUpdateActions)
+            {
+                action();
             }
         }
     }
