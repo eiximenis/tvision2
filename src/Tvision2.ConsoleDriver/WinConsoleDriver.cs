@@ -9,6 +9,7 @@ namespace Tvision2.ConsoleDriver
     {
         private const int STDIN = -10;
         private const int STDOUT = -11;
+        private const int CP_UTF8 = 65001;
         private readonly IntPtr _hstdin;
         private readonly IntPtr _hstdout;
 
@@ -29,6 +30,7 @@ namespace Tvision2.ConsoleDriver
             _hstdin = ConsoleNative.GetStdHandle(STDIN);
             _hstdout = ConsoleNative.GetStdHandle(STDOUT);
             _options = options;
+             ConsoleNative.SetConsoleOutputCP(CP_UTF8);
         }
 
         public void Init()

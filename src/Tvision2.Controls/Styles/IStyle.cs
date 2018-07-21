@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tvision2.Controls.Styles
 {
@@ -8,5 +6,7 @@ namespace Tvision2.Controls.Styles
     {
         ConsoleColor ForeColor { get; }
         ConsoleColor BackColor { get; }
+        ConsoleColor HiliteForeColor { get; }
+        ConsoleColor HiliteBackColor { get; }
     }
 }

@@ -15,6 +15,8 @@ namespace Tvision2.Controls.Styles
             _provider = provider;
             _foreColor = DefaultStyle.Instance.ForeColor;
             _backColor = DefaultStyle.Instance.BackColor;
+            _hiForeColor = DefaultStyle.Instance.HiliteForeColor;
+            _hiBackColor = DefaultStyle.Instance.HiliteBackColor;
             _classes = new List<string>();
         }
 
@@ -33,6 +35,20 @@ namespace Tvision2.Controls.Styles
         {
             get => _backColor;
             set { _backColor = value; IsDirty = true; }
+        }
+
+        private ConsoleColor _hiForeColor;
+        public ConsoleColor HiliteForeColor
+        {
+            get => _hiForeColor;
+            set { _hiForeColor = value; IsDirty = true; }
+        }
+
+        private ConsoleColor _hiBackColor;
+        public ConsoleColor HiliteBackColor
+        {
+            get => _hiBackColor;
+            set { _hiBackColor = value; IsDirty = true; }
         }
 
         private int _paddingLeft;

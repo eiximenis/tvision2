@@ -97,17 +97,7 @@ namespace Tvision2.Core.Engine
             if (_currentConsole.IsDirty)
             {
                 flushed = true;
-                var updateActions = _currentConsole.UpdateActions;
-                if (updateActions.Diffs.Any())
-                {
-                    VirtualConsoleRenderer.RenderToConsole(ConsoleDriver, updateActions.Diffs);
-                }
-                var (pendingCursorMovement, pos) = updateActions.CursorMovement;
-                if (pendingCursorMovement)
-                {
-                    ConsoleDriver.SetCursorAt(pos.Left, pos.Top);
-                }
-                _currentConsole.NoDirty();
+                _currentConsole.Flush(ConsoleDriver);
             }
 
             return flushed;

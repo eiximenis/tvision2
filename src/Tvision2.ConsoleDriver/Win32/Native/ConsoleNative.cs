@@ -707,7 +707,7 @@ namespace Tvision2.ConsoleDriver.Win32
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool GetConsoleScreenBufferInfoEx(IntPtr hConsoleOutput, ref CONSOLE_SCREEN_BUFFER_INFO_EX ConsoleScreenBufferInfo);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
+        [DllImport("kernel32.dll", SetLastError = true, EntryPoint = "FillConsoleOutputCharacterW")]
         public static extern bool FillConsoleOutputCharacter(IntPtr hConsoleOutput, char cCharacter, uint nLength, COORD dwWriteCoord, out uint lpNumberOfCharsWritten);
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -731,6 +731,12 @@ namespace Tvision2.ConsoleDriver.Win32
 
         [DllImport("kernel32.dll")]
         public static extern IntPtr GetConsoleWindow();
+
+
+        [DllImport("kernel32.dll")]
+        public static extern bool SetConsoleCP(uint wCodePageID);
+        [DllImport("kernel32.dll")]
+        public static extern bool SetConsoleOutputCP(uint wCodePageID);
     }
 
 }

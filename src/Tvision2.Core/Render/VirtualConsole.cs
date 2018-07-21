@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Tvision2.Engine.Console;
 
 namespace Tvision2.Core.Render
 {
@@ -9,6 +10,7 @@ namespace Tvision2.Core.Render
     public class VirtualConsole
     {
         private readonly ConsoleCharacter[] _buffer;
+        private readonly bool[] _dirtyMap;
         public VirtualConsoleUpdateActions UpdateActions { get; }
         public int Width { get; }
         public int Height { get; }
@@ -17,25 +19,43 @@ namespace Tvision2.Core.Render
 
         public VirtualConsoleCursor Cursor { get; }
 
-        public void NoDirty()
-        {
-            IsDirty = false;
-            _diffs.Clear();
-            Cursor.MovementPending = false;
-        }
-
-        private readonly List<VirtualConsoleUpdate> _diffs;
-
         public VirtualConsole()
         {
             Width = Console.WindowWidth;
             Height = Console.WindowHeight;
             _buffer = new ConsoleCharacter[Height * Width];
+            _dirtyMap = new bool[Height * Width];
             InitEmpty();
-            _diffs = new List<VirtualConsoleUpdate>(Height * Width);
             Cursor = new VirtualConsoleCursor();
-            UpdateActions = new VirtualConsoleUpdateActions(_diffs, Cursor);
         }
+
+        public void Flush(IConsoleDriver consoleDriver)
+        {
+            var idx = 0;
+            for (var row = 0; row < Height; row++)
+            {
+                for (var col = 0; col < Width; col++)
+                {
+                    if (_dirtyMap[idx])
+                    {
+                        var cc = _buffer[idx];
+                        consoleDriver.WriteCharacterAt(col, row, cc.Character, cc.Foreground, cc.Background);
+                        _dirtyMap[idx] = false;
+                    }
+                    idx++;
+                }
+            }
+
+            if (Cursor.MovementPending)
+            {
+                consoleDriver.SetCursorAt(Cursor.Position.Left, Cursor.Position.Top);
+                Cursor.MovementPending = false;
+            }
+
+
+            IsDirty = false;
+        }
+
 
         private void InitEmpty()
         {
@@ -66,12 +86,10 @@ namespace Tvision2.Core.Render
                 var newchar = text[textIdx];
                 if (cchar.ZIndex <= zIndex && !cchar.Equals(newchar, foreColor, backColor, zIndex))
                 {
-                    cchar.Character = newchar;
-                    cchar.Background = backColor;
-                    cchar.Foreground = foreColor;
+                    cchar.Value = ConsoleCharacter.ValueFrom(newchar, foreColor, backColor);
                     cchar.ZIndex = zIndex;
                     dirty = true;
-                    _diffs.Add(new VirtualConsoleUpdate(cchar, charRow, charCol));
+                    _dirtyMap[idx] = true;
                 }
                 textIdx++;
                 charCol++;
@@ -93,17 +111,16 @@ namespace Tvision2.Core.Render
                 var cchar = _buffer[idx];
                 if (cchar.ZIndex <= zindex && !cchar.Equals(charToCopy))
                 {
-                    cchar.Character = charToCopy.Character;
-                    cchar.Background = charToCopy.Background;
-                    cchar.Foreground = charToCopy.Foreground;
+                    cchar.Value = charToCopy.Value;
                     cchar.ZIndex = charToCopy.ZIndex;
                     dirty = true;
-                    _diffs.Add(new VirtualConsoleUpdate(cchar, charRow, charCol));
-                }
+                    _dirtyMap[idx] = true;
+               }
                 charCol++;
             }
 
             IsDirty = dirty;
         }
+
     }
 }

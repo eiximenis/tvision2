@@ -6,14 +6,15 @@ namespace Tvision2.Controls.Styles
 {
     class DefaultStyle : IStyle
     {
-        private static IStyle _instance;
+        static DefaultStyle() => Instance = new DefaultStyle();
 
-        static DefaultStyle() => _instance = new DefaultStyle();
-
-        public static IStyle Instance => _instance;
+        public static IStyle Instance { get; private set; }
 
         public ConsoleColor ForeColor => ConsoleColor.White;
 
         public ConsoleColor BackColor => ConsoleColor.Black;
+
+        public ConsoleColor HiliteForeColor => ConsoleColor.Black;
+        public ConsoleColor HiliteBackColor => ConsoleColor.White;
     }
 }

@@ -25,6 +25,15 @@ namespace Tvision2.Controls.Styles
 
                 });
 
+                sb.AddStyleSheet("tvlist", shb =>
+                {
+                    shb.AddClass("", style =>
+                    {
+                        style.WithForegroundColor(ConsoleColor.White);
+                        style.WithBackgroundColor(ConsoleColor.Blue);
+                    });
+                });
+
                 sb.AddStyleSheet("tvtextbox", shb =>
                 {
                     shb.AddClass("", style =>
