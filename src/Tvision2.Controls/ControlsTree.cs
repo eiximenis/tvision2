@@ -52,7 +52,7 @@ namespace Tvision2.Controls
 
         public TvControlMetadata CurrentFocused() => _focused;
 
-        public void Focus(TvControlMetadata controlToFocus)
+        public bool Focus(TvControlMetadata controlToFocus)
         {
             if (_focused != controlToFocus)
             {
@@ -62,15 +62,18 @@ namespace Tvision2.Controls
                 }
                 controlToFocus.Focus();
                 _focused = controlToFocus;
+                return true;
             }
+
+            return false;
         }
 
         public TvControlMetadata First() => _controls.First?.Value;
 
-        public void MoveFocusToNext()
+        public bool MoveFocusToNext()
         {
             var next = _focused != null ? NextControl(_focused) : _controls.First?.Value;
-            Focus(next);
+            return Focus(next);
         }
 
     }

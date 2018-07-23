@@ -9,8 +9,8 @@ namespace Tvision2.Controls
         TvControlMetadata NextControl(TvControlMetadata current);
         TvControlMetadata PreviousControl(TvControlMetadata current);
         TvControlMetadata CurrentFocused();
-        void Focus(TvControlMetadata controlToFocus);
+        bool Focus(TvControlMetadata controlToFocus);
         TvControlMetadata First();
-        void MoveFocusToNext();
+        bool MoveFocusToNext();
     }
 }

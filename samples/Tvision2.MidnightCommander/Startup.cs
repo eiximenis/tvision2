@@ -46,7 +46,7 @@ namespace Tvision2.MidnightCommander
             var left = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1), new ListState(Enumerable.Empty<string>()));
             var right = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1), new ListState(Enumerable.Empty<string>()));
 
-            var menu = new TvMenuBar(skin, vpf.FullViewport(), new MenuBarState(new[] { "Left", "Edit", "Command", "Options", "Help", "Right" }));
+            var menu = new TvMenuBar(skin, vpf.FullViewport().TakeRows(1,0), new MenuBarState(new[] { "Left", "Edit", "Command", "Options", "Help", "Right" }));
 
             var sleft = TvStatexControl.Wrap<TvList, ListState, FileList>(left, opt =>
             {
