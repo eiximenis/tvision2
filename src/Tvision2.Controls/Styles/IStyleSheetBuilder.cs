@@ -8,6 +8,7 @@ namespace Tvision2.Controls.Styles
     {
         IStyleSheetBuilder AddClass(string name, IStyle style);
         IStyleSheetBuilder AddClass(string name, Action<IStyleBuilder> action);
+        IStyleSheetBuilder AddClass(string name, string baseName, Action<IStyleBuilder> action);
         IStyleSheet Build();
     }
 }

@@ -20,15 +20,14 @@ namespace Tvision2.Controls.Label
         {
             var state = context.State;
             var currentcols = context.Viewport.Columns;
-            var focused = Style.ContainsClass("focused");
-            var value = string.Format("{0}{1}{2}{3}{4}",
-                new string(' ', Style.PaddingLeft),
+            var focused = Metadata.IsFocused;
+            var style = focused ? CurrentStyles.GetStyle("focused") : CurrentStyles.GetStyle("");
+            var value = string.Format("{0}{1}{2}",
                 focused ? ">" : "",
                 state.Text.ToString() ?? "",
-                focused ? "<" : "",
-                new string(' ', Style.PaddingRight));
-            context.Fill(Style.BackColor);
-            context.DrawStringAt(value, new TvPoint(0, 0), Style.ForeColor, Style.BackColor);
+                focused ? "<" : "");
+            context.Fill(style.BackColor);
+            context.DrawStringAt(value, new TvPoint(0, 0), style.ForeColor, style.BackColor);
         }
     }
 }

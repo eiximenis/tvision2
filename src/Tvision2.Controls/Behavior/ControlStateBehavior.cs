@@ -6,23 +6,26 @@ using Tvision2.Core.Components.Behaviors;
 namespace Tvision2.Controls.Behavior
 {
     public class ControlStateBehavior<TState> : ITvBehavior<TState>
+        where TState : IDirtyObject
     {
-        private readonly TvControlData _controlData;
 
-        public ControlStateBehavior(TvControlData controlData)
+        private readonly TvControlMetadata _metadata;
+        public ControlStateBehavior(TvControlMetadata metadata)
         {
-            _controlData = controlData;
+            _metadata = metadata;
         }
 
         bool ITvBehavior.Update(BehaviorContext updateContext) => Update((BehaviorContext<TState>)updateContext);
 
         public bool Update(BehaviorContext<TState> updateContext) 
         {
-            var isDirty = _controlData.IsDirty;
+            var isDirty = updateContext.State.IsDirty || _metadata.IsDirty;
 
-            if (_controlData.IsDirty)
+            if (isDirty)
             {
-                _controlData.Validate();
+                isDirty = false;
+                _metadata.Validate();
+                updateContext.State.Validate();
                 return true;
             }
             return false;

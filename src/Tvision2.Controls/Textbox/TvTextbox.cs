@@ -22,10 +22,11 @@ namespace Tvision2.Controls.Textbox
 
         protected override void OnDraw(RenderContext<TextboxState> context)
         {
-            context.DrawChars(' ', context.Viewport.Columns, new TvPoint(0, 0), Style.ForeColor, Style.BackColor);
+            var style = Metadata.IsFocused ? CurrentStyles.GetStyle("focused") : CurrentStyles.GetStyle("");
+            context.DrawChars(' ', context.Viewport.Columns, new TvPoint(0, 0), style.ForeColor, style.BackColor);
             if (!string.IsNullOrEmpty(State.Text))
             {
-                context.DrawStringAt(State.Text, new TvPoint(0, 0), ConsoleColor.Black, Style.BackColor);
+                context.DrawStringAt(State.Text, new TvPoint(0, 0), ConsoleColor.Black, style.BackColor);
             }
         }
     }

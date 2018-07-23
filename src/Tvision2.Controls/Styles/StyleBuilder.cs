@@ -6,25 +6,25 @@ namespace Tvision2.Controls.Styles
 {
     public class StyleBuilder : IStyleBuilder
     {
-        private readonly Style _styles;
+        private readonly Style _style;
 
         public StyleBuilder(IStyle parent = null)
         {
-            _styles = new Style(parent);
+            _style = new Style(parent);
         }
 
         public IStyleBuilder WithForegroundColor(ConsoleColor color)
         {
-            _styles.ForeColor = color;
+            _style.ForeColor = color;
             return this;
         }
 
         public IStyleBuilder WithBackgroundColor(ConsoleColor color)
         {
-            _styles.BackColor = color;
+            _style.BackColor = color;
             return this;
         }
 
-        public IStyle Build() => _styles;
+        public IStyle Build() => _style;
     }
 }

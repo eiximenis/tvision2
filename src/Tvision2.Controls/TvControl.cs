@@ -15,13 +15,13 @@ namespace Tvision2.Controls
         where TState : IDirtyObject
     {
 
-        private IStyleSheet _currentStyles;
+        public IStyleSheet CurrentStyles { get; }
         private TvComponent<TState> _component;
-        private TvControlData _controlData;
         public TvControlMetadata Metadata { get; }
         public TState State { get; }
         public string ControlType { get; }
-        public AppliedStyle Style { get; }
+
+
         public IViewport Viewport => _component.Viewport;
 
         private bool _setFocusPending;
@@ -30,19 +30,17 @@ namespace Tvision2.Controls
         {
             Metadata = new TvControlMetadata(this);
             ControlType = GetType().Name.ToLowerInvariant();
-            _currentStyles = skin.GetControlStyle(this);
-            Style = _currentStyles.BuildStyle();
+            CurrentStyles = skin.GetControlStyle(this);
             State = initialState;
             _component = new TvComponent<TState>(initialState, name ?? $"TvControl_{Guid.NewGuid()}");
             _component.AddViewport(viewport);
-            _controlData = new TvControlData(Style, initialState);
             _setFocusPending = false;
             AddElements();
         }
 
         private void AddElements()
         {
-            _component.AddBehavior(new ControlStateBehavior<TState>(_controlData));
+            _component.AddBehavior(new ControlStateBehavior<TState>(Metadata));
             _component.AddDrawer(OnDraw);
             foreach (var behavior in GetEventedBehaviors())
             {

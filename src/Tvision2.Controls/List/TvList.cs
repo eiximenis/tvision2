@@ -18,7 +18,7 @@ namespace Tvision2.Controls.List
 
         protected override void AddCustomElements(TvComponent<ListState> component)
         {
-            component.AddDrawer(new BorderDrawer(Style));
+            component.AddDrawer(new BorderDrawer(CurrentStyles));
         }
 
         protected override IEnumerable<ITvBehavior<ListState>> GetEventedBehaviors()
@@ -28,6 +28,7 @@ namespace Tvision2.Controls.List
 
         protected override void OnDraw(RenderContext<ListState> context)
         {
+            var style = Metadata.IsFocused ? CurrentStyles.GetStyle("focused") : CurrentStyles.GetStyle("");
             var viewport = context.Viewport;
             var numitems = State.Count;
             State.ItemsView.Adjust(viewport.Rows - 2);
@@ -38,16 +39,16 @@ namespace Tvision2.Controls.List
                     var item = State.ItemsView[idx];
                     var selected = State.SelectedIndex == idx + State.ItemsView.From;
                     var len = item.Length;
-                    context.DrawStringAt(item, new TvPoint(1, idx + 1), selected ? Style.HiliteForeColor : Style.ForeColor, selected ? Style.HiliteBackColor : Style.BackColor);
+                    context.DrawStringAt(item, new TvPoint(1, idx + 1), selected ? style.HiliteForeColor : style.ForeColor, selected ? style.HiliteBackColor : style.BackColor);
                     var extra = viewport.Columns - 2 - len;
                     if (extra > 0)
                     {
-                        context.DrawChars(' ', extra, new TvPoint(len + 1, idx + 1), Style.ForeColor, Style.BackColor);
+                        context.DrawChars(' ', extra, new TvPoint(len + 1, idx + 1), style.ForeColor, style.BackColor);
                     }
                 }
                 else
                 {
-                    context.DrawChars(' ', viewport.Columns - 2, new TvPoint(1, idx + 1), Style.ForeColor, Style.BackColor);
+                    context.DrawChars(' ', viewport.Columns - 2, new TvPoint(1, idx + 1), style.ForeColor, style.BackColor);
                 }
             }
         }

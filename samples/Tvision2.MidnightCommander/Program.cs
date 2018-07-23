@@ -15,7 +15,7 @@ namespace Tvision2.MidnightCommander
             var builder = new HostBuilder();
             builder.UseTvision2(setup =>
             {
-                setup.UseDotNetConsoleDriver()
+                setup.UsePlatformConsoleDriver()
                     .UseViewportManager()
                     .UseLayoutManager()
                     //.UseDebug(opt =>

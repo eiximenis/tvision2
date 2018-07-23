@@ -34,6 +34,21 @@ namespace Tvision2.Controls.Styles
                     });
                 });
 
+                sb.AddStyleSheet("tvmenubar", shb =>
+                {
+                    shb.AddClass("", style =>
+                    {
+                        style.WithBackgroundColor(ConsoleColor.DarkBlue);
+                        style.WithForegroundColor(ConsoleColor.White);
+                    });
+                    shb.AddClass("focused", style =>
+                    {
+                        style.WithBackgroundColor(ConsoleColor.Black);
+                        style.WithForegroundColor(ConsoleColor.White);
+                    });
+
+                });
+
                 sb.AddStyleSheet("tvtextbox", shb =>
                 {
                     shb.AddClass("", style =>

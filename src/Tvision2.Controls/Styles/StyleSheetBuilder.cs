@@ -19,14 +19,22 @@ namespace Tvision2.Controls.Styles
             _styles.Add(name, style);
             return this;
         }
-        public IStyleSheetBuilder AddClass(string name, Action<IStyleBuilder> action)
+
+        public IStyleSheetBuilder AddClass(string name, string baseName, Action<IStyleBuilder> action)
         {
-            var builder = new StyleBuilder();
+            IStyle parent = null;
+            if (!string.IsNullOrEmpty(baseName))
+            {
+                parent = _styles[baseName];
+            }
+            var builder = new StyleBuilder(parent);
             action.Invoke(builder);
             var style = builder.Build();
             _styles.Add(name, style);
             return this;
         }
+
+        public IStyleSheetBuilder AddClass(string name, Action<IStyleBuilder> action) => AddClass(name, null, action);
 
 
         public IStyleSheet Build() => new StyleSheet(_styles);

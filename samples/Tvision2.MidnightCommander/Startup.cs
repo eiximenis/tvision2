@@ -9,6 +9,7 @@ using Tvision2.Controls.Button;
 using Tvision2.Controls.Checkbox;
 using Tvision2.Controls.Label;
 using Tvision2.Controls.List;
+using Tvision2.Controls.Menu;
 using Tvision2.Controls.Styles;
 using Tvision2.Controls.Textbox;
 using Tvision2.Core;
@@ -39,11 +40,13 @@ namespace Tvision2.MidnightCommander
             var skin = _skinManager.CurrentSkin;
             var vpf = _layoutManager.ViewportFactory;
             var grid = new TvGrid(tui.UI, new GridState(1, 2));
-            grid.AsComponent().AddViewport(vpf.FullViewport().Grow(0, -2));
+            grid.AsComponent().AddViewport(vpf.FullViewport().Translate(new TvPoint(0,1)).Grow(0, -3));
             var textbox = new TvTextbox(skin, null, new TextboxState());
             
             var left = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1), new ListState(Enumerable.Empty<string>()));
             var right = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1), new ListState(Enumerable.Empty<string>()));
+
+            var menu = new TvMenuBar(skin, vpf.FullViewport(), new MenuBarState(new[] { "Left", "Edit", "Command", "Options", "Help", "Right" }));
 
             var sleft = TvStatexControl.Wrap<TvList, ListState, FileList>(left, opt =>
             {
@@ -71,6 +74,7 @@ namespace Tvision2.MidnightCommander
             bottom.AsComponent().AddViewport(vpf.BottomViewport(2));
             bottom.Children.Add(textbox);
             tui.UI.Add(bottom);
+            tui.UI.Add(menu);
             _storeSelector.GetStore<FileList>("left").Dispatch(new TvAction<string>("FETCH_DIR", "C:\\"));
             _storeSelector.GetStore<FileList>("right").Dispatch(new TvAction<string>("FETCH_DIR", "D:\\"));
             return Task.CompletedTask;

@@ -6,12 +6,12 @@ namespace Tvision2.Controls.Drawers
 {
     public class BorderDrawer : ITvDrawer
     {
-        private readonly AppliedStyle _style;
-
-        public BorderDrawer(AppliedStyle style) => _style = style;
+        private readonly IStyle _style;
+        public BorderDrawer(IStyleSheet styles) => _style = styles.GetStyle("");
 
         public void Draw(RenderContext context)
         {
+
             var viewport = context.Viewport;
             if (viewport.Rows > 2 && viewport.Columns > 2)
             {

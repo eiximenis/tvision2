@@ -30,7 +30,8 @@ namespace Tvision2.ConsoleDriver
             _hstdin = ConsoleNative.GetStdHandle(STDIN);
             _hstdout = ConsoleNative.GetStdHandle(STDOUT);
             _options = options;
-             ConsoleNative.SetConsoleOutputCP(CP_UTF8);
+            ConsoleNative.SetConsoleCP(CP_UTF8);
+            ConsoleNative.SetConsoleOutputCP(CP_UTF8);
         }
 
         public void Init()
@@ -54,12 +55,12 @@ namespace Tvision2.ConsoleDriver
 
         public TvConsoleEvents ReadEvents()
         {
-            ConsoleNative.GetNumberOfConsoleInputEvents(_hstdin, out uint numEvents);
+            ConsoleNative.GetNumberOfConsoleInputEvents(_hstdin, out var numEvents);
 
             if (numEvents > 0)
             {
                 var buffer = new INPUT_RECORD[numEvents];
-                ConsoleNative.ReadConsoleInput(_hstdin, buffer, (uint)buffer.Length, out uint eventsRead);
+                ConsoleNative.ReadConsoleInput(_hstdin, buffer, (uint)buffer.Length, out var eventsRead);
                 return new TvConsoleEvents().Add(buffer);
             }
             else

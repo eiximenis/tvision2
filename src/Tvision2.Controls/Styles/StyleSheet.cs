@@ -43,32 +43,16 @@ namespace Tvision2.Controls.Styles
             }
         }
 
-        public IStyle GetStyle(IEnumerable<string> classes)
+        public IStyle GetStyle(string className)
         {
-            foreach (var className in classes)
+            if (_styles.ContainsKey(className))
             {
-                if (_styles.ContainsKey(className))
-                {
-                    return _styles[className];
-                }
+                return _styles[className];
             }
 
             return _styles.ContainsKey("") ? _styles[""] : DefaultStyle.Instance;
         }
 
-        public AppliedStyle BuildStyle()
-        {
-            var runtimeStyle = new AppliedStyle(this);
-            UpdateStyle(runtimeStyle);
-            return runtimeStyle;
-        }
 
-        public void UpdateStyle(AppliedStyle styleToUpdate)
-        {
-            var classes = styleToUpdate.Classes;
-            var style = GetStyle(classes);
-            styleToUpdate.BackColor = style.BackColor;
-            styleToUpdate.ForeColor = style.ForeColor;
-        }
     }
 }

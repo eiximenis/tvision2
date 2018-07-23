@@ -14,11 +14,12 @@ namespace Tvision2.Controls.Dropdown
 
         protected override void OnDraw(RenderContext<DropdownState> context)
         {
-            context.DrawChars(' ', Viewport.Columns, new TvPoint(0, 0), Style.ForeColor, Style.BackColor);
+            var style = Metadata.IsFocused ? CurrentStyles.GetStyle("focused") : CurrentStyles.GetStyle("");
+            context.DrawChars(' ', Viewport.Columns, new TvPoint(0, 0), style.ForeColor, style.BackColor);
             int row = 1;
             foreach (var value in State.Values)
             {
-                context.DrawStringAt(value, new TvPoint(0, row++), Style.ForeColor, Style.BackColor);
+                context.DrawStringAt(value, new TvPoint(0, row++), style.ForeColor, style.BackColor);
             }
         }
     }

@@ -7,7 +7,6 @@ namespace Tvision2.Controls
     {
         TvComponent AsComponent();
         string ControlType { get; }
-        AppliedStyle Style { get; }
 
         TvControlMetadata Metadata { get; }
 

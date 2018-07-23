@@ -9,9 +9,6 @@ namespace Tvision2.Controls.Styles
     {
         void AddClassStyle(string name, IStyle style);
         void RemoveClassStyle(string name);
-        IStyle GetStyle(IEnumerable<string> classes);
-        AppliedStyle BuildStyle();
-
-        void UpdateStyle(AppliedStyle styleToUpdate);
+        IStyle GetStyle(string className);
     }
 }

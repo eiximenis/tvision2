@@ -14,10 +14,3 @@ The responders chain are a ordered-list of components that will receive all even
 1. Process it and do not event go to the next responder
 2. Process it and let event go to the next responder
 3. Ignore it (event will go to the next responder)
-
-
-
-
-
-
-

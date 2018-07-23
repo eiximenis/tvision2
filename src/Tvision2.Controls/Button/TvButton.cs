@@ -26,15 +26,14 @@ namespace Tvision2.Controls.Button
 
         protected override void OnDraw(RenderContext<ButtonState> context)
         {
-            var focused = Style.ContainsClass("focused");
-            var value = string.Format("{0}{1}{2}{3}{4}",
-                new string(' ', Style.PaddingLeft),
+            var focused = Metadata.IsFocused;
+            var style = focused ? CurrentStyles.GetStyle("focused") : CurrentStyles.GetStyle("");
+
+            var value = string.Format("{0}{1}{2}",
                 focused ? ">" : "",
                 "[" + State.Text.ToString() + "]",
-                focused ? "<" : "",
-                new string(' ', Style.PaddingRight));
-
-            context.DrawStringAt(value, new TvPoint(0, 0), Style.ForeColor, Style.BackColor);
+                focused ? "<" : "");
+            context.DrawStringAt(value, new TvPoint(0, 0), style.ForeColor, style.BackColor);
         }
     }
 }
