@@ -33,6 +33,12 @@
 
         public Viewport(TvPoint point, int cols, int rows = 1) : this(point, cols, rows, ClippingMode.Clip) { }
 
+        public IViewport Top()
+        {
+            ZIndex = int.MaxValue;
+            return this;
+        }
+
         public IViewport Clone()
         {
             return new Viewport(Position, Columns, Rows, Clipping) { ZIndex = ZIndex };

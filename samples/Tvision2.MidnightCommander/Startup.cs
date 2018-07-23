@@ -12,6 +12,7 @@ using Tvision2.Controls.List;
 using Tvision2.Controls.Menu;
 using Tvision2.Controls.Styles;
 using Tvision2.Controls.Textbox;
+using Tvision2.Controls.Window;
 using Tvision2.Core;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
@@ -48,6 +49,10 @@ namespace Tvision2.MidnightCommander
 
             var menu = new TvMenuBar(skin, vpf.FullViewport().TakeRows(1,0), new MenuBarState(new[] { "Left", "Edit", "Command", "Options", "Help", "Right" }));
 
+            var window = new TvWindow(skin, vpf.FullViewport().CreateCentered(20, 10).Top(), new WindowState(tui.UI));
+            var label = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 9, 1), new LabelState() { Text = "In Window" });
+            window.State.Add(label);
+
             var sleft = TvStatexControl.Wrap<TvList, ListState, FileList>(left, opt =>
             {
                 opt.UseStore("left");
@@ -75,6 +80,9 @@ namespace Tvision2.MidnightCommander
             bottom.Children.Add(textbox);
             tui.UI.Add(bottom);
             tui.UI.Add(menu);
+
+            tui.UI.Add(window);
+
             _storeSelector.GetStore<FileList>("left").Dispatch(new TvAction<string>("FETCH_DIR", "C:\\"));
             _storeSelector.GetStore<FileList>("right").Dispatch(new TvAction<string>("FETCH_DIR", "D:\\"));
             return Task.CompletedTask;
