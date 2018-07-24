@@ -18,6 +18,15 @@ namespace Tvision2.Layouts
         {
             _containers.Add(container.Name, container);
         }
+
+        public void Remove(ITvContainer container)
+        {
+            if (_containers.ContainsKey(container.Name))
+            {
+                _containers.Remove(container.Name);
+            }
+        }
+
         public T Get<T>(string name) where T : class, ITvContainer =>
             _containers.TryGetValue(name, out ITvContainer container) ? container as T : default(T);
 

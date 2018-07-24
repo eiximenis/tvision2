@@ -15,6 +15,18 @@ namespace Tvision2.Core.Engine
             tree.Add(container.AsComponent());
         }
 
+        public static bool Remove(this IComponentTree tree, ITvContainer container)
+        {
+            var removed = tree.Remove(container.AsComponent());
+            if (removed)
+            {
+                var layoutManager = tree.Layouts() as LayoutManager;
+                layoutManager.Remove(container);
+            }
+
+            return removed;
+        }
+
         public static ILayoutManager Layouts(this IComponentTree componentTree) => componentTree.Engine.ServiceProvider.GetService<ILayoutManager>();
     }
 }

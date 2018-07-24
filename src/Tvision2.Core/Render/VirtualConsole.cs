@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Tvision2.Engine.Console;
 
 namespace Tvision2.Core.Render
@@ -98,6 +96,26 @@ namespace Tvision2.Core.Render
             IsDirty = dirty;
         }
 
+        public void Clear(IViewport viewport)
+        {
+            var initcol = viewport.Position.Left;
+            var initrow = viewport.Position.Top;
+            var maxcol = initcol + viewport.Columns;
+            var maxrow = initrow + viewport.Rows;
+
+            for (var row = initrow; row <= maxrow; row++)
+            {
+                for (var col = initcol; col <= maxcol; col++)
+                {
+                    var idx = col + (Width * row);
+                    _buffer[idx].Value = ConsoleCharacter.ValueFrom(' ', ConsoleColor.Gray, ConsoleColor.Black);
+                    _buffer[idx].ZIndex = -1;
+                }
+            }
+
+
+        }
+
         public void CopyCharacter(TvPoint location, ConsoleCharacter charToCopy, int count)
         {
             var start = location.Left + (Width * location.Top);
@@ -115,7 +133,7 @@ namespace Tvision2.Core.Render
                     cchar.ZIndex = charToCopy.ZIndex;
                     dirty = true;
                     _dirtyMap[idx] = true;
-               }
+                }
                 charCol++;
             }
 

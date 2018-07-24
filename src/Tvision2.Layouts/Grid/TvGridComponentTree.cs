@@ -30,6 +30,7 @@ namespace Tvision2.Layouts.Grid
         public IEnumerable<TvComponent> Components => _childs.Values;
 
         public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
+        public event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
 
         public IComponentMetadata Add(IComponentMetadata metadata)
         {
@@ -53,6 +54,38 @@ namespace Tvision2.Layouts.Grid
             handler?.Invoke(this, new TreeUpdatedEventArgs(metadata));
         }
 
+        private void OnComponentRemoved(IComponentMetadata metadata)
+        {
+            var handler = ComponentRemoved;
+            handler?.Invoke(this, new TreeUpdatedEventArgs(metadata));
+        }
+
         public TvComponent GetComponent(string name) => _childs.Values.FirstOrDefault(c => c.Name == name);
+
+        public bool Remove(IComponentMetadata metadata)
+        {
+            var cmp = metadata.Component;
+            (int, int)? keyToDelete = null;
+            
+            foreach (var child in _childs)
+            {
+                if (child.Value == cmp)
+                {
+                    keyToDelete = child.Key;
+                    break;
+                }
+            }
+            if (keyToDelete.HasValue)
+            {
+                _childs.Remove(keyToDelete.Value);
+                _root.Remove(metadata);
+                OnComponentRemoved(metadata);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool Remove(TvComponent component) => Remove(component.Metadata);
     }
 }

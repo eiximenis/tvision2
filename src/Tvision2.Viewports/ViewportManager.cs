@@ -28,6 +28,17 @@ namespace Tvision2.Viewports
             }
 
             componentTree.ComponentAdded += OnComponentAdded;
+            componentTree.ComponentRemoved += OnComponentRemoved;
+        }
+
+        private void OnComponentRemoved(object sender, TreeUpdatedEventArgs e)
+        {
+            var removed = e.ComponentMetadata;
+            var viewport = e.ComponentMetadata.Component.Viewport;
+            if (viewport != null)
+            {
+                InvalidateViewport(viewport);
+            }
         }
 
         private void OnComponentAdded(object sender, TreeUpdatedEventArgs e)

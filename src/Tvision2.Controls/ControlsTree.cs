@@ -39,6 +39,8 @@ namespace Tvision2.Controls
 
         public void Add(TvControlMetadata cdata) => _controls.AddLast(cdata);
 
+        public void Remove(TvControlMetadata cdata) => _controls.Remove(cdata);
+
         public TvControlMetadata NextControl(TvControlMetadata current)
         {
             var next = _controls.Find(current)?.Next;

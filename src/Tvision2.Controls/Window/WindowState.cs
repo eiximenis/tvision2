@@ -27,7 +27,7 @@ namespace Tvision2.Controls.Window
             _myWindow = ownerWindow;
             foreach (var existingChild in _children)
             {
-                existingChild.UpdateViewport(existingChild.Viewport.InsertInto(_myWindow.Viewport));
+                existingChild.UpdateViewport(existingChild.Viewport.InnerViewport(_myWindow.Viewport));
             }
         }
 
@@ -36,13 +36,14 @@ namespace Tvision2.Controls.Window
         public IEnumerable<TvComponent> Components => _children;
 
         public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
+        public event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
 
         public IComponentMetadata Add(TvComponent component)
         {
             _children.Add(component);
             if (_myWindow != null)
             {
-                component.UpdateViewport(component.Viewport.InsertInto(_myWindow.Viewport));
+                component.UpdateViewport(_myWindow.Viewport.InnerViewport(component.Viewport).Top());
             }
             _ownerTree.Add(component);
             OnComponentAdded(component.Metadata);
@@ -58,6 +59,24 @@ namespace Tvision2.Controls.Window
             ComponentAdded?.Invoke(this, new TreeUpdatedEventArgs(metadata));
         }
 
+        private void OnComponentRemoved(IComponentMetadata metadata)
+        {
+            ComponentRemoved?.Invoke(this, new TreeUpdatedEventArgs(metadata));
+        }
 
+        public bool Remove(IComponentMetadata metadata)
+        {
+            if (_children.Contains(metadata.Component))
+            {
+                _children.Remove(metadata.Component);
+                _ownerTree.Remove(metadata.Component);
+                OnComponentRemoved(metadata);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool Remove(TvComponent component) => Remove(component.Metadata);
     }
 }

@@ -83,6 +83,12 @@ namespace Tvision2.MidnightCommander
 
             tui.UI.Add(window);
 
+            Task.Factory.StartNew(async () =>
+            {
+                await Task.Delay(10000);
+                window.Close();
+            });
+
             _storeSelector.GetStore<FileList>("left").Dispatch(new TvAction<string>("FETCH_DIR", "C:\\"));
             _storeSelector.GetStore<FileList>("right").Dispatch(new TvAction<string>("FETCH_DIR", "D:\\"));
             return Task.CompletedTask;

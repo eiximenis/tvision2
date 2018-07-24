@@ -18,6 +18,20 @@ namespace Tvision2.Core.Engine
             ctree.Add(control.Metadata);
         }
 
+        public static bool Remove(this IComponentTree componentTree, ITvControl control)
+        {
+            var removed = componentTree.Remove(control.AsComponent());
+            if (removed)
+            {
+                var ctree = componentTree.Controls() as ControlsTree;
+                ctree.Remove(control.Metadata);
+            }
+
+            return removed;
+        }
+
+
+
         public static IControlsTree Controls(this IComponentTree componentTree) => componentTree.Engine.ServiceProvider.GetService<IControlsTree>();
     }
 }

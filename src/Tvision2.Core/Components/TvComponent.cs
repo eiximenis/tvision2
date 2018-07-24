@@ -10,14 +10,21 @@ using Tvision2.Events;
 namespace Tvision2.Core.Components
 {
 
+    public enum RedrawNeededAction
+    {
+        None,
+        Standard,
+        Forced
+    }
+
 
     public abstract class TvComponent
     {
         private readonly TvComponentMetadata _metadata;
         protected Dictionary<Guid, IViewport> _viewports;
-        public bool NeedToRedraw { get; protected set; }
+        public RedrawNeededAction NeedToRedraw { get; protected set; }
         public string Name { get; }
-        public void Invalidate() => NeedToRedraw = true;
+        public void Invalidate() => NeedToRedraw = RedrawNeededAction.Standard;
         public IComponentMetadata Metadata => _metadata;
 
         protected readonly List<ITvDrawer> _drawers;
@@ -82,13 +89,13 @@ namespace Tvision2.Core.Components
         {
             var oldState = State;
             State = newState;
-            NeedToRedraw = Object.ReferenceEquals(oldState, State);
+            NeedToRedraw = Object.ReferenceEquals(oldState, State) ? RedrawNeededAction.None : RedrawNeededAction.Standard;
         }
 
 
         public TvComponent(T initialState, string name = null) : base(name)
         {
-            NeedToRedraw = false;
+            NeedToRedraw = RedrawNeededAction.None;
             State = initialState;
         }
 
@@ -125,7 +132,7 @@ namespace Tvision2.Core.Components
 
         protected internal override void Update(TvConsoleEvents evts)
         {
-            bool updated = NeedToRedraw;
+            var updated = NeedToRedraw != RedrawNeededAction.None;
             foreach (var mdata in _behaviorsMetadata)
             {
                 var ctx = new BehaviorContext<T>(State, evts);
@@ -136,7 +143,7 @@ namespace Tvision2.Core.Components
                 }
             }
 
-            NeedToRedraw = updated;
+            NeedToRedraw = updated ? RedrawNeededAction.Standard : RedrawNeededAction.None;
         }
 
 
@@ -150,7 +157,7 @@ namespace Tvision2.Core.Components
                     drawer?.Draw(context);
                }
             }
-            NeedToRedraw = false;
+            NeedToRedraw = RedrawNeededAction.None;
 
         }
 

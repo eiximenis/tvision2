@@ -18,6 +18,7 @@ namespace Tvision2.Layouts
         public TuiEngine Engine => _root.Engine;
 
         public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
+        public event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
 
         public LayoutsComponentTree(IComponentTree root)
         {
@@ -43,13 +44,32 @@ namespace Tvision2.Layouts
 
         public TvComponent GetComponent(string name)
         {
-           return  _myComponents.FirstOrDefault(c => c.Name == name);
+            return _myComponents.FirstOrDefault(c => c.Name == name);
         }
 
         private void OnComponentAdded(IComponentMetadata metadata)
         {
-            var handler = ComponentAdded;
-            handler?.Invoke(this, new TreeUpdatedEventArgs(metadata));
+            ComponentAdded?.Invoke(this, new TreeUpdatedEventArgs(metadata));
+        }
+
+        private void OnComponentRemoved(IComponentMetadata metadata)
+        {
+            ComponentRemoved?.Invoke(this, new TreeUpdatedEventArgs(metadata));
+        }
+
+        public bool Remove(IComponentMetadata metadata) => Remove(metadata.Component);
+
+        public bool Remove(TvComponent component)
+        {
+            if (_myComponents.Contains(component))
+            {
+                _root.Remove(component);
+                _myComponents.Remove(component);
+                OnComponentRemoved(component.Metadata);
+                return true;
+            }
+
+            return false;
         }
     }
 }

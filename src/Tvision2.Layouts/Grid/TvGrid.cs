@@ -28,6 +28,12 @@ namespace Tvision2.Layouts.Grid
             _root = root;
             _ui = new TvGridComponentTree(_root);
             _ui.ComponentAdded += OnComponentAdded;
+            _ui.ComponentRemoved += OnComponentRemoved;
+        }
+
+        private void OnComponentRemoved(object sender, TreeUpdatedEventArgs e)
+        {
+            ResizeRowsAndCols();
         }
 
         private void OnComponentAdded(object sender, TreeUpdatedEventArgs e)
@@ -75,7 +81,7 @@ namespace Tvision2.Layouts.Grid
             var startCol = ctrCol * cellWidth;
             var startRow = ctrRow * cellHeight;
 
-            return myViewport.InsertInto(new TvPoint(startCol, startRow), cellWidth, cellHeight);
+            return myViewport.InnerViewport(new TvPoint(startCol, startRow), cellWidth, cellHeight);
 
         }
     }

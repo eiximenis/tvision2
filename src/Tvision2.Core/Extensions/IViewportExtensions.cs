@@ -6,7 +6,7 @@ namespace Tvision2.Core.Render
 {
     public static class IViewportExtensions_Core
     {
-        public static IViewport InsertInto(this IViewport containerViewport, TvPoint pos, int cols, int rows)
+        public static IViewport InnerViewport(this IViewport containerViewport, TvPoint pos, int cols, int rows)
         {
             var vppos = pos + containerViewport.Position;
             var displacement = pos;
@@ -19,7 +19,7 @@ namespace Tvision2.Core.Render
             return vp;
         }
 
-        public static IViewport InsertInto(this IViewport containerViewport, IViewport innerViewport)
+        public static IViewport InnerViewport(this IViewport containerViewport, IViewport innerViewport)
         {
             if (innerViewport == null)
             {
@@ -27,7 +27,7 @@ namespace Tvision2.Core.Render
             }
             else
             {
-                return containerViewport.InsertInto(innerViewport.Position, innerViewport.Columns, innerViewport.Rows);
+                return containerViewport.InnerViewport(innerViewport.Position, innerViewport.Columns, innerViewport.Rows);
             }
         }
     }

@@ -20,6 +20,12 @@ namespace Tvision2.Layouts.Stack
             Name = _thisComponent.Name;
             _thisComponent.Metadata.ViewportChanged += OnViewportChange;
             _childs.ComponentAdded += OnChildAdded;
+            _childs.ComponentRemoved += OnChildRemoved;
+        }
+
+        private void OnChildRemoved(object sender, TreeUpdatedEventArgs e)
+        {
+            RepositionChildren(TvPoint.Zero);
         }
 
         private void OnChildAdded(object sender, TreeUpdatedEventArgs e)
