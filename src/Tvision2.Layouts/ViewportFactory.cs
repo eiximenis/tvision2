@@ -14,13 +14,13 @@ namespace Tvision2.Layouts
         public IViewport FullViewport()
         {
             var (rows, cols) = _console.GetConsoleWindowSize();
-            return new Viewport(TvPoint.Zero, cols, rows, ClippingMode.Clip);
+            return new Viewport(TvPoint.Zero, cols, rows, zindex: 0);
         }
 
         public IViewport BottomViewport(int vprows = 1)
         {
             var (rows, cols) = _console.GetConsoleWindowSize();
-            return new Viewport(new TvPoint(0, rows - vprows), cols, vprows, ClippingMode.Clip);
+            return new Viewport(new TvPoint(0, rows - vprows), cols, vprows, zindex: 0);
         }
     }
 }

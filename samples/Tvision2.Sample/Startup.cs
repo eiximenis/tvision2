@@ -25,18 +25,18 @@ namespace Tvision2.Sample
         {
             var skin = _skinManager.CurrentSkin;
 
-            var lbl = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 2, 1), new LabelState()
+            var lbl = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 2, 1, 0), new LabelState()
             {
                 Text = "label",
             });
             lbl.Viewport.MoveTo(new TvPoint(4, 3));
             tui.UI.Add(lbl);
 
-            var check = new TvCheckbox(skin, new Viewport(new TvPoint(0, 0), 10, 1), new CheckboxState());
+            var check = new TvCheckbox(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0), new CheckboxState());
             check.Viewport.MoveTo(new TvPoint(8, 7));
             tui.UI.Add(check);
 
-            var button = new TvButton(skin, new Viewport(new TvPoint(0, 0), 4, 1), new ButtonState()
+            var button = new TvButton(skin, new Viewport(new TvPoint(0, 0), 4, 1, 0), new ButtonState()
             {
                 Text = "btn"
             });
@@ -54,7 +54,7 @@ namespace Tvision2.Sample
 
             tui.UI.Add(button);
 
-            var textbox = new TvTextbox(skin, new Viewport(new TvPoint(12, 9), 8, 1), new TextboxState());
+            var textbox = new TvTextbox(skin, new Viewport(new TvPoint(12, 9), 8, 1, 0), new TextboxState());
             tui.UI.Add(textbox);
             //await Task.Delay(6000);
             //button.State.Text = "---Uuuups";

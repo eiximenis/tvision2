@@ -11,7 +11,7 @@
                 rowsToTake = availableRows;
             }
 
-            return new Viewport(viewport.Position + new TvPoint(0, startingRow), viewport.Columns, rowsToTake);
+            return new Viewport(viewport.Position + new TvPoint(0, startingRow), viewport.Columns, rowsToTake, viewport.ZIndex);
         }
 
         public static IViewport CreateCentered(this IViewport viewport, int columns, int rows)
@@ -22,7 +22,7 @@
             var finalrows = rows < maxrows ? rows : maxrows;
             var finalcols = columns < maxcols ? columns : maxcols;
 
-            return new Viewport(viewport.Position + new TvPoint((maxcols - finalcols) / 2, (maxrows - finalrows) / 2), finalcols, finalrows);
+            return new Viewport(viewport.Position + new TvPoint((maxcols - finalcols) / 2, (maxrows - finalrows) / 2), finalcols, finalrows, viewport.ZIndex);
         }
     }
 }

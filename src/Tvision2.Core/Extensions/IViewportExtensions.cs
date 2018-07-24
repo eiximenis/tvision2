@@ -15,7 +15,7 @@ namespace Tvision2.Core.Render
             var availableRows = containerViewport.Rows - displacement.Top;
             var vpCols = cols < availableCols ? cols : availableCols;
             var vpRows = rows < availableRows ? rows : availableRows;
-            var vp = new Viewport(vppos, vpCols, vpRows);
+            var vp = new Viewport(vppos, vpCols, vpRows, containerViewport.ZIndex);
             return vp;
         }
 
@@ -23,7 +23,7 @@ namespace Tvision2.Core.Render
         {
             if (innerViewport == null)
             {
-                return new Viewport(new TvPoint(0, 0), containerViewport.Columns, containerViewport.Rows);
+                return new Viewport(new TvPoint(0, 0), containerViewport.Columns, containerViewport.Rows, containerViewport.ZIndex);
             }
             else
             {

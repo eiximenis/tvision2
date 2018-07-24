@@ -7,7 +7,7 @@ namespace Tvision2.Viewports
 {
     internal class ViewportManager : IViewportManager
     {
-        private IComponentTree _attachedComponentTree;
+        private ComponentTree _attachedComponentTree;
         public void InvalidateViewport(IViewport viewportToInvalidate)
         {
             var components = _attachedComponentTree.Components.Where(c => c.Viewports.Any(vp => vp.Intersects(viewportToInvalidate)));
@@ -17,7 +17,7 @@ namespace Tvision2.Viewports
             }
         }
 
-        public void AttachTo(IComponentTree componentTree)
+        public void AttachTo(ComponentTree componentTree)
         {
             _attachedComponentTree = componentTree;
 
@@ -51,7 +51,9 @@ namespace Tvision2.Viewports
         {
             // TODO: process viewportchange
             var data = sender as IComponentMetadata;
+            _attachedComponentTree.ClearViewport(e.Previous);
             data.Component.Invalidate();
+            InvalidateViewport(e.Previous);
         }
     }
 }

@@ -2,48 +2,42 @@
 {
     public class Viewport : IViewport
     {
-        private static Viewport _nullViewport = new Viewport(new TvPoint(0, 0), 0, 0, ClippingMode.Clip);
+        private static Viewport _nullViewport = new Viewport(new TvPoint(0, 0), 0, 0, 0);
         public TvPoint Position { get; }
 
-        public int ZIndex { get; set; }
+        public int ZIndex { get;  }
 
         public int Columns { get; }
 
         public int Rows { get; }
 
-        public ClippingMode Clipping { get; }
-
         public static IViewport NullViewport => _nullViewport;
 
-        public Viewport(TvPoint point, int cols, int rows, ClippingMode clipping)
+        public Viewport(TvPoint point, int cols) : this (point, cols, 1, 0)
+        {
+        }
+
+        public Viewport(TvPoint point, int cols, int rows, int zindex)
         {
             Position = point;
-            Clipping = clipping;
             Columns = cols;
             Rows = rows;
-            ZIndex = 0;
+            ZIndex = zindex;
         }
 
-        public IViewport ResizeTo(int cols, int rows) => new Viewport(Position, cols, rows, Clipping);
-        public IViewport Grow(int ncols, int nrows) => new Viewport(Position, Columns + ncols, Rows + nrows, Clipping);
 
-        public IViewport MoveTo(TvPoint newPos) => new Viewport(newPos, Columns, Rows, Clipping);
 
-        public IViewport Translate(TvPoint translation) => new Viewport(Position + translation, Columns, Rows, Clipping);
+        public IViewport ResizeTo(int cols, int rows) => new Viewport(Position, cols, rows, ZIndex);
+        public IViewport Grow(int ncols, int nrows) => new Viewport(Position, Columns + ncols, Rows + nrows, ZIndex);
 
-        public Viewport(TvPoint point, int cols, int rows = 1) : this(point, cols, rows, ClippingMode.Clip) { }
+        public IViewport MoveTo(TvPoint newPos) => new Viewport(newPos, Columns, Rows, ZIndex);
 
-        public IViewport Top()
-        {
-            ZIndex = int.MaxValue;
-            return this;
-        }
+        public IViewport Translate(TvPoint translation) => new Viewport(Position + translation, Columns, Rows, ZIndex);
 
-        public IViewport Clone()
-        {
-            return new Viewport(Position, Columns, Rows, Clipping) { ZIndex = ZIndex };
-        }
+        public IViewport Top() => new Viewport(Position, Columns, Rows, int.MaxValue);
 
+        public IViewport Clone() => new Viewport(Position, Columns, Rows, ZIndex);
+        
         public bool Intersects(IViewport another)
         {
             var otherPos = another.Position;
@@ -59,6 +53,25 @@
             var y2o = y1o + another.Rows;
 
             return (x2o >= x1 && x1o <= x2) && (y2o >= y1 && y1o <= y2);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is IViewport)
+            {
+                return Equals((IViewport)obj);
+            }
+            else
+            {
+                return base.Equals(obj);
+            }
+        }
+
+        public bool Equals(IViewport other)
+        {
+            return Position == other.Position
+                && Columns == other.Columns && other.Rows == Rows
+                && ZIndex == other.ZIndex;
         }
     }
 }

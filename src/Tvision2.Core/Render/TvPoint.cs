@@ -40,5 +40,8 @@ namespace Tvision2.Core.Render
         {
             return (Top << 16) & (Left);
         }
+
+        public static bool operator ==(TvPoint first, TvPoint second) => first.Equals(second);
+        public static bool operator !=(TvPoint first, TvPoint second) => !first.Equals(second);
     }
 }

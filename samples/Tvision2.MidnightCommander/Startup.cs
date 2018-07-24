@@ -44,13 +44,13 @@ namespace Tvision2.MidnightCommander
             grid.AsComponent().AddViewport(vpf.FullViewport().Translate(new TvPoint(0,1)).Grow(0, -3));
             var textbox = new TvTextbox(skin, null, new TextboxState());
             
-            var left = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1), new ListState(Enumerable.Empty<string>()));
-            var right = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1), new ListState(Enumerable.Empty<string>()));
+            var left = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1,0), new ListState(Enumerable.Empty<string>()));
+            var right = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0), new ListState(Enumerable.Empty<string>()));
 
             var menu = new TvMenuBar(skin, vpf.FullViewport().TakeRows(1,0), new MenuBarState(new[] { "Left", "Edit", "Command", "Options", "Help", "Right" }));
 
             var window = new TvWindow(skin, vpf.FullViewport().CreateCentered(20, 10).Top(), new WindowState(tui.UI));
-            var label = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 9, 1), new LabelState() { Text = "In Window" });
+            var label = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 9, 1, 0), new LabelState() { Text = "In Window" });
             window.State.Add(label);
 
             var sleft = TvStatexControl.Wrap<TvList, ListState, FileList>(left, opt =>
@@ -82,12 +82,6 @@ namespace Tvision2.MidnightCommander
             tui.UI.Add(menu);
 
             tui.UI.Add(window);
-
-            Task.Factory.StartNew(async () =>
-            {
-                await Task.Delay(10000);
-                window.Close();
-            });
 
             _storeSelector.GetStore<FileList>("left").Dispatch(new TvAction<string>("FETCH_DIR", "C:\\"));
             _storeSelector.GetStore<FileList>("right").Dispatch(new TvAction<string>("FETCH_DIR", "D:\\"));

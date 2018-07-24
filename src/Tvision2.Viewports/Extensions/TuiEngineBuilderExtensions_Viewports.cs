@@ -20,7 +20,7 @@ namespace Tvision2.Core.Engine
             setup.Options.AfterCreateInvoke((engine, sp) =>
             {
                 var viewportManager = sp.GetRequiredService<IViewportManager>() as ViewportManager;
-                viewportManager.AttachTo(engine.UI);
+                viewportManager.AttachTo(engine.UI as ComponentTree);
             });
             return setup;
         }

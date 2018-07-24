@@ -8,7 +8,7 @@ using Tvision2.Events;
 
 namespace Tvision2.Core.Engine
 {
-    class ComponentTree : IComponentTree
+    public class ComponentTree : IComponentTree
     {
         private readonly Dictionary<string, IComponentMetadata> _components;
         private readonly List<IViewport> _viewportsToClear;
@@ -74,7 +74,7 @@ namespace Tvision2.Core.Engine
             ComponentRemoved?.Invoke(this, new TreeUpdatedEventArgs(metadata));
         }
 
-        private void ClearViewport(IViewport viewportToClear)
+        public void ClearViewport(IViewport viewportToClear)
         {
             if (viewportToClear != null)
             {

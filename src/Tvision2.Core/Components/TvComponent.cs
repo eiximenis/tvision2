@@ -13,8 +13,7 @@ namespace Tvision2.Core.Components
     public enum RedrawNeededAction
     {
         None,
-        Standard,
-        Forced
+        Standard
     }
 
 
@@ -135,11 +134,15 @@ namespace Tvision2.Core.Components
             var updated = NeedToRedraw != RedrawNeededAction.None;
             foreach (var mdata in _behaviorsMetadata)
             {
-                var ctx = new BehaviorContext<T>(State, evts);
+                var ctx = new BehaviorContext<T>(State, evts, Viewport);
                 if (mdata.Schedule == BehaviorSchedule.OncePerFrame
                     || (mdata.Schedule == BehaviorSchedule.OnEvents && evts != null))
                 {
                     updated = mdata.Behavior.Update(ctx) || updated;
+                    if (ctx.ViewportUpdated)
+                    {
+                        UpdateViewport(ctx.Viewport);
+                    }
                 }
             }
 

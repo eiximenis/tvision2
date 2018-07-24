@@ -4,13 +4,12 @@ using System.Text;
 
 namespace Tvision2.Core.Render
 {
-    public interface IViewport
+    public interface IViewport : IEquatable<IViewport>
     {
         TvPoint Position { get; }
         int ZIndex { get; }
         int Columns { get; }
         int Rows { get; }
-        ClippingMode Clipping { get; }
 
         bool Intersects(IViewport another);
 
