@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Tvision2.Controls.Extensions;
-using Tvision2.Core;
 using Tvision2.Core.Engine;
 
 namespace Tvision2.Controls
 {
-    class ControlsTree : IControlsTree
+    internal class ControlsTree : IControlsTree
     {
         private readonly LinkedList<TvControlMetadata> _controls;
         private IComponentTree _componentTree;
@@ -74,7 +72,18 @@ namespace Tvision2.Controls
 
         public bool MoveFocusToNext()
         {
-            var next = _focused != null ? NextControl(_focused) : _controls.First?.Value;
+            if (!_controls.Any())
+            {
+                return false;
+            }
+
+            var currentFocused = _focused ?? _controls.First.Value;
+
+            var next = NextControl(_focused);
+            while (!next.CanFocus && next != currentFocused)
+            {
+                next = NextControl(next);
+            }
             return Focus(next);
         }
 

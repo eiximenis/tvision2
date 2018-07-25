@@ -7,76 +7,35 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Controls.Window
 {
-    public class WindowState : IDirtyObject, IComponentTree
+    public class WindowState : IDirtyObject
     {
-        private readonly IComponentTree _ownerTree;
-        private readonly List<TvComponent> _children;
         private TvWindow _myWindow;
+        private readonly ListComponentTree _children;
 
         public bool IsDirty { get; private set; }
         public void Validate() => IsDirty = false;
 
+        public IComponentTree UI => _children;
+
         public WindowState(IComponentTree ownerTree)
         {
-            _ownerTree = ownerTree;
-            _children = new List<TvComponent>();
+            _children = new ListComponentTree(ownerTree);
         }
         
         internal void SetOwnerWindow(TvWindow ownerWindow)
         {
             _myWindow = ownerWindow;
-            foreach (var existingChild in _children)
+            foreach (var existingChild in _children.Components)
             {
-                existingChild.UpdateViewport(existingChild.Viewport.InnerViewport(_myWindow.Viewport));
+                existingChild.UpdateViewport(existingChild.Viewport.InnerViewport(_myWindow.Viewport, new TvPoint(1,1)));
             }
+            IsDirty = true;
         }
 
-        public TuiEngine Engine => _ownerTree.Engine;
-
-        public IEnumerable<TvComponent> Components => _children;
-
-        public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
-        public event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
-
-        public IComponentMetadata Add(TvComponent component)
+        internal void RequestClose()
         {
-            _children.Add(component);
-            if (_myWindow != null)
-            {
-                component.UpdateViewport(_myWindow.Viewport.InnerViewport(component.Viewport).Top());
-            }
-            _ownerTree.Add(component);
-            OnComponentAdded(component.Metadata);
-            return component.Metadata;
+            _myWindow?.Close();
         }
 
-        public IComponentMetadata Add(IComponentMetadata metadata) => Add(metadata.Component);
-
-        public TvComponent GetComponent(string name) => _children.FirstOrDefault(cm => cm.Name == name);
-
-        private void OnComponentAdded(IComponentMetadata metadata)
-        {
-            ComponentAdded?.Invoke(this, new TreeUpdatedEventArgs(metadata));
-        }
-
-        private void OnComponentRemoved(IComponentMetadata metadata)
-        {
-            ComponentRemoved?.Invoke(this, new TreeUpdatedEventArgs(metadata));
-        }
-
-        public bool Remove(IComponentMetadata metadata)
-        {
-            if (_children.Contains(metadata.Component))
-            {
-                _children.Remove(metadata.Component);
-                _ownerTree.Remove(metadata.Component);
-                OnComponentRemoved(metadata);
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool Remove(TvComponent component) => Remove(component.Metadata);
     }
 }

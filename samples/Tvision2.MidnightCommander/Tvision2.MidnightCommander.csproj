@@ -20,6 +20,7 @@
     <ProjectReference Include="..\..\src\Tvision2.Statex.Controls\Tvision2.Statex.Controls.csproj" />
     <ProjectReference Include="..\..\src\Tvision2.Statex\Tvision2.Statex.csproj" />
     <ProjectReference Include="..\..\src\Tvision2.Viewports\Tvision2.Viewports.csproj" />
+    <ProjectReference Include="..\..\Tvision2.Dialogs\Tvision2.Dialogs.csproj" />
   </ItemGroup>
 
 </Project>

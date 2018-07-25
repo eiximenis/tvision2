@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Tvision2.Core.Components.Behaviors;
+using Tvision2.Core.Render;
 using Tvision2.Events;
 
 namespace Tvision2.Controls.Window
@@ -31,8 +32,27 @@ namespace Tvision2.Controls.Window
                 switch (keyInfo.Key)
                 {
                     case ConsoleKey.RightArrow:
-                        updateContext.UpdateViewport(updateContext.Viewport.Translate(new Core.Render.TvPoint(1, 0)));
+                        updateContext.UpdateViewport(updateContext.Viewport.Translate(new TvPoint(1, 0)));
                         return true;
+                    case ConsoleKey.LeftArrow:
+                        updateContext.UpdateViewport(updateContext.Viewport.Translate(new TvPoint(-1, 0)));
+                        return true;
+                    case ConsoleKey.UpArrow:
+                        updateContext.UpdateViewport(updateContext.Viewport.Translate(new TvPoint(0, -1)));
+                        return true;
+                    case ConsoleKey.DownArrow:
+                        updateContext.UpdateViewport(updateContext.Viewport.Translate(new TvPoint(0, 1)));
+                        return true;
+                    case ConsoleKey.Escape:
+                        _moving = false;
+                        return false;
+                }
+            }
+            else
+            {
+                if (keyInfo.Key == ConsoleKey.Escape)
+                {
+                    updateContext.State.RequestClose();
                 }
             }
             return false;

@@ -13,6 +13,7 @@ namespace Tvision2.Controls.Label
 
         public TvLabel(ISkin skin, IViewport boxModel, LabelState state) : base(skin, boxModel, state)
         {
+            Metadata.CanFocus = false;
         }
 
 
@@ -21,11 +22,8 @@ namespace Tvision2.Controls.Label
             var state = context.State;
             var currentcols = context.Viewport.Columns;
             var focused = Metadata.IsFocused;
-            var style = focused ? CurrentStyles.GetStyle("focused") : CurrentStyles.GetStyle("");
-            var value = string.Format("{0}{1}{2}",
-                focused ? ">" : "",
-                state.Text.ToString() ?? "",
-                focused ? "<" : "");
+            var style = CurrentStyles.GetStyle("");
+            var value = state.Text.ToString() ?? "";
             context.Fill(style.BackColor);
             context.DrawStringAt(value, new TvPoint(0, 0), style.ForeColor, style.BackColor);
         }

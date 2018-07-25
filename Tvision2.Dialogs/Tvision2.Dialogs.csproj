@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\Tvision2.Controls\Tvision2.Controls.csproj" />
+    <ProjectReference Include="..\src\Tvision2.Layouts\Tvision2.Layouts.csproj" />
+  </ItemGroup>
+
+</Project>

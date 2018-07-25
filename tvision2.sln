@@ -23,15 +23,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Viewports", "src\T
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{1FFF334B-6239-454C-8B05-991DC83C0D5A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Sample", "samples\Tvision2.Sample\Tvision2.Sample.csproj", "{ADEE07AD-A1B1-428C-B5BC-C7EB585B5693}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Debug", "src\Tvision2.Debug\Tvision2.Debug.csproj", "{0B67C2E1-76ED-486C-87BD-F7091C897B4A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.MidnightCommander", "samples\Tvision2.MidnightCommander\Tvision2.MidnightCommander.csproj", "{B272F9AF-7C0E-448E-B68A-163A2CC39EAE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Statex.Controls", "src\Tvision2.Statex.Controls\Tvision2.Statex.Controls.csproj", "{DA8CBE9D-5614-4FB9-BD8D-70B6A0BE5390}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.HelloWorld", "samples\Tvision2.HelloWorld\Tvision2.HelloWorld.csproj", "{CD6F38CC-1A3E-4F11-8FFE-2BD8F188730B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.HelloWorld", "samples\Tvision2.HelloWorld\Tvision2.HelloWorld.csproj", "{CD6F38CC-1A3E-4F11-8FFE-2BD8F188730B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.Dialogs", "Tvision2.Dialogs\Tvision2.Dialogs.csproj", "{300A2B0D-4FE0-486C-B820-D5B092E9B8BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,10 +71,6 @@ Global
 		{D2C6EF97-0950-4955-A4EB-8482EEBBB890}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2C6EF97-0950-4955-A4EB-8482EEBBB890}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2C6EF97-0950-4955-A4EB-8482EEBBB890}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ADEE07AD-A1B1-428C-B5BC-C7EB585B5693}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ADEE07AD-A1B1-428C-B5BC-C7EB585B5693}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ADEE07AD-A1B1-428C-B5BC-C7EB585B5693}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ADEE07AD-A1B1-428C-B5BC-C7EB585B5693}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0B67C2E1-76ED-486C-87BD-F7091C897B4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0B67C2E1-76ED-486C-87BD-F7091C897B4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B67C2E1-76ED-486C-87BD-F7091C897B4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -91,13 +87,16 @@ Global
 		{CD6F38CC-1A3E-4F11-8FFE-2BD8F188730B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD6F38CC-1A3E-4F11-8FFE-2BD8F188730B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD6F38CC-1A3E-4F11-8FFE-2BD8F188730B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{300A2B0D-4FE0-486C-B820-D5B092E9B8BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{300A2B0D-4FE0-486C-B820-D5B092E9B8BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{300A2B0D-4FE0-486C-B820-D5B092E9B8BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{300A2B0D-4FE0-486C-B820-D5B092E9B8BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{63234481-D20C-40EA-ABC4-57F42482DA3C} = {31E0103B-CAA7-43A4-89C3-BEE4C29A6363}
-		{ADEE07AD-A1B1-428C-B5BC-C7EB585B5693} = {1FFF334B-6239-454C-8B05-991DC83C0D5A}
 		{B272F9AF-7C0E-448E-B68A-163A2CC39EAE} = {1FFF334B-6239-454C-8B05-991DC83C0D5A}
 		{CD6F38CC-1A3E-4F11-8FFE-2BD8F188730B} = {1FFF334B-6239-454C-8B05-991DC83C0D5A}
 	EndGlobalSection

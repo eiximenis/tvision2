@@ -16,6 +16,7 @@ using Tvision2.Controls.Window;
 using Tvision2.Core;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
+using Tvision2.Dialogs;
 using Tvision2.Layouts;
 using Tvision2.Layouts.Grid;
 using Tvision2.Layouts.Stack;
@@ -49,9 +50,14 @@ namespace Tvision2.MidnightCommander
 
             var menu = new TvMenuBar(skin, vpf.FullViewport().TakeRows(1,0), new MenuBarState(new[] { "Left", "Edit", "Command", "Options", "Help", "Right" }));
 
-            var window = new TvWindow(skin, vpf.FullViewport().CreateCentered(20, 10).Top(), new WindowState(tui.UI));
+            //var window = new TvWindow(skin, vpf.FullViewport().CreateCentered(20, 10), new WindowState(tui.UI));
+            //var label = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 9, 1, 0), new LabelState() { Text = "In Window" });
+            //window.State.UI.Add(label);
+
+
+            var dialog = new TvDialog(skin, vpf.FullViewport().CreateCentered(20, 10), tui.UI);
             var label = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 9, 1, 0), new LabelState() { Text = "In Window" });
-            window.State.Add(label);
+            dialog.State.UI.Add(label);
 
             var sleft = TvStatexControl.Wrap<TvList, ListState, FileList>(left, opt =>
             {
@@ -81,7 +87,8 @@ namespace Tvision2.MidnightCommander
             tui.UI.Add(bottom);
             tui.UI.Add(menu);
 
-            tui.UI.Add(window);
+            //tui.UI.Add(window);
+            tui.UI.Add(dialog);
 
             _storeSelector.GetStore<FileList>("left").Dispatch(new TvAction<string>("FETCH_DIR", "C:\\"));
             _storeSelector.GetStore<FileList>("right").Dispatch(new TvAction<string>("FETCH_DIR", "D:\\"));

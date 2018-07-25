@@ -34,8 +34,6 @@
 
         public IViewport Translate(TvPoint translation) => new Viewport(Position + translation, Columns, Rows, ZIndex);
 
-        public IViewport Top() => new Viewport(Position, Columns, Rows, int.MaxValue);
-
         public IViewport Clone() => new Viewport(Position, Columns, Rows, ZIndex);
         
         public bool Intersects(IViewport another)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Tvision2.Controls.Drawers;
 using Tvision2.Controls.Styles;
 using Tvision2.Core.Components;
@@ -13,15 +12,16 @@ namespace Tvision2.Controls.Window
 {
     public class TvWindow : TvControl<WindowState>
     {
-        public TvWindow(ISkin skin, IViewport boxModel, WindowState initialState) : base(skin, boxModel, initialState)
+        public TvWindow(ISkin skin, IViewport boxModel, WindowState initialState)
+            : base(skin, boxModel.Layer(ViewportLayer.Top, -1), initialState, $"TvWindow_{Guid.NewGuid()}")
         {
             initialState.SetOwnerWindow(this);
-            this.AsComponent().Metadata.ViewportChanged += MyViewportChanged;
+            AsComponent().Metadata.ViewportChanged += MyViewportChanged;
         }
 
         private void MyViewportChanged(object sender, ViewportUpdatedEventArgs e)
         {
-            var childs = State.Components.ToList();
+            var childs = State.UI.Components.ToList();
             var diff = e.Current.Position - e.Previous.Position;
             foreach (var child in childs)
             {
@@ -29,14 +29,15 @@ namespace Tvision2.Controls.Window
             }
         }
 
-        public void Close()
+        internal void Close()
         {
-            var childs = State.Components.ToList();
+            var childs = State.UI.Components.ToList();
             foreach (var child in childs)
             {
-                State.Remove(child);
+                State.UI.Remove(child);
             }
-            State.Engine.UI.Remove(this.AsComponent());
+            AsComponent().Metadata.ViewportChanged -= MyViewportChanged;
+            State.UI.Engine.UI.Remove(AsComponent());
         }
 
         protected override IEnumerable<ITvBehavior<WindowState>> GetEventedBehaviors()
@@ -52,7 +53,8 @@ namespace Tvision2.Controls.Window
         protected override void OnDraw(RenderContext<WindowState> context)
         {
             var style = CurrentStyles.GetStyle("");
-            for (var row=1; row < Viewport.Rows - 2; row ++) {
+            for (var row = 1; row < Viewport.Rows - 2; row++)
+            {
                 context.DrawChars(' ', Viewport.Columns - 2, new TvPoint(1, row), style.ForeColor, style.BackColor);
             }
             context.Fill(style.BackColor);

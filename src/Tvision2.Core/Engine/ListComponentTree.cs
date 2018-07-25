@@ -1,34 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Tvision2.Core.Components;
-using Tvision2.Core.Engine;
 
-namespace Tvision2.Layouts
+namespace Tvision2.Core.Engine
 {
-    internal class LayoutsComponentTree : IComponentTree
+    public class ListComponentTree : IComponentTree
     {
-
-        private readonly IComponentTree _root;
+        private readonly IComponentTree _parent;
         private List<TvComponent> _myComponents;
         public IEnumerable<TvComponent> Components => _myComponents;
 
         public int Count => _myComponents.Count;
 
-        public TuiEngine Engine => _root.Engine;
+        public TuiEngine Engine => _parent.Engine;
 
         public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
         public event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
 
-        public LayoutsComponentTree(IComponentTree root)
+        public ListComponentTree(IComponentTree root)
         {
             _myComponents = new List<TvComponent>();
-            _root = root;
+            _parent = root;
         }
 
         public IComponentMetadata Add(TvComponent component)
         {
-            var metadata = _root.Add(component);
+            var metadata = _parent.Add(component);
             _myComponents.Add(component);
             OnComponentAdded(component.Metadata);
             return metadata;
@@ -36,7 +35,7 @@ namespace Tvision2.Layouts
 
         public IComponentMetadata Add(IComponentMetadata metadata)
         {
-            _root.Add(metadata);
+            _parent.Add(metadata);
             _myComponents.Add(metadata.Component);
             OnComponentAdded(metadata);
             return metadata;
@@ -63,7 +62,7 @@ namespace Tvision2.Layouts
         {
             if (_myComponents.Contains(component))
             {
-                _root.Remove(component);
+                _parent.Remove(component);
                 _myComponents.Remove(component);
                 OnComponentRemoved(component.Metadata);
                 return true;
@@ -71,5 +70,6 @@ namespace Tvision2.Layouts
 
             return false;
         }
+
     }
 }

@@ -3,17 +3,20 @@ using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 
-namespace Tvision2.Layouts.Stack
+namespace Tvision2.Layouts.Canvas
 {
-    public class TvStackPanel : ITvContainer
+    public class TvCanvas : ITvContainer
     {
+
         private readonly TvComponent<ListComponentTree> _thisComponent;
         private readonly ListComponentTree _childs;
         public string Name { get; }
 
+        public TvComponent AsComponent() => _thisComponent;
+
         public IComponentTree Children => _childs;
 
-        public TvStackPanel(IComponentTree root, string name = null)
+        public TvCanvas(IComponentTree root, string name = null)
         {
             _childs = new ListComponentTree(root);
             _thisComponent = new TvComponent<ListComponentTree>(_childs, name ?? $"TvContainer{Guid.NewGuid()}");
@@ -49,12 +52,10 @@ namespace Tvision2.Layouts.Stack
         {
             if (_thisComponent.Viewport != null)
             {
-                var current = 0;
-                var height = _thisComponent.Viewport.Rows / _childs.Count;
                 foreach (var child in _childs.Components)
                 {
                     var childvp = child.Viewport;
-                    child.UpdateViewport(_thisComponent.Viewport.TakeRows(height, height * current), addIfNotExists: true);
+                    child.UpdateViewport(childvp.Translate(_thisComponent.Viewport.Position));
                 }
             }
         }
@@ -75,6 +76,5 @@ namespace Tvision2.Layouts.Stack
             }
         }
 
-        public TvComponent AsComponent() => _thisComponent;
     }
 }
