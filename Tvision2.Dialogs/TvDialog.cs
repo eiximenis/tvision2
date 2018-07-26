@@ -10,12 +10,11 @@ namespace Tvision2.Dialogs
 {
     public class TvDialog : TvControl<DialogState>
     {
-        public TvDialog(ISkin skin, IViewport viewport, IComponentTree owner) 
-            : base(skin, viewport, new DialogState(skin, owner, viewport), $"TvDialog_{Guid.NewGuid()}")
+        public TvDialog(ISkin skin, IViewport viewport, IComponentTree owner, string name = null)
+            : base(skin, viewport.Layer(ViewportLayer.Top, -1), new DialogState(skin, name ?? $"TvDialog_{Guid.NewGuid()}"))
         {
-
+            State.Init(this, owner);
         }
-
 
         protected override void AddCustomElements(TvComponent<DialogState> component)
         {
@@ -25,6 +24,12 @@ namespace Tvision2.Dialogs
 
         protected override void OnDraw(RenderContext<DialogState> context)
         {
+            var style = CurrentStyles.GetStyle("");
+            for (var row = 1; row < Viewport.Rows - 2; row++)
+            {
+                context.DrawChars(' ', Viewport.Columns - 2, new TvPoint(1, row), style.ForeColor, style.BackColor);
+            }
+            context.Fill(style.BackColor);
         }
     }
 }

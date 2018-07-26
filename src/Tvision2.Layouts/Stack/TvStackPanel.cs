@@ -55,6 +55,7 @@ namespace Tvision2.Layouts.Stack
                 {
                     var childvp = child.Viewport;
                     child.UpdateViewport(_thisComponent.Viewport.TakeRows(height, height * current), addIfNotExists: true);
+                    current++;
                 }
             }
         }

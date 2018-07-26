@@ -56,7 +56,8 @@ namespace Tvision2.MidnightCommander
 
 
             var dialog = new TvDialog(skin, vpf.FullViewport().CreateCentered(20, 10), tui.UI);
-            var label = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 9, 1, 0), new LabelState() { Text = "In Window" });
+            // TODO: Layer management must be provided by DialogState itself!
+            var label = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 9, 1, Int32.MaxValue), new LabelState() { Text = "In Window" });
             dialog.State.UI.Add(label);
 
             var sleft = TvStatexControl.Wrap<TvList, ListState, FileList>(left, opt =>
