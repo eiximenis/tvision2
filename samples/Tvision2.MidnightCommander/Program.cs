@@ -18,6 +18,7 @@ namespace Tvision2.MidnightCommander
                 setup.UsePlatformConsoleDriver()
                     .UseViewportManager()
                     .UseLayoutManager()
+                    .AddTvDialogs()
                     //.UseDebug(opt =>
                     //{
                     //    opt.UseDebugFilter(c => c.Name.StartsWith("TvControl"));

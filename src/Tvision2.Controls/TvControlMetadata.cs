@@ -12,7 +12,7 @@ namespace Tvision2.Controls
         public bool IsFocused { get; private set; }
 
         public bool IsDirty { get; private set; }
-        public bool CanFocus { get; internal set; }
+        public bool CanFocus { get; set; }
 
         public void Focus()
         {

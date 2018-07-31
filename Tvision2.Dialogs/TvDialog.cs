@@ -10,9 +10,10 @@ namespace Tvision2.Dialogs
 {
     public class TvDialog : TvControl<DialogState>
     {
-        public TvDialog(ISkin skin, IViewport viewport, IComponentTree owner, string name = null)
+        internal TvDialog(ISkin skin, IViewport viewport, IComponentTree owner, string name = null)
             : base(skin, viewport.Layer(ViewportLayer.Top, -1), new DialogState(skin, name ?? $"TvDialog_{Guid.NewGuid()}"))
         {
+            Metadata.CanFocus = false;
             State.Init(this, owner);
         }
 
