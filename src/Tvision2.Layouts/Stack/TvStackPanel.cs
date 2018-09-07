@@ -7,16 +7,17 @@ namespace Tvision2.Layouts.Stack
 {
     public class TvStackPanel : ITvContainer
     {
-        private readonly TvComponent<ListComponentTree> _thisComponent;
-        private readonly ListComponentTree _childs;
+        private readonly TvComponent<StackLayout> _thisComponent;
+        private readonly KeyedComponentsTree<int> _childs;
         public string Name { get; }
 
-        public IComponentTree Children => _childs;
+        public StackLayout Layout => _thisComponent.State;
+
 
         public TvStackPanel(IComponentTree root, string name = null)
         {
-            _childs = new ListComponentTree(root);
-            _thisComponent = new TvComponent<ListComponentTree>(_childs, name ?? $"TvContainer{Guid.NewGuid()}");
+            _childs = new KeyedComponentsTree<int>(root);
+            _thisComponent = new TvComponent<StackLayout>(new StackLayout(), name ?? $"TvStackPanel_{Guid.NewGuid()}");
             Name = _thisComponent.Name;
             _thisComponent.Metadata.ViewportChanged += OnViewportChange;
             _childs.ComponentAdded += OnChildAdded;
@@ -28,20 +29,25 @@ namespace Tvision2.Layouts.Stack
             RepositionChildren(TvPoint.Zero);
         }
 
+        public IComponentTree At (int idx)
+        {
+            var layout = _thisComponent.State;
+            if (layout.ItemsCount > idx)
+            {
+                _childs.SetKey(idx);
+                return _childs;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(nameof(idx), idx, $"Value {idx} out of range 0..{layout.ItemsCount -1 }");
+            }
+
+        }
+
         private void OnChildAdded(object sender, TreeUpdatedEventArgs e)
         {
             var child = e.ComponentMetadata.Component;
-            InsertChildInside(child);
             RepositionChildren(TvPoint.Zero);
-        }
-
-
-        private void InsertChildInside(TvComponent child)
-        {
-            //if (_thisComponent.Viewport != null)
-            //{
-            //    child.UpdateViewport(_thisComponent.Viewport.Inner(child.Viewport), addIfNotExists: true);
-            //}
         }
 
 
@@ -49,13 +55,20 @@ namespace Tvision2.Layouts.Stack
         {
             if (_thisComponent.Viewport != null)
             {
-                var current = 0;
-                var height = _thisComponent.Viewport.Rows / _childs.Count;
-                foreach (var child in _childs.Components)
+                var layout = _thisComponent.State;
+                if (layout.ItemsCount > 0)
                 {
-                    var childvp = child.Viewport;
-                    child.UpdateViewport(_thisComponent.Viewport.TakeRows(height, height * current), addIfNotExists: true);
-                    current++;
+                    for (var layoutIdx = 0; layoutIdx < layout.ItemsCount; layoutIdx++)
+                    {
+                        var height = Layout.GetRealSize(Layout[layoutIdx], _thisComponent.Viewport.Rows);
+                        var itemChilds = _childs.ComponentsForKey(layoutIdx);
+                        foreach (var childComponent in itemChilds)
+                        {
+                            var childvp = childComponent.Viewport;
+                            childComponent.UpdateViewport(_thisComponent.Viewport.TakeRows(height, height * layoutIdx), addIfNotExists: true);
+                        }
+
+                    }
                 }
             }
         }
@@ -64,10 +77,7 @@ namespace Tvision2.Layouts.Stack
         {
             if (e.Previous == Viewport.NullViewport)
             {
-                foreach (var child in _childs.Components)
-                {
-                    RepositionChildren(TvPoint.Zero);
-                }
+                RepositionChildren(TvPoint.Zero);
             }
             else
             {
@@ -75,6 +85,8 @@ namespace Tvision2.Layouts.Stack
                 RepositionChildren(displacement);
             }
         }
+
+
 
         public TvComponent AsComponent() => _thisComponent;
     }

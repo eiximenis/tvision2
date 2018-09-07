@@ -79,8 +79,9 @@ namespace Tvision2.MidnightCommander
             grid.Use(0, 1).Add(right);
             tui.UI.Add(grid);
             var bottom = new TvStackPanel(tui.UI, "BottomContainer");
+            bottom.Layout.Add(new LayoutSize());
             bottom.AsComponent().AddViewport(vpf.BottomViewport(2));
-            bottom.Children.Add(textbox);
+            bottom.At(0).Add(textbox);
             tui.UI.Add(bottom);
             tui.UI.Add(menu);
 
