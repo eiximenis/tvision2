@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Tvision2.Engine.Console;
 using Tvision2.Events;
 using Tvision2.Events.NCurses;
@@ -9,22 +11,24 @@ namespace Tvision2.ConsoleDriver
 {
     public class NcursesConsoleDriver : IConsoleDriver
     {
-        private Curses.Window _console;
         private readonly ConsoleDriverOptions _options;
+
+        private const int EscKey = 27;
+
         public NcursesConsoleDriver(ConsoleDriverOptions options)
         {
             _options = options;
         }
+
         public void Init()
         {
-            _console = Curses.initscr();
+            Curses.initscr();
             Curses.raw();
             Curses.noecho();
             Curses.nonl();
-            var w = Window.Standard;
-            Curses.nodelay(w.Handle, bf: true);
-            Curses.keypad(w.Handle, bf: true);
-            Curses.get_wch(out int wch);
+            var stdscr = Window.Standard;
+            Curses.nodelay(stdscr.Handle, bf: true);
+            Curses.keypad(stdscr.Handle, bf: true);
         }
 
         public TvConsoleEvents ReadEvents()
@@ -36,28 +40,44 @@ namespace Tvision2.ConsoleDriver
             {
                 events = new TvConsoleEvents();
                 var alt = false;
-                if (code == 27)     // Alt read, next char has the key
+                if (wch == EscKey) // Esc key read, we treat as Alt
                 {
-                    Curses.get_wch(out wch);
                     alt = true;
+                    Curses.timeout(100);
+                    var code2 = Curses.get_wch(out wch);
+                    if (code2 == Curses.ERR)
+                    {
+                        wch = EscKey;
+                        alt = false;
+                    }
                 }
+
                 events.Add(new NCursesConsoleKeyboardEvent(wch, alt: alt, isDown: true));
                 events.Add(new NCursesConsoleKeyboardEvent(wch, alt: alt, isDown: false));
+
+                return events;
             }
 
-            if (code == Curses.KEY_CODE_YES)
+            else if (code == Curses.KEY_CODE_YES)
             {
                 events = new TvConsoleEvents();
                 if (wch == Curses.KeyMouse)
                 {
-
                     Curses.getmouse(out Curses.MouseEvent ev);
                     return TvConsoleEvents.Empty;
                 }
-                return TvConsoleEvents.Empty;
+
+                else
+                {
+                    events.Add(new NCursesConsoleKeyboardEvent(wch, alt: false, isDown: true));
+                    events.Add(new NCursesConsoleKeyboardEvent(wch, alt: false, isDown: false));
+                    return events;
+                }
+
+                return events;
             }
 
-            return events ?? TvConsoleEvents.Empty;
+            return TvConsoleEvents.Empty;
         }
 
         public void WriteCharacterAt(int x, int y, char character)
