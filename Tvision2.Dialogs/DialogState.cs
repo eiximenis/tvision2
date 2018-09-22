@@ -25,6 +25,7 @@ namespace Tvision2.Dialogs
         public DialogState(ISkin skin, string prefix)
         {
             _skin = skin;
+            _prefixNames = prefix;
         }
 
         internal void Init(TvDialog dialog, IComponentTree owner)
