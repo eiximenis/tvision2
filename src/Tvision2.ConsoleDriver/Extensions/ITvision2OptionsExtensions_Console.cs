@@ -53,7 +53,7 @@ namespace Tvision2.Core
             config?.Invoke(options);
             var platform = Environment.OSVersion.Platform;
             var useWin = (platform == PlatformID.Win32NT || platform == PlatformID.Win32S || platform == PlatformID.Win32Windows);
-            var driver = useWin ? new WinConsoleDriver(options) as IConsoleDriver : new NcursesConsoleDriver(options) as IConsoleDriver;
+            var driver = useWin ? new WinConsoleDriver(options) as IConsoleDriver : new TerminfoConsoleDriver() as IConsoleDriver;
             tv2.Options.UseConsoleDriver(driver);
             tv2.Builder.ConfigureServices((hc, sc) =>
             {
