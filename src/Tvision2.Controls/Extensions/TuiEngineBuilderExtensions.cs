@@ -5,12 +5,13 @@ using Tvision2.Controls;
 using Tvision2.Controls.Hooks;
 using Tvision2.Controls.Styles;
 using Tvision2.Core;
+using Tvision2.Core.Colors;
 
 namespace Tvision2.DependencyInjection
 {
     public static class TvControlsTuiEngineBuilderExtensions
     {
-        public static Tvision2Setup AddTvControls(this Tvision2Setup setup)
+        public static Tvision2Setup AddTvControls(this Tvision2Setup setup, Action<ISkinManagerBuilder> skinOptions = null)
         {
 
             var tree = new ControlsTree();
@@ -20,10 +21,16 @@ namespace Tvision2.DependencyInjection
                 sc.AddSingleton<ControlsTree>(tree);
                 sc.AddSingleton<IControlsTree>(tree);
                 var sp = sc.BuildServiceProvider();
-                var skinManager = sp.GetService<ISkinManager>();
-                if (skinManager == null)
+                var cm = sp.GetService<IColorManager>();
+                if (skinOptions != null)
                 {
-                    AddDefaultSkinManager(sc);
+                    var skinManager = CreateSkinManager(skinOptions, cm);
+                    sc.AddSingleton<ISkinManager>(skinManager);
+                }
+                else
+                {
+                    var skinManager = CreateDefaultSkinManager(cm);
+                    sc.AddSingleton<ISkinManager>(skinManager);
                 }
             });
 
@@ -37,25 +44,23 @@ namespace Tvision2.DependencyInjection
             return setup;
         }
 
-        private static void AddDefaultSkinManager(IServiceCollection sc)
+        private static ISkinManager CreateDefaultSkinManager(IColorManager cm)
         {
             // TODO: Create a default skin manager.
-            var skinBuilder = new SkinManagerBuilder();
+
+            var skinBuilder = new SkinManagerBuilder(cm);
             skinBuilder.AddSkin(string.Empty);
             var skinManager = skinBuilder.Build();
-            sc.AddSingleton<ISkinManager>(skinManager);
+            return skinManager;
         }
 
-        public static Tvision2Setup AddSkinSupport(this Tvision2Setup setup, Action<ISkinManagerBuilder> builderOptions)
+        private static ISkinManager CreateSkinManager(Action<ISkinManagerBuilder> builderOptions, IColorManager cm)
         {
-            var skinManagerBuilder = new SkinManagerBuilder();
+            var skinManagerBuilder = new SkinManagerBuilder(cm);
             builderOptions.Invoke(skinManagerBuilder);
             var skinManager = skinManagerBuilder.Build();
-            setup.Builder.ConfigureServices(sc =>
-            {
-               sc.AddSingleton<ISkinManager>(skinManager);
-            });
-            return setup;
+
+            return skinManager;
         }
 
     }

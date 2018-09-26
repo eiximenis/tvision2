@@ -52,10 +52,11 @@ namespace Tvision2.ConsoleDriver
             TerminfoBindings.putp(character + "");
         }
 
-        public void WriteCharacterAt(int x, int y, char character, ConsoleColor foreColor, ConsoleColor backColor)
+        public void WriteCharacterAt(int x, int y, char character, int pairIdx)
         {
-            TerminfoBindings.putp(_terminal.Cup(y, x));
+            // TODO: Implement using terminfo capabalities
 
+            TerminfoBindings.putp(_terminal.Cup(y, x));
             TerminfoBindings.putp(character + "");
         }
 

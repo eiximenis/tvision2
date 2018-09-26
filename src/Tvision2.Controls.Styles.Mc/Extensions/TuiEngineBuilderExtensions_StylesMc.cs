@@ -1,66 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Tvision2.Core.Colors;
 
 namespace Tvision2.Controls.Styles
 {
     public static class TuiEngineBuilderExtensions_StylesMc
     {
-        public static ISkinManagerBuilder AddMcStyles (this ISkinManagerBuilder builder)
+        public static ISkinManagerBuilder AddMcStyles(this ISkinManagerBuilder builder)
         {
             builder.AddSkin("Mc", sb =>
             {
-                sb.AddStyleSheet("tvbutton", shb =>
-                {
-                    shb.AddClass("", style =>
-                    {
-                        style.WithBackgroundColor(ConsoleColor.White);
-                        style.WithForegroundColor(ConsoleColor.Black);
-                    });
-                    shb.AddClass("focused", style =>
-                    {
-                        style.WithBackgroundColor(ConsoleColor.Blue);
-                        style.WithForegroundColor(ConsoleColor.Black);
-                    });
 
+                sb.AddBaseStyle(style =>
+                {
+                    style.DesiredStandard(DefaultColorName.Yellow, DefaultColorName.Blue);
+                    style.DesiredFocused(DefaultColorName.White, DefaultColorName.Blue);
                 });
 
-                sb.AddStyleSheet("tvlist", shb =>
+                sb.AddStyle("tvtextbox", style =>
                 {
-                    shb.AddClass("", style =>
-                    {
-                        style.WithForegroundColor(ConsoleColor.White);
-                        style.WithBackgroundColor(ConsoleColor.Blue);
-                    });
-                });
-
-                sb.AddStyleSheet("tvmenubar", shb =>
-                {
-                    shb.AddClass("", style =>
-                    {
-                        style.WithBackgroundColor(ConsoleColor.DarkBlue);
-                        style.WithForegroundColor(ConsoleColor.White);
-                    });
-                    shb.AddClass("focused", style =>
-                    {
-                        style.WithBackgroundColor(ConsoleColor.Black);
-                        style.WithForegroundColor(ConsoleColor.White);
-                    });
-
-                });
-
-                sb.AddStyleSheet("tvtextbox", shb =>
-                {
-                    shb.AddClass("", style =>
-                    {
-                        style.WithBackgroundColor(ConsoleColor.White);
-                        style.WithForegroundColor(ConsoleColor.Black);
-                    });
-                    shb.AddClass("focused", style =>
-                    {
-                        style.WithBackgroundColor(ConsoleColor.Blue);
-                        style.WithForegroundColor(ConsoleColor.Black);
-                    });
+                    style.DesiredStandard(DefaultColorName.Black, DefaultColorName.White);
+                    style.DesiredFocused(DefaultColorName.White, DefaultColorName.Black);
                 });
             });
 

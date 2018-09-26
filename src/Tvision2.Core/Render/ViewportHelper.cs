@@ -7,8 +7,8 @@ namespace Tvision2.Core.Render
 
         public static TvPoint ViewPointToConsolePoint(TvPoint viewPoint, TvPoint viewportPosition) => viewPoint + viewportPosition;
         public static TvPoint ConsolePointToViewport(TvPoint consolePoint, TvPoint viewportPosition) => consolePoint - viewportPosition;
-        
-        public static void DrawStringAt(string text, TvPoint location, ConsoleColor foreColor, ConsoleColor backColor, IViewport boxModel, VirtualConsole console)
+
+        public static void DrawStringAt(string text, TvPoint location, int pairIdx, IViewport boxModel, VirtualConsole console)
         {
             var consoleLocation = ViewPointToConsolePoint(location, boxModel.Position);
             var zindex = boxModel.ZIndex;
@@ -17,15 +17,15 @@ namespace Tvision2.Core.Render
             {
                 text = text.Substring(0, boxModel.Columns);
             }
-            console.DrawAt(text, consoleLocation, zindex, foreColor, backColor);
+            console.DrawAt(text, consoleLocation, zindex, pairIdx);
         }
 
-        internal static void DrawChars(char value, int count, TvPoint location, ConsoleColor foreColor, ConsoleColor backColor, IViewport boxModel, VirtualConsole console)
+        internal static void DrawChars(char value, int count, TvPoint location, int pairIdx, IViewport boxModel, VirtualConsole console)
         {
 
             var chars = new ConsoleCharacter[count];
             var zindex = boxModel.ZIndex;
-            var cc = new ConsoleCharacter() { Character = value, Background = backColor, Foreground = foreColor, ZIndex = zindex };
+            var cc = new ConsoleCharacter() { Character = value, PairIndex = pairIdx, ZIndex = zindex };
             var pos = ViewPointToConsolePoint(location, boxModel.Position);
             console.CopyCharacter(pos, cc, count);
         }
@@ -36,20 +36,19 @@ namespace Tvision2.Core.Render
             return consolePoint.Top >= viewportPosition.Top && consolePoint.Left >= viewportPosition.Left;
         }
 
-        public static void Fill(ConsoleColor color, IViewport boxModel, VirtualConsole console)
+        public static void Fill(int pairIdx, IViewport boxModel, VirtualConsole console)
         {
             var location = ViewPointToConsolePoint(new TvPoint(0, 0), boxModel.Position);
             for (var rows = 0; rows < boxModel.Rows; rows++)
             {
-                console.DrawAt(new string(' ', boxModel.Columns), location + new TvPoint(0, rows), boxModel.ZIndex, color, color);
+                console.DrawAt(new string(' ', boxModel.Columns), location + new TvPoint(0, rows), boxModel.ZIndex, pairIdx);
             }
         }
 
         public static void Clear(IViewport boxModel, VirtualConsole console)
         {
             var location = ViewPointToConsolePoint(new TvPoint(0, 0), boxModel.Position);
-            var color = ConsoleColor.Black;
-            console.DrawAt(new string(' ', boxModel.Columns), location, int.MinValue, color, color);
+            console.DrawAt(new string(' ', boxModel.Columns), location, int.MinValue, 0);
         }
 
 

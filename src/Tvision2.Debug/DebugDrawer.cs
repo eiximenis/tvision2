@@ -6,16 +6,16 @@ namespace Tvision2.Debug
 {
     internal class DebugDrawer : ITvDrawer
     {
-        private readonly ConsoleColor _color;
+        private readonly int _pairIdx;
 
         public DebugDrawer()
         {
-            _color = (ConsoleColor)(new Random().Next(1, 16));
+            _pairIdx = new Random().Next(1, 16);
         }
 
         public void Draw(RenderContext context)
         {
-            context.Fill(_color);
+            context.Fill(_pairIdx);
         }
     }
 }

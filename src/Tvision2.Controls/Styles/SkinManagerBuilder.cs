@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Tvision2.Core.Colors;
 
 namespace Tvision2.Controls.Styles
 {
-    class SkinManagerBuilder : ISkinManagerBuilder
+    internal class SkinManagerBuilder : ISkinManagerBuilder
     {
         private readonly Dictionary<string, ISkin> _skins;
+        private readonly IColorManager _colorManager;
 
-        public SkinManagerBuilder()
+        public SkinManagerBuilder(IColorManager colorManager)
         {
             _skins = new Dictionary<string, ISkin>();
+            _colorManager = colorManager;
         }
 
         public ISkinManagerBuilder AddSkin(string name, Action<ISkinBuilder> builderOptions = null)
         {
-            var skinBuilder = new SkinBuilder();
+            var skinBuilder = new SkinBuilder(_colorManager);
             builderOptions?.Invoke(skinBuilder);
             var skin = skinBuilder.Build();
             return AddSkin(name, skin);

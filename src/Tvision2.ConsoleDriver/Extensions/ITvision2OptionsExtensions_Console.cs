@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using Tvision2.ConsoleDriver;
+using Tvision2.ConsoleDriver.Colors;
+using Tvision2.ConsoleDriver.NCurses;
+using Tvision2.Core.Colors;
 using Tvision2.Engine.Console;
 
 namespace Tvision2.Core
@@ -14,7 +17,7 @@ namespace Tvision2.Core
             config?.Invoke(options);
             var driver = new WinConsoleDriver(options);
             tv2.Options.UseConsoleDriver(driver);
-            tv2.Builder.ConfigureServices((hc, sc) => 
+            tv2.Builder.ConfigureServices((hc, sc) =>
             {
                 sc.AddSingleton<IConsoleDriver>(driver);
             });
@@ -25,11 +28,13 @@ namespace Tvision2.Core
         {
             var options = new ConsoleDriverOptions();
             config?.Invoke(options);
-            var driver = new WinConsoleDriver(options);
+            var colorManager = new NcursesColorManager();
+            var driver = new NcursesConsoleDriver(options, colorManager);
             tv2.Options.UseConsoleDriver(driver);
             tv2.Builder.ConfigureServices((hc, sc) =>
             {
                 sc.AddSingleton<IConsoleDriver>(driver);
+                sc.AddSingleton<IColorManager>(colorManager);
             });
             return tv2;
         }
@@ -38,11 +43,13 @@ namespace Tvision2.Core
         {
             var options = new ConsoleDriverOptions();
             config?.Invoke(options);
-            var driver = new NetConsoleDriver(options);
+            var colorManager = new DotNetColorManager();
+            var driver = new NetConsoleDriver(options, colorManager);
             tv2.Options.UseConsoleDriver(driver);
             tv2.Builder.ConfigureServices((hc, sc) =>
             {
                 sc.AddSingleton<IConsoleDriver>(driver);
+                sc.AddSingleton<IColorManager>(colorManager);
             });
             return tv2;
         }

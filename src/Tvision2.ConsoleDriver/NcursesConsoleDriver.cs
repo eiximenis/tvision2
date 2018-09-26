@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using Tvision2.ConsoleDriver.NCurses;
 using Tvision2.Engine.Console;
 using Tvision2.Events;
 using Tvision2.Events.NCurses;
@@ -12,17 +13,22 @@ namespace Tvision2.ConsoleDriver
     public class NcursesConsoleDriver : IConsoleDriver
     {
         private readonly ConsoleDriverOptions _options;
+        private readonly NcursesColorManager _colorDriver;
 
         private const int EscKey = 27;
 
-        public NcursesConsoleDriver(ConsoleDriverOptions options)
+        public NcursesConsoleDriver(ConsoleDriverOptions options, NcursesColorManager colorDriver)
         {
             _options = options;
+            _colorDriver = colorDriver;
         }
 
         public void Init()
         {
             Curses.initscr();
+            _colorDriver.Init();
+
+
             Curses.raw();
             Curses.noecho();
             Curses.nonl();
@@ -86,10 +92,12 @@ namespace Tvision2.ConsoleDriver
             Console.Write(character);
         }
 
-        public void WriteCharacterAt(int x, int y, char character, ConsoleColor foreColor, ConsoleColor backColor)
+        public void WriteCharacterAt(int x, int y, char character, int pairIdx)
         {
-            Console.ForegroundColor = foreColor;
-            Console.BackgroundColor = backColor;
+            // TODO: Use ncurses pairs
+
+            // Console.ForegroundColor = foreColor;
+            // Console.BackgroundColor = backColor;
             Console.SetCursorPosition(x, y);
             Console.Write(character);
         }

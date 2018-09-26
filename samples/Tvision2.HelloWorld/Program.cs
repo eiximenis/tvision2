@@ -20,7 +20,7 @@ namespace Tvision2.HelloWorld
                     var helloWorld = new TvComponent<string>("Tvision2 rocks!");
                     helloWorld.AddDrawer(ctx =>
                     {
-                        ctx.DrawStringAt(ctx.State, TvPoint.Zero, ConsoleColor.Yellow, ConsoleColor.Blue);
+                        ctx.DrawStringAt(ctx.State, TvPoint.Zero,0  );
                     });
                     helloWorld.AddViewport(new Viewport(new TvPoint(10, 10), 30));
                     tui.UI.Add(helloWorld);

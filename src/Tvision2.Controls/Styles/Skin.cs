@@ -6,25 +6,19 @@ namespace Tvision2.Controls.Styles
 {
     class Skin : ISkin
     {
-        private readonly IDictionary<string, IStyleSheet> _styleSheets;
-        private IStyleSheet _defaultSheet;
+        private readonly IDictionary<string, IStyle> _styles;
 
-        public Skin(IDictionary<string, IStyleSheet> styleSheets)
+        public Skin(IDictionary<string, IStyle> styles)
         {
-            _styleSheets = styleSheets ?? throw new ArgumentNullException(nameof(styleSheets));
-            _defaultSheet = StyleSheet.Default;
+            _styles = styles ?? throw new ArgumentNullException(nameof(styles));
         }
 
-        public void SetDefaultStyleSheet(IStyleSheet sheet) => _defaultSheet = sheet;
-
-        public IStyleSheet DefaultStyles => _defaultSheet;
-
-        public IStyleSheet this[string name]
+        public IStyle this[string name]
         {
             get
             {
-                var found = _styleSheets.TryGetValue(name, out var sheet);
-                return found ? sheet : _defaultSheet;
+                var found = _styles.TryGetValue(name, out var sheet);
+                return found ? sheet : _styles[""];
             }
         }
     }

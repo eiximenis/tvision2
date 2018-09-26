@@ -74,11 +74,12 @@ namespace Tvision2.ConsoleDriver
             ConsoleNative.FillConsoleOutputCharacter(_hstdout, character, (uint)1, new COORD((short)x, (short)y), out var numWritten);
         }
 
-        public void WriteCharacterAt(int x, int y, char character, ConsoleColor foreColor, ConsoleColor backColor)
+        public void WriteCharacterAt(int x, int y, char character, int pairIdx)
         {
             var coord = new COORD((short)x, (short)y);
 
-            var attribute = (ushort)(Win32ConsoleColor.ForeConsoleColorToAttribute(foreColor) | Win32ConsoleColor.BackConsoleColorToAttribute(backColor));
+            // TODO: Implement using custom pairs
+            var attribute = (ushort)(Win32ConsoleColor.ForeConsoleColorToAttribute(ConsoleColor.White) | Win32ConsoleColor.BackConsoleColorToAttribute(ConsoleColor.Black));
 
             ConsoleNative.FillConsoleOutputAttribute(_hstdout, attribute, (uint)1, coord, out var numAttrWritten);
             ConsoleNative.FillConsoleOutputCharacter(_hstdout, character, (uint)1, coord, out var numWritten);

@@ -1,30 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Tvision2.Core.Colors;
 
 namespace Tvision2.Controls.Styles
 {
-    public class StyleBuilder : IStyleBuilder
+    class StyleBuilder : IStyleBuilder
     {
-        private readonly Style _style;
 
-        public StyleBuilder(IStyle parent = null)
+        public readonly Style _style;
+        private (DefaultColorName fore, DefaultColorName back) _standard;
+        private (DefaultColorName fore, DefaultColorName back) _focused;
+
+        public StyleBuilder()
         {
-            _style = new Style(parent);
+            _style = new Style();
         }
-
-        public IStyleBuilder WithForegroundColor(ConsoleColor color)
+        public IStyleBuilder DesiredFocused(DefaultColorName fore, DefaultColorName back)
         {
-            _style.ForeColor = color;
+            _focused = (fore, back);
             return this;
         }
 
-        public IStyleBuilder WithBackgroundColor(ConsoleColor color)
+        public IStyleBuilder DesiredStandard(DefaultColorName fore, DefaultColorName back)
         {
-            _style.BackColor = color;
+            _standard = (fore, back);
             return this;
         }
 
-        public IStyle Build() => _style;
+        public IStyle Build(IColorManager colorManager)
+        {
+            _style.Standard = colorManager.GetPairIndexFor(_standard.fore, _standard.back);
+            _style.Focused = colorManager.GetPairIndexFor(_focused.fore, _focused.back);
+            return _style;
+        }
     }
 }

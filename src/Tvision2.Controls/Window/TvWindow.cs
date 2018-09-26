@@ -47,17 +47,17 @@ namespace Tvision2.Controls.Window
 
         protected override void AddCustomElements(TvComponent<WindowState> component)
         {
-            component.AddDrawer(new BorderDrawer(CurrentStyles));
+            component.AddDrawer(new BorderDrawer(CurrentStyle));
         }
 
         protected override void OnDraw(RenderContext<WindowState> context)
         {
-            var style = CurrentStyles.GetStyle("");
+            var pairIdx = CurrentStyle.Standard;
             for (var row = 1; row < Viewport.Rows - 2; row++)
             {
-                context.DrawChars(' ', Viewport.Columns - 2, new TvPoint(1, row), style.ForeColor, style.BackColor);
+                context.DrawChars(' ', Viewport.Columns - 2, new TvPoint(1, row), pairIdx);
             }
-            context.Fill(style.BackColor);
+            context.Fill(pairIdx);
 
         }
     }

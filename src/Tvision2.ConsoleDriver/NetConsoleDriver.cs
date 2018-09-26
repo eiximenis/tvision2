@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Tvision2.ConsoleDriver.Colors;
 using Tvision2.ConsoleDriver.DotNet;
+using Tvision2.Core.Colors;
 using Tvision2.Engine.Console;
 using Tvision2.Events;
 
 namespace Tvision2.ConsoleDriver
 {
-    public class NetConsoleDriver : IConsoleDriver
+    class NetConsoleDriver : IConsoleDriver
     {
         private readonly ConsoleDriverOptions _options;
+        private readonly DotNetColorManager _colorManager;
 
-        public NetConsoleDriver(ConsoleDriverOptions options)
+        public NetConsoleDriver(ConsoleDriverOptions options, DotNetColorManager colorManager)
         {
             _options = options;
+            _colorManager = colorManager;
         }
         public void Init() {}
         public TvConsoleEvents ReadEvents()
@@ -38,10 +42,11 @@ namespace Tvision2.ConsoleDriver
             Console.Write(character);
         }
 
-        public void WriteCharacterAt(int x, int y, char character, ConsoleColor foreColor, ConsoleColor backColor)
+        public void WriteCharacterAt(int x, int y, char character, int pairIdx)
         {
-            Console.ForegroundColor = foreColor;
-            Console.BackgroundColor = backColor;
+            var (fg, bg)  = _colorManager.ColorPairToDotNetColors(pairIdx);
+            Console.ForegroundColor = fg;
+            Console.BackgroundColor = bg;
             Console.SetCursorPosition(x, y);
             Console.Write(character);
         }

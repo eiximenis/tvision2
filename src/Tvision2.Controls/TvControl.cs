@@ -15,7 +15,7 @@ namespace Tvision2.Controls
         where TState : IDirtyObject
     {
 
-        public IStyleSheet CurrentStyles { get; }
+        public IStyle CurrentStyle { get; }
         private TvComponent<TState> _component;
         public TvControlMetadata Metadata { get; }
         public TState State { get; }
@@ -30,7 +30,7 @@ namespace Tvision2.Controls
         {
             Metadata = new TvControlMetadata(this);
             ControlType = GetType().Name.ToLowerInvariant();
-            CurrentStyles = skin.GetControlStyle(this);
+            CurrentStyle = skin.GetControlStyle(this);
             State = initialState;
             _component = new TvComponent<TState>(initialState, name ?? $"TvControl_{Guid.NewGuid()}");
             _component.AddViewport(viewport);

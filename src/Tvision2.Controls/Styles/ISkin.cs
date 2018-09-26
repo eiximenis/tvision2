@@ -6,6 +6,6 @@ namespace Tvision2.Controls.Styles
 {
     public interface ISkin
     {
-        IStyleSheet this[string name] { get; }
+        IStyle this[string name] { get; }
     }
 }

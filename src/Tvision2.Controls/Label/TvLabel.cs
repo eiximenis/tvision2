@@ -22,10 +22,10 @@ namespace Tvision2.Controls.Label
             var state = context.State;
             var currentcols = context.Viewport.Columns;
             var focused = Metadata.IsFocused;
-            var style = CurrentStyles.GetStyle("");
+            var pairIdx = CurrentStyle.Standard;
             var value = state.Text.ToString() ?? "";
-            context.Fill(style.BackColor);
-            context.DrawStringAt(value, new TvPoint(0, 0), style.ForeColor, style.BackColor);
+            context.Fill(pairIdx);
+            context.DrawStringAt(value, new TvPoint(0, 0), pairIdx);
         }
     }
 }

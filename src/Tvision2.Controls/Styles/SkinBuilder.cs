@@ -1,49 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Tvision2.Core.Colors;
 
 namespace Tvision2.Controls.Styles
 {
     public class SkinBuilder : ISkinBuilder
     {
-        private readonly Dictionary<string, IStyleSheet> _sheets;
-        private IStyleSheet _default;
+        private readonly Dictionary<string, IStyle> _styles;
+        private const string DEFAULT_STYLE_NAME = "";
+        private readonly IColorManager _colorManager;
 
-        public SkinBuilder() => _sheets = new Dictionary<string, IStyleSheet>();
-
-        public ISkinBuilder UseDefaultStyles(IStyleSheet sheet)
+        public SkinBuilder(IColorManager colorManager)
         {
-            _default = sheet ?? throw new ArgumentNullException(nameof(sheet));
-            return this;
+            _styles = new Dictionary<string, IStyle>();
+            _colorManager = colorManager;
         }
 
-        public ISkinBuilder AddStyleSheet(string name, IStyleSheet sheet)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException("must enter name", nameof(name));
-            }
 
-            _sheets.Add(name, sheet);
-            return this;
-        }
 
-        public ISkinBuilder AddStyleSheet(string name, Action<IStyleSheetBuilder> builderOptions)
-        {
-            var builder = new StyleSheetBuilder();
-            builderOptions.Invoke(builder);
-            var sheet = builder.Build();
-            return AddStyleSheet(name, sheet);
-        }
 
         public ISkin Build()
         {
-            var skin = new Skin(_sheets);
-            if (_default != null)
-            {
-                skin.SetDefaultStyleSheet(_default);
-            }
+            var skin = new Skin(_styles);
             return skin;
+        }
+
+        public ISkinBuilder AddBaseStyle(Action<IStyleBuilder> builderOptions) => AddStyle(DEFAULT_STYLE_NAME, builderOptions);
+
+        public ISkinBuilder AddStyle(string name, Action<IStyleBuilder> builderOptions)
+        {
+            var builder = new StyleBuilder();
+            builderOptions.Invoke(builder);
+            var style = builder.Build(_colorManager);
+            _styles.Add(name, style);
+            return this;
         }
 
     }

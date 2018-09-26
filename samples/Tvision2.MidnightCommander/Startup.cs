@@ -88,8 +88,14 @@ namespace Tvision2.MidnightCommander
             //tui.UI.Add(window);
             tui.UI.Add(dialog);
 
+            /*
             _storeSelector.GetStore<FileList>("left").Dispatch(new TvAction<string>("FETCH_DIR", "/"));
             _storeSelector.GetStore<FileList>("right").Dispatch(new TvAction<string>("FETCH_DIR", "/home/eiximenis"));
+            */
+
+            _storeSelector.GetStore<FileList>("left").Dispatch(new TvAction<string>("FETCH_DIR", "C:\\"));
+            _storeSelector.GetStore<FileList>("right").Dispatch(new TvAction<string>("FETCH_DIR", "D:\\"));
+
             return Task.CompletedTask;
         }
     }

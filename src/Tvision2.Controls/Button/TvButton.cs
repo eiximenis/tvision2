@@ -23,9 +23,9 @@ namespace Tvision2.Controls.Button
         protected override void OnDraw(RenderContext<ButtonState> context)
         {
             var focused = Metadata.IsFocused;
-            var style = focused ? CurrentStyles.GetStyle("focused") : CurrentStyles.GetStyle("");
+            var pairIdx = focused ? CurrentStyle.Focused : CurrentStyle.Standard;
             var value = $"[ {State.Text.ToString()} ]";
-            context.DrawStringAt(value, new TvPoint(0, 0), style.ForeColor, style.BackColor);
+            context.DrawStringAt(value, new TvPoint(0, 0), pairIdx);
         }
     }
 }

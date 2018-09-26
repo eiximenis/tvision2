@@ -4,8 +4,9 @@ namespace Tvision2.Controls.Styles
 {
     public interface ISkinBuilder
     {
-        ISkinBuilder UseDefaultStyles(IStyleSheet styles);
-        ISkinBuilder AddStyleSheet(string name, IStyleSheet sheet);
-        ISkinBuilder AddStyleSheet(string name, Action<IStyleSheetBuilder> builderOptions);
+
+        ISkinBuilder AddBaseStyle (Action<IStyleBuilder> builderOptions);
+        ISkinBuilder AddStyle(string name, Action<IStyleBuilder> builderOptions);
+
     }
 }

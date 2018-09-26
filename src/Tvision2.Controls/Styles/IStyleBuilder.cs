@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Tvision2.Core.Colors;
 
 namespace Tvision2.Controls.Styles
 {
     public interface IStyleBuilder
     {
-        IStyleBuilder WithForegroundColor(ConsoleColor color);
-        IStyleBuilder WithBackgroundColor(ConsoleColor color);
+        IStyleBuilder DesiredStandard(DefaultColorName fore, DefaultColorName back);
+        IStyleBuilder DesiredFocused(DefaultColorName fore, DefaultColorName back);
     }
 }
