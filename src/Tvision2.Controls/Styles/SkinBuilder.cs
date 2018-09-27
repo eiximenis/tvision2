@@ -1,27 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Tvision2.Core.Colors;
 
 namespace Tvision2.Controls.Styles
 {
     public class SkinBuilder : ISkinBuilder
     {
-        private readonly Dictionary<string, IStyle> _styles;
+        private readonly Dictionary<string, StyleBuilder> _stylesToBuild;
         private const string DEFAULT_STYLE_NAME = "";
-        private readonly IColorManager _colorManager;
 
-        public SkinBuilder(IColorManager colorManager)
+        public SkinBuilder()
         {
-            _styles = new Dictionary<string, IStyle>();
-            _colorManager = colorManager;
+            _stylesToBuild = new Dictionary<string, StyleBuilder>();
         }
 
-
-
-
-        public ISkin Build()
+        public ISkin Build(IColorManager cm)
         {
-            var skin = new Skin(_styles);
+
+            var styles = _stylesToBuild.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Build(cm));
+            var skin = new Skin(styles);
             return skin;
         }
 
@@ -31,8 +29,7 @@ namespace Tvision2.Controls.Styles
         {
             var builder = new StyleBuilder();
             builderOptions.Invoke(builder);
-            var style = builder.Build(_colorManager);
-            _styles.Add(name, style);
+            _stylesToBuild.Add(name, builder);
             return this;
         }
 

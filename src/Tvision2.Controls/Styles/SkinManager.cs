@@ -10,9 +10,19 @@ namespace Tvision2.Controls.Styles
         private string _currentSkin;
 
         private readonly Dictionary<string, ISkin> _skins;
-        public SkinManager(Dictionary<string, ISkin> skins)
+        public SkinManager()
         {
-            _skins = skins;
+            _skins = new Dictionary<string, ISkin>();
+            _currentSkin = null;
+        }
+
+        public void Fill(Dictionary<string, ISkin> skins)
+        {
+            foreach (var entry in skins)
+            {
+                _skins.Add(entry.Key, entry.Value);
+            }
+
             _currentSkin = skins.ContainsKey(string.Empty) ? string.Empty : skins.Keys.First();
         }
 

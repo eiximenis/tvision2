@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Tvision2.Core.Colors;
 
@@ -7,38 +8,37 @@ namespace Tvision2.Controls.Styles
 {
     internal class SkinManagerBuilder : ISkinManagerBuilder
     {
-        private readonly Dictionary<string, ISkin> _skins;
+        private readonly Dictionary<string, SkinBuilder> _skinsToBuild;
         private readonly IColorManager _colorManager;
 
         public SkinManagerBuilder(IColorManager colorManager)
         {
-            _skins = new Dictionary<string, ISkin>();
+            _skinsToBuild = new Dictionary<string, SkinBuilder>();
             _colorManager = colorManager;
         }
 
         public ISkinManagerBuilder AddSkin(string name, Action<ISkinBuilder> builderOptions = null)
         {
-            var skinBuilder = new SkinBuilder(_colorManager);
+            var skinBuilder = new SkinBuilder();
             builderOptions?.Invoke(skinBuilder);
-            var skin = skinBuilder.Build();
-            return AddSkin(name, skin);
+            AddSkinToBuild(name, skinBuilder);
+            return this;
         }
 
-
-        public ISkinManager Build()
+        public void Fill(SkinManager skinManager)
         {
-            return new SkinManager(_skins);
+            var skins = _skinsToBuild.ToDictionary(k => k.Key, k => k.Value.Build(_colorManager));
+            skinManager.Fill(skins);
         }
 
-        public ISkinManagerBuilder AddSkin(string name, ISkin skin)
+        private void AddSkinToBuild(string name, SkinBuilder skinToBuild)
         {
-            if (_skins.ContainsKey(name))
+            if (_skinsToBuild.ContainsKey(name))
             {
                 throw new ArgumentException($"Style name {name} duplicated.", nameof(name));
             }
 
-            _skins.Add(name, skin);
-            return this;
+            _skinsToBuild.Add(name, skinToBuild);
         }
     }
 }
