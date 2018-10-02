@@ -24,6 +24,8 @@ function Exec
 
 echo  "current path is $PSScriptRoot"
 
+Push-Location ..\
+
 if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
 
 exec { & dotnet restore }
