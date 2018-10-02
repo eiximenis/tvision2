@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Statex.Controls", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.HelloWorld", "samples\Tvision2.HelloWorld\Tvision2.HelloWorld.csproj", "{CD6F38CC-1A3E-4F11-8FFE-2BD8F188730B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.Dialogs", "Tvision2.Dialogs\Tvision2.Dialogs.csproj", "{300A2B0D-4FE0-486C-B820-D5B092E9B8BC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.Dialogs", "src\Tvision2.Dialogs\Tvision2.Dialogs.csproj", "{300A2B0D-4FE0-486C-B820-D5B092E9B8BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
