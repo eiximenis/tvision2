@@ -16,11 +16,11 @@
     <ProjectReference Include="..\..\src\Tvision2.Controls\Tvision2.Controls.csproj" />
     <ProjectReference Include="..\..\src\Tvision2.Core\Tvision2.Core.csproj" />
     <ProjectReference Include="..\..\src\Tvision2.Debug\Tvision2.Debug.csproj" />
+    <ProjectReference Include="..\..\src\Tvision2.Dialogs\Tvision2.Dialogs.csproj" />
     <ProjectReference Include="..\..\src\Tvision2.Layouts\Tvision2.Layouts.csproj" />
     <ProjectReference Include="..\..\src\Tvision2.Statex.Controls\Tvision2.Statex.Controls.csproj" />
     <ProjectReference Include="..\..\src\Tvision2.Statex\Tvision2.Statex.csproj" />
     <ProjectReference Include="..\..\src\Tvision2.Viewports\Tvision2.Viewports.csproj" />
-    <ProjectReference Include="..\..\src\Tvision2.Dialogs\Tvision2.Dialogs.csproj" />
   </ItemGroup>
 
 </Project>

@@ -22,9 +22,6 @@ function Exec
     }
 }
 
-echo  "current path is $PSScriptRoot"
-
-Push-Location ..\
 
 if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
 
@@ -40,9 +37,9 @@ echo "build: Tag is $tag"
 echo "build: Package version suffix is $suffix"
 echo "build: Build version suffix is $buildSuffix" 
 
-Push-Location .\src
+
 exec { & dotnet build tvision2.sln -c Release --version-suffix=$buildSuffix -v q /nologo }
-Pop-Location
+
 
 echo "running tests"
 
