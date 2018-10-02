@@ -1,0 +1,38 @@
+<Project>
+  <PropertyGroup Label="SDK Versions">
+    <NetStandardTargetVersion>netstandard2.0</NetStandardTargetVersion>
+    <NetCoreTargetVersion>netcoreapp2.1</NetCoreTargetVersion>
+    <MicrosoftNETTestSdkPackageVersion>15.8.0</MicrosoftNETTestSdkPackageVersion>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package Versions">
+    <MicrosoftExtensionsDependencyInjectionAbstractionsVersion>2.1.1</MicrosoftExtensionsDependencyInjectionAbstractionsVersion>
+    <MicrosoftExtensionsHostingVersion>2.1.1</MicrosoftExtensionsHostingVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="CLI Tools Versions">
+    <DotnetXUnitPackageVersion>2.4.0</DotnetXUnitPackageVersion>
+    <DotnetWatcherToolPackageVersion>2.0.0</DotnetWatcherToolPackageVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Tvision2 Package Versions">
+    <Tvision2ConsoleDriverVersion>0.1.0-alpha</Tvision2ConsoleDriverVersion>
+    <Tvision2ControlsVersion>0.1.0-alpha</Tvision2ControlsVersion>
+    <Tvision2ControlsStylesMcVersion>0.1.0-alpha</Tvision2ControlsStylesMcVersion>
+    <Tvision2CoreVersion>0.1.0-alpha</Tvision2CoreVersion>
+    <Tvision2DebugVersion>0.1.0-alpha</Tvision2DebugVersion>
+    <Tvision2LayoutsVersion>0.1.0-alpha</Tvision2LayoutsVersion>
+    <Tvision2StatexVersion>0.1.0-alpha</Tvision2StatexVersion>
+    <Tvision2StatexControlsVersion>0.1.0-alpha</Tvision2StatexControlsVersion>
+    <Tvision2ViewportsVersion>0.1.0-alpha</Tvision2ViewportsVersion>
+    <Tvision2DialogsVersion>0.1.0-alpha</Tvision2DialogsVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package information">
+    <PackageLicenseUrl>https://github.com/eiximenis/tvision2/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/eiximenis/tvision2</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/eiximenis/tvision2</RepositoryUrl>
+    <Authors>Eduard Tomàs (eiximenis)</Authors>
+  </PropertyGroup>
+</Project>
