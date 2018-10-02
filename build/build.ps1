@@ -36,39 +36,48 @@ echo "build: Tag is $tag"
 echo "build: Package version suffix is $suffix"
 echo "build: Build version suffix is $buildSuffix" 
 
+Push-Location ../src
 exec { & dotnet build tvision2.sln -c Release --version-suffix=$buildSuffix -v q /nologo }
+Pop-Location
 
 echo "running tests"
 
 try {
 
-	Push-Location -Path .\tests
+	Push-Location -Path ..\tests
 	exec { & dotnet test }
 } finally {
 	Pop-Location
 }
 
-if ($suffix -eq "") {
-    exec { & dotnet pack .\src\Tvision2.ConsoleDriver\Tvision2.ConsoleDriver.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
-    exec { & dotnet pack .\src\Tvision2.Controls\Tvision2.Controls.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
-    exec { & dotnet pack .\src\Tvision2.Controls.Styles.Mc\Tvision2.Controls.Styles.Mc.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
-    exec { & dotnet pack .\src\Tvision2.Core\Tvision2.Core.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
-    exec { & dotnet pack .\src\Tvision2.Debug\Tvision2.Debug.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
-    exec { & dotnet pack .\src\Tvision2.Layouts\Tvision2.Layouts.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
-    exec { & dotnet pack .\src\Tvision2.Statex\Tvision2.Statex.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
-    exec { & dotnet pack .\src\Tvision2.Statex.Controls\Tvision2.Statex.Controls.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
-    exec { & dotnet pack .\src\Tvision2.Viewports\Tvision2.Viewports.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
-    exec { & dotnet pack .\src\Tvision2.Dialogs\Tvision2.Dialogs.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
-} else {
-    exec { & dotnet pack .\src\Tvision2.ConsoleDriver\Tvision2.ConsoleDriver.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix  }
-    exec { & dotnet pack .\src\Tvision2.Controls\Tvision2.Controls.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
-    exec { & dotnet pack .\src\Tvision2.Controls.Styles.Mc\Tvision2.Controls.Styles.Mc.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
-    exec { & dotnet pack .\src\Tvision2.Core\Tvision2.Core.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
-    exec { & dotnet pack .\src\Tvision2.Debug\Tvision2.Debug.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
-    exec { & dotnet pack .\src\Tvision2.Layouts\Tvision2.Layouts.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
-    exec { & dotnet pack .\src\Tvision2.Statex\Tvision2.Statex.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
-    exec { & dotnet pack .\src\Tvision2.Statex.Controls\Tvision2.Statex.Controls.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
-    exec { & dotnet pack .\src\Tvision2.Viewports\Tvision2.Viewports.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
-    exec { & dotnet pack .\src\Tvision2.Dialogs\Tvision2.Dialogs.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
+
+try {
+    Push-Location -Path ..\src
+    if ($suffix -eq "") {
+        exec { & dotnet pack .\Tvision2.ConsoleDriver\Tvision2.ConsoleDriver.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
+        exec { & dotnet pack .\Tvision2.Controls\Tvision2.Controls.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
+        exec { & dotnet pack .\Tvision2.Controls.Styles.Mc\Tvision2.Controls.Styles.Mc.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
+        exec { & dotnet pack .\Tvision2.Core\Tvision2.Core.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
+        exec { & dotnet pack .\Tvision2.Debug\Tvision2.Debug.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
+        exec { & dotnet pack .\Tvision2.Layouts\Tvision2.Layouts.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
+        exec { & dotnet pack .\Tvision2.Statex\Tvision2.Statex.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
+        exec { & dotnet pack .\Tvision2.Statex.Controls\Tvision2.Statex.Controls.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
+        exec { & dotnet pack .\Tvision2.Viewports\Tvision2.Viewports.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
+        exec { & dotnet pack .\Tvision2.Dialogs\Tvision2.Dialogs.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
+    } else {
+        exec { & dotnet pack .\Tvision2.ConsoleDriver\Tvision2.ConsoleDriver.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix  }
+        exec { & dotnet pack .\Tvision2.Controls\Tvision2.Controls.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
+        exec { & dotnet pack .\Tvision2.Controls.Styles.Mc\Tvision2.Controls.Styles.Mc.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
+        exec { & dotnet pack .\Tvision2.Core\Tvision2.Core.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
+        exec { & dotnet pack .\Tvision2.Debug\Tvision2.Debug.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
+        exec { & dotnet pack .\Tvision2.Layouts\Tvision2.Layouts.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
+        exec { & dotnet pack .\Tvision2.Statex\Tvision2.Statex.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
+        exec { & dotnet pack .\Tvision2.Statex.Controls\Tvision2.Statex.Controls.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
+        exec { & dotnet pack .\Tvision2.Viewports\Tvision2.Viewports.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
+        exec { & dotnet pack .\Tvision2.Dialogs\Tvision2.Dialogs.csproj -c Release -o ..\..\artifacts --include-symbols --no-build -version-suffix=$suffix }
+    }
+}
+finally {
+    Pop-Location
 }
 
