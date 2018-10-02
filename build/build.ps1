@@ -22,6 +22,8 @@ function Exec
     }
 }
 
+echo  "current path is $PSScriptRoot"
+
 if(Test-Path .\artifacts) { Remove-Item .\artifacts -Force -Recurse }
 
 exec { & dotnet restore }
@@ -36,7 +38,7 @@ echo "build: Tag is $tag"
 echo "build: Package version suffix is $suffix"
 echo "build: Build version suffix is $buildSuffix" 
 
-Push-Location ../src
+Push-Location .\src
 exec { & dotnet build tvision2.sln -c Release --version-suffix=$buildSuffix -v q /nologo }
 Pop-Location
 
@@ -44,7 +46,7 @@ echo "running tests"
 
 try {
 
-	Push-Location -Path ..\tests
+	Push-Location -Path .\tests
 	exec { & dotnet test }
 } finally {
 	Pop-Location
@@ -52,7 +54,7 @@ try {
 
 
 try {
-    Push-Location -Path ..\src
+    Push-Location -Path .\src
     if ($suffix -eq "") {
         exec { & dotnet pack .\Tvision2.ConsoleDriver\Tvision2.ConsoleDriver.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
         exec { & dotnet pack .\Tvision2.Controls\Tvision2.Controls.csproj -c Release -o ..\..\artifacts --include-symbols --no-build }
