@@ -41,15 +41,15 @@ echo "build: Build version suffix is $buildSuffix"
 exec { & dotnet build tvision2.sln -c Release --version-suffix=$buildSuffix -v q /nologo }
 
 
-echo "running tests"
+#echo "running tests"
 
-try {
-
-	Push-Location -Path .\tests
-	exec { & dotnet test }
-} finally {
-	Pop-Location
-}
+#try {
+#
+#	Push-Location -Path .\tests
+#	exec { & dotnet test }
+#} finally {
+#	Pop-Location
+#}
 
 
 try {
