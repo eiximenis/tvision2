@@ -15,7 +15,7 @@ namespace Tvision2.Controls.List
 
         protected override void AddCustomElements(TvComponent<ListState> component)
         {
-            component.AddDrawer(new BorderDrawer(CurrentStyle));
+            component.AddDrawer(new BorderDrawer(CurrentStyle, Metadata));
         }
 
         protected override IEnumerable<ITvBehavior<ListState>> GetEventedBehaviors()
@@ -25,8 +25,8 @@ namespace Tvision2.Controls.List
 
         protected override void OnDraw(RenderContext<ListState> context)
         {
-            var pairIdx = Metadata.IsFocused ? CurrentStyle.Focused : CurrentStyle.Standard;
-            var selectedPairIdx = CurrentStyle.Standard;        // TODO: Add Hiliteprop
+            var pairIdx = CurrentStyle.Standard;
+            var selectedPairIdx = Metadata.IsFocused ? CurrentStyle.AlternateFocused : CurrentStyle.Alternate;
             var viewport = context.Viewport;
             var numitems = State.Count;
             State.ItemsView.Adjust(viewport.Rows - 2);

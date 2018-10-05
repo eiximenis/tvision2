@@ -106,8 +106,9 @@ namespace Unix.Terminal {
 		public const int KeyResize = unchecked((int)0x19a);
 
 
-		static public int ColorPair(int n){
-			return 0 + n * 256;
+		static public int ColorPair(int n)
+		{
+			return n << 8;
 		}
 
 	}

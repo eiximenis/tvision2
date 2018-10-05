@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Tvision2.Core;
+using Tvision2.Core.Colors;
 using Tvision2.Core.Components;
 using Tvision2.Core.Render;
 
@@ -17,10 +19,12 @@ namespace Tvision2.HelloWorld
                 setup.UseDotNetConsoleDriver();
                 setup.Options.UseStartup((sp, tui) =>
                 {
+                    var cm = sp.GetService<IColorManager>();
+                    var attr = cm.BuildAttributeFor(DefaultColorName.Yellow, DefaultColorName.Blue, CharacterAttributeModifiers.Normal);
                     var helloWorld = new TvComponent<string>("Tvision2 rocks!");
                     helloWorld.AddDrawer(ctx =>
                     {
-                        ctx.DrawStringAt(ctx.State, TvPoint.Zero,0  );
+                        ctx.DrawStringAt(ctx.State, TvPoint.Zero, attr) ;
                     });
                     helloWorld.AddViewport(new Viewport(new TvPoint(10, 10), 30));
                     tui.UI.Add(helloWorld);

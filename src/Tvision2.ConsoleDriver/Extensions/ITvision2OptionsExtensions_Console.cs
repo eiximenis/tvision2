@@ -56,17 +56,9 @@ namespace Tvision2.Core
 
         public static Tvision2Setup UsePlatformConsoleDriver(this Tvision2Setup tv2, Action<IConsoleDriverOptions> config = null)
         {
-            var options = new ConsoleDriverOptions();
-            config?.Invoke(options);
             var platform = Environment.OSVersion.Platform;
             var useWin = (platform == PlatformID.Win32NT || platform == PlatformID.Win32S || platform == PlatformID.Win32Windows);
-            var driver = useWin ? new WinConsoleDriver(options) as IConsoleDriver : new TerminfoConsoleDriver() as IConsoleDriver;
-            tv2.Options.UseConsoleDriver(driver);
-            tv2.Builder.ConfigureServices((hc, sc) =>
-            {
-                sc.AddSingleton<IConsoleDriver>(driver);
-            });
-            return tv2;
+            return useWin ? UseWin32ConsoleDriver(tv2, config) : UseNcursesConsoleDriver(tv2, config);
         }
     }
 }

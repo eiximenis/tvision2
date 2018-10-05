@@ -1,8 +1,13 @@
-﻿namespace Tvision2.Controls.Styles
+﻿using Tvision2.Core.Colors;
+
+namespace Tvision2.Controls.Styles
 {
     public interface IStyle
     {
-        int Standard { get; }
-        int Focused { get; }
+        CharacterAttribute Standard { get; }
+        CharacterAttribute Focused { get; }
+        CharacterAttribute Alternate { get; }
+        CharacterAttribute AlternateFocused { get; }
+        CharacterAttribute this[string name] { get; }
     }
 }

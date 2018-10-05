@@ -42,9 +42,10 @@ namespace Tvision2.ConsoleDriver
             Console.Write(character);
         }
 
-        public void WriteCharacterAt(int x, int y, char character, int pairIdx)
+
+        public void WriteCharacterAt(int x, int y, char character,  CharacterAttribute attribute)
         {
-            var (fg, bg)  = _colorManager.ColorPairToDotNetColors(pairIdx);
+            var (fg, bg)  = _colorManager.AttributeToDotNetColors(attribute);
             Console.ForegroundColor = fg;
             Console.BackgroundColor = bg;
             Console.SetCursorPosition(x, y);

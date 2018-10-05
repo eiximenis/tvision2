@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Extensions.FileSystemGlobbing.Internal.PathSegments;
 using Tvision2.ConsoleDriver.Terminfo;
+using Tvision2.Core.Colors;
 using Tvision2.Engine.Console;
 using Tvision2.Events;
 
@@ -52,7 +53,7 @@ namespace Tvision2.ConsoleDriver
             TerminfoBindings.putp(character + "");
         }
 
-        public void WriteCharacterAt(int x, int y, char character, int pairIdx)
+        public void WriteCharacterAt(int x, int y, char character, CharacterAttribute attribute)
         {
             // TODO: Implement using terminfo capabalities
 

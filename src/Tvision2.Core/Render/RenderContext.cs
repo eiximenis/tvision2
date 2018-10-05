@@ -1,4 +1,5 @@
 ﻿using System;
+using Tvision2.Core.Colors;
 using Tvision2.Core.Components;
 
 namespace Tvision2.Core.Render
@@ -14,14 +15,14 @@ namespace Tvision2.Core.Render
             Viewport = viewport;
         }
 
-        public void DrawStringAt(string value, TvPoint location, int pairIdx)
+        public void DrawStringAt(string value, TvPoint location, CharacterAttribute attr)
         {
-            ViewportHelper.DrawStringAt(value, location, pairIdx, Viewport, _console);
+            ViewportHelper.DrawStringAt(value, location, attr, Viewport, _console);
         }
 
-        public void DrawChars(char value, int count, TvPoint location, int pairIdx)
+        public void DrawChars(char value, int count, TvPoint location, CharacterAttribute attribute)
         {
-            ViewportHelper.DrawChars(value, count, location, pairIdx, Viewport, _console);
+            ViewportHelper.DrawChars(value, count, location, attribute, Viewport, _console);
         }
 
         public void SetCursorAt(int left, int top)
@@ -34,9 +35,9 @@ namespace Tvision2.Core.Render
             ViewportHelper.Clear(Viewport, _console);
         }
 
-        public void Fill(int pairIdx)
+        public void Fill(CharacterAttribute attr)
         {
-            ViewportHelper.Fill(pairIdx, Viewport, _console);
+            ViewportHelper.Fill(attr, Viewport, _console);
         }
 
         public void ApplyBoxModel(IViewport newBoxModel)

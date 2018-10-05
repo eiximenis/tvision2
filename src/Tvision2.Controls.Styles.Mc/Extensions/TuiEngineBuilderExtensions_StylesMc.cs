@@ -11,9 +11,20 @@ namespace Tvision2.Controls.Styles
 
                 sb.AddBaseStyle(style =>
                 {
-                    style.DesiredStandard(DefaultColorName.Yellow, DefaultColorName.Blue);
-                    style.DesiredFocused(DefaultColorName.White, DefaultColorName.Blue);
+                    style.DesiredStandard(DefaultColorName.White, DefaultColorName.Blue);
+                    style.DesiredFocused(DefaultColorName.Black, DefaultColorName.Cyan);
                 });
+                
+                sb.AddStyle("tvlist", style =>
+                {
+                    style.DesiredStandard(DefaultColorName.White, DefaultColorName.Blue);
+                    style.DesiredFocused(DefaultColorName.White, DefaultColorName.Blue, CharacterAttributeModifiers.Bold);
+
+                    style.DesiredAlternate(DefaultColorName.Black, DefaultColorName.Cyan);
+                    style.DesiredAlternateFocused(DefaultColorName.Black, DefaultColorName.White);
+
+                });
+                
 
                 sb.AddStyle("tvtextbox", style =>
                 {

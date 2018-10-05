@@ -1,5 +1,6 @@
 ﻿using System;
 using Tvision2.ConsoleDriver.Win32;
+using Tvision2.Core.Colors;
 using Tvision2.Engine.Console;
 using Tvision2.Events;
 
@@ -74,14 +75,14 @@ namespace Tvision2.ConsoleDriver
             ConsoleNative.FillConsoleOutputCharacter(_hstdout, character, (uint)1, new COORD((short)x, (short)y), out var numWritten);
         }
 
-        public void WriteCharacterAt(int x, int y, char character, int pairIdx)
+        public void WriteCharacterAt(int x, int y, char character, CharacterAttribute attribute)
         {
             var coord = new COORD((short)x, (short)y);
 
             // TODO: Implement using custom pairs
-            var attribute = (ushort)(Win32ConsoleColor.ForeConsoleColorToAttribute(ConsoleColor.White) | Win32ConsoleColor.BackConsoleColorToAttribute(ConsoleColor.Black));
+            var winattr = (ushort)(Win32ConsoleColor.ForeConsoleColorToAttribute(ConsoleColor.White) | Win32ConsoleColor.BackConsoleColorToAttribute(ConsoleColor.Black));
 
-            ConsoleNative.FillConsoleOutputAttribute(_hstdout, attribute, (uint)1, coord, out var numAttrWritten);
+            ConsoleNative.FillConsoleOutputAttribute(_hstdout, winattr, (uint)1, coord, out var numAttrWritten);
             ConsoleNative.FillConsoleOutputCharacter(_hstdout, character, (uint)1, coord, out var numWritten);
 
         }

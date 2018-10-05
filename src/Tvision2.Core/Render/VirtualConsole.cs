@@ -1,4 +1,5 @@
 ﻿using System;
+using Tvision2.Core.Colors;
 using Tvision2.Engine.Console;
 
 namespace Tvision2.Core.Render
@@ -37,7 +38,7 @@ namespace Tvision2.Core.Render
                     if (_dirtyMap[idx])
                     {
                         var cc = _buffer[idx];
-                        consoleDriver.WriteCharacterAt(col, row, cc.Character, cc.PairIndex);
+                        consoleDriver.WriteCharacterAt(col, row, cc.Character, cc.Attributes);
                         _dirtyMap[idx] = false;
                     }
                     idx++;
@@ -62,14 +63,14 @@ namespace Tvision2.Core.Render
                 _buffer[idx] = new ConsoleCharacter()
                 {
                     Character = ' ',
-                    PairIndex = 0,
+                    Attributes = new CharacterAttribute(),
                     ZIndex = int.MinValue
                 };
             }
             IsDirty = false;
         }
 
-        public void DrawAt(string text, TvPoint location, int zIndex, int pairIdx)
+        public void DrawAt(string text, TvPoint location, int zIndex, CharacterAttribute attr)
         {
             var start = location.Left + (Width * location.Top);
             var end = start + text.Length;
@@ -81,10 +82,10 @@ namespace Tvision2.Core.Render
             {
                 var cchar = _buffer[idx];
                 var newchar = text[textIdx];
-                if (cchar.ZIndex <= zIndex && !cchar.Equals(newchar, pairIdx, zIndex))
+                if (cchar.ZIndex <= zIndex && !cchar.Equals(newchar, attr, zIndex))
                 {
                     cchar.Character = newchar;
-                    cchar.PairIndex = pairIdx;
+                    cchar.Attributes = attr;
                     cchar.ZIndex = zIndex;
                     dirty = true;
                     _dirtyMap[idx] = true;
@@ -109,7 +110,7 @@ namespace Tvision2.Core.Render
                 {
                     var idx = col + (Width * row);
                     _buffer[idx].Character = ' ';
-                    _buffer[idx].PairIndex = 0;
+                    _buffer[idx].Attributes = new CharacterAttribute();
                     _buffer[idx].ZIndex = -1;
                 }
             }
@@ -131,7 +132,7 @@ namespace Tvision2.Core.Render
                 if (cchar.ZIndex <= zindex && !cchar.Equals(charToCopy))
                 {
                     cchar.Character = charToCopy.Character;
-                    cchar.PairIndex = charToCopy.PairIndex;
+                    cchar.Attributes = charToCopy.Attributes;
                     cchar.ZIndex = charToCopy.ZIndex;
                     dirty = true;
                     _dirtyMap[idx] = true;

@@ -47,7 +47,7 @@ namespace Tvision2.Controls.Window
 
         protected override void AddCustomElements(TvComponent<WindowState> component)
         {
-            component.AddDrawer(new BorderDrawer(CurrentStyle));
+            component.AddDrawer(new BorderDrawer(CurrentStyle, Metadata));
         }
 
         protected override void OnDraw(RenderContext<WindowState> context)

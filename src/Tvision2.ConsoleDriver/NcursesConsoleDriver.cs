@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Xml;
 using Tvision2.ConsoleDriver.NCurses;
+using Tvision2.Core.Colors;
 using Tvision2.Engine.Console;
 using Tvision2.Events;
 using Tvision2.Events.NCurses;
@@ -25,10 +27,9 @@ namespace Tvision2.ConsoleDriver
 
         public void Init()
         {
+            Curses.setlocale(6, "");
             Curses.initscr();
             _colorDriver.Init();
-
-
             Curses.raw();
             Curses.noecho();
             Curses.nonl();
@@ -92,14 +93,18 @@ namespace Tvision2.ConsoleDriver
             Console.Write(character);
         }
 
-        public void WriteCharacterAt(int x, int y, char character, int pairIdx)
+        public void WriteCharacterAt(int x, int y, char character, CharacterAttribute attributes)
         {
-            // TODO: Use ncurses pairs
 
-            // Console.ForegroundColor = foreColor;
-            // Console.BackgroundColor = backColor;
-            Console.SetCursorPosition(x, y);
-            Console.Write(character);
+            _colorDriver.SetAttributes(attributes);
+            //_colorDriver.SetColor(pairIdx, CharacterAttributes.Italic | CharacterAttributes.Blink);
+            //Console.SetCursorPosition(x, y);
+
+            //var wchar = new CcharT(pairIdx << 8, character);
+            // Curses.mvadd_wch(y, x, ref wchar);
+            //Curses.addch(character);
+            Curses.move(y, x);
+            Curses.addch(character);
         }
 
         public void SetCursorAt(int x, int y)

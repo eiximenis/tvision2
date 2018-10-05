@@ -19,7 +19,7 @@ namespace Tvision2.Dialogs
 
         protected override void AddCustomElements(TvComponent<DialogState> component)
         {
-            component.AddDrawer(new BorderDrawer(CurrentStyle));
+            component.AddDrawer(new BorderDrawer(CurrentStyle, Metadata));
 
         }
 

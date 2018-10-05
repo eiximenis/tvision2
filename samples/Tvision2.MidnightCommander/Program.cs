@@ -4,6 +4,7 @@ using Tvision2.Controls.Styles;
 using Tvision2.Core;
 using Tvision2.Core.Engine;
 using Tvision2.DependencyInjection;
+
 using Tvision2.MidnightCommander.Stores;
 
 namespace Tvision2.MidnightCommander
@@ -15,7 +16,7 @@ namespace Tvision2.MidnightCommander
             var builder = new HostBuilder();
             builder.UseTvision2(setup =>
             {
-                setup.UseDotNetConsoleDriver()
+                setup.UsePlatformConsoleDriver()
                     .UseViewportManager()
                     .UseLayoutManager()
                     .AddTvDialogs()

@@ -29,6 +29,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using Tvision2.ConsoleDriver.NCurses;
 
 namespace Unix.Terminal {
 
@@ -48,7 +49,7 @@ namespace Unix.Terminal {
 		static int lines, cols;
 
 		static Window main_window;
-		static IntPtr curses_handle, curscr_ptr, lines_ptr, cols_ptr;
+		private static IntPtr curses_handle, curscr_ptr, lines_ptr, cols_ptr, colors_ptr, colorpairs_ptr;
 
 		static void FindNCurses ()
 		{
@@ -66,6 +67,8 @@ namespace Unix.Terminal {
 			curscr_ptr = get_ptr ("curscr");
 			lines_ptr = get_ptr ("LINES");
 			cols_ptr = get_ptr ("COLS");
+			colors_ptr = get_ptr("COLORS");
+			colorpairs_ptr = get_ptr("COLOR_PAIRS");
 		}
 		
 		static public Window initscr ()
@@ -243,11 +246,8 @@ namespace Unix.Terminal {
 		[DllImport ("libncursesw.so.5")]
 		extern public static int addstr (string s);
 
-		public static int addstr (string format, params object [] args)
-		{
-			var s = string.Format (format, args);
-			return addstr (s);
-		}
+		[DllImport("libncursesw.so.5")]
+		extern public static int mvadd_wch(int y, int x, ref CcharT character);
 
 		static char [] r = new char [1];
 
@@ -311,10 +311,14 @@ namespace Unix.Terminal {
 		[DllImport ("libncursesw.so.5")]
 		extern internal static int use_default_colors ();
 		public static int UseDefaultColors () => use_default_colors ();
+		
+		[DllImport ("libc")]
+		extern internal static int setlocale (int category, string locale);
+		
 
-		[DllImport ("libncursesw.so.5")]
-		extern internal static int COLOR_PAIRS();
-		public static int ColorPairs => COLOR_PAIRS();
+		public static int Colors => Marshal.ReadInt32(colors_ptr);
+		public static int ColorPairs => Marshal.ReadInt32(colorpairs_ptr);
+		
 		
 		
 #endregion
@@ -355,6 +359,7 @@ namespace Unix.Terminal {
 			lines = Marshal.ReadInt32 (lines_ptr);
 			cols = Marshal.ReadInt32 (cols_ptr);
 		}
+		
 
 		[DllImport ("libncursesw.so.5", EntryPoint="mousemask")]
 		extern static IntPtr call_mousemask (IntPtr newmask, out IntPtr oldmask);

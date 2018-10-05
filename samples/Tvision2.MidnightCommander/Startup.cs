@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Tvision2.Controls.Label;
 using Tvision2.Controls.List;
@@ -24,13 +26,16 @@ namespace Tvision2.MidnightCommander
         private readonly ILayoutManager _layoutManager;
         private readonly ITvStoreSelector _storeSelector;
         private readonly IDialogManager _dialogManager;
-        public Startup(ISkinManager skinManager, ILayoutManager layoutManager, ITvStoreSelector storeSelector, IDialogManager dialogManager)
+
+        public Startup(ISkinManager skinManager, ILayoutManager layoutManager, ITvStoreSelector storeSelector,
+            IDialogManager dialogManager)
         {
             _skinManager = skinManager;
             _layoutManager = layoutManager;
             _storeSelector = storeSelector;
             _dialogManager = dialogManager;
         }
+
         Task ITvisionAppStartup.Startup(ITuiEngine tui)
         {
             var skin = _skinManager.CurrentSkin;
@@ -39,21 +44,22 @@ namespace Tvision2.MidnightCommander
             grid.AsComponent().AddViewport(vpf.FullViewport().Translate(new TvPoint(0, 1)).Grow(0, -3));
             var textbox = new TvTextbox(skin, null, new TextboxState());
 
-            var left = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0), new ListState(Enumerable.Empty<string>()));
-            var right = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0), new ListState(Enumerable.Empty<string>()));
+            var left = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
+                new ListState(Enumerable.Empty<string>()));
+            var right = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
+                new ListState(Enumerable.Empty<string>()));
 
-            var menu = new TvMenuBar(skin, vpf.FullViewport().TakeRows(1, 0), new MenuBarState(new[] { "Left", "Edit", "Command", "Options", "Help", "Right" }));
+            var menu = new TvMenuBar(skin, vpf.FullViewport().TakeRows(1, 0),
+                new MenuBarState(new[] {"Left", "Edit", "Command", "Options", "Help", "Right"}));
 
             //var window = new TvWindow(skin, vpf.FullViewport().CreateCentered(20, 10), new WindowState(tui.UI));
             //var label = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 9, 1, 0), new LabelState() { Text = "In Window" });
             //window.State.UI.Add(label);
 
-            var label = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 9, 1, 0), new LabelState() { Text = "In Window" });
+            var label = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 9, 1, 0),
+                new LabelState() {Text = "In Window"});
             var dialog = _dialogManager.CreateDialog(vpf.FullViewport().CreateCentered(20, 10),
-                d =>
-                {
-                    d.State.UI.Add(label);
-                });
+                d => { d.State.UI.Add(label); });
 
 
             var sleft = TvStatexControl.Wrap<TvList, ListState, FileList>(left, opt =>
@@ -88,13 +94,17 @@ namespace Tvision2.MidnightCommander
             //tui.UI.Add(window);
             tui.UI.Add(dialog);
 
-            /*
-            _storeSelector.GetStore<FileList>("left").Dispatch(new TvAction<string>("FETCH_DIR", "/"));
-            _storeSelector.GetStore<FileList>("right").Dispatch(new TvAction<string>("FETCH_DIR", "/home/eiximenis"));
-            */
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                _storeSelector.GetStore<FileList>("left").Dispatch(new TvAction<string>("FETCH_DIR", "/"));
+                _storeSelector.GetStore<FileList>("right").Dispatch(new TvAction<string>("FETCH_DIR", "/home/eiximenis"));
+            }
+            else
+            {
+                _storeSelector.GetStore<FileList>("left").Dispatch(new TvAction<string>("FETCH_DIR", "C:\\"));
+                _storeSelector.GetStore<FileList>("right").Dispatch(new TvAction<string>("FETCH_DIR", "D:\\"));
+            }
 
-            _storeSelector.GetStore<FileList>("left").Dispatch(new TvAction<string>("FETCH_DIR", "C:\\"));
-            _storeSelector.GetStore<FileList>("right").Dispatch(new TvAction<string>("FETCH_DIR", "D:\\"));
 
             return Task.CompletedTask;
         }

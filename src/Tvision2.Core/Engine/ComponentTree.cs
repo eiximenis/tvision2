@@ -67,6 +67,7 @@ namespace Tvision2.Core.Engine
             {
                 _components.Add(kvp.Key, kvp.Value);
                 CreateNeededBehaviors(kvp.Value.Component);
+                kvp.Value.Component.Invalidate();
                 OnComponentAdded(kvp.Value);
             }
             _pendingAdds.Clear();

@@ -20,5 +20,5 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(MicrosoftExtensionsHostingVersion)" />
   
   </ItemGroup>
-
+    
 </Project>

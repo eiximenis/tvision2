@@ -45,10 +45,12 @@ private static async Task Main(string[] args)
         setup.UseDotNetConsoleDriver();
         setup.Options.UseStartup((sp, tui) =>
         {
+            var cm = sp.GetService<IColorManager>();
+            var attr = cm.BuildAttributeFor(DefaultColorName.Yellow, DefaultColorName.Blue, CharacterAttributeModifiers.Normal);
             var helloWorld = new TvComponent<string>("Tvision2 rocks!");
             helloWorld.AddDrawer(ctx =>
             {
-                ctx.DrawStringAt(ctx.State, TvPoint.Zero, ConsoleColor.Yellow, ConsoleColor.Blue);
+                ctx.DrawStringAt(ctx.State, TvPoint.Zero, attr) ;
             });
             helloWorld.AddViewport(new Viewport(new TvPoint(10, 10), 30));
             tui.UI.Add(helloWorld);
@@ -77,7 +79,7 @@ And that's all :)
 
 * Tvision2.Core: The work on core is, altought not finished, somewhat stabilized. Some work could be needed to support some scenarios needed by some other libraries, but I don't expect dramatic changes to it. Pending work is making `VirtualConsole` aware of console buffer size changes.
 
-* Tvision2.ConsoleDriver: DotNet console driver is almost done, and Win32 console driver is very advanced but some adjustements needs to be done (to support utf8 characters). Linux driver (using ncurses) is in early development stage and won't almost work. A pending work for all drivers is way to setup the initial state of the console buffer. If you wonder why there are Win32 and Linux specific implementations of the ConsoleDriver (instead of relying in the netcore Console API which is cross-platform) is because netcore Console API is limited (i.e. no mouse support).
+* Tvision2.ConsoleDriver: DotNet console driver is implemented and working. Linux console driver (based on NCurses) is under development, but it is usable, altohough some keyboard bindings still not work. Win32 console driver is working, but need to be adapted to support the new color management. Finally an experimental Linux terminfo console driver is started, but is not usable yet.
 
 * Tvision2.Controls: Basic architecture is done, but all controls needs to be finished, and some controls have to be added. But, from architectural point of view, I don't expect any radical change.
 
