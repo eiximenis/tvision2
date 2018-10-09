@@ -24,9 +24,13 @@ namespace Tvision2.Controls.Styles
                     style.DesiredAlternateFocused(DefaultColorName.Black, DefaultColorName.White);
 
                 });
-                
-
                 sb.AddStyle("tvtextbox", style =>
+                {
+                    style.DesiredStandard(DefaultColorName.Black, DefaultColorName.White);
+                    style.DesiredFocused(DefaultColorName.White, DefaultColorName.Black);
+                });
+
+                sb.AddStyle("tvdialog", style =>
                 {
                     style.DesiredStandard(DefaultColorName.Black, DefaultColorName.White);
                     style.DesiredFocused(DefaultColorName.White, DefaultColorName.Black);
