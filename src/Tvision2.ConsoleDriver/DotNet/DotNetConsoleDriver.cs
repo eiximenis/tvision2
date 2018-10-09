@@ -9,12 +9,12 @@ using Tvision2.Events;
 
 namespace Tvision2.ConsoleDriver
 {
-    class NetConsoleDriver : IConsoleDriver
+    class DotNetConsoleDriver : IConsoleDriver
     {
         private readonly ConsoleDriverOptions _options;
         private readonly DotNetColorManager _colorManager;
 
-        public NetConsoleDriver(ConsoleDriverOptions options, DotNetColorManager colorManager)
+        public DotNetConsoleDriver(ConsoleDriverOptions options, DotNetColorManager colorManager)
         {
             _options = options;
             _colorManager = colorManager;

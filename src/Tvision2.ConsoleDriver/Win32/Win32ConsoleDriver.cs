@@ -6,13 +6,15 @@ using Tvision2.Events;
 
 namespace Tvision2.ConsoleDriver
 {
-    public class WinConsoleDriver : IConsoleDriver
+    public class Win32ConsoleDriver : IConsoleDriver
     {
         private const int STDIN = -10;
         private const int STDOUT = -11;
         private const int CP_UTF8 = 65001;
         private readonly IntPtr _hstdin;
         private readonly IntPtr _hstdout;
+        public bool SupportsVt100 { get; }
+        private IWindowsColorManager _colorManager;
 
         private readonly ConsoleDriverOptions _options;
 
@@ -26,13 +28,17 @@ namespace Tvision2.ConsoleDriver
             return (rows, columns);
         }
 
-        public WinConsoleDriver(ConsoleDriverOptions options)
+        internal void AttachColorManager(IWindowsColorManager colorManager) => _colorManager = colorManager;
+
+        public Win32ConsoleDriver(ConsoleDriverOptions options)
         {
             _hstdin = ConsoleNative.GetStdHandle(STDIN);
             _hstdout = ConsoleNative.GetStdHandle(STDOUT);
             _options = options;
             ConsoleNative.SetConsoleCP(CP_UTF8);
             ConsoleNative.SetConsoleOutputCP(CP_UTF8);
+            ConsoleNative.SetConsoleMode(_hstdin, (uint)(ConsoleInputModes.ENABLE_MOUSE_INPUT | ConsoleInputModes.ENABLE_WINDOW_INPUT | ConsoleInputModes.ENABLE_VIRTUAL_TERMINAL_INPUT));
+            SupportsVt100 = ConsoleNative.SetConsoleMode(_hstdout, (uint)(ConsoleOutputModes.ENABLE_VIRTUAL_TERMINAL_PROCESSING));
         }
 
         public void Init()
@@ -78,13 +84,9 @@ namespace Tvision2.ConsoleDriver
         public void WriteCharacterAt(int x, int y, char character, CharacterAttribute attribute)
         {
             var coord = new COORD((short)x, (short)y);
-
-            // TODO: Implement using custom pairs
-            var winattr = (ushort)(Win32ConsoleColor.ForeConsoleColorToAttribute(ConsoleColor.White) | Win32ConsoleColor.BackConsoleColorToAttribute(ConsoleColor.Black));
-
-            ConsoleNative.FillConsoleOutputAttribute(_hstdout, winattr, (uint)1, coord, out var numAttrWritten);
+            var winattr = _colorManager.AttributeToWin32Colors(attribute);
+            ConsoleNative.FillConsoleOutputAttribute(_hstdout, (ushort)winattr, (uint)1, coord, out var numAttrWritten);
             ConsoleNative.FillConsoleOutputCharacter(_hstdout, character, (uint)1, coord, out var numWritten);
-
         }
 
         public void SetCursorAt(int x, int y)
