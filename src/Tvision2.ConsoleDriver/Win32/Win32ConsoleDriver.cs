@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Tvision2.ConsoleDriver.Win32;
 using Tvision2.Core.Colors;
 using Tvision2.Engine.Console;
@@ -10,7 +11,7 @@ namespace Tvision2.ConsoleDriver
     {
         private const int STDIN = -10;
         private const int STDOUT = -11;
-        private const int CP_UTF8 = 65001;
+        private const int CP_TOUSE = 65001;     // UTF8
         private readonly IntPtr _hstdin;
         private readonly IntPtr _hstdout;
         public bool SupportsVt100 { get; }
@@ -35,9 +36,9 @@ namespace Tvision2.ConsoleDriver
             _hstdin = ConsoleNative.GetStdHandle(STDIN);
             _hstdout = ConsoleNative.GetStdHandle(STDOUT);
             _options = options;
-            ConsoleNative.SetConsoleCP(CP_UTF8);
-            ConsoleNative.SetConsoleOutputCP(CP_UTF8);
-            ConsoleNative.SetConsoleMode(_hstdin, (uint)(ConsoleInputModes.ENABLE_MOUSE_INPUT | ConsoleInputModes.ENABLE_WINDOW_INPUT | ConsoleInputModes.ENABLE_VIRTUAL_TERMINAL_INPUT));
+            ConsoleNative.SetConsoleCP(CP_TOUSE);
+            ConsoleNative.SetConsoleOutputCP(CP_TOUSE);
+            //ConsoleNative.SetConsoleMode(_hstdin, (uint)(ConsoleInputModes.ENABLE_MOUSE_INPUT | ConsoleInputModes.ENABLE_WINDOW_INPUT | ConsoleInputModes.ENABLE_VIRTUAL_TERMINAL_INPUT));
             SupportsVt100 = ConsoleNative.SetConsoleMode(_hstdout, (uint)(ConsoleOutputModes.ENABLE_VIRTUAL_TERMINAL_PROCESSING));
         }
 
@@ -86,7 +87,7 @@ namespace Tvision2.ConsoleDriver
             var coord = new COORD((short)x, (short)y);
             var winattr = _colorManager.AttributeToWin32Colors(attribute);
             ConsoleNative.FillConsoleOutputAttribute(_hstdout, (ushort)winattr, (uint)1, coord, out var numAttrWritten);
-            ConsoleNative.FillConsoleOutputCharacter(_hstdout, character, (uint)1, coord, out var numWritten);
+            ConsoleNative.FillConsoleOutputCharacter(_hstdout, (char)character, (uint)1, coord, out var numWritten);
         }
 
         public void SetCursorAt(int x, int y)

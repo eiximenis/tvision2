@@ -15,11 +15,26 @@ namespace Tvision2.Core.Render
         {
             return Character == other.Character && Attributes == other.Attributes && ZIndex == other.ZIndex;
         }
+       
 
-        public bool Equals(char otherChar, CharacterAttribute attr,  int otherZIndex)
+        public ConsoleCharacterComparison CompareContents(char otherChar, CharacterAttribute otherAttr)
         {
-            return Character == otherChar  && Attributes == attr && ZIndex == otherZIndex;
+            if (Character == otherChar)
+            {
+                if (Attributes != otherAttr)
+                {
+                    return ConsoleCharacterComparison.DifferOnlyAttributes;
+                }
+                return ConsoleCharacterComparison.Equals;
+            }
+            else
+            {
+                if (Attributes != otherAttr)
+                {
+                    return ConsoleCharacterComparison.DifferOnEverything;
+                }
+                return ConsoleCharacterComparison.DifferOnlyChar;
+            }
         }
-
     }
 }

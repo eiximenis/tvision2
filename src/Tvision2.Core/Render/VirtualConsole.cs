@@ -8,8 +8,17 @@ namespace Tvision2.Core.Render
 
     public class VirtualConsole
     {
+        enum DirtyStatus
+        {
+            Clean = 0,
+            OnlyChar = 1,
+            OnlyAttributes = 2,
+            CharAndAttr = 3
+        }
+
+
         private readonly ConsoleCharacter[] _buffer;
-        private readonly bool[] _dirtyMap;
+        private readonly DirtyStatus[] _dirtyMap;
         public VirtualConsoleUpdateActions UpdateActions { get; }
         public int Width { get; }
         public int Height { get; }
@@ -23,7 +32,7 @@ namespace Tvision2.Core.Render
             Width = Console.WindowWidth;
             Height = Console.WindowHeight;
             _buffer = new ConsoleCharacter[Height * Width];
-            _dirtyMap = new bool[Height * Width];
+            _dirtyMap = new DirtyStatus[Height * Width];
             InitEmpty();
             Cursor = new VirtualConsoleCursor();
         }
@@ -35,11 +44,11 @@ namespace Tvision2.Core.Render
             {
                 for (var col = 0; col < Width; col++)
                 {
-                    if (_dirtyMap[idx])
+                    if (_dirtyMap[idx] != DirtyStatus.Clean)
                     {
                         var cc = _buffer[idx];
                         consoleDriver.WriteCharacterAt(col, row, cc.Character, cc.Attributes);
-                        _dirtyMap[idx] = false;
+                        _dirtyMap[idx] = DirtyStatus.Clean;
                     }
                     idx++;
                 }
@@ -82,13 +91,18 @@ namespace Tvision2.Core.Render
             {
                 var cchar = _buffer[idx];
                 var newchar = text[textIdx];
-                if (cchar.ZIndex <= zIndex && !cchar.Equals(newchar, attr, zIndex))
+                if (cchar.ZIndex <= zIndex)
                 {
-                    cchar.Character = newchar;
-                    cchar.Attributes = attr;
+                    var comparison = cchar.CompareContents(newchar, attr);
+                    if (comparison != ConsoleCharacterComparison.Equals)
+                    {
+                        cchar.Character = newchar;
+                        cchar.Attributes = attr;
+                        cchar.ZIndex = zIndex;
+                        dirty = true;
+                        _dirtyMap[idx] = (DirtyStatus) comparison;
+                    }
                     cchar.ZIndex = zIndex;
-                    dirty = true;
-                    _dirtyMap[idx] = true;
                 }
                 textIdx++;
                 charCol++;
@@ -129,13 +143,18 @@ namespace Tvision2.Core.Render
             for (var idx = start; idx < end; idx++)
             {
                 var cchar = _buffer[idx];
-                if (cchar.ZIndex <= zindex && !cchar.Equals(charToCopy))
+                if (cchar.ZIndex <= zindex)
                 {
-                    cchar.Character = charToCopy.Character;
-                    cchar.Attributes = charToCopy.Attributes;
-                    cchar.ZIndex = charToCopy.ZIndex;
-                    dirty = true;
-                    _dirtyMap[idx] = true;
+                    var comparison = cchar.CompareContents(charToCopy.Character, charToCopy.Attributes);
+                    if (comparison != ConsoleCharacterComparison.Equals)
+                    {
+                        cchar.Character = charToCopy.Character;
+                        cchar.Attributes = charToCopy.Attributes;
+                        cchar.ZIndex = charToCopy.ZIndex;
+                        dirty = true;
+                        _dirtyMap[idx] = (DirtyStatus)comparison;
+                    }
+                    cchar.ZIndex = zindex;
                 }
                 charCol++;
             }
