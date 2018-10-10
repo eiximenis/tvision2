@@ -21,18 +21,16 @@ namespace Tvision2.Controls
         public TState State { get; }
         public string ControlType { get; }
 
-
         public IViewport Viewport => _component.Viewport;
-
         private bool _setFocusPending;
 
         public TvControl(ISkin skin, IViewport viewport, TState initialState, string name = null)
         {
-            Metadata = new TvControlMetadata(this);
+            _component = new TvComponent<TState>(initialState, name ?? $"TvControl_<$>");
+            Metadata = new TvControlMetadata(this, _component.ComponentId);
             ControlType = GetType().Name.ToLowerInvariant();
             CurrentStyle = skin.GetControlStyle(this);
             State = initialState;
-            _component = new TvComponent<TState>(initialState, name ?? $"TvControl_{Guid.NewGuid()}");
             _component.AddViewport(viewport);
             _setFocusPending = false;
             AddElements();
@@ -48,7 +46,6 @@ namespace Tvision2.Controls
             }
             AddCustomElements(_component);
         }
-
 
 
         protected virtual IEnumerable<ITvBehavior<TState>> GetEventedBehaviors()

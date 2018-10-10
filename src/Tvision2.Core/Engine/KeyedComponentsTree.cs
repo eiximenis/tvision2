@@ -94,5 +94,13 @@ namespace Tvision2.Core.Engine
 
             return false;
         }
+
+        public void Clear()
+        {
+            foreach (var child in _myComponents.Values)
+            {
+                child.Clear();
+            }
+        }
     }
 }

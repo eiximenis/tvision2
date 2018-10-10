@@ -36,12 +36,20 @@ namespace Tvision2.Core.Engine
 
         private void DoPendingRemovals()
         {
-            foreach (var kvp in _pendingRemovals)
+            if (_pendingRemovals.Count > 0)
             {
-                _components.Remove(kvp.Key);
-                OnComponentRemoved(kvp.Value);
+                var deleted = new List<IComponentMetadata>();
+                foreach (var kvp in _pendingRemovals)
+                {
+                    _components.Remove(kvp.Key);
+                    deleted.Add(kvp.Value);
+                }
+                _pendingRemovals.Clear();
+                foreach (var deletedComponent in deleted)
+                {
+                    OnComponentRemoved(deletedComponent);
+                }
             }
-            _pendingRemovals.Clear();
         }
 
         public ComponentTree(TuiEngine owner)
@@ -98,6 +106,14 @@ namespace Tvision2.Core.Engine
             if (viewportToClear != null)
             {
                 _viewportsToClear.Add(viewportToClear);
+            }
+        }
+
+        public void Clear()
+        {
+            foreach (var child in Components)
+            {
+                Remove(child);
             }
         }
 

@@ -24,6 +24,7 @@ namespace Tvision2.DependencyInjection
             });
 
             setup.AddHook<ChangeFocusEventHook>();
+
             setup.Options.AfterCreateInvoke((engine, sp) =>
             {
                 var skinManager = sp.GetRequiredService<ISkinManager>() as SkinManager;

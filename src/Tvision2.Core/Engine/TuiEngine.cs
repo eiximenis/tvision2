@@ -25,7 +25,7 @@ namespace Tvision2.Core.Engine
 
         private VirtualConsole _currentConsole;
         public IConsoleDriver ConsoleDriver { get; }
-        public IEventHookManager EventHookManager { get; }
+        public IEventHookManager EventHookManager { get; private set; }
         public IComponentTree UI => _ui;
         public IServiceProvider ServiceProvider { get; }
 
@@ -35,17 +35,16 @@ namespace Tvision2.Core.Engine
             _ui = new ComponentTree(this);
             _eventPumper = new EventPumper(ConsoleDriver);
             _watcher = new Stopwatch();
-            var hookContext = new HookContext(this);
             ServiceProvider = serviceProvider;
             _options = options;
-            EventHookManager = new EventHookManager(options.HookTypes ?? Enumerable.Empty<Type>(), options.AfterUpdates ?? Enumerable.Empty<Action>(), hookContext, ServiceProvider);
         }
 
         public async Task Start(CancellationToken cancellationToken)
         {
             ConsoleDriver.Init();
             _currentConsole = new VirtualConsole();
-
+            var hookContext = new HookContext(this);
+            EventHookManager = new EventHookManager(_options.HookTypes ?? Enumerable.Empty<Type>(), _options.AfterUpdates ?? Enumerable.Empty<Action>(), hookContext, ServiceProvider);
             foreach (var afterCreateTask in _options.AfterCreateInvokers)
             {
                 afterCreateTask.Invoke(this, ServiceProvider);

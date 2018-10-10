@@ -11,5 +11,6 @@ namespace Tvision2.Layouts
     {
         TvComponent AsComponent();
         string Name { get; }
+        void Clear();
     }
 }

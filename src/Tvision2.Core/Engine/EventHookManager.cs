@@ -16,8 +16,13 @@ namespace Tvision2.Core.Engine
 
         public EventHookManager(IEnumerable<Type> hookTypes, IEnumerable<Action> afterUpdates, HookContext context, IServiceProvider serviceProvider)
         {
+            _hooks = new List<IEventHook>();
 
-            _hooks = hookTypes.Select(ht => serviceProvider.GetService(ht) as IEventHook).ToList();
+            foreach (var ht in hookTypes)
+            {
+                _hooks.Add(serviceProvider.GetService(ht) as IEventHook);
+            }
+
             _context = context;
             _postUpdateActions = afterUpdates.ToList();
         }

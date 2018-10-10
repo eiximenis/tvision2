@@ -87,5 +87,14 @@ namespace Tvision2.Layouts.Grid
         }
 
         public bool Remove(TvComponent component) => Remove(component.Metadata);
+
+        public void Clear()
+        {
+            var toDelete = _childs.Values.ToList();
+            foreach (var child in toDelete)
+            {
+                Remove(child);
+            }
+        }
     }
 }

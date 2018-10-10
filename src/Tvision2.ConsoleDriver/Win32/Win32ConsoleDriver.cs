@@ -39,7 +39,9 @@ namespace Tvision2.ConsoleDriver
             ConsoleNative.SetConsoleCP(CP_TOUSE);
             ConsoleNative.SetConsoleOutputCP(CP_TOUSE);
             //ConsoleNative.SetConsoleMode(_hstdin, (uint)(ConsoleInputModes.ENABLE_MOUSE_INPUT | ConsoleInputModes.ENABLE_WINDOW_INPUT | ConsoleInputModes.ENABLE_VIRTUAL_TERMINAL_INPUT));
-            SupportsVt100 = ConsoleNative.SetConsoleMode(_hstdout, (uint)(ConsoleOutputModes.ENABLE_VIRTUAL_TERMINAL_PROCESSING));
+            ConsoleNative.GetConsoleMode(_hstdout, out uint dwOutModes);
+            dwOutModes |= (uint)ConsoleOutputModes.ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+            SupportsVt100 = ConsoleNative.SetConsoleMode(_hstdout, dwOutModes);
         }
 
         public void Init()

@@ -26,16 +26,19 @@ namespace Tvision2.Core.Components
         public void Invalidate() => NeedToRedraw = RedrawNeededAction.Standard;
         public IComponentMetadata Metadata => _metadata;
 
+        public Guid ComponentId { get; }
+
         protected readonly List<ITvDrawer> _drawers;
         protected readonly List<IBehaviorMetadata> _behaviorsMetadata;
 
         public TvComponent(string name)
         {
+            ComponentId = Guid.NewGuid();
             _metadata = new TvComponentMetadata(this);
             _drawers = new List<ITvDrawer>();
             _behaviorsMetadata = new List<IBehaviorMetadata>();
             _viewports = new Dictionary<Guid, IViewport>();
-            Name = string.IsNullOrEmpty(name) ? $"TvComponent-{Guid.NewGuid().ToString()}" : name;
+            Name = string.IsNullOrEmpty(name) ? $"TvComponent-{ComponentId}" : name.Replace("<$>", ComponentId.ToString());
         }
 
         public Guid AddViewport(IViewport viewport)

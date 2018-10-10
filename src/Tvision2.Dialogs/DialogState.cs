@@ -1,4 +1,5 @@
-﻿using Tvision2.Controls;
+﻿using System.Collections.Generic;
+using Tvision2.Controls;
 using Tvision2.Controls.Button;
 using Tvision2.Controls.Styles;
 using Tvision2.Core.Engine;
@@ -19,26 +20,34 @@ namespace Tvision2.Dialogs
         private TvStackPanel _mainPanel;
         private TvGrid _bottomGrid;
         private TvCanvas _mainCanvas;
+        private DialogButtons _buttons;
 
         public IComponentTree UI => _mainCanvas.Children;
+
+        public IEnumerable<TvButton> Buttons => _buttons;
+
+        internal TvStackPanel MainPanel => _mainPanel;
+
 
         public DialogState(ISkin skin, string prefix)
         {
             _skin = skin;
             _prefixNames = prefix;
+            _buttons = new DialogButtons(skin);
         }
 
         internal void Init(TvDialog dialog, IComponentTree owner)
         {
             _myDialog = dialog;
+            _buttons.AddOkButton();
+            _buttons.AddCancelButton();
             var viewport = _myDialog.AsComponent().Viewport.Layer(ViewportLayer.Top);
             _mainPanel = new TvStackPanel(owner, $"{_prefixNames}_MainPanel");
             _mainPanel.Layout.Add("1", "*");
             _mainPanel.AsComponent().AddViewport(new Viewport(viewport.Position + new TvPoint(1, 1), viewport.Columns - 2, viewport.Rows - 2, viewport.ZIndex));
             _bottomGrid = new TvGrid(owner, new GridState(1, 2), $"{_prefixNames}_BottomGrid");
-            _bottomGrid.Use(0, 0)
-                .Add(new TvButton(_skin, Viewport.NullViewport, new ButtonState() { Text = "Ok" }));
-            _bottomGrid.Use(0, 1).Add(new TvButton(_skin, Viewport.NullViewport, new ButtonState() { Text = "Cancel" }));
+            _bottomGrid.Use(0, 0).Add(_buttons.OkButton);
+            _bottomGrid.Use(0, 1).Add(_buttons.CancelButton);
             _mainCanvas = new TvCanvas(owner, $"{_prefixNames}_BodyCanvas");
             _mainCanvas.AsComponent().AddViewport(Viewport.NullViewport);
 
@@ -49,6 +58,7 @@ namespace Tvision2.Dialogs
         }
 
         public bool IsDirty { get; private set; }
+
         public void Validate() => IsDirty = false;
     }
 }

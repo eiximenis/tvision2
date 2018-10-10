@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
@@ -13,7 +14,6 @@ namespace Tvision2.Layouts.Stack
 
         public StackLayout Layout => _thisComponent.State;
 
-
         public TvStackPanel(IComponentTree root, string name = null)
         {
             _childs = new KeyedComponentsTree<int>(root);
@@ -22,6 +22,15 @@ namespace Tvision2.Layouts.Stack
             _thisComponent.Metadata.ViewportChanged += OnViewportChange;
             _childs.ComponentAdded += OnChildAdded;
             _childs.ComponentRemoved += OnChildRemoved;
+        }
+
+        public void Clear()
+        {
+            var layout = _thisComponent.State;
+            for (var idx=0; idx < layout.ItemsCount; idx++)
+            {
+                At(idx).Clear();
+            }
         }
 
         private void OnChildRemoved(object sender, TreeUpdatedEventArgs e)

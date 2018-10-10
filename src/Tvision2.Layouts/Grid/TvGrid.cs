@@ -29,6 +29,21 @@ namespace Tvision2.Layouts.Grid
             _ui = new TvGridComponentTree(_root);
             _ui.ComponentAdded += OnComponentAdded;
             _ui.ComponentRemoved += OnComponentRemoved;
+            _root.ComponentRemoved += OnRootRemoved;
+        }
+
+        private void OnRootRemoved(object sender, TreeUpdatedEventArgs e)
+        {
+            if (e.ComponentMetadata == _component.Metadata)
+            {
+                _root.ComponentRemoved -= OnRootRemoved;
+                Clear();
+            }
+        }
+
+        public void Clear()
+        {
+            _ui.Clear();
         }
 
         private void OnComponentRemoved(object sender, TreeUpdatedEventArgs e)

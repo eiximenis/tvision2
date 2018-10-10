@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Tvision2.Controls;
 using Tvision2.Controls.Drawers;
 using Tvision2.Controls.Styles;
@@ -31,6 +32,14 @@ namespace Tvision2.Dialogs
                 context.DrawChars(' ', Viewport.Columns - 2, new TvPoint(1, row), pairIdx);
             }
             context.Fill(pairIdx);
+        }
+
+        internal void Close()
+        {
+            State.MainPanel.Clear();
+
+            State.UI.Engine.UI.Remove(State.MainPanel.AsComponent());
+            State.UI.Engine.UI.Remove(AsComponent());
         }
     }
 }

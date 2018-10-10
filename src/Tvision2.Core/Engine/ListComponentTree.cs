@@ -71,5 +71,14 @@ namespace Tvision2.Core.Engine
             return false;
         }
 
+        public void Clear()
+        {
+            var cachedChilds = _myComponents.ToList();
+            foreach (var component in cachedChilds)
+            {
+                Remove(component);
+            }
+        }
+
     }
 }

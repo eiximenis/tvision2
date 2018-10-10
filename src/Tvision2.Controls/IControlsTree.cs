@@ -12,5 +12,7 @@ namespace Tvision2.Controls
         bool Focus(TvControlMetadata controlToFocus);
         TvControlMetadata First();
         bool MoveFocusToNext();
+        IEnumerable<TvControlMetadata> ControlsMetadata { get; }
+        TvControlMetadata this[Guid id] { get; }
     }
 }

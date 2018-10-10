@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Tvision2.Core;
 using Tvision2.Dialogs;
+using Tvision2.Dialogs.Hooks;
 
 namespace Tvision2.DependencyInjection
 {
@@ -16,6 +17,8 @@ namespace Tvision2.DependencyInjection
             {
                 sc.AddSingleton<IDialogManager, DialogManager>();
             });
+
+            setup.AddHook<DialogEscapeKeyHook>();
 
             return setup;
         }

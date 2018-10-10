@@ -8,8 +8,9 @@ namespace Tvision2.Layouts.Canvas
     public class TvCanvas : ITvContainer
     {
 
-        private readonly TvComponent<ListComponentTree> _thisComponent;
+        private readonly TvComponent<object> _thisComponent;
         private readonly ListComponentTree _childs;
+        private readonly IComponentTree _root;
         public string Name { get; }
 
         public TvComponent AsComponent() => _thisComponent;
@@ -18,12 +19,28 @@ namespace Tvision2.Layouts.Canvas
 
         public TvCanvas(IComponentTree root, string name = null)
         {
+            _root = root;
             _childs = new ListComponentTree(root);
-            _thisComponent = new TvComponent<ListComponentTree>(_childs, name ?? $"TvContainer{Guid.NewGuid()}");
+            _thisComponent = new TvComponent<object>(new Object(), name ?? $"TvCanvas_{Guid.NewGuid()}");
             Name = _thisComponent.Name;
             _thisComponent.Metadata.ViewportChanged += OnViewportChange;
             _childs.ComponentAdded += OnChildAdded;
             _childs.ComponentRemoved += OnChildRemoved;
+            root.ComponentRemoved += OnRootRemoved;
+        }
+
+        private void OnRootRemoved(object sender, TreeUpdatedEventArgs e)
+        {
+            if (e.ComponentMetadata == _thisComponent.Metadata)
+            {
+                Clear();
+                _root.ComponentAdded -= OnRootRemoved;
+            }
+        }
+
+        public void Clear()
+        {
+            _childs.Clear();
         }
 
         private void OnChildRemoved(object sender, TreeUpdatedEventArgs e)

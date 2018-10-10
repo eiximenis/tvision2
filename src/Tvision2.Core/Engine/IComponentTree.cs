@@ -17,5 +17,7 @@ namespace Tvision2.Core.Engine
         bool Remove(TvComponent component);
         TvComponent GetComponent(string name);
         IEnumerable<TvComponent> Components { get; }
+
+        void Clear();
     }
 }

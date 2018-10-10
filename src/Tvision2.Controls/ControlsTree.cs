@@ -9,14 +9,19 @@ namespace Tvision2.Controls
     internal class ControlsTree : IControlsTree
     {
         private readonly LinkedList<TvControlMetadata> _controls;
+        private Dictionary<Guid, TvControlMetadata> _indexedControls;
         private IComponentTree _componentTree;
         private TvControlMetadata _focused;
+
+        public IEnumerable<TvControlMetadata> ControlsMetadata => _controls;
+
 
         public ControlsTree()
         {
             _controls = new LinkedList<TvControlMetadata>();
             _focused = null;
             _componentTree = null;
+            _indexedControls = new Dictionary<Guid, TvControlMetadata>();
         }
 
         public void InsertAfter(TvControlMetadata cdata, int position)
@@ -28,6 +33,7 @@ namespace Tvision2.Controls
 
             var current = _controls.NodeAt(position);
             _controls.AddAfter(current, cdata);
+            _indexedControls.Add(cdata.ControlId, cdata);
         }
 
         internal void AttachTo(IComponentTree comtree)
@@ -35,9 +41,18 @@ namespace Tvision2.Controls
             _componentTree = comtree;
         }
 
-        public void Add(TvControlMetadata cdata) => _controls.AddLast(cdata);
+        public void Add(TvControlMetadata cdata)
+        {
+            _controls.AddLast(cdata);
+            _indexedControls.Add(cdata.ControlId, cdata);
+        }
 
-        public void Remove(TvControlMetadata cdata) => _controls.Remove(cdata);
+        public void Remove(TvControlMetadata cdata)
+        {
+            _controls.Remove(cdata);
+            _indexedControls.Remove(cdata.ControlId);
+        }
+
 
         public TvControlMetadata NextControl(TvControlMetadata current)
         {
@@ -87,5 +102,7 @@ namespace Tvision2.Controls
             return Focus(next);
         }
 
+        public TvControlMetadata this[Guid id] => 
+            _indexedControls.TryGetValue(id, out TvControlMetadata result) ? result : null;
     }
 }
