@@ -6,10 +6,10 @@ using Tvision2.Events;
 
 namespace Tvision2.Controls.List
 {
-    public class ListBehavior : KeyboardBehavior<ListState>
+    public class ListBehavior<T> : KeyboardBehavior<ListState<T>>
     {
-        protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<ListState> updateContext) => true;
-        protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<ListState> updateContext)
+        protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<ListState<T>> updateContext) => true;
+        protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<ListState<T>> updateContext)
         {
             var info = evt.AsConsoleKeyInfo();
             if (info.Key == ConsoleKey.DownArrow && updateContext.State.CanScroll)

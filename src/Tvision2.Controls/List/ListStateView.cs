@@ -2,19 +2,21 @@
 
 namespace Tvision2.Controls.List
 {
-    public class ListStateView
+    public class ListStateView<T>
     {
-        private readonly ListState _source;
+        private readonly ListState<T> _source;
+        private readonly Func<T, TvListItem> _converter;
         private int _from;
         private int _to;
 
-        public ListStateView(ListState source)
+        public ListStateView(ListState<T> source, Func<T, TvListItem> converter)
         {
+            _converter = converter;
             _source = source;
             Reload();
         }
 
-        public string this[int idx] => _source[idx + _from];
+        public TvListItem this[int idx] => _converter.Invoke(_source[idx + _from]);
 
         public void Adjust(int rows)
         {

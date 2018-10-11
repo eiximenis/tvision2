@@ -1,21 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Tvision2.Controls.List
 {
-    public class ListState : IDirtyObject
+    public class ListState<T> : IDirtyObject
     {
-        private readonly List<string> _values;
+        private readonly List<T> _values;
         private int _selectedIndex = 0;
+
         public bool IsDirty { get; private set; }
 
         public void Validate() => IsDirty = false;
 
-        public IEnumerable<string> Values => _values;
-        public ListStateView ItemsView { get; }
+        public IEnumerable<T> Values => _values;
+        public ListStateView<T> ItemsView { get; }
 
 
-        public string this[int idx] => _values[idx];
+        public T this[int idx] => _values[idx];
         public int Count => _values.Count;
 
         public int SelectedIndex
@@ -42,11 +44,11 @@ namespace Tvision2.Controls.List
         }
 
 
-        public ListState(IEnumerable<string> values)
+        public ListState(IEnumerable<T> values, Func<T, TvListItem> converter)
         {
             _values = values.ToList();
             _selectedIndex = 0;
-            ItemsView = new ListStateView(this);
+            ItemsView = new ListStateView<T>(this, converter);
         }
 
         public void Clear()
@@ -56,13 +58,12 @@ namespace Tvision2.Controls.List
             IsDirty = true;
         }
 
-        public void AddRange(IEnumerable<string> items)
+        public void AddRange(IEnumerable<T> items)
         {
             _values.AddRange(items);
             ItemsView.Reload();
             IsDirty = true;
         }
-
     }
 
 }

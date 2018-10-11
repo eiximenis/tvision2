@@ -20,7 +20,6 @@ namespace Tvision2.Controls
         public TvControlMetadata Metadata { get; }
         public TState State { get; }
         public string ControlType { get; }
-
         public IViewport Viewport => _component.Viewport;
         private bool _setFocusPending;
 
@@ -28,7 +27,9 @@ namespace Tvision2.Controls
         {
             _component = new TvComponent<TState>(initialState, name ?? $"TvControl_<$>");
             Metadata = new TvControlMetadata(this, _component.ComponentId);
-            ControlType = GetType().Name.ToLowerInvariant();
+            var typename = GetType().Name.ToLowerInvariant();
+            var genericIdx = typename.IndexOf('`');
+            ControlType = genericIdx != -1 ? typename.Substring(0, genericIdx) : typename;
             CurrentStyle = skin.GetControlStyle(this);
             State = initialState;
             _component.AddViewport(viewport);

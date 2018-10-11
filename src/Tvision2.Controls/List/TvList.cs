@@ -7,23 +7,23 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Controls.List
 {
-    public class TvList : TvControl<ListState>
+    public class TvList<TItem> : TvControl<ListState<TItem>>
     {
-        public TvList(ISkin skin, IViewport boxModel, ListState data) : base(skin, boxModel, data)
+        public TvList(ISkin skin, IViewport boxModel, ListState<TItem> data) : base(skin, boxModel, data)
         {
         }
 
-        protected override void AddCustomElements(TvComponent<ListState> component)
+        protected override void AddCustomElements(TvComponent<ListState<TItem>> component)
         {
             component.AddDrawer(new BorderDrawer(CurrentStyle, Metadata));
         }
 
-        protected override IEnumerable<ITvBehavior<ListState>> GetEventedBehaviors()
+        protected override IEnumerable<ITvBehavior<ListState<TItem>>> GetEventedBehaviors()
         {
-            yield return new ListBehavior();
+            yield return new ListBehavior<TItem>();
         }
 
-        protected override void OnDraw(RenderContext<ListState> context)
+        protected override void OnDraw(RenderContext<ListState<TItem>> context)
         {
             var pairIdx = CurrentStyle.Standard;
             var selectedPairIdx = Metadata.IsFocused ? CurrentStyle.AlternateFocused : CurrentStyle.Alternate;
@@ -36,8 +36,8 @@ namespace Tvision2.Controls.List
                 {
                     var item = State.ItemsView[idx];
                     var selected = State.SelectedIndex == idx + State.ItemsView.From;
-                    var len = item.Length;
-                    context.DrawStringAt(item, new TvPoint(1, idx + 1), selected ? selectedPairIdx :pairIdx);
+                    var len = item.Text.Length;
+                    context.DrawStringAt(item.Text, new TvPoint(1, idx + 1), selected ? selectedPairIdx : pairIdx);
                     var extra = viewport.Columns - 2 - len;
                     if (extra > 0)
                     {

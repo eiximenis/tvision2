@@ -44,10 +44,10 @@ namespace Tvision2.MidnightCommander
             grid.AsComponent().AddViewport(vpf.FullViewport().Translate(new TvPoint(0, 1)).Grow(0, -3));
             var textbox = new TvTextbox(skin, null, new TextboxState());
 
-            var left = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
-                new ListState(Enumerable.Empty<string>()));
-            var right = new TvList(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
-                new ListState(Enumerable.Empty<string>()));
+            var left = new TvList<FileItem>(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
+                new ListState<FileItem>(Enumerable.Empty<FileItem>(), f => new TvListItem() { Text = f.Name }));
+            var right = new TvList<FileItem>(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
+                new ListState<FileItem>(Enumerable.Empty<FileItem>(), f => new TvListItem() { Text = f.Name }));
 
             var menu = new TvMenuBar(skin, vpf.FullViewport().TakeRows(1, 0),
                 new MenuBarState(new[] {"Left", "Edit", "Command", "Options", "Help", "Right"}));
@@ -62,7 +62,7 @@ namespace Tvision2.MidnightCommander
                 d => { d.State.UI.Add(label); });
 
 
-            var sleft = TvStatexControl.Wrap<TvList, ListState, FileList>(left, opt =>
+            var sleft = TvStatexControl.Wrap<TvList<FileItem>, ListState<FileItem>, FileList>(left, opt =>
             {
                 opt.UseStore("left");
                 opt.UseStatexTransformation((fl, cs) =>
@@ -71,7 +71,7 @@ namespace Tvision2.MidnightCommander
                     cs.AddRange(fl.Items);
                 });
             });
-            var sright = TvStatexControl.Wrap<TvList, ListState, FileList>(right, opt =>
+            var sright = TvStatexControl.Wrap<TvList<FileItem>, ListState<FileItem>, FileList>(right, opt =>
             {
                 opt.UseStore("right");
                 opt.UseStatexTransformation((fl, cs) =>

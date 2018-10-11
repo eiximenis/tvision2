@@ -7,14 +7,14 @@ namespace Tvision2.MidnightCommander.Stores
         public static FileList Empty { get;  }
         static FileList()
         {
-            Empty = new FileList(new string[0]);
+            Empty = new FileList(new FileItem[0]);
         }
 
-        private readonly string[] _items;
+        private readonly FileItem[] _items;
 
-        public IEnumerable<string> Items => _items;
+        public IEnumerable<FileItem> Items => _items;
 
-        public FileList(string[] items)
+        public FileList(FileItem[] items)
         {
             this._items = items;
         }

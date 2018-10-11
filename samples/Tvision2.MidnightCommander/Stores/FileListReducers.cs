@@ -1,4 +1,6 @@
-﻿using Tvision2.Statex;
+﻿using System.IO;
+using System.Linq;
+using Tvision2.Statex;
 
 namespace Tvision2.MidnightCommander.Stores
 {
@@ -8,9 +10,15 @@ namespace Tvision2.MidnightCommander.Stores
         {
             if (action.Name == "FETCH_DIR")
             {
-                var folder = action.WithData<string>().Value;
-                var items = System.IO.Directory.GetFileSystemEntries(folder, "*.*");
-                return new FileList(items);
+                var folderName = action.WithData<string>().Value;
+                var folder = new DirectoryInfo(folderName);
+                var items = folder.GetFileSystemInfos().Select(f => new FileItem
+                {
+                    Name = f.Name,
+                    IsDirectory = (f.Attributes | FileAttributes.Directory) != 0
+                });
+
+                return new FileList(items.ToArray());
             }
 
             return state;
