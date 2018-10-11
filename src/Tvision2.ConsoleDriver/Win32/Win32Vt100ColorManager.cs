@@ -16,7 +16,8 @@ namespace Tvision2.ConsoleDriver.Win32
             throw new NotImplementedException();
         }
 
-        public CharacterAttribute BuildAttributeFor(DefaultColorName fore, DefaultColorName back, CharacterAttributeModifiers attrs)
+        public CharacterAttribute BuildAttributeFor(DefaultColorName fore, DefaultColorName back, 
+            CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal)
         {
             throw new NotImplementedException();
         }

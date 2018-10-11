@@ -56,7 +56,8 @@ namespace Tvision2.ConsoleDriver.NCurses
 
 
         
-        public CharacterAttribute BuildAttributeFor(DefaultColorName fore, DefaultColorName back, CharacterAttributeModifiers attrs)
+        public CharacterAttribute BuildAttributeFor(DefaultColorName fore, DefaultColorName back, 
+            CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal)
         {
             return new CharacterAttribute()
             {
