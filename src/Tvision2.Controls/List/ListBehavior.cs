@@ -12,16 +12,20 @@ namespace Tvision2.Controls.List
         protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<ListState<T>> updateContext)
         {
             var info = evt.AsConsoleKeyInfo();
-            if (info.Key == ConsoleKey.DownArrow && updateContext.State.CanScroll)
+            if (info.Key == ConsoleKey.DownArrow && updateContext.State.CanScrollDown)
             {
-                if (updateContext.State.NeedsToScroll)
+                if (updateContext.State.NeedsToScrollDown)
                 {
                     updateContext.State.ScrollDown(1);
                 }
                 updateContext.State.SelectedIndex++;
             }
-            else if (info.Key == ConsoleKey.UpArrow)
+            else if (info.Key == ConsoleKey.UpArrow && updateContext.State.CanScrollUp)
             {
+                if (updateContext.State.NeedsToScrollUp)
+                {
+                    updateContext.State.ScrollUp(1);
+                }
                 updateContext.State.SelectedIndex--;
             }
 

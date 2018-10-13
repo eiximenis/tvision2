@@ -33,13 +33,21 @@ namespace Tvision2.Controls.List
             }
         }
 
-        public bool CanScroll => SelectedIndex < Count - 1;
+        public bool CanScrollDown => SelectedIndex < Count - 1;
+        public bool CanScrollUp => SelectedIndex > 0;
 
-        public bool NeedsToScroll => SelectedIndex == ItemsView.To;
+        public bool NeedsToScrollDown => SelectedIndex == ItemsView.To;
+        public bool NeedsToScrollUp => SelectedIndex == ItemsView.From;
 
         public void ScrollDown(int lines)
         {
             ItemsView.ScrollDown(lines);
+            IsDirty = true;
+        }
+
+        public void ScrollUp(int lines)
+        {
+            ItemsView.ScrollUp(lines);
             IsDirty = true;
         }
 

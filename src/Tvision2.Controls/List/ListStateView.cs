@@ -31,6 +31,13 @@ namespace Tvision2.Controls.List
             From += lines;
         }
 
+        public void ScrollUp(int lines)
+        {
+            To -= lines;
+            From -= lines;
+        }
+
+
 
         public int NumItems => _to - _from + 1;
 
