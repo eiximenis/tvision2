@@ -11,5 +11,6 @@ namespace Tvision2.Core.Colors
 
         int GetPairIndexFor(DefaultColorName fore, DefaultColorName back);
         CharacterAttribute BuildAttributeFor(DefaultColorName fore, DefaultColorName back, CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal);
+        CharacterAttribute DefaultAttribute { get; }
     }   
 }

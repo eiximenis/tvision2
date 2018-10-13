@@ -18,6 +18,8 @@ namespace Tvision2.Controls.List
 
         public TvListItem this[int idx] => _converter.Invoke(_source[idx + _from]);
 
+        public T SourceItem(int idx) => _source[idx + _from];
+
         public void Adjust(int rows)
         {
             To = From + rows - 1;

@@ -9,8 +9,14 @@ namespace Tvision2.Controls.List
 {
     public class TvList<TItem> : TvControl<ListState<TItem>>
     {
+        protected readonly TvListStyleProvider<TItem> _styleProvider;
+
+        public IListStyleProvider<TItem> StyleProvider => _styleProvider;
+
         public TvList(ISkin skin, IViewport boxModel, ListState<TItem> data) : base(skin, boxModel, data)
         {
+            _styleProvider = new TvListStyleProvider<TItem>(skin.ColorManager);
+            _styleProvider.UseSkin(skin);
         }
 
         protected override void AddCustomElements(TvComponent<ListState<TItem>> component)
@@ -25,7 +31,6 @@ namespace Tvision2.Controls.List
 
         protected override void OnDraw(RenderContext<ListState<TItem>> context)
         {
-            var pairIdx = CurrentStyle.Standard;
             var selectedPairIdx = Metadata.IsFocused ? CurrentStyle.AlternateFocused : CurrentStyle.Alternate;
             var viewport = context.Viewport;
             var numitems = State.Count;
@@ -37,6 +42,7 @@ namespace Tvision2.Controls.List
                     var item = State.ItemsView[idx];
                     var selected = State.SelectedIndex == idx + State.ItemsView.From;
                     var len = item.Text.Length;
+                    var pairIdx = _styleProvider.GetAttributesForItem(State.ItemsView.SourceItem(idx));
                     context.DrawStringAt(item.Text, new TvPoint(1, idx + 1), selected ? selectedPairIdx : pairIdx);
                     var extra = viewport.Columns - 2 - len;
                     if (extra > 0)
@@ -46,6 +52,7 @@ namespace Tvision2.Controls.List
                 }
                 else
                 {
+                    var pairIdx = CurrentStyle.Standard;
                     context.DrawChars(' ', viewport.Columns - 2, new TvPoint(1, idx + 1), pairIdx);
                 }
             }

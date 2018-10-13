@@ -46,6 +46,11 @@ namespace Tvision2.MidnightCommander
 
             var left = new TvList<FileItem>(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
                 new ListState<FileItem>(Enumerable.Empty<FileItem>(), f => new TvListItem() { Text = f.Name }));
+
+            left.StyleProvider
+                .Use(Core.Colors.DefaultColorName.Red, Core.Colors.DefaultColorName.Green)
+                .When(item => item.Name.Contains(' '));
+
             var right = new TvList<FileItem>(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
                 new ListState<FileItem>(Enumerable.Empty<FileItem>(), f => new TvListItem() { Text = f.Name }));
 

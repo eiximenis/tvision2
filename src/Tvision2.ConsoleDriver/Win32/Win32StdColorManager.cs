@@ -24,6 +24,8 @@ namespace Tvision2.ConsoleDriver.Win32
 
         private int _currentLastPair = -1;
 
+        public CharacterAttribute DefaultAttribute { get; }
+
         private readonly Dictionary<(DefaultColorName fore, DefaultColorName back), Win32StdColorPair> _pairs;
         private List<Win32StdColorPair> _indexedPairs;
 
@@ -32,6 +34,7 @@ namespace Tvision2.ConsoleDriver.Win32
             _pairs = new Dictionary<(DefaultColorName fore, DefaultColorName back), Win32StdColorPair>();
             _indexedPairs = new List<Win32StdColorPair>();
             AddColorPair(DefaultColorName.White, DefaultColorName.Black);
+            DefaultAttribute = BuildAttributeFor(DefaultColorName.White, DefaultColorName.Black, CharacterAttributeModifiers.Normal);
         }
 
 

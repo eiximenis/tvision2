@@ -19,7 +19,7 @@ namespace Tvision2.Controls.Styles
         {
 
             var styles = _stylesToBuild.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Build(cm));
-            var skin = new Skin(styles);
+            var skin = new Skin(styles, cm);
             return skin;
         }
 

@@ -11,6 +11,8 @@ namespace Tvision2.ConsoleDriver.Win32
 
         public int MaxPairs => throw new NotImplementedException();
 
+        public CharacterAttribute DefaultAttribute => throw new NotImplementedException();
+
         public int AttributeToWin32Colors(CharacterAttribute attribute)
         {
             throw new NotImplementedException();

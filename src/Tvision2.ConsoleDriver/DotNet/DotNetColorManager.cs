@@ -11,6 +11,7 @@ namespace Tvision2.ConsoleDriver.Colors
         public int MaxColors => DOTNET_MAX_COLORS;
 
         public int MaxPairs => 64;
+        public CharacterAttribute DefaultAttribute { get; }
 
         private readonly ColorPair[] _pairs;
         private readonly ConsoleColor[,] _dotnetMap;
@@ -24,36 +25,36 @@ namespace Tvision2.ConsoleDriver.Colors
                 switch (stdcolor)
                 {
                     case DefaultColorName.Black:
-                        _dotnetMap[(int) stdcolor, 0] = ConsoleColor.Black;
-                        _dotnetMap[(int) stdcolor, 1] = ConsoleColor.DarkGray;
+                        _dotnetMap[(int)stdcolor, 0] = ConsoleColor.Black;
+                        _dotnetMap[(int)stdcolor, 1] = ConsoleColor.DarkGray;
                         break;
                     case DefaultColorName.Blue:
-                        _dotnetMap[(int) stdcolor, 0] = ConsoleColor.DarkBlue;
-                        _dotnetMap[(int) stdcolor, 1] = ConsoleColor.Blue;
+                        _dotnetMap[(int)stdcolor, 0] = ConsoleColor.DarkBlue;
+                        _dotnetMap[(int)stdcolor, 1] = ConsoleColor.Blue;
                         break;
                     case DefaultColorName.Cyan:
-                        _dotnetMap[(int) stdcolor, 0] = ConsoleColor.DarkCyan;
-                        _dotnetMap[(int) stdcolor, 1] = ConsoleColor.Cyan;
+                        _dotnetMap[(int)stdcolor, 0] = ConsoleColor.DarkCyan;
+                        _dotnetMap[(int)stdcolor, 1] = ConsoleColor.Cyan;
                         break;
                     case DefaultColorName.Green:
-                        _dotnetMap[(int) stdcolor, 0] = ConsoleColor.DarkGreen;
-                        _dotnetMap[(int) stdcolor, 1] = ConsoleColor.Green;
+                        _dotnetMap[(int)stdcolor, 0] = ConsoleColor.DarkGreen;
+                        _dotnetMap[(int)stdcolor, 1] = ConsoleColor.Green;
                         break;
                     case DefaultColorName.Magenta:
-                        _dotnetMap[(int) stdcolor, 0] = ConsoleColor.DarkMagenta;
-                        _dotnetMap[(int) stdcolor, 1] = ConsoleColor.Magenta;
+                        _dotnetMap[(int)stdcolor, 0] = ConsoleColor.DarkMagenta;
+                        _dotnetMap[(int)stdcolor, 1] = ConsoleColor.Magenta;
                         break;
                     case DefaultColorName.Red:
-                        _dotnetMap[(int) stdcolor, 0] = ConsoleColor.DarkRed;
-                        _dotnetMap[(int) stdcolor, 1] = ConsoleColor.Red;
+                        _dotnetMap[(int)stdcolor, 0] = ConsoleColor.DarkRed;
+                        _dotnetMap[(int)stdcolor, 1] = ConsoleColor.Red;
                         break;
                     case DefaultColorName.White:
-                        _dotnetMap[(int) stdcolor, 0] = ConsoleColor.Gray;
-                        _dotnetMap[(int) stdcolor, 1] = ConsoleColor.White;
+                        _dotnetMap[(int)stdcolor, 0] = ConsoleColor.Gray;
+                        _dotnetMap[(int)stdcolor, 1] = ConsoleColor.White;
                         break;
                     case DefaultColorName.Yellow:
-                        _dotnetMap[(int) stdcolor, 0] = ConsoleColor.DarkYellow;
-                        _dotnetMap[(int) stdcolor, 1] = ConsoleColor.Yellow;
+                        _dotnetMap[(int)stdcolor, 0] = ConsoleColor.DarkYellow;
+                        _dotnetMap[(int)stdcolor, 1] = ConsoleColor.Yellow;
                         break;
                 }
             }
@@ -66,6 +67,8 @@ namespace Tvision2.ConsoleDriver.Colors
                     _pairs[fore + (back << 3)] = new ColorPair(fore, back);
                 }
             }
+
+            DefaultAttribute = BuildAttributeFor(DefaultColorName.White, DefaultColorName.Black, CharacterAttributeModifiers.Normal);
         }
 
         public ColorPair this[int idx] => _pairs[idx];
@@ -73,17 +76,17 @@ namespace Tvision2.ConsoleDriver.Colors
         public (ConsoleColor fore, ConsoleColor back) AttributeToDotNetColors(CharacterAttribute attribute)
         {
             var pair = _pairs[attribute.ColorIdx];
-            var bright = (attribute.Modifiers | CharacterAttributeModifiers.Bold) != 0; 
-            return (_dotnetMap[pair.ForeGround, bright ? 1 : 0], _dotnetMap[pair.Background, bright ? 1: 0]);
+            var bright = (attribute.Modifiers | CharacterAttributeModifiers.Bold) != 0;
+            return (_dotnetMap[pair.ForeGround, bright ? 1 : 0], _dotnetMap[pair.Background, bright ? 1 : 0]);
         }
 
-        public int GetPairIndexFor(DefaultColorName fore, DefaultColorName back) => (int) fore + ((int) back << 3);
+        public int GetPairIndexFor(DefaultColorName fore, DefaultColorName back) => (int)fore + ((int)back << 3);
 
         public CharacterAttribute BuildAttributeFor(DefaultColorName fore, DefaultColorName back,
             CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal) => new CharacterAttribute()
-        {
-            ColorIdx = (int) fore + ((int) back << 3),
-            Modifiers = attrs
-        };
+            {
+                ColorIdx = (int)fore + ((int)back << 3),
+                Modifiers = attrs
+            };
     }
 }

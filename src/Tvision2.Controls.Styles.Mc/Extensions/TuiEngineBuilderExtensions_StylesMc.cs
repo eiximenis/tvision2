@@ -19,11 +19,10 @@ namespace Tvision2.Controls.Styles
                 {
                     style.DesiredStandard(DefaultColorName.White, DefaultColorName.Blue);
                     style.DesiredFocused(DefaultColorName.White, DefaultColorName.Blue, CharacterAttributeModifiers.Bold);
-
                     style.DesiredAlternate(DefaultColorName.Black, DefaultColorName.Cyan);
                     style.DesiredAlternateFocused(DefaultColorName.Black, DefaultColorName.White);
-
                 });
+
                 sb.AddStyle("tvtextbox", style =>
                 {
                     style.DesiredStandard(DefaultColorName.Black, DefaultColorName.White);

@@ -9,20 +9,27 @@ namespace Tvision2.ConsoleDriver.NCurses
     public class NcursesColorManager : IColorManager
     {
 
-       
-        
+
+
         public int MaxColors { get; private set; }
-        
+
         public int MaxPairs { get; private set; }
 
         private readonly Dictionary<(int fore, int back), int> _pairs;
         private int _lastPairUsedIdx;
+
+        public CharacterAttribute DefaultAttribute  { get; }
 
 
         public NcursesColorManager()
         {
             _pairs = new Dictionary<(int fore, int back), int>();
             _lastPairUsedIdx = 0;
+            DefaultAttribute = new CharacterAttribute()
+            {
+                ColorIdx = 0,
+                Modifiers = CharacterAttributeModifiers.Normal
+            };
         }
 
         public int GetPairIndexFor(DefaultColorName fore, DefaultColorName back)
