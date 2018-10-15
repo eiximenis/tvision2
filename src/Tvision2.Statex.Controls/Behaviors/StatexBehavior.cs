@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Tvision2.Controls;
 using Tvision2.Core.Components.Behaviors;
 
 namespace Tvision2.Statex.Controls.Behaviors
 {
-    public class StatexBehavior<TControlState, TStatex> : ITvBehavior<TControlState>
+    public class StatexBehavior<TControl, TControlState, TStatex> : ITvBehavior<TControlState>
+        where TControl: TvControl<TControlState>
         where TControlState : class, IDirtyObject
         where TStatex : class
     {
         private readonly ITvStoreSelector _storeSelector;
-        private StatexControlOptions<TControlState, TStatex> _options;
+        private StatexControlOptions<TControl, TControlState, TStatex> _options;
         private TStatex _currentStatex;
 
         public StatexBehavior(ITvStoreSelector storeSelector)
@@ -19,6 +21,26 @@ namespace Tvision2.Statex.Controls.Behaviors
             _storeSelector = storeSelector;
             _options = null;
             _currentStatex = null;
+        }
+
+        internal void AddCommandHandlers(TControl control)
+        {
+            foreach (var creator in _options.ActionCreators)
+            {
+                var commandType = typeof(DelegateCommand<>);
+                commandType = commandType.MakeGenericType(creator.CommandType);
+
+                Func<object, Task> @delegate = delegate (object o)
+                {
+                    var action = creator.ActionCreator(control.State);
+                    var store = _storeSelector.GetStore(_options.StoreName);
+                    store.Dispatch(action);
+                    return Task.CompletedTask;
+                };
+
+                var command = Activator.CreateInstance(commandType, @delegate);
+                creator.CommandMember.SetValue(control, command);
+            }
         }
 
         bool ITvBehavior.Update(BehaviorContext context) => Update((BehaviorContext<TControlState>)context);
@@ -34,7 +56,7 @@ namespace Tvision2.Statex.Controls.Behaviors
             return needsUpdate;
         }
 
-        internal void SetOptions(StatexControlOptions<TControlState, TStatex> options)
+        internal void SetOptions(StatexControlOptions<TControl, TControlState, TStatex> options)
         {
             _options = options;
             var store = _storeSelector.GetStore<TStatex>(_options.StoreName);

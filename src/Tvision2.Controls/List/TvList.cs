@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Tvision2.Controls.Drawers;
 using Tvision2.Controls.Styles;
 using Tvision2.Core.Components;
@@ -10,6 +11,8 @@ namespace Tvision2.Controls.List
     public class TvList<TItem> : TvControl<ListState<TItem>>
     {
         protected readonly TvListStyleProvider<TItem> _styleProvider;
+
+        public ICommand<TItem> OnItemClicked { get; set; }
 
         public IListStyleProvider<TItem> StyleProvider => _styleProvider;
 
@@ -26,7 +29,7 @@ namespace Tvision2.Controls.List
 
         protected override IEnumerable<ITvBehavior<ListState<TItem>>> GetEventedBehaviors()
         {
-            yield return new ListBehavior<TItem>();
+            yield return new ListBehavior<TItem>(async () => await (OnItemClicked?.Invoke(State[State.SelectedIndex]) ?? Task.CompletedTask));
         }
 
         protected override void OnDraw(RenderContext<ListState<TItem>> context)

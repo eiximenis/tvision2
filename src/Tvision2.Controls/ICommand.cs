@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace Tvision2.Controls
 {
-    public interface ICommand<TData>
-    {
+    public interface ICommand { }
+    public interface ICommand<TData> : ICommand
+    { 
         Task Invoke(TData data);
     }
 }

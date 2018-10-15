@@ -32,6 +32,8 @@ namespace Tvision2.Statex
 
         ITvStore<TState> ITvStoreSelector.GetStore<TState>() => _stores.Values.SingleOrDefault(s => s.StateType == typeof(TState)) as ITvStore<TState>;
 
+        ITvStore ITvStoreSelector.GetStore(string name) => _stores[name];
+
         internal void DoDispatchAllActions()
         {
             foreach (var store in _stores.Values)
