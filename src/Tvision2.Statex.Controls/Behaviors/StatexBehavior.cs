@@ -32,9 +32,9 @@ namespace Tvision2.Statex.Controls.Behaviors
 
                 Func<object, Task> @delegate = delegate (object o)
                 {
-                    var action = creator.ActionCreator(control.State);
+                    var action = creator.ActionCreator.DynamicInvoke(control.State, o);
                     var store = _storeSelector.GetStore(_options.StoreName);
-                    store.Dispatch(action);
+                    store.Dispatch(action as TvAction);
                     return Task.CompletedTask;
                 };
 

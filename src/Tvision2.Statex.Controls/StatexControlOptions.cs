@@ -12,14 +12,14 @@ namespace Tvision2.Statex.Controls
 
     {
         private Action<TStatex, TControlState> _controlStateUpdater;
-        private List<StatexCommandActionCreatorBinder<TControlState>> _actionCreators;
+        private List<StatexCommandActionCreatorBinder> _actionCreators;
 
         internal string StoreName { get; private set; }
-        internal IEnumerable<StatexCommandActionCreatorBinder<TControlState>> ActionCreators => _actionCreators;
+        internal IEnumerable<StatexCommandActionCreatorBinder> ActionCreators => _actionCreators;
 
         public StatexControlOptions()
         {
-            _actionCreators = new List<StatexCommandActionCreatorBinder<TControlState>>();
+            _actionCreators = new List<StatexCommandActionCreatorBinder>();
         }
 
         public void UseStore(string storeName)
@@ -32,11 +32,11 @@ namespace Tvision2.Statex.Controls
             _controlStateUpdater = controlStateUpdater;
         }
 
-        public IStatexCommandActionCreatorBinder<TControlState> On<TCommand>(Expression<Func<TControl, ICommand<TCommand>>> commandSelector)
+        public IStatexCommandActionCreatorBinder<TControlState, TCommandArg> On<TCommandArg>(Expression<Func<TControl, ICommand<TCommandArg>>> commandSelector)
         {
             if (commandSelector.Body is MemberExpression expr && expr.Member is PropertyInfo pi)
             {
-                var creatorBinder = new StatexCommandActionCreatorBinder<TControlState>(pi, typeof(TCommand));
+                var creatorBinder = new StatexCommandActionCreatorBinder<TControlState, TCommandArg>(pi, typeof(TCommandArg));
                 _actionCreators.Add(creatorBinder);
                 return creatorBinder;
             }

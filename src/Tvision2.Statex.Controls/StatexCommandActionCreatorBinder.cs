@@ -7,20 +7,30 @@ using Tvision2.Controls;
 
 namespace Tvision2.Statex.Controls
 {
-    public class StatexCommandActionCreatorBinder<TControlState> : IStatexCommandActionCreatorBinder<TControlState>
-        where TControlState : IDirtyObject
+
+
+    public class StatexCommandActionCreatorBinder
     {
         internal PropertyInfo CommandMember { get; }
-        internal Func<TControlState, TvAction> ActionCreator { get; private set; }
         internal Type CommandType { get; }
+
+        internal Delegate ActionCreator { get; private protected set; }
 
         public StatexCommandActionCreatorBinder(PropertyInfo commandMember, Type commandType)
         {
             CommandMember = commandMember;
             CommandType = commandType;
         }
+    }
+    public class StatexCommandActionCreatorBinder<TControlState, TCommandArg> : StatexCommandActionCreatorBinder, IStatexCommandActionCreatorBinder<TControlState, TCommandArg>
+        where TControlState : IDirtyObject
+    {
+        
+        public StatexCommandActionCreatorBinder(PropertyInfo commandMember, Type commandType) : base (commandMember, commandType)
+        {
+        }
 
-        public void Dispatch(Func<TControlState, TvAction> actionCreator)
+        public void Dispatch(Func<TControlState, TCommandArg, TvAction> actionCreator)
         {
             ActionCreator = actionCreator;
         }

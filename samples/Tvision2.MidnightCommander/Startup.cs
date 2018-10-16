@@ -84,7 +84,7 @@ namespace Tvision2.MidnightCommander
                     cs.Clear();
                     cs.AddRange(fl.Items);
                 });
-                opt.On(c => c.OnItemClicked).Dispatch(s => new TvAction<string>("FETCH_DIR", "/"));
+                opt.On(c => c.OnItemClicked).Dispatch((s, args) => new TvAction<string>("FETCH_DIR", "/"));
             });
 
             grid.Use(0, 0).Add(left);
