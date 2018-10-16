@@ -7,7 +7,7 @@ namespace Tvision2.Controls.List
 {
     public class TvListItem
     {
-        public string Text { get; set; }
-        public CharacterAttribute Attribute { get; set; }
+        public string[] Text { get; set; }
+        public CharacterAttribute[] Attribute { get; set; }
     }
 }

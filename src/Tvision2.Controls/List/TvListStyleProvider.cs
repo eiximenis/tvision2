@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using Tvision2.Controls.Styles;
 using Tvision2.Core.Colors;
 
 namespace Tvision2.Controls.List
 {
-    public class TvListStyleProvider<T> : IListStyleProvider<T>, IListStyleProviderConditionBuilder<T>
+    public class TvListStyleProvider<T> : IListStyleProvider<T>, IListStyleProviderConditionBuilder<T>, IListStyleProviderColumnSelector<T>
     {
-
+        private const int ALL_COLUMNS = -1;
         class ListStyleProviderItem
         {
             public Func<T, bool> Predicate { get; set; }
             public DefaultColorName Fore { get; set; }
             public DefaultColorName Back { get; set; }
+            public int ColumnIdx { get; set; } = ALL_COLUMNS;
         }
 
         private readonly IColorManager _colorManager;
@@ -42,21 +43,33 @@ namespace Tvision2.Controls.List
             return this;
         }
 
-        public IListStyleProvider<T> When(Func<T, bool> predicate)
+        public IListStyleProviderColumnSelector<T> When(Func<T, bool> predicate)
         {
 
             _items[_items.Count - 1].Predicate = predicate;
             return this;
         }
 
-        public CharacterAttribute GetAttributesForItem(T item)
+        public IListStyleProvider<T> AppliesToColumn(int idx)
         {
-            foreach (var comparison in _items)
+            _items[_items.Count - 1].ColumnIdx = idx;
+            return this;
+        }
+
+        public IListStyleProvider<T> AppliesToAllColumns()
+        {
+            _items[_items.Count - 1].ColumnIdx = ALL_COLUMNS;
+            return this;
+        }
+
+        public CharacterAttribute GetAttributesForItem(T item, int colidx)
+        {
+            foreach (var comparison in _items.Where(i => i.ColumnIdx == ALL_COLUMNS || i.ColumnIdx == colidx))
             {
                 if (comparison.Predicate(item)) return _colorManager.BuildAttributeFor(comparison.Fore, comparison.Back, CharacterAttributeModifiers.Normal);
             }
 
-            return  _style?.Standard ?? _colorManager.DefaultAttribute;
+            return _style?.Standard ?? _colorManager.DefaultAttribute;
         }
     }
 

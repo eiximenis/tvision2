@@ -16,6 +16,9 @@ namespace Tvision2.Controls.List
         public IEnumerable<T> Values => _values;
         public ListStateView<T> ItemsView { get; }
 
+        internal TvListColumnSpec<T>[] Columns { get; }
+        internal int ColumnsTotalFixedWidth { get; }
+
 
         public T this[int idx] => _values[idx];
         public int Count => _values.Count;
@@ -52,12 +55,22 @@ namespace Tvision2.Controls.List
         }
 
 
-        public ListState(IEnumerable<T> values, Func<T, TvListItem> converter)
+        public ListState(IEnumerable<T> values, params TvListColumnSpec<T>[] columns)
         {
             _values = values.ToList();
             _selectedIndex = 0;
-            ItemsView = new ListStateView<T>(this, converter);
+            ItemsView = new ListStateView<T>(this);
+
+            if (columns.Count(c => c.Width == 0) > 1)
+            {
+                throw new ArgumentException("Only one column of variable (0) width is allowed.", nameof(columns));
+            }
+
+            Columns = columns;
+            ColumnsTotalFixedWidth = columns.Sum(c => c.Width);
         }
+
+
 
         public void Clear()
         {
@@ -71,6 +84,11 @@ namespace Tvision2.Controls.List
             _values.AddRange(items);
             ItemsView.Reload();
             IsDirty = true;
+        }
+
+        public static IListStateColumnsSpecifier<T> From(IEnumerable<T> source)
+        {
+            return new ListStateBuilder<T>(source);
         }
     }
 

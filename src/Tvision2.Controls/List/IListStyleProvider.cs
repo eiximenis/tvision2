@@ -10,10 +10,18 @@ namespace Tvision2.Controls.List
     {
         IListStyleProviderConditionBuilder<T> Use (DefaultColorName fore, DefaultColorName back);
         IListStyleProvider<T> UseSkin(ISkin skin);
+
+
     }
 
     public interface IListStyleProviderConditionBuilder<T>
     {
-        IListStyleProvider<T> When(Func<T, bool> predicate);
+        IListStyleProviderColumnSelector<T> When(Func<T, bool> predicate);
+    }
+
+    public interface IListStyleProviderColumnSelector<T>
+    {
+        IListStyleProvider<T> AppliesToColumn(int idx);
+        IListStyleProvider<T> AppliesToAllColumns();
     }
 }

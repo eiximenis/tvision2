@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Tvision2.Controls.Drawers;
 using Tvision2.Controls.Styles;
@@ -34,7 +35,7 @@ namespace Tvision2.Controls.List
 
         protected override void OnDraw(RenderContext<ListState<TItem>> context)
         {
-            var selectedPairIdx = Metadata.IsFocused ? CurrentStyle.AlternateFocused : CurrentStyle.Alternate;
+            var selectedAttr = Metadata.IsFocused ? CurrentStyle.AlternateFocused : CurrentStyle.Alternate;
             var viewport = context.Viewport;
             var numitems = State.Count;
             State.ItemsView.Adjust(viewport.Rows - 2);
@@ -42,23 +43,38 @@ namespace Tvision2.Controls.List
             {
                 if (idx < State.ItemsView.NumItems)
                 {
+                    var lenDrawn = 0;
                     var item = State.ItemsView[idx];
                     var selected = State.SelectedIndex == idx + State.ItemsView.From;
-                    var len = item.Text.Length;
-                    var pairIdx = _styleProvider.GetAttributesForItem(State.ItemsView.SourceItem(idx));
-                    context.DrawStringAt(item.Text, new TvPoint(1, idx + 1), selected ? selectedPairIdx : pairIdx);
-                    var extra = viewport.Columns - 2 - len;
-                    if (extra > 0)
+                    var tvitem = CreateTvItem(item);
+                    for (var column = 0; column < State.Columns.Length; column++)
                     {
-                        context.DrawChars(' ', extra, new TvPoint(len + 1, idx + 1), pairIdx);
+                        var coldef = State.Columns[column];
+                        var colWidth = coldef.Width > 0 ? coldef.Width : viewport.Columns - 2 - State.ColumnsTotalFixedWidth;
+                        var text = tvitem.Text[column];
+                        var attr = tvitem.Attribute[column];
+                        context.DrawStringAt(text.PadRight(colWidth), new TvPoint(1 + lenDrawn, idx + 1), selected ? selectedAttr : attr);
+                        lenDrawn += colWidth;
                     }
                 }
                 else
                 {
-                    var pairIdx = CurrentStyle.Standard;
-                    context.DrawChars(' ', viewport.Columns - 2, new TvPoint(1, idx + 1), pairIdx);
+                    var attr = CurrentStyle.Standard;
+                    context.DrawChars(' ', viewport.Columns - 2, new TvPoint(1, idx + 1), attr);
                 }
             }
+        }
+
+        private TvListItem CreateTvItem(TItem item)
+        {
+            var numColumns = State.Columns.Length;
+            var tvitem = new TvListItem();
+            tvitem.Text = State.Columns.Select(c => c.Transformer(item)).ToArray();
+            tvitem.Attribute = Enumerable.Range(0, numColumns)
+                .Select(idx => _styleProvider.GetAttributesForItem(item, idx))
+                .ToArray();
+
+            return tvitem;
         }
     }
 }

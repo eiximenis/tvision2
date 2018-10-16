@@ -44,15 +44,23 @@ namespace Tvision2.MidnightCommander
             grid.AsComponent().AddViewport(vpf.FullViewport().Translate(new TvPoint(0, 1)).Grow(0, -3));
             var textbox = new TvTextbox(skin, null, new TextboxState());
 
+            //var left = new TvList<FileItem>(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
+            //    new ListState<FileItem>(Enumerable.Empty<FileItem>(), f => new TvListItem() { Text = f.Name }));
+
             var left = new TvList<FileItem>(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
-                new ListState<FileItem>(Enumerable.Empty<FileItem>(), f => new TvListItem() { Text = f.Name }));
+                ListState<FileItem>
+                    .From(Enumerable.Empty<FileItem>())
+                    .AddFixedColumn(fi => fi.IsDirectory ? "*" : " ", width: 2)
+                    .AddColumn(fi => fi.Name)
+                    .Build());
 
             left.StyleProvider
                 .Use(Core.Colors.DefaultColorName.Red, Core.Colors.DefaultColorName.Green)
-                .When(item => item.Name.Contains(' '));
+                .When(item => item.Name.Contains(' '))
+                .AppliesToAllColumns();
 
             var right = new TvList<FileItem>(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
-                new ListState<FileItem>(Enumerable.Empty<FileItem>(), f => new TvListItem() { Text = f.Name }));
+                new ListState<FileItem>(Enumerable.Empty<FileItem>(), new TvListColumnSpec<FileItem>() { Transformer = f => f.Name }));
 
             var menu = new TvMenuBar(skin, vpf.FullViewport().TakeRows(1, 0),
                 new MenuBarState(new[] {"Left", "Edit", "Command", "Options", "Help", "Right"}));
