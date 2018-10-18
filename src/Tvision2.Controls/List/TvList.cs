@@ -11,6 +11,8 @@ namespace Tvision2.Controls.List
 {
     public class TvList<TItem> : TvControl<ListState<TItem>>
     {
+
+        private readonly TvListItemCache<TItem> _itemsCache;
         protected readonly TvListStyleProvider<TItem> _styleProvider;
 
         public ICommand<TItem> OnItemClicked { get; set; }
@@ -21,6 +23,7 @@ namespace Tvision2.Controls.List
         {
             _styleProvider = new TvListStyleProvider<TItem>(skin.ColorManager);
             _styleProvider.UseSkin(skin);
+            _itemsCache = new TvListItemCache<TItem>(State.Columns, _styleProvider);
         }
 
         protected override void AddCustomElements(TvComponent<ListState<TItem>> component)
@@ -46,15 +49,13 @@ namespace Tvision2.Controls.List
                     var lenDrawn = 0;
                     var item = State.ItemsView[idx];
                     var selected = State.SelectedIndex == idx + State.ItemsView.From;
-                    var tvitem = CreateTvItem(item);
+                    var tvitem = _itemsCache.GetTvItemFor(item, idx + State.ItemsView.From, viewport.Columns - 2 - State.ColumnsTotalFixedWidth);
                     for (var column = 0; column < State.Columns.Length; column++)
                     {
-                        var coldef = State.Columns[column];
-                        var colWidth = coldef.Width > 0 ? coldef.Width : viewport.Columns - 2 - State.ColumnsTotalFixedWidth;
-                        var text = tvitem.Text[column];
-                        var attr = tvitem.Attribute[column];
-                        context.DrawStringAt(text.PadRight(colWidth), new TvPoint(1 + lenDrawn, idx + 1), selected ? selectedAttr : attr);
-                        lenDrawn += colWidth;
+                        var text = tvitem.Texts[column];
+                        var attr = tvitem.Attributes[column];
+                        context.DrawStringAt(text, new TvPoint(1 + lenDrawn, idx + 1), selected ? selectedAttr : attr);
+                        lenDrawn += text.Length;
                     }
                 }
                 else
@@ -65,16 +66,5 @@ namespace Tvision2.Controls.List
             }
         }
 
-        private TvListItem CreateTvItem(TItem item)
-        {
-            var numColumns = State.Columns.Length;
-            var tvitem = new TvListItem();
-            tvitem.Text = State.Columns.Select(c => c.Transformer(item)).ToArray();
-            tvitem.Attribute = Enumerable.Range(0, numColumns)
-                .Select(idx => _styleProvider.GetAttributesForItem(item, idx))
-                .ToArray();
-
-            return tvitem;
-        }
     }
 }
