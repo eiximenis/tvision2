@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Tvision2.Statex
 {
@@ -43,18 +42,30 @@ namespace Tvision2.Statex
             var actions = _pendingActions.ToArray();
             foreach (var action in actions)
             {
-                DoDispatchAction(action);
+                var result = DoDispatchAction(action);
+                // TODO: Handle result if errors!
+
             }
 
             _pendingActions.Clear();
         }
 
-        private void DoDispatchAction(TvAction action)
+        private TvActionResult DoDispatchAction(TvAction action)
         {
             var newState = _currentState;
+            var errored = TvActionResult.Failed();
+            var someError = false;
             foreach (var reducer in _reducers)
             {
-                newState = reducer.Invoke(newState, action);
+                try
+                {
+                    newState = reducer.Invoke(newState, action);
+                }
+                catch (Exception ex)
+                {
+                    errored.AddError(ex);
+                    someError = true;
+                }
             }
 
             var isDirty = _dirtyChecker(_currentState, newState);
@@ -64,6 +75,8 @@ namespace Tvision2.Statex
             }
 
             _currentState = newState;
+
+            return someError ? errored : TvActionResult.OK;
         }
 
         public void Subscribe(Action<TState> action)

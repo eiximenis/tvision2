@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Tvision2.Controls.List
@@ -32,5 +33,9 @@ namespace Tvision2.Controls.List
             return tvitem;
         }
 
+        internal void Invalidate()
+        {
+            _cachedItems.Clear();
+        }
     }
 }

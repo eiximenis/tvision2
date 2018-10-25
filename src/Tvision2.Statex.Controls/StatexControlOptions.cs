@@ -32,7 +32,7 @@ namespace Tvision2.Statex.Controls
             _controlStateUpdater = controlStateUpdater;
         }
 
-        public IStatexCommandActionCreatorBinder<TControlState, TCommandArg> On<TCommandArg>(Expression<Func<TControl, ICommand<TCommandArg>>> commandSelector)
+        public IStatexCommandActionCreatorBinder<TControlState, TCommandArg> On<TCommandArg>(Expression<Func<TControl, ICommandChain<TCommandArg>>> commandSelector)
         {
             if (commandSelector.Body is MemberExpression expr && expr.Member is PropertyInfo pi)
             {
@@ -41,7 +41,7 @@ namespace Tvision2.Statex.Controls
                 return creatorBinder;
             }
 
-            throw new ArgumentException($"{nameof(commandSelector)} must be a lambda referring to a ICommand.");
+            throw new ArgumentException($"{nameof(commandSelector)} must be a lambda referring to a ICommandChain.");
         }
 
         internal bool UpdateControlState(TControlState controlState, TStatex statex)

@@ -15,15 +15,17 @@ namespace Tvision2.Controls.List
         private readonly TvListItemCache<TItem> _itemsCache;
         protected readonly TvListStyleProvider<TItem> _styleProvider;
 
-        public ICommand<TItem> OnItemClicked { get; set; }
+        public ICommandChain<TItem> OnItemClicked { get; }
 
         public IListStyleProvider<TItem> StyleProvider => _styleProvider;
 
         public TvList(ISkin skin, IViewport boxModel, ListState<TItem> data) : base(skin, boxModel, data)
         {
+            OnItemClicked = new CommandChain<TItem>();
             _styleProvider = new TvListStyleProvider<TItem>(skin.ColorManager);
             _styleProvider.UseSkin(skin);
             _itemsCache = new TvListItemCache<TItem>(State.Columns, _styleProvider);
+            State.SetCache(_itemsCache);
         }
 
         protected override void AddCustomElements(TvComponent<ListState<TItem>> component)
@@ -33,7 +35,7 @@ namespace Tvision2.Controls.List
 
         protected override IEnumerable<ITvBehavior<ListState<TItem>>> GetEventedBehaviors()
         {
-            yield return new ListBehavior<TItem>(async () => await (OnItemClicked?.Invoke(State[State.SelectedIndex]) ?? Task.CompletedTask));
+            yield return new ListBehavior<TItem>(async () => await (OnItemClicked.Invoke(State[State.SelectedIndex]) ?? Task.CompletedTask));
         }
 
         protected override void OnDraw(RenderContext<ListState<TItem>> context)

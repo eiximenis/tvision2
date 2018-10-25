@@ -8,6 +8,6 @@ namespace Tvision2.Controls
     public interface ICommand { }
     public interface ICommand<TData> : ICommand
     { 
-        Task Invoke(TData data);
+        Task<bool> Invoke(TData data);
     }
 }

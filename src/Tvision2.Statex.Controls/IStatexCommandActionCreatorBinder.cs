@@ -8,6 +8,6 @@ namespace Tvision2.Statex.Controls
     public interface IStatexCommandActionCreatorBinder<TControlState, TCommandArg>
         where TControlState : IDirtyObject
     {
-        void Dispatch(Func<TControlState, TCommandArg, TvAction> actionCreator);
+        IStatexCommandActionFilter<TControlState, TCommandArg> Dispatch(Func<TControlState, TCommandArg, TvAction> actionCreator);
     }
 }

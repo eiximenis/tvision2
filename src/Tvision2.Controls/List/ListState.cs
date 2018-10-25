@@ -19,6 +19,9 @@ namespace Tvision2.Controls.List
         internal TvListColumnSpec<T>[] Columns { get; }
         internal int ColumnsTotalFixedWidth { get; }
 
+        private TvListItemCache<T> _cache;
+
+        internal void SetCache(TvListItemCache<T> cache) => _cache = cache;
 
         public T this[int idx] => _values[idx];
         public int Count => _values.Count;
@@ -76,6 +79,7 @@ namespace Tvision2.Controls.List
         {
             _values.Clear();
             ItemsView.Reload();
+            _cache.Invalidate();
             IsDirty = true;
         }
 

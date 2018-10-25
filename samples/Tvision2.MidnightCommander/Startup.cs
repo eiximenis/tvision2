@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Tvision2.Controls.Label;
@@ -40,10 +39,17 @@ namespace Tvision2.MidnightCommander
         {
             var skin = _skinManager.CurrentSkin;
             var vpf = _layoutManager.ViewportFactory;
-            var grid = new TvGrid(tui.UI, new GridState(1, 2));
-            grid.AsComponent().AddViewport(vpf.FullViewport().Translate(new TvPoint(0, 1)).Grow(0, -3));
-            var textbox = new TvTextbox(skin, null, new TextboxState());
 
+            var mainStackPanel = new TvStackPanel(tui.UI, "mainStackPanel");
+            mainStackPanel.AsComponent().AddViewport(vpf.FullViewport().Translate(new TvPoint(0, 1)).Grow(0, -3));
+            mainStackPanel.Layout.Add("*", "3");
+            var listFilesGrid = new TvGrid(tui.UI, new GridState(1, 2));
+            mainStackPanel.At(0).Add(listFilesGrid);
+
+            // TODO: Implement BorderedPanel
+            // mainStackPanel.At(1).Add(new BorderedPanel());
+
+            var textbox = new TvTextbox(skin, null, new TextboxState());
             //var left = new TvList<FileItem>(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
             //    new ListState<FileItem>(Enumerable.Empty<FileItem>(), f => new TvListItem() { Text = f.Name }));
 
@@ -55,22 +61,27 @@ namespace Tvision2.MidnightCommander
                     .Build());
 
             left.StyleProvider
-                .Use(Core.Colors.DefaultColorName.Red, Core.Colors.DefaultColorName.Green)
-                .When(item => item.Name.Contains(' '))
-                .AppliesToAllColumns();
+                .Use(Core.Colors.DefaultColorName.Red, Core.Colors.DefaultColorName.Blue)
+                .When(f => (f.FileAttributes & System.IO.FileAttributes.Hidden) == System.IO.FileAttributes.Hidden)
+                .AppliesToColumn(1);
 
             var right = new TvList<FileItem>(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
                 new ListState<FileItem>(Enumerable.Empty<FileItem>(), new TvListColumnSpec<FileItem>() { Transformer = f => f.Name }));
 
+            right.StyleProvider
+                .Use(Core.Colors.DefaultColorName.Red, Core.Colors.DefaultColorName.Blue)
+                .When(f => (f.FileAttributes & System.IO.FileAttributes.Hidden) == System.IO.FileAttributes.Hidden)
+                .AppliesToColumn(1);
+
             var menu = new TvMenuBar(skin, vpf.FullViewport().TakeRows(1, 0),
-                new MenuBarState(new[] {"Left", "Edit", "Command", "Options", "Help", "Right"}));
+                new MenuBarState(new[] { "Left", "Edit", "Command", "Options", "Help", "Right" }));
 
             //var window = new TvWindow(skin, vpf.FullViewport().CreateCentered(20, 10), new WindowState(tui.UI));
             //var label = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 9, 1, 0), new LabelState() { Text = "In Window" });
             //window.State.UI.Add(label);
 
             var label = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 9, 1, 0),
-                new LabelState() {Text = "In Window"});
+                new LabelState() { Text = "In Window" });
             var dialog = _dialogManager.CreateDialog(vpf.FullViewport().CreateCentered(20, 10),
                 d => { d.State.UI.Add(label); });
 
@@ -83,6 +94,9 @@ namespace Tvision2.MidnightCommander
                     cs.Clear();
                     cs.AddRange(fl.Items);
                 });
+                opt.On(c => c.OnItemClicked)
+                .Dispatch((s, args) => new TvAction<string>("FETCH_DIR", args.FullName))
+                .When(f => f.IsDirectory);
             });
             var sright = TvStatexControl.Wrap<TvList<FileItem>, ListState<FileItem>, FileList>(right, opt =>
             {
@@ -92,12 +106,13 @@ namespace Tvision2.MidnightCommander
                     cs.Clear();
                     cs.AddRange(fl.Items);
                 });
-                opt.On(c => c.OnItemClicked).Dispatch((s, args) => new TvAction<string>("FETCH_DIR", "/"));
+                opt.On(c => c.OnItemClicked)
+                .Dispatch((s, args) => new TvAction<string>("FETCH_DIR", args.FullName))
+                .When(f => f.IsDirectory);
             });
 
-            grid.Use(0, 0).Add(left);
-            grid.Use(0, 1).Add(right);
-            tui.UI.Add(grid);
+            listFilesGrid.Use(0, 0).Add(left);
+            listFilesGrid.Use(0, 1).Add(right);
             var bottom = new TvStackPanel(tui.UI, "BottomContainer");
             bottom.Layout.Add(new LayoutSize());
             bottom.AsComponent().AddViewport(vpf.BottomViewport(2));

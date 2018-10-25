@@ -12,10 +12,13 @@ namespace Tvision2.MidnightCommander.Stores
             {
                 var folderName = action.WithData<string>().Value;
                 var folder = new DirectoryInfo(folderName);
+
                 var items = folder.GetFileSystemInfos().Select(f => new FileItem
                 {
+                    FileAttributes = f.Attributes,
                     Name = f.Name,
-                    IsDirectory = (f.Attributes | FileAttributes.Directory) != 0
+                    IsDirectory = (f.Attributes & FileAttributes.Directory) != 0,
+                    FullName = f.FullName
                 });
 
                 return new FileList(items.ToArray());

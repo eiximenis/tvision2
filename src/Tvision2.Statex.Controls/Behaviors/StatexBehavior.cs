@@ -38,8 +38,9 @@ namespace Tvision2.Statex.Controls.Behaviors
                     return Task.CompletedTask;
                 };
 
-                var command = Activator.CreateInstance(commandType, @delegate);
-                creator.CommandMember.SetValue(control, command);
+                var command = Activator.CreateInstance(commandType, @delegate, creator.Predicate) as ICommand;
+                var chain = creator.CommandMember.GetValue(control) as ICommandChain;
+                chain.Add(command);
             }
         }
 

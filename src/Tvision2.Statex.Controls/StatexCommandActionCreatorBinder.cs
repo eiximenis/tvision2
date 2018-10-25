@@ -16,13 +16,15 @@ namespace Tvision2.Statex.Controls
 
         internal Delegate ActionCreator { get; private protected set; }
 
+        internal Delegate Predicate { get; private protected set; }
+
         public StatexCommandActionCreatorBinder(PropertyInfo commandMember, Type commandType)
         {
             CommandMember = commandMember;
             CommandType = commandType;
         }
     }
-    public class StatexCommandActionCreatorBinder<TControlState, TCommandArg> : StatexCommandActionCreatorBinder, IStatexCommandActionCreatorBinder<TControlState, TCommandArg>
+    public class StatexCommandActionCreatorBinder<TControlState, TCommandArg> : StatexCommandActionCreatorBinder, IStatexCommandActionCreatorBinder<TControlState, TCommandArg>, IStatexCommandActionFilter<TControlState, TCommandArg>
         where TControlState : IDirtyObject
     {
         
@@ -30,9 +32,15 @@ namespace Tvision2.Statex.Controls
         {
         }
 
-        public void Dispatch(Func<TControlState, TCommandArg, TvAction> actionCreator)
+        public IStatexCommandActionFilter<TControlState, TCommandArg> Dispatch(Func<TControlState, TCommandArg, TvAction> actionCreator)
         {
             ActionCreator = actionCreator;
+            return this;
+        }
+
+        void IStatexCommandActionFilter<TControlState, TCommandArg>.When(Func<TCommandArg, bool> predicate)
+        {
+            Predicate = predicate;
         }
     }
 }
