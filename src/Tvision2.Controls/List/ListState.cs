@@ -80,6 +80,7 @@ namespace Tvision2.Controls.List
             _values.Clear();
             ItemsView.Reload();
             _cache.Invalidate();
+            SelectedIndex = 0;
             IsDirty = true;
         }
 

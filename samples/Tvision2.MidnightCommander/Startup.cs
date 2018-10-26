@@ -95,8 +95,11 @@ namespace Tvision2.MidnightCommander
                     cs.AddRange(fl.Items);
                 });
                 opt.On(c => c.OnItemClicked)
-                .Dispatch((s, args) => new TvAction<string>("FETCH_DIR", args.FullName))
-                .When(f => f.IsDirectory);
+                    .Dispatch((s, args) => new TvAction<string>("FETCH_DIR", args.FullName))
+                    .When(f => f.IsDirectory);
+
+                opt.OnKeyEvent(e => e.AsConsoleKeyInfo().Key == System.ConsoleKey.Enter)
+                    .Dispatch(s => new TvAction<FileItem>("FETCH_INFO", s[s.SelectedIndex]));
             });
             var sright = TvStatexControl.Wrap<TvList<FileItem>, ListState<FileItem>, FileList>(right, opt =>
             {

@@ -26,21 +26,26 @@ namespace Tvision2.Controls.List
                     updateContext.State.ScrollDown(1);
                 }
                 updateContext.State.SelectedIndex++;
+                return true;
             }
-            else if (info.Key == ConsoleKey.UpArrow && updateContext.State.CanScrollUp)
+
+            if (info.Key == ConsoleKey.UpArrow && updateContext.State.CanScrollUp)
             {
                 if (updateContext.State.NeedsToScrollUp)
                 {
                     updateContext.State.ScrollUp(1);
                 }
                 updateContext.State.SelectedIndex--;
-            }
-            else if (info.Key == ConsoleKey.Enter)
-            {
-                _itemClickedAction?.Invoke();
+                return true;
             }
 
-            return true;
+            if (info.Key == ConsoleKey.Enter)
+            {
+                _itemClickedAction?.Invoke();
+                return true;
+            }
+
+            return false;
         }
     }
 }

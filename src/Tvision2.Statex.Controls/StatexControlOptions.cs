@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using Tvision2.Controls;
+using Tvision2.Events;
 
 namespace Tvision2.Statex.Controls
 {
@@ -14,12 +15,16 @@ namespace Tvision2.Statex.Controls
         private Action<TStatex, TControlState> _controlStateUpdater;
         private List<StatexCommandActionCreatorBinder> _actionCreators;
 
+        private List<StatexKeyActionCreatorBinder<TControlState>> _keyActionCreators;
+
         internal string StoreName { get; private set; }
         internal IEnumerable<StatexCommandActionCreatorBinder> ActionCreators => _actionCreators;
+        internal IEnumerable<StatexKeyActionCreatorBinder<TControlState>> KeyActionCreators => _keyActionCreators;
 
         public StatexControlOptions()
         {
             _actionCreators = new List<StatexCommandActionCreatorBinder>();
+            _keyActionCreators = new List<StatexKeyActionCreatorBinder<TControlState>>();
         }
 
         public void UseStore(string storeName)
@@ -42,6 +47,13 @@ namespace Tvision2.Statex.Controls
             }
 
             throw new ArgumentException($"{nameof(commandSelector)} must be a lambda referring to a ICommandChain.");
+        }
+
+        public IStatexKeyActionCreatorBinder<TControlState> OnKeyEvent(Func<TvConsoleKeyboardEvent, bool> keyPredicate)
+        {
+            var keyOptionsCreator = new StatexKeyActionCreatorBinder<TControlState>(keyPredicate);
+            _keyActionCreators.Add(keyOptionsCreator);
+            return keyOptionsCreator;
         }
 
         internal bool UpdateControlState(TControlState controlState, TStatex statex)

@@ -71,7 +71,9 @@ namespace Tvision2.Core.Engine
                 _ui.Update(evts);
                 PerformDrawOperations(force: false);
                 EventHookManager.ProcessAfterUpdateActions();
-                // StateManager.DoDispatchAllActions();
+                // TODO: At this point we still have all events in evts, but:
+                //  1. No clue of which events had been processed (should annotate that)
+                //  2. Don't do anything with remaining events. A list of pluggable "remaining events handler" could be implemented
                 _watcher.Stop();
                 var ellapsed = (int)_watcher.ElapsedTicks;
                 if (ellapsed < TIME_PER_FRAME)

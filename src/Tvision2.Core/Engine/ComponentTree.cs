@@ -83,7 +83,7 @@ namespace Tvision2.Core.Engine
 
         private void CreateNeededBehaviors(TvComponent component)
         {
-            var behaviorsToBeCreated = component.BehaviorsMetadatas.Where(bm => !bm.Created);
+            var behaviorsToBeCreated = component.BehaviorsMetadatas.Where(bm => !bm.Created).ToList();
             foreach (var bm in behaviorsToBeCreated)
             {
                 bm.CreateBehavior(Engine.ServiceProvider);

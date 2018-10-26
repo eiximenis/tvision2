@@ -44,7 +44,7 @@ namespace Tvision2.Statex.Controls
                     data.OnCreate(behavior =>
                     {
                         behavior.SetOptions(_options);
-                        behavior.AddCommandHandlers(Control);
+                        behavior.SetupControl(Control);
                     });
                 });
             }

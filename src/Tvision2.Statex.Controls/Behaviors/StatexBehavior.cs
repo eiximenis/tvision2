@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tvision2.Controls;
+using Tvision2.Controls.Behavior;
 using Tvision2.Core.Components.Behaviors;
+using Tvision2.Statex.Behaviors;
 
 namespace Tvision2.Statex.Controls.Behaviors
 {
@@ -23,7 +26,22 @@ namespace Tvision2.Statex.Controls.Behaviors
             _currentStatex = null;
         }
 
-        internal void AddCommandHandlers(TControl control)
+        internal void SetupControl(TControl control)
+        {
+            AddCommandHandlers(control);
+            AddKeyHandlers(control);
+        }
+
+        private void AddKeyHandlers(TControl control)
+        {
+            if (_options.KeyActionCreators.Any())
+            {
+                control.AsComponent().AddBehavior(new StatexKeyActionBehavior<TControlState>(_options.KeyActionCreators, _options.StoreName, _storeSelector));
+            }
+ 
+        }
+
+        private void AddCommandHandlers(TControl control)
         {
             foreach (var creator in _options.ActionCreators)
             {

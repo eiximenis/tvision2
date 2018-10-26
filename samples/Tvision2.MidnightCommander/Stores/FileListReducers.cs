@@ -23,6 +23,10 @@ namespace Tvision2.MidnightCommander.Stores
 
                 return new FileList(items.ToArray());
             }
+            if (action.Name == "FETCH_INFO")
+            {
+                return state;
+            }
 
             return state;
         }
