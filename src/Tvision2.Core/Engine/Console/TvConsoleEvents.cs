@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Tvision2.Events
 {
@@ -11,12 +10,12 @@ namespace Tvision2.Events
         private readonly List<TvWindowEvent> _windowEvents;
         private readonly List<TvConsoleMouseEvent> _mouseEvents;
         public static TvConsoleEvents Empty { get; } = new TvConsoleEvents();
-        public IEnumerable<TvConsoleKeyboardEvent> KeyboardEvents => _keyboardEvents;
+        public IEnumerable<TvConsoleKeyboardEvent> KeyboardEvents => _keyboardEvents.Where(e => !e.IsHandled);
         public IEnumerable<TvConsoleMouseEvent> MouseEvents => _mouseEvents;
         public IEnumerable<TvWindowEvent> WindowEvents => _windowEvents;
 
-        public bool HasEvents => _keyboardEvents.Any() || _mouseEvents.Any() || _windowEvents.Any();
-        public bool HasKeyboardEvents => _keyboardEvents.Any();
+        public bool HasEvents => _keyboardEvents.Any(e=> !e.IsHandled) || _mouseEvents.Any() || _windowEvents.Any();
+        public bool HasKeyboardEvents => _keyboardEvents.Any(e => !e.IsHandled);
         public bool HasWindowEvents => _windowEvents.Any();
         public TvConsoleEvents()
         {
@@ -27,11 +26,8 @@ namespace Tvision2.Events
 
         public TvConsoleKeyboardEvent AcquireFirstKeyboard(Func<TvConsoleKeyboardEvent, bool> filter)
         {
-            var evt = _keyboardEvents.FirstOrDefault(filter);
-            if (evt != null)
-            {
-                _keyboardEvents.Remove(evt);
-            }
+            var evt = _keyboardEvents.Where(x => !x.IsHandled).FirstOrDefault(filter);
+            evt?.Handle();
             return evt;
         }
 

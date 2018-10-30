@@ -9,12 +9,17 @@ namespace Tvision2.Events
 
         public char Character { get; }
 
+        public bool IsHandled { get; private set; }
+
         protected TvConsoleKeyboardEvent(bool isKeyDown, int repeatCount, char character)
         {
             IsKeyDown = isKeyDown;
             RepeatCount = repeatCount;
             Character = character;
+            IsHandled = false;
         }
+
+        public void Handle() => IsHandled = true;
 
         public abstract ConsoleKeyInfo AsConsoleKeyInfo();
     }

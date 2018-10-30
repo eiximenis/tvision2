@@ -16,7 +16,7 @@ namespace Tvision2.Statex
         public string Name { get;  }
         public TvActionExceptionHandling ExceptionHandler { get; set; }
 
-        public TvAction(string name, TvActionExceptionHandling handler)
+        public TvAction(string name, TvActionExceptionHandling handler = TvActionExceptionHandling.Rethrow)
         {
             Name = name;
             ExceptionHandler = handler;

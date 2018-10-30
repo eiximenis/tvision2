@@ -21,11 +21,27 @@ namespace Tvision2.MidnightCommander.Stores
                     FullName = f.FullName
                 });
 
-                return new FileList(items.ToArray());
+                return new FileList(folder.FullName, items.ToArray());
             }
             if (action.Name == "FETCH_INFO")
             {
                 return state;
+            }
+
+            if (action.Name == "FETCH_BACK")
+            {
+                var folderName = $"{state.CurrentFolder}{Path.DirectorySeparatorChar}..";
+                var folder = new DirectoryInfo(folderName);
+
+                var items = folder.GetFileSystemInfos().Select(f => new FileItem
+                {
+                    FileAttributes = f.Attributes,
+                    Name = f.Name,
+                    IsDirectory = (f.Attributes & FileAttributes.Directory) != 0,
+                    FullName = f.FullName
+                });
+
+                return new FileList(folder.FullName, items.ToArray());
             }
 
             return state;

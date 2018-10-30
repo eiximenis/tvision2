@@ -25,7 +25,7 @@ namespace Tvision2.Statex.Behaviors
         {
             if (!updateContext.Events.HasKeyboardEvents) return false;
 
-            var keyEvents = updateContext.Events.KeyboardEvents;
+            var keyEvents = updateContext.Events.KeyboardEvents.Where(e => e.IsKeyDown);
             bool updated = false;
 
             foreach (var evt in keyEvents)
@@ -36,6 +36,7 @@ namespace Tvision2.Statex.Behaviors
                     {
                         var action = binder.ActionCreator(updateContext.State);
                         _storeSelector.GetStore(_storeName).Dispatch(action);
+                        evt.Handle();
                         updated = true;
                     }
                 }

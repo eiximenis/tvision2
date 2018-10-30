@@ -25,6 +25,9 @@ namespace Tvision2.Core.Components.Behaviors
                 {
                     updated = OnKeyUp(evt, updateContext) || updated;
                 }
+
+                // TODO: Need to know if event is handled (update itself is not enought)
+
             }
 
             return updated;

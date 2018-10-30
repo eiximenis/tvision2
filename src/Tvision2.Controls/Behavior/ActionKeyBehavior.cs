@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
+﻿using System.Linq;
 using Tvision2.Core.Components.Behaviors;
 
 namespace Tvision2.Controls.Behavior
@@ -21,6 +18,7 @@ namespace Tvision2.Controls.Behavior
             {
                 foreach (var evt in updateContext.Events.KeyboardEvents.Where(e => _options.Predicate(e)))
                 {
+                    evt.Handle();
                     updated = updated || _options.Action(evt, updateContext);
                 }
             }

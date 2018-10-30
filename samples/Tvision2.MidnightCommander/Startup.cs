@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Tvision2.Controls.Label;
 using Tvision2.Controls.List;
 using Tvision2.Controls.Menu;
+using Tvision2.Controls.ActivityIndicator;
 using Tvision2.Controls.Styles;
 using Tvision2.Controls.Textbox;
 using Tvision2.Core;
@@ -53,12 +54,19 @@ namespace Tvision2.MidnightCommander
             //var left = new TvList<FileItem>(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
             //    new ListState<FileItem>(Enumerable.Empty<FileItem>(), f => new TvListItem() { Text = f.Name }));
 
+            var actind = new TvActivityIndicator(skin, new Viewport(new TvPoint(0, 22), 1, 1, 0)
+                , new ActivityIndicatorState());
+
+            tui.UI.Add(actind);
+          
+
             var left = new TvList<FileItem>(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
                 ListState<FileItem>
                     .From(Enumerable.Empty<FileItem>())
                     .AddFixedColumn(fi => fi.IsDirectory ? "*" : " ", width: 2)
                     .AddColumn(fi => fi.Name)
                     .Build());
+
 
             left.StyleProvider
                 .Use(Core.Colors.DefaultColorName.Red, Core.Colors.DefaultColorName.Blue)
@@ -100,6 +108,10 @@ namespace Tvision2.MidnightCommander
 
                 opt.OnKeyEvent(e => e.AsConsoleKeyInfo().Key == System.ConsoleKey.Enter)
                     .Dispatch(s => new TvAction<FileItem>("FETCH_INFO", s[s.SelectedIndex]));
+
+                opt.OnKeyEvent(e => e.AsConsoleKeyInfo().Key == System.ConsoleKey.Backspace)
+                    .Dispatch(s => new TvAction("FETCH_BACK"));
+
             });
             var sright = TvStatexControl.Wrap<TvList<FileItem>, ListState<FileItem>, FileList>(right, opt =>
             {
