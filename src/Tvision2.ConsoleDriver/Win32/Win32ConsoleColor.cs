@@ -72,50 +72,50 @@ namespace Tvision2.ConsoleDriver.Win32
             return ConsoleColor.Gray;
         }
 
-        public static ushort ForeConsoleColorToAttribute(DefaultColorName color)
+        public static ushort ForeConsoleColorToAttribute(TvisionColor color)
         {
             switch (color)
             {
-                case DefaultColorName.Black:
+                case TvisionColor.Black:
                     return (ushort)0;
-                case DefaultColorName.Blue:
+                case TvisionColor.Blue:
                     return FOREGROUND_BLUE;
-                case DefaultColorName.Cyan:
+                case TvisionColor.Cyan:
                     return FOREGROUND_BLUE;
-                case DefaultColorName.Green:
+                case TvisionColor.Green:
                     return FOREGROUND_GREEN;
-                case DefaultColorName.Magenta:
+                case TvisionColor.Magenta:
                     return FOREGROUND_BLUE | FOREGROUND_RED;
-                case DefaultColorName.Red:
+                case TvisionColor.Red:
                     return FOREGROUND_RED;
-                case DefaultColorName.White:
+                case TvisionColor.White:
                     return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
-                case DefaultColorName.Yellow:
+                case TvisionColor.Yellow:
                     return FOREGROUND_RED | FOREGROUND_GREEN;
                 default:
                     return 0;
             }
         }
 
-        public static ushort BackConsoleColorToAttribute(DefaultColorName color)
+        public static ushort BackConsoleColorToAttribute(TvisionColor color)
         {
             switch (color)
             {
-                case DefaultColorName.Black:
+                case TvisionColor.Black:
                     return (ushort)0;
-                case DefaultColorName.Blue:
+                case TvisionColor.Blue:
                     return BACKGROUND_BLUE;
-                case DefaultColorName.Cyan:
+                case TvisionColor.Cyan:
                     return BACKGROUND_BLUE | BACKGROUND_GREEN;
-                case DefaultColorName.Green:
+                case TvisionColor.Green:
                     return BACKGROUND_GREEN;
-                case DefaultColorName.Magenta:
+                case TvisionColor.Magenta:
                     return BACKGROUND_BLUE | BACKGROUND_RED;
-                case DefaultColorName.Red:
+                case TvisionColor.Red:
                     return BACKGROUND_RED;
-                case DefaultColorName.White:
+                case TvisionColor.White:
                     return BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE;
-                case DefaultColorName.Yellow:
+                case TvisionColor.Yellow:
                     return BACKGROUND_RED | BACKGROUND_GREEN;
                 default:
                     return 0;

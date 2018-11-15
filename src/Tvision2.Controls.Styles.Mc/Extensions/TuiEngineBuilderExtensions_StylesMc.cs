@@ -11,34 +11,34 @@ namespace Tvision2.Controls.Styles
 
                 sb.AddBaseStyle(style =>
                 {
-                    style.DesiredStandard(DefaultColorName.White, DefaultColorName.Blue);
-                    style.DesiredFocused(DefaultColorName.Black, DefaultColorName.Cyan);
+                    style.DesiredStandard(TvisionColor.White, TvisionColor.Blue);
+                    style.DesiredFocused(TvisionColor.Black, TvisionColor.Cyan);
                 });
                 
                 sb.AddStyle("tvlist", style =>
                 {
-                    style.DesiredStandard(DefaultColorName.White, DefaultColorName.Blue);
-                    style.DesiredFocused(DefaultColorName.White, DefaultColorName.Blue, CharacterAttributeModifiers.BackgroundBold);
-                    style.DesiredAlternate(DefaultColorName.Black, DefaultColorName.Cyan);
-                    style.DesiredAlternateFocused(DefaultColorName.Black, DefaultColorName.White);
+                    style.DesiredStandard(TvisionColor.White, TvisionColor.Blue);
+                    style.DesiredFocused(TvisionColor.White, TvisionColor.Blue, CharacterAttributeModifiers.BackgroundBold);
+                    style.DesiredAlternate(TvisionColor.Black, TvisionColor.Cyan);
+                    style.DesiredAlternateFocused(TvisionColor.Black, TvisionColor.White);
                 });
 
                 sb.AddStyle("tvtextbox", style =>
                 {
-                    style.DesiredStandard(DefaultColorName.Black, DefaultColorName.White);
-                    style.DesiredFocused(DefaultColorName.White, DefaultColorName.Black);
+                    style.DesiredStandard(TvisionColor.Black, TvisionColor.White);
+                    style.DesiredFocused(TvisionColor.White, TvisionColor.Black);
                 });
 
                 sb.AddStyle("tvdialog", style =>
                 {
-                    style.DesiredStandard(DefaultColorName.Black, DefaultColorName.White);
-                    style.DesiredFocused(DefaultColorName.White, DefaultColorName.Black);
+                    style.DesiredStandard(TvisionColor.Black, TvisionColor.White);
+                    style.DesiredFocused(TvisionColor.White, TvisionColor.Black);
                 });
 
                 sb.AddStyle("tvmenubar", style =>
                 {
-                    style.DesiredFocused(DefaultColorName.White, DefaultColorName.Cyan, CharacterAttributeModifiers.Bold);
-                    style.DesiredStandard(DefaultColorName.Black, DefaultColorName.Cyan);
+                    style.DesiredFocused(TvisionColor.White, TvisionColor.Cyan, CharacterAttributeModifiers.Bold);
+                    style.DesiredStandard(TvisionColor.Black, TvisionColor.Cyan);
                 });
             });
 

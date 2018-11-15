@@ -20,39 +20,39 @@ namespace Tvision2.ConsoleDriver.Colors
         {
             _dotnetMap = new ConsoleColor[DOTNET_MAX_COLORS, 2];
 
-            foreach (DefaultColorName stdcolor in Enum.GetValues(typeof(DefaultColorName)))
+            foreach (TvisionColor stdcolor in Enum.GetValues(typeof(TvisionColor)))
             {
                 switch (stdcolor)
                 {
-                    case DefaultColorName.Black:
+                    case TvisionColor.Black:
                         _dotnetMap[(int)stdcolor, 0] = ConsoleColor.Black;
                         _dotnetMap[(int)stdcolor, 1] = ConsoleColor.DarkGray;
                         break;
-                    case DefaultColorName.Blue:
+                    case TvisionColor.Blue:
                         _dotnetMap[(int)stdcolor, 0] = ConsoleColor.DarkBlue;
                         _dotnetMap[(int)stdcolor, 1] = ConsoleColor.Blue;
                         break;
-                    case DefaultColorName.Cyan:
+                    case TvisionColor.Cyan:
                         _dotnetMap[(int)stdcolor, 0] = ConsoleColor.DarkCyan;
                         _dotnetMap[(int)stdcolor, 1] = ConsoleColor.Cyan;
                         break;
-                    case DefaultColorName.Green:
+                    case TvisionColor.Green:
                         _dotnetMap[(int)stdcolor, 0] = ConsoleColor.DarkGreen;
                         _dotnetMap[(int)stdcolor, 1] = ConsoleColor.Green;
                         break;
-                    case DefaultColorName.Magenta:
+                    case TvisionColor.Magenta:
                         _dotnetMap[(int)stdcolor, 0] = ConsoleColor.DarkMagenta;
                         _dotnetMap[(int)stdcolor, 1] = ConsoleColor.Magenta;
                         break;
-                    case DefaultColorName.Red:
+                    case TvisionColor.Red:
                         _dotnetMap[(int)stdcolor, 0] = ConsoleColor.DarkRed;
                         _dotnetMap[(int)stdcolor, 1] = ConsoleColor.Red;
                         break;
-                    case DefaultColorName.White:
+                    case TvisionColor.White:
                         _dotnetMap[(int)stdcolor, 0] = ConsoleColor.Gray;
                         _dotnetMap[(int)stdcolor, 1] = ConsoleColor.White;
                         break;
-                    case DefaultColorName.Yellow:
+                    case TvisionColor.Yellow:
                         _dotnetMap[(int)stdcolor, 0] = ConsoleColor.DarkYellow;
                         _dotnetMap[(int)stdcolor, 1] = ConsoleColor.Yellow;
                         break;
@@ -68,7 +68,7 @@ namespace Tvision2.ConsoleDriver.Colors
                 }
             }
 
-            DefaultAttribute = BuildAttributeFor(DefaultColorName.White, DefaultColorName.Black, CharacterAttributeModifiers.Normal);
+            DefaultAttribute = BuildAttributeFor(TvisionColor.White, TvisionColor.Black, CharacterAttributeModifiers.Normal);
         }
 
         public ColorPair this[int idx] => _pairs[idx];
@@ -80,9 +80,9 @@ namespace Tvision2.ConsoleDriver.Colors
             return (_dotnetMap[pair.ForeGround, bright ? 1 : 0], _dotnetMap[pair.Background, bright ? 1 : 0]);
         }
 
-        public int GetPairIndexFor(DefaultColorName fore, DefaultColorName back) => (int)fore + ((int)back << 3);
+        public int GetPairIndexFor(TvisionColor fore, TvisionColor back) => (int)fore + ((int)back << 3);
 
-        public CharacterAttribute BuildAttributeFor(DefaultColorName fore, DefaultColorName back,
+        public CharacterAttribute BuildAttributeFor(TvisionColor fore, TvisionColor back,
             CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal) => new CharacterAttribute()
             {
                 ColorIdx = (int)fore + ((int)back << 3),

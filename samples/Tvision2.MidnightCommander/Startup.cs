@@ -69,7 +69,7 @@ namespace Tvision2.MidnightCommander
 
 
             left.StyleProvider
-                .Use(Core.Colors.DefaultColorName.Red, Core.Colors.DefaultColorName.Blue)
+                .Use(Core.Colors.TvisionColor.Red, Core.Colors.TvisionColor.Blue)
                 .When(f => (f.FileAttributes & System.IO.FileAttributes.Hidden) == System.IO.FileAttributes.Hidden)
                 .AppliesToColumn(1);
 
@@ -77,7 +77,7 @@ namespace Tvision2.MidnightCommander
                 new ListState<FileItem>(Enumerable.Empty<FileItem>(), new TvListColumnSpec<FileItem>() { Transformer = f => f.Name }));
 
             right.StyleProvider
-                .Use(Core.Colors.DefaultColorName.Red, Core.Colors.DefaultColorName.Blue)
+                .Use(Core.Colors.TvisionColor.Red, Core.Colors.TvisionColor.Blue)
                 .When(f => (f.FileAttributes & System.IO.FileAttributes.Hidden) == System.IO.FileAttributes.Hidden)
                 .AppliesToColumn(1);
 

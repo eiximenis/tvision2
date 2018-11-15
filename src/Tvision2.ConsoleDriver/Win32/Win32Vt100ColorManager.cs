@@ -18,13 +18,13 @@ namespace Tvision2.ConsoleDriver.Win32
             throw new NotImplementedException();
         }
 
-        public CharacterAttribute BuildAttributeFor(DefaultColorName fore, DefaultColorName back, 
+        public CharacterAttribute BuildAttributeFor(TvisionColor fore, TvisionColor back, 
             CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal)
         {
             throw new NotImplementedException();
         }
 
-        public int GetPairIndexFor(DefaultColorName fore, DefaultColorName back)
+        public int GetPairIndexFor(TvisionColor fore, TvisionColor back)
         {
             throw new NotImplementedException();
         }

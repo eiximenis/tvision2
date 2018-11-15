@@ -12,8 +12,8 @@ namespace Tvision2.Controls.List
         class ListStyleProviderItem
         {
             public Func<T, bool> Predicate { get; set; }
-            public DefaultColorName Fore { get; set; }
-            public DefaultColorName Back { get; set; }
+            public TvisionColor Fore { get; set; }
+            public TvisionColor Back { get; set; }
             public int ColumnIdx { get; set; } = ALL_COLUMNS;
         }
 
@@ -33,7 +33,7 @@ namespace Tvision2.Controls.List
             return this;
         }
 
-        public IListStyleProviderConditionBuilder<T> Use(DefaultColorName fore, DefaultColorName back)
+        public IListStyleProviderConditionBuilder<T> Use(TvisionColor fore, TvisionColor back)
         {
             _items.Add(new ListStyleProviderItem()
             {

@@ -20,7 +20,7 @@ namespace Tvision2.HelloWorld
                 setup.Options.UseStartup((sp, tui) =>
                 {
                     var cm = sp.GetService<IColorManager>();
-                    var attr = cm.BuildAttributeFor(DefaultColorName.Yellow, DefaultColorName.Blue);
+                    var attr = cm.BuildAttributeFor(TvisionColor.Yellow, TvisionColor.Blue);
                     var helloWorld = new TvComponent<string>("Tvision2 rocks!");
                     helloWorld.AddDrawer(ctx =>
                     {

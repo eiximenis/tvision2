@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Tvision2.Core.Colors
 {
-    public enum DefaultColorName
+    public enum TvisionColor
     {
         Black = 0,
         Red = 1,

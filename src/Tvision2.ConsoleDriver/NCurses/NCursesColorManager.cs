@@ -33,7 +33,7 @@ namespace Tvision2.ConsoleDriver.NCurses
             };
         }
 
-        public int GetPairIndexFor(DefaultColorName fore, DefaultColorName back)
+        public int GetPairIndexFor(TvisionColor fore, TvisionColor back)
         {
             if (_pairs.TryGetValue(((int)fore, (int)back), out int pairidx))
             {
@@ -85,7 +85,7 @@ namespace Tvision2.ConsoleDriver.NCurses
 
 
         
-        public CharacterAttribute BuildAttributeFor(DefaultColorName fore, DefaultColorName back, 
+        public CharacterAttribute BuildAttributeFor(TvisionColor fore, TvisionColor back, 
             CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal)
         {
             var coloridx = GetPairIndexFor(fore, back);

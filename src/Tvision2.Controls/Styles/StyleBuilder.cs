@@ -23,7 +23,7 @@ namespace Tvision2.Controls.Styles
             _customDefinitions = new Dictionary<string, StyleDefinition>();
         }
 
-        public IStyleBuilder DesiredFocused(DefaultColorName fore, DefaultColorName back,
+        public IStyleBuilder DesiredFocused(TvisionColor fore, TvisionColor back,
             CharacterAttributeModifiers attributes = CharacterAttributeModifiers.Normal)
         {
             _focused = new StyleDefinition()
@@ -35,7 +35,7 @@ namespace Tvision2.Controls.Styles
             return this;
         }
 
-        public IStyleBuilder DesiredStandard(DefaultColorName fore, DefaultColorName back,
+        public IStyleBuilder DesiredStandard(TvisionColor fore, TvisionColor back,
             CharacterAttributeModifiers attributes = CharacterAttributeModifiers.Normal)
         {
             _standard = new StyleDefinition()
@@ -47,7 +47,7 @@ namespace Tvision2.Controls.Styles
             return this;
         }
 
-        public IStyleBuilder DesiredAlternate(DefaultColorName fore, DefaultColorName back,
+        public IStyleBuilder DesiredAlternate(TvisionColor fore, TvisionColor back,
             CharacterAttributeModifiers attributes = CharacterAttributeModifiers.Normal)
         {
             _alternate = new StyleDefinition()
@@ -59,7 +59,7 @@ namespace Tvision2.Controls.Styles
             return this;
         }
 
-        public IStyleBuilder DesiredAlternateFocused(DefaultColorName fore, DefaultColorName back,
+        public IStyleBuilder DesiredAlternateFocused(TvisionColor fore, TvisionColor back,
             CharacterAttributeModifiers attributes = CharacterAttributeModifiers.Normal)
         {
             _alternateFocused = new StyleDefinition()
@@ -71,7 +71,7 @@ namespace Tvision2.Controls.Styles
             return this;
         }
 
-        public IStyleBuilder DesiredCustom(string name, DefaultColorName fore, DefaultColorName back,
+        public IStyleBuilder DesiredCustom(string name, TvisionColor fore, TvisionColor back,
             CharacterAttributeModifiers attributes = CharacterAttributeModifiers.Normal)
         {
             _customDefinitions.Add(name, new StyleDefinition()

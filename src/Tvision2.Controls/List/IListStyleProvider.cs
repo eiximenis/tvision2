@@ -8,7 +8,7 @@ namespace Tvision2.Controls.List
 {
     public interface IListStyleProvider<T>
     {
-        IListStyleProviderConditionBuilder<T> Use (DefaultColorName fore, DefaultColorName back);
+        IListStyleProviderConditionBuilder<T> Use (TvisionColor fore, TvisionColor back);
         IListStyleProvider<T> UseSkin(ISkin skin);
 
 
