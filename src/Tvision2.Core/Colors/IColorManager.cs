@@ -9,8 +9,8 @@ namespace Tvision2.Core.Colors
         int MaxColors { get; }
         int MaxPairs { get; }
 
-        int GetPairIndexFor(TvisionColor fore, TvisionColor back);
-        CharacterAttribute BuildAttributeFor(TvisionColor fore, TvisionColor back, CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal);
+        int GetPairIndexFor(TvColor fore, TvColor back);
+        CharacterAttribute BuildAttributeFor(TvColor fore, TvColor back, CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal);
         CharacterAttribute DefaultAttribute { get; }
     }   
 }

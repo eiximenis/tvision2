@@ -4,8 +4,8 @@ namespace Tvision2.Controls.Styles
 {
     public struct StyleDefinition
     {
-        public TvisionColor Foreground { get; set; }
-        public TvisionColor Background { get; set; }
+        public TvColor Foreground { get; set; }
+        public TvColor Background { get; set; }
         public CharacterAttributeModifiers Attributes { get; set; }
     }
 }

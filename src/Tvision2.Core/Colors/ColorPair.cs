@@ -6,10 +6,10 @@ namespace Tvision2.Core.Colors
 {
     public struct ColorPair
     {
-        public int ForeGround { get; set; }
-        public int Background { get; set; }
+        public TvColor ForeGround { get; set; }
+        public TvColor Background { get; set; }
 
-        public ColorPair(int fore, int back)
+        public ColorPair(TvColor fore, TvColor back)
         {
             ForeGround = fore;
             Background = back;

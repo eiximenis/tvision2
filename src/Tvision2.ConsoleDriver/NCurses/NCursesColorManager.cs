@@ -15,7 +15,7 @@ namespace Tvision2.ConsoleDriver.NCurses
 
         public int MaxPairs { get; private set; }
 
-        private readonly Dictionary<(int fore, int back), int> _pairs;
+        private readonly Dictionary<(TvColor fore, TvColor back), int> _pairs;
         private int _lastPairUsedIdx;
 
         public CharacterAttribute DefaultAttribute  { get; }
@@ -24,7 +24,7 @@ namespace Tvision2.ConsoleDriver.NCurses
         public NcursesColorManager()
         {
             _supportsBgHilite = false;
-            _pairs = new Dictionary<(int fore, int back), int>();
+            _pairs = new Dictionary<(TvColor fore, TvColor back), int>();
             _lastPairUsedIdx = 0;
             DefaultAttribute = new CharacterAttribute()
             {
@@ -33,23 +33,23 @@ namespace Tvision2.ConsoleDriver.NCurses
             };
         }
 
-        public int GetPairIndexFor(TvisionColor fore, TvisionColor back)
+        public int GetPairIndexFor(TvColor fore, TvColor back)
         {
-            if (_pairs.TryGetValue(((int)fore, (int)back), out int pairidx))
+            if (_pairs.TryGetValue((fore, back), out int pairidx))
             {
                 return pairidx;
             }
 
             _lastPairUsedIdx++;
             Curses.init_pair((short)_lastPairUsedIdx, (short) fore, (short) back);
-            _pairs.Add(((int) fore, (int) back), _lastPairUsedIdx);
+            _pairs.Add((fore, back), _lastPairUsedIdx);
             var lastPair = _lastPairUsedIdx;
             if (_supportsBgHilite)
             {
                 _lastPairUsedIdx++;
                 // TODO: Instead fore+1 & back+1 use redefined color indexes (fore + 8, back + 8)
-                Curses.init_pair((short)_lastPairUsedIdx, (short)(fore + 1), (short)(back + 1));
-                _pairs.Add(((int)fore + 1, (int)back + 1), _lastPairUsedIdx);
+                Curses.init_pair((short)_lastPairUsedIdx, (short)(fore.Plus(1)), (short)(fore.Plus(1)));
+                _pairs.Add((fore.Plus(1), back.Plus(1)), _lastPairUsedIdx);
             }
 
 
@@ -85,7 +85,7 @@ namespace Tvision2.ConsoleDriver.NCurses
 
 
         
-        public CharacterAttribute BuildAttributeFor(TvisionColor fore, TvisionColor back, 
+        public CharacterAttribute BuildAttributeFor(TvColor fore, TvColor back, 
             CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal)
         {
             var coloridx = GetPairIndexFor(fore, back);

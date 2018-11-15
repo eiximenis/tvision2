@@ -25,19 +25,19 @@ namespace Tvision2.ConsoleDriver.Win32
 
         public CharacterAttribute DefaultAttribute { get; }
 
-        private readonly Dictionary<(TvisionColor fore, TvisionColor back), Win32StdColorPair> _pairs;
+        private readonly Dictionary<(TvColor fore, TvColor back), Win32StdColorPair> _pairs;
         private List<Win32StdColorPair> _indexedPairs;
 
         public Win32StdColorManager()
         {
-            _pairs = new Dictionary<(TvisionColor fore, TvisionColor back), Win32StdColorPair>();
+            _pairs = new Dictionary<(TvColor fore, TvColor back), Win32StdColorPair>();
             _indexedPairs = new List<Win32StdColorPair>();
-            AddColorPair(TvisionColor.White, TvisionColor.Black);
-            DefaultAttribute = BuildAttributeFor(TvisionColor.White, TvisionColor.Black, CharacterAttributeModifiers.Normal);
+            AddColorPair(TvColor.White, TvColor.Black);
+            DefaultAttribute = BuildAttributeFor(TvColor.White, TvColor.Black, CharacterAttributeModifiers.Normal);
         }
 
 
-        public CharacterAttribute BuildAttributeFor(TvisionColor fore, TvisionColor back,
+        public CharacterAttribute BuildAttributeFor(TvColor fore, TvColor back,
             CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal)
         {
             return new CharacterAttribute()
@@ -47,7 +47,7 @@ namespace Tvision2.ConsoleDriver.Win32
             };
         }
 
-        private Win32StdColorPair AddColorPair(TvisionColor fore, TvisionColor back)
+        private Win32StdColorPair AddColorPair(TvColor fore, TvColor back)
         {
             _currentLastPair++;
             var wincolor = Win32ConsoleColor.ForeConsoleColorToAttribute(fore) | Win32ConsoleColor.BackConsoleColorToAttribute(back);
@@ -57,7 +57,7 @@ namespace Tvision2.ConsoleDriver.Win32
             return newPair;
         }
 
-        public int GetPairIndexFor(TvisionColor fore, TvisionColor back)
+        public int GetPairIndexFor(TvColor fore, TvColor back)
         {
             if (_pairs.TryGetValue((fore, back), out Win32StdColorPair pair))
             {
