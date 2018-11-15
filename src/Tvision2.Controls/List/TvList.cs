@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tvision2.Controls.Drawers;
@@ -14,13 +15,16 @@ namespace Tvision2.Controls.List
 
         private readonly TvListItemCache<TItem> _itemsCache;
         protected readonly TvListStyleProvider<TItem> _styleProvider;
+        private readonly TvListOptions<TItem> _options;
 
         public ICommandChain<TItem> OnItemClicked { get; }
 
         public IListStyleProvider<TItem> StyleProvider => _styleProvider;
 
-        public TvList(ISkin skin, IViewport boxModel, ListState<TItem> data) : base(skin, boxModel, data)
+        public TvList(ISkin skin, IViewport boxModel, ListState<TItem> data, Action<ITvListOptions<TItem>> optionsAction = null) : base(skin, boxModel, data)
         {
+            _options = new TvListOptions<TItem>();
+            optionsAction?.Invoke(_options);
             OnItemClicked = new CommandChain<TItem>();
             _styleProvider = new TvListStyleProvider<TItem>(skin.ColorManager);
             _styleProvider.UseSkin(skin);

@@ -14,6 +14,7 @@ namespace Tvision2.Core.Colors
         Bold = 1 << 13,
         Invis = 1 << 15,
         Protect = 1 << 16,
-        Italic = 1 << 23
+        Italic = 1 << 23,
+        BackgroundBold = 1 << 24
     }
 }

@@ -82,7 +82,10 @@ namespace Tvision2.MidnightCommander
                 .AppliesToColumn(1);
 
             var menu = new TvMenuBar(skin, vpf.FullViewport().TakeRows(1, 0),
-                new MenuBarState(new[] { "Left", "Edit", "Command", "Options", "Help", "Right" }));
+                new MenuBarState(new[] { "Left", "Edit", "Command", "Options", "Help", "Right" }), opt=>
+                {
+                    opt.ItemsSpacedBy(4);
+                });
 
             //var window = new TvWindow(skin, vpf.FullViewport().CreateCentered(20, 10), new WindowState(tui.UI));
             //var label = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 9, 1, 0), new LabelState() { Text = "In Window" });

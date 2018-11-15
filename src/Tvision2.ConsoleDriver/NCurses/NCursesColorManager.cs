@@ -9,7 +9,7 @@ namespace Tvision2.ConsoleDriver.NCurses
     public class NcursesColorManager : IColorManager
     {
 
-
+        private bool _supportsBgHilite;
 
         public int MaxColors { get; private set; }
 
@@ -23,6 +23,7 @@ namespace Tvision2.ConsoleDriver.NCurses
 
         public NcursesColorManager()
         {
+            _supportsBgHilite = false;
             _pairs = new Dictionary<(int fore, int back), int>();
             _lastPairUsedIdx = 0;
             DefaultAttribute = new CharacterAttribute()
@@ -42,7 +43,17 @@ namespace Tvision2.ConsoleDriver.NCurses
             _lastPairUsedIdx++;
             Curses.init_pair((short)_lastPairUsedIdx, (short) fore, (short) back);
             _pairs.Add(((int) fore, (int) back), _lastPairUsedIdx);
-            return _lastPairUsedIdx;
+            var lastPair = _lastPairUsedIdx;
+            if (_supportsBgHilite)
+            {
+                _lastPairUsedIdx++;
+                // TODO: Instead fore+1 & back+1 use redefined color indexes (fore + 8, back + 8)
+                Curses.init_pair((short)_lastPairUsedIdx, (short)(fore + 1), (short)(back + 1));
+                _pairs.Add(((int)fore + 1, (int)back + 1), _lastPairUsedIdx);
+            }
+
+
+            return lastPair;
         }
 
 
@@ -53,7 +64,18 @@ namespace Tvision2.ConsoleDriver.NCurses
                 Curses.StartColor();
                 MaxColors = Curses.Colors;
                 MaxPairs = Curses.ColorPairs;
+                if (true)       // TODO: Ask ncurses if colors can be redefined
+                {
+                    CreateHiliteBgColors();
+                    _supportsBgHilite = true;
+                }
             }
+        }
+
+        private void CreateHiliteBgColors()
+        {
+            // TODO: Create hilitecolors & store in 9-15
+ 
         }
 
         public void SetColor(int pairIdx)
@@ -66,9 +88,20 @@ namespace Tvision2.ConsoleDriver.NCurses
         public CharacterAttribute BuildAttributeFor(DefaultColorName fore, DefaultColorName back, 
             CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal)
         {
+            var coloridx = GetPairIndexFor(fore, back);
+
+            if (_supportsBgHilite)
+            {
+
+                if ((attrs & CharacterAttributeModifiers.BackgroundBold) == CharacterAttributeModifiers.BackgroundBold)
+                {
+                    coloridx++;
+                }
+            }
+
             return new CharacterAttribute()
             {
-                ColorIdx = GetPairIndexFor(fore, back),
+                ColorIdx = coloridx,
                 Modifiers = attrs
             };
         }

@@ -18,7 +18,7 @@ namespace Tvision2.Controls.Styles
                 sb.AddStyle("tvlist", style =>
                 {
                     style.DesiredStandard(DefaultColorName.White, DefaultColorName.Blue);
-                    style.DesiredFocused(DefaultColorName.White, DefaultColorName.Blue, CharacterAttributeModifiers.Bold);
+                    style.DesiredFocused(DefaultColorName.White, DefaultColorName.Blue, CharacterAttributeModifiers.BackgroundBold);
                     style.DesiredAlternate(DefaultColorName.Black, DefaultColorName.Cyan);
                     style.DesiredAlternateFocused(DefaultColorName.Black, DefaultColorName.White);
                 });
@@ -33,6 +33,12 @@ namespace Tvision2.Controls.Styles
                 {
                     style.DesiredStandard(DefaultColorName.Black, DefaultColorName.White);
                     style.DesiredFocused(DefaultColorName.White, DefaultColorName.Black);
+                });
+
+                sb.AddStyle("tvmenubar", style =>
+                {
+                    style.DesiredFocused(DefaultColorName.White, DefaultColorName.Cyan, CharacterAttributeModifiers.Bold);
+                    style.DesiredStandard(DefaultColorName.Black, DefaultColorName.Cyan);
                 });
             });
 

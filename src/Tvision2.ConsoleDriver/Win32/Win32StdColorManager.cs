@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Tvision2.Core.Colors;
 
 namespace Tvision2.ConsoleDriver.Win32
@@ -9,7 +8,7 @@ namespace Tvision2.ConsoleDriver.Win32
 
         class Win32StdColorPair
         {
-            public int Idx { get;  }
+            public int Idx { get; }
             public int WinColor { get; }
 
             public Win32StdColorPair(int idx, int color)
@@ -38,7 +37,7 @@ namespace Tvision2.ConsoleDriver.Win32
         }
 
 
-        public CharacterAttribute BuildAttributeFor(DefaultColorName fore, DefaultColorName back, 
+        public CharacterAttribute BuildAttributeFor(DefaultColorName fore, DefaultColorName back,
             CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal)
         {
             return new CharacterAttribute()
@@ -72,9 +71,14 @@ namespace Tvision2.ConsoleDriver.Win32
         public int AttributeToWin32Colors(CharacterAttribute attribute)
         {
             var winAttr = _indexedPairs[attribute.ColorIdx].WinColor;
-            if ((attribute.Modifiers | CharacterAttributeModifiers.Bold) != 0)
+            if ((attribute.Modifiers & CharacterAttributeModifiers.Bold) != 0)
             {
-                winAttr |= (Win32ConsoleColor.FOREGROUND_INTENSITY | Win32ConsoleColor.BACKGROUND_INTENSITY);
+                winAttr |= (Win32ConsoleColor.FOREGROUND_INTENSITY);
+            }
+
+            if ((attribute.Modifiers & CharacterAttributeModifiers.BackgroundBold) != 0)
+            {
+                winAttr |= (Win32ConsoleColor.BACKGROUND_INTENSITY);
             }
             return winAttr;
         }
