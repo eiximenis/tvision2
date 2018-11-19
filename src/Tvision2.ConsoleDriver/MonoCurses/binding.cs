@@ -319,7 +319,16 @@ namespace Unix.Terminal {
 		public static int Colors => Marshal.ReadInt32(colors_ptr);
 		public static int ColorPairs => Marshal.ReadInt32(colorpairs_ptr);
 		
+
+		[DllImport ("libncursesw.so.5")]
+		extern internal static int init_color (short color, short r, short g, short b);
+		public static int InitColor (short color, short r, short g, short b) => init_color (color, r,g,b);
 		
+		[DllImport ("libncursesw.so.5")]
+		extern internal static bool can_change_color();
+
+		public static bool CanChangeColor() => can_change_color();
+
 		
 #endregion
 		
