@@ -30,6 +30,7 @@ namespace Tvision2.Events.NCurses
                 case Curses.KeyF8: return ConsoleKey.F8;
                 case Curses.KeyF9: return ConsoleKey.F9;
                 case Curses.KeyF10: return ConsoleKey.F10;
+                case 27: return ConsoleKey.Escape;
                 case 13: return ConsoleKey.Enter;
                 case 9: return ConsoleKey.Tab;
  
