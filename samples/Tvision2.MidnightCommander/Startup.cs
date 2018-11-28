@@ -93,8 +93,11 @@ namespace Tvision2.MidnightCommander
 
             var label = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 9, 1, 0),
                 new LabelState() { Text = "In Window" });
+            
+           
             var dialog = _dialogManager.CreateDialog(vpf.FullViewport().CreateCentered(20, 10),
                 d => { d.State.UI.Add(label); });
+           
 
 
             var sleft = TvStatexControl.Wrap<TvList<FileItem>, ListState<FileItem>, FileList>(left, opt =>

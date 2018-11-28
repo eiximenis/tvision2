@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Tvision2.Core.Colors
@@ -7,6 +8,7 @@ namespace Tvision2.Core.Colors
 
     public static class TvColorNames
     {
+        private static string[] _names = new[] { "Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White"};
         public const int Black = 0;
         public const int Red = 1;
         public const int Green = 2;
@@ -16,8 +18,16 @@ namespace Tvision2.Core.Colors
         public const int Cyan = 6;
         public const int White = 7;
 
-        public static IEnumerable<int> AllStandardColors() => new[] { Black, Red, Green, Yellow, Blue, Magenta, Cyan, White };
+        public static IEnumerable<int> AllStandardColors() =>
+            new[] {Black, Red, Green, Yellow, Blue, Magenta, Cyan, White};
         public const int StandardColorsCount = 8;
+
+        public static string NameOf(int value)
+        {
+            return _names[(value % _names.Length + 1) - 1];
+        }
+
+        public static string NameOf(TvColor color) => NameOf(color.Value);
     }
 
     public struct TvColor
@@ -28,14 +38,14 @@ namespace Tvision2.Core.Colors
 
         public TvColor Plus(int valueToAdd) => new TvColor(Value + valueToAdd);
 
-        public readonly static TvColor Black = new TvColor(TvColorNames.Black);
-        public readonly static TvColor Red = new TvColor(TvColorNames.Red);
-        public static TvColor Green => new TvColor(TvColorNames.Green);
-        public static TvColor Yellow => new TvColor(TvColorNames.Yellow);
-        public static TvColor Blue => new TvColor(TvColorNames.Blue);
-        public static TvColor Magenta => new TvColor(TvColorNames.Magenta);
-        public static TvColor Cyan => new TvColor(TvColorNames.Cyan);
-        public static TvColor White => new TvColor(TvColorNames.White);
+        public static readonly TvColor Black = new TvColor(TvColorNames.Black);
+        public static readonly TvColor Red = new TvColor(TvColorNames.Red);
+        public static readonly TvColor Green = new TvColor(TvColorNames.Green);
+        public static readonly TvColor Yellow = new TvColor(TvColorNames.Yellow);
+        public static readonly TvColor Blue = new TvColor(TvColorNames.Blue);
+        public static readonly TvColor Magenta = new TvColor(TvColorNames.Magenta);
+        public static readonly TvColor Cyan = new TvColor(TvColorNames.Cyan);
+        public static readonly TvColor White = new TvColor(TvColorNames.White);
 
         public static explicit operator short(TvColor color) => (short)color.Value;
         public static bool operator ==(TvColor one, TvColor other) => one.Value == other.Value;
@@ -54,7 +64,13 @@ namespace Tvision2.Core.Colors
 
         public override int GetHashCode() => Value.GetHashCode();
 
-
-
+        public override string ToString()
+        {
+            var colvalue = Value % TvColorNames.StandardColorsCount;
+            var colname = TvColorNames.NameOf(colvalue);
+            var diff = Value - (Value % TvColorNames.StandardColorsCount);
+            var msg = diff > 0 ? $"+ {diff}" : "";
+            return $"{Value} (TvColor.{colname} {msg})";
+        }
     }
 }
