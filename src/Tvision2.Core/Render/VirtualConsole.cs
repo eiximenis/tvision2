@@ -42,17 +42,37 @@ namespace Tvision2.Core.Render
             var idx = 0;
             for (var row = 0; row < Height; row++)
             {
+                var span = 1;
+                var spanning = false;
+                var spanCol = 0;
                 for (var col = 0; col < Width; col++)
                 {
-                    if (_dirtyMap[idx] != DirtyStatus.Clean)
+                    var next = col < Width - 1 ? _buffer[idx + 1] : null;
+                    var cc = _buffer[idx];
+                    if (spanning || _dirtyMap[idx] != DirtyStatus.Clean)
                     {
-                        var cc = _buffer[idx];
-                        consoleDriver.WriteCharacterAt(col, row, cc.Character, cc.Attributes);
-                        _dirtyMap[idx] = DirtyStatus.Clean;
+                        if (cc.Equals(next))
+                        {
+                            span++;
+                            spanning = true;
+                        }
+                        else
+                        {
+                            consoleDriver.WriteCharactersAt(spanCol, row, span, cc.Character, cc.Attributes);
+                            span = 1;
+                            spanning = false;
+                            spanCol = col + 1;
+                        }
                     }
+                    else
+                    {
+                        spanCol++;
+                    }
+                    _dirtyMap[idx] = DirtyStatus.Clean;
                     idx++;
                 }
             }
+
 
             if (Cursor.MovementPending)
             {
@@ -100,7 +120,7 @@ namespace Tvision2.Core.Render
                         cchar.Attributes = attr;
                         cchar.ZIndex = zIndex;
                         dirty = true;
-                        _dirtyMap[idx] = (DirtyStatus) comparison;
+                        _dirtyMap[idx] = (DirtyStatus)comparison;
                     }
                     cchar.ZIndex = zIndex;
                 }

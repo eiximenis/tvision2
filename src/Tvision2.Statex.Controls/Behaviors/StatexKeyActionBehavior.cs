@@ -13,18 +13,20 @@ namespace Tvision2.Statex.Behaviors
         private readonly List<StatexKeyActionCreatorBinder<TControlState>> _keyBinders;
         private readonly ITvStoreSelector _storeSelector;
         private readonly string _storeName;
+        private readonly TvControlMetadata _metadata;
 
-        public StatexKeyActionBehavior(IEnumerable<StatexKeyActionCreatorBinder<TControlState>> keyBinders, string storeName, ITvStoreSelector storeSelector)
+        public StatexKeyActionBehavior(IEnumerable<StatexKeyActionCreatorBinder<TControlState>> keyBinders, string storeName, ITvStoreSelector storeSelector, TvControlMetadata metadata)
         {
             _keyBinders = keyBinders.ToList();
             _storeSelector = storeSelector;
             _storeName = storeName;
+            _metadata = metadata;
         }
 
         public bool Update(BehaviorContext<TControlState> updateContext)
         {
-            if (!updateContext.Events.HasKeyboardEvents) return false;
-
+            if (!updateContext.Events.HasKeyboardEvents || !_metadata.IsFocused) return false;
+            
             var keyEvents = updateContext.Events.KeyboardEvents.Where(e => e.IsKeyDown);
             bool updated = false;
 

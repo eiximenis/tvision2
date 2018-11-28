@@ -36,7 +36,7 @@ namespace Tvision2.Statex.Controls.Behaviors
         {
             if (_options.KeyActionCreators.Any())
             {
-                control.AsComponent().AddBehavior(new StatexKeyActionBehavior<TControlState>(_options.KeyActionCreators, _options.StoreName, _storeSelector));
+                control.AsComponent().AddBehavior(new StatexKeyActionBehavior<TControlState>(_options.KeyActionCreators, _options.StoreName, _storeSelector, control.Metadata));
             }
  
         }

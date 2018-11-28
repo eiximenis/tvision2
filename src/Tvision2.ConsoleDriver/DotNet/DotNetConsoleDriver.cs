@@ -52,6 +52,15 @@ namespace Tvision2.ConsoleDriver
             Console.Write(character);
         }
 
+        public void WriteCharactersAt(int x, int y, int count, char character, CharacterAttribute attribute)
+        {
+            for (var rep = 0; rep < count; rep++)
+            {
+                WriteCharacterAt(x + rep, y, character, attribute);
+            }
+        }
+
+
         public void SetCursorAt(int x, int y)
         {
             Console.SetCursorPosition(x, y);

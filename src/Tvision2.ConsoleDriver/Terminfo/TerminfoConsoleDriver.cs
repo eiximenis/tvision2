@@ -61,6 +61,16 @@ namespace Tvision2.ConsoleDriver
             TerminfoBindings.putp(character + "");
         }
 
+        public void WriteCharactersAt(int x, int y, int count, char character, CharacterAttribute attribute)
+        {
+            // TODO: Temporal hack for compilation. Needs to be refactored to make a single native call
+            for (var rep = 0; rep < count; rep++)
+            {
+                WriteCharacterAt(x + rep, y, character, attribute);
+            }
+        }
+
+
         public void SetCursorAt(int x, int y)
         {
             //throw new NotImplementedException();

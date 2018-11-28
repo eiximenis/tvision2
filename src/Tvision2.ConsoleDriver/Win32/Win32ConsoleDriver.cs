@@ -86,11 +86,17 @@ namespace Tvision2.ConsoleDriver
 
         public void WriteCharacterAt(int x, int y, char character, CharacterAttribute attribute)
         {
+            WriteCharactersAt(x, y, 1, character, attribute);
+        }
+
+        public void WriteCharactersAt(int x, int y, int count, char character, CharacterAttribute attribute)
+        {
             var coord = new COORD((short)x, (short)y);
             var winattr = _colorManager.AttributeToWin32Colors(attribute);
-            ConsoleNative.FillConsoleOutputAttribute(_hstdout, (ushort)winattr, (uint)1, coord, out var numAttrWritten);
-            ConsoleNative.FillConsoleOutputCharacter(_hstdout, (char)character, (uint)1, coord, out var numWritten);
+            ConsoleNative.FillConsoleOutputAttribute(_hstdout, (ushort)winattr, (uint)count, coord, out var numAttrWritten);
+            ConsoleNative.FillConsoleOutputCharacter(_hstdout, (char)character, (uint)count, coord, out var numWritten);
         }
+
 
         public void SetCursorAt(int x, int y)
         {
