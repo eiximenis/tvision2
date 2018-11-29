@@ -10,9 +10,9 @@ namespace Tvision2.Controls.Checkbox
 {
     public class TvCheckbox : TvControl<CheckboxState>
     {
-        private static TvPoint _focusOffset = new TvPoint(1, 0);
         public TvCheckbox(ISkin skin, IViewport boxModel, CheckboxState state) : base(skin, boxModel, state)
         {
+            RequestControlManagement((ctx, _) => ctx.SetCursorAt(1,0));
         }
 
         protected override IEnumerable<ITvBehavior<CheckboxState>> GetEventedBehaviors()
@@ -20,7 +20,6 @@ namespace Tvision2.Controls.Checkbox
             yield return new CheckBoxBehavior();
         }
 
-        protected override TvPoint CalculateFocusOffset() => _focusOffset;
         protected override void OnDraw(RenderContext<CheckboxState> context)
         {
             var pairIdx = Metadata.IsFocused ? CurrentStyle.Focused : CurrentStyle.Standard;

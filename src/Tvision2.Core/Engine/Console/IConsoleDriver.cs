@@ -15,5 +15,6 @@ namespace Tvision2.Engine.Console
         TvConsoleEvents ReadEvents();
         void Init();
         (int rows, int cols) GetConsoleWindowSize();
+        void SetCursorVisibility(bool isVisible);
     }
 }

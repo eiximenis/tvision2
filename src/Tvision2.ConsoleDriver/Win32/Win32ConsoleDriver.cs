@@ -16,8 +16,8 @@ namespace Tvision2.ConsoleDriver
         private readonly IntPtr _hstdout;
         public bool SupportsVt100 { get; }
         private IWindowsColorManager _colorManager;
-
         private readonly ConsoleDriverOptions _options;
+        private CONSOLE_CURSOR_INFO _initialCursorInfo;
 
         public (int rows, int cols) GetConsoleWindowSize()
         {
@@ -61,6 +61,10 @@ namespace Tvision2.ConsoleDriver
                 ConsoleNative.SetConsoleWindowInfo(_hstdout, true, ref rect);
             }
             ConsoleNative.SetConsoleScreenBufferSize(_hstdout, new COORD((short)(rect.Right + 1), (short)(rect.Bottom + 1)));
+
+            CONSOLE_CURSOR_INFO cursorInfo;
+            ConsoleNative.GetConsoleCursorInfo(_hstdout, out cursorInfo);
+            _initialCursorInfo = cursorInfo;
         }
 
         public TvConsoleEvents ReadEvents()
@@ -101,6 +105,13 @@ namespace Tvision2.ConsoleDriver
         public void SetCursorAt(int x, int y)
         {
             ConsoleNative.SetConsoleCursorPosition(_hstdout, new COORD((short)x, (short)y));
+        }
+
+
+        public void SetCursorVisibility(bool isVisible)
+        {
+            var info = new CONSOLE_CURSOR_INFO(isVisible, _initialCursorInfo.Size);
+            ConsoleNative.SetConsoleCursorInfo(_hstdout, ref info);
         }
     }
 }

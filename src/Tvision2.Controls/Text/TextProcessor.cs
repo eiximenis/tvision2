@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
-using Tvision2.Controls.Extensions;
 
 namespace Tvision2.Controls.Text
 {
@@ -9,68 +7,112 @@ namespace Tvision2.Controls.Text
     {
         private readonly StringBuilder _sb;
 
+        public bool ReplaceMode { get; private set; }
+        public int CurentPos { get; private set; }
+
         public TextProcessor()
         {
             _sb = new StringBuilder();
+            CurentPos = 0;
+            ReplaceMode = false;
         }
 
 
         public override string ToString() => _sb.ToString();
 
-        public void AppendChar(char value) => InsertChar(value, _sb.Length);
-
-        public void InsertChar(char value, int index)
-        {
-            if (index > _sb.Length)
-            {
-                index = _sb.Length;
-            }
-
-            _sb.Insert(index, value);
-        }
-
         internal void ProcessKey(ConsoleKeyInfo consoleKeyInfo)
         {
             var key = consoleKeyInfo.Key;
-            var special = ProcessSpecialKey(key, _sb.Length);
+            var special = ProcessSpecialKey(key);
             if (!special)
             {
-                AppendChar(consoleKeyInfo.KeyChar);
+                InsertChar(consoleKeyInfo.KeyChar);
             }
         }
 
-        private bool ProcessSpecialKey(ConsoleKey key, int position)
+        private bool ProcessSpecialKey(ConsoleKey key)
         {
             switch (key)
             {
                 case ConsoleKey.Backspace:
-                    RemoveChars(position - 1);
+                    RemoveChars(CurentPos - 1);
                     return true;
                 case ConsoleKey.Delete:
-                    RemoveChars(position);
+                    RemoveChars(CurentPos);
+                    return true;
+                case ConsoleKey.LeftArrow:
+                    DecreasePosition();
+                    return true;
+                case ConsoleKey.RightArrow:
+                    IncreasePosition();
+                    return true;
+                case ConsoleKey.End:
+                    GoToEnd();
+                    return true;
+                case ConsoleKey.Home:
+                    GoToBegin();
+                    return true;
+                case ConsoleKey.Insert:
+                    ReplaceMode = !ReplaceMode;
                     return true;
             }
 
             return false;
         }
 
-        public void RemoveChars(int offset, int count = 1)
+        private void GoToEnd()
         {
-            if (offset < 0)
+            CurentPos = _sb.Length;
+        }
+
+        private void GoToBegin()
+        {
+            CurentPos = 0;
+        }
+
+        private void InsertChar(char value)
+        {
+            if (ReplaceMode && CurentPos < _sb.Length)
+            {
+                _sb[CurentPos] = value;
+            }
+            else
+            {
+                _sb.Insert(CurentPos, value);
+            }
+            IncreasePosition();
+        }
+        private void DecreasePosition(int count = 1)
+        {
+            CurentPos -= count;
+            if (CurentPos < 0) CurentPos = 0;
+        }
+
+        private void IncreasePosition(int count = 1)
+        {
+            CurentPos += count;
+            if (CurentPos > _sb.Length) CurentPos = _sb.Length;
+        }
+
+
+        public void RemoveChars(int pos, int count = 1)
+        {
+            if (pos < 0)
             {
                 return;
             }
 
-           if (offset >= _sb.Length)
+            if (pos >= _sb.Length)
             {
-                offset = _sb.Length;
+                pos = _sb.Length;
             }
-           if (count > _sb.Length - offset)
+            if (count > _sb.Length - pos)
             {
-                count = _sb.Length - offset;
+                count = _sb.Length - pos;
             }
 
-            _sb.Remove(offset, count);
+            _sb.Remove(pos, count);
+            DecreasePosition(count);
         }
     }
 }

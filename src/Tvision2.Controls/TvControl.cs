@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tvision2.Controls.Behavior;
+using Tvision2.Controls.Drawers;
 using Tvision2.Controls.Styles;
 using Tvision2.Core.Components;
 using Tvision2.Core.Components.Behaviors;
@@ -21,7 +22,6 @@ namespace Tvision2.Controls
         public TState State { get; }
         public string ControlType { get; }
         public IViewport Viewport => _component.Viewport;
-        private bool _setFocusPending;
 
         public TvControl(ISkin skin, IViewport viewport, TState initialState, string name = null)
         {
@@ -33,7 +33,6 @@ namespace Tvision2.Controls
             CurrentStyle = skin.GetControlStyle(this);
             State = initialState;
             _component.AddViewport(viewport);
-            _setFocusPending = false;
             AddElements();
         }
 
@@ -54,27 +53,19 @@ namespace Tvision2.Controls
             return Enumerable.Empty<ITvBehavior<TState>>();
         }
 
-
-        private void BeginOnDraw(RenderContext<TState> context)
-        {
-            if (_setFocusPending)
-            {
-                var pos = CalculateFocusOffset();
-                context.SetCursorAt(pos.Left, pos.Top);
-                _setFocusPending = false;
-            }
-        }
-
         protected abstract void OnDraw(RenderContext<TState> context);
 
         protected virtual void AddCustomElements(TvComponent<TState> component) { }
 
-        protected virtual TvPoint CalculateFocusOffset() => TvPoint.Zero;
 
-        public void OnFocus()
+        protected void RequestControlManagement(Action<ICursorContext, TState> cursorAction)
         {
-            var pos = Viewport.Position + CalculateFocusOffset();
-            _setFocusPending = true;
+            _component.AddDrawer(new TvControlCursorDrawer<TState>(cursorAction, Metadata));
+        }
+
+
+        public virtual void OnFocus()
+        {
         }
 
         public TvComponent<TState> AsComponent() => _component;

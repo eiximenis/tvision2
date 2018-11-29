@@ -24,6 +24,8 @@ namespace Tvision2.Controls.Textbox
             get => _textProcessor.ToString();
         }
 
+        public int CaretPos => _textProcessor.CurentPos;
+
         internal void ProcessKey(ConsoleKeyInfo consoleKeyInfo)
         {
             _textProcessor.ProcessKey(consoleKeyInfo);

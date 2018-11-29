@@ -632,8 +632,14 @@ namespace Tvision2.ConsoleDriver.Win32
     [StructLayout(LayoutKind.Sequential)]
     internal struct CONSOLE_CURSOR_INFO
     {
-        private readonly uint Size;
-        private readonly bool Visible;
+        public readonly uint Size;
+        public readonly bool Visible;
+
+        public CONSOLE_CURSOR_INFO(bool visible, uint size)
+        {
+            Size = size;
+            Visible = visible;
+        }
     }
 
     internal static class ConsoleNative
@@ -715,6 +721,10 @@ namespace Tvision2.ConsoleDriver.Win32
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool GetConsoleCursorInfo(IntPtr hConsoleOutput, out CONSOLE_CURSOR_INFO lpConsoleCursorInfo);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool SetConsoleCursorInfo(IntPtr hConsoleOutput, ref CONSOLE_CURSOR_INFO lpConsoleCursorInfo);
+
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool SetConsoleTextAttribute(IntPtr hConsoleOutput, ushort wAttributes);

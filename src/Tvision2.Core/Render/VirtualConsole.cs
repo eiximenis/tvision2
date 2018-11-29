@@ -74,10 +74,21 @@ namespace Tvision2.Core.Render
             }
 
 
+            if (Cursor.ActionPending == VirtualConsoleCursorAction.Show)
+            {
+                consoleDriver.SetCursorVisibility(isVisible: true);
+                Cursor.VisibilityChanged(isVisible: true);
+            }
+
             if (Cursor.MovementPending)
             {
                 consoleDriver.SetCursorAt(Cursor.Position.Left, Cursor.Position.Top);
                 Cursor.MovementPending = false;
+            }
+            else if (Cursor.ActionPending == VirtualConsoleCursorAction.Hide)
+            {
+                consoleDriver.SetCursorVisibility(isVisible: false);
+                Cursor.VisibilityChanged(isVisible: false);
             }
 
 

@@ -87,5 +87,9 @@ namespace Tvision2.ConsoleDriver
         {
             return (24,80);
         }
+
+        public void SetCursorVisibility(bool isVisible)
+        {
+        }
     }
 }

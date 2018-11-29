@@ -70,5 +70,10 @@ namespace Tvision2.ConsoleDriver
         {
             return (Console.WindowHeight, Console.WindowWidth);
         }
+
+        public void SetCursorVisibility(bool isVisible)
+        {
+            Console.CursorVisible = isVisible;
+        }
     }
 }

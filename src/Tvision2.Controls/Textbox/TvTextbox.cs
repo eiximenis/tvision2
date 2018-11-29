@@ -12,8 +12,8 @@ namespace Tvision2.Controls.Textbox
     {
         public TvTextbox(ISkin skin, IViewport boxModel, TextboxState initialState) : base(skin, boxModel, initialState)
         {
+            RequestControlManagement((ctx, state) => ctx.SetCursorAt(state.CaretPos, 0));
         }
-
 
         protected override IEnumerable<ITvBehavior<TextboxState>> GetEventedBehaviors()
         {
