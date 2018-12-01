@@ -8,5 +8,7 @@ namespace Tvision2.ConsoleDriver
         IConsoleDriverOptions UseForegroundColor(ConsoleColor foreColor);
 
         IConsoleDriverOptions SetupWindow(Action<IConsoleWindowOptions> options);
+        IConsoleDriverOptions EnableMouse();
+        IConsoleDriverOptions DisableMouse();
     }
 }

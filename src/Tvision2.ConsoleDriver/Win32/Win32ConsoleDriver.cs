@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using Tvision2.ConsoleDriver.Win32;
 using Tvision2.Core.Colors;
 using Tvision2.Engine.Console;
@@ -38,10 +37,17 @@ namespace Tvision2.ConsoleDriver
             _options = options;
             ConsoleNative.SetConsoleCP(CP_TOUSE);
             ConsoleNative.SetConsoleOutputCP(CP_TOUSE);
-            //ConsoleNative.SetConsoleMode(_hstdin, (uint)(ConsoleInputModes.ENABLE_MOUSE_INPUT | ConsoleInputModes.ENABLE_WINDOW_INPUT | ConsoleInputModes.ENABLE_VIRTUAL_TERMINAL_INPUT));
             ConsoleNative.GetConsoleMode(_hstdout, out uint dwOutModes);
+            ConsoleNative.GetConsoleMode(_hstdin, out uint dwInputModes);
+            SetConsoleMode(options, dwOutModes, dwInputModes);
+            //ConsoleNative.SetConsoleMode(_hstdin, (uint)(ConsoleInputModes.ENABLE_MOUSE_INPUT | ConsoleInputModes.ENABLE_WINDOW_INPUT | ConsoleInputModes.ENABLE_VIRTUAL_TERMINAL_INPUT));
             dwOutModes |= (uint)ConsoleOutputModes.ENABLE_VIRTUAL_TERMINAL_PROCESSING;
             SupportsVt100 = ConsoleNative.SetConsoleMode(_hstdout, dwOutModes);
+        }
+
+        private void SetConsoleMode(ConsoleDriverOptions options, uint currentOutModes, uint currentInputModes)
+        {
+
         }
 
         public void Init()

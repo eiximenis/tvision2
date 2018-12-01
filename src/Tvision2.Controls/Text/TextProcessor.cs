@@ -24,7 +24,7 @@ namespace Tvision2.Controls.Text
         {
             var key = consoleKeyInfo.Key;
             var special = ProcessSpecialKey(key);
-            if (!special)
+            if (!special && consoleKeyInfo.KeyChar != '\0') 
             {
                 InsertChar(consoleKeyInfo.KeyChar);
             }
