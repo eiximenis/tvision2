@@ -17,20 +17,35 @@ namespace Tvision2.Core.Render
         }
 
 
-        private readonly ConsoleCharacter[] _buffer;
-        private readonly DirtyStatus[] _dirtyMap;
+        private ConsoleCharacter[] _buffer;
+        private DirtyStatus[] _dirtyMap;
         public VirtualConsoleUpdateActions UpdateActions { get; }
-        public int Width { get; }
-        public int Height { get; }
+        public int Width { get; private set; }
+        public int Height { get; private set; }
 
         public bool IsDirty { get; private set; }
 
-        public VirtualConsoleCursor Cursor { get; }
+        public VirtualConsoleCursor Cursor { get; private set; }
 
         public VirtualConsole()
         {
             Width = Console.WindowWidth;
             Height = Console.WindowHeight;
+            InitData();
+        }
+
+        public void Resize(int height, int width)
+        {
+            if (Height != height || Width != width)
+            {
+                Height = height;
+                Width = width;
+                InitData();
+            }
+        }
+
+        private void InitData()
+        {
             _buffer = new ConsoleCharacter[Height * Width];
             _dirtyMap = new DirtyStatus[Height * Width];
             InitEmpty();
@@ -146,8 +161,8 @@ namespace Tvision2.Core.Render
         {
             var initcol = viewport.Position.Left;
             var initrow = viewport.Position.Top;
-            var maxcol = initcol + viewport.Columns;
-            var maxrow = initrow + viewport.Rows;
+            var maxcol = Math.Min(initcol + viewport.Columns, Width - 1);
+            var maxrow = Math.Min(initrow + viewport.Rows, Height - 1);
 
             for (var row = initrow; row <= maxrow; row++)
             {

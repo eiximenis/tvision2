@@ -1,7 +1,7 @@
 ﻿using Tvision2.Core.Render;
 using Tvision2.Engine.Console;
 
-namespace Tvision2.Layouts
+namespace Tvision2.Viewports
 {
     internal class ViewportFactory : IViewportFactory
     {

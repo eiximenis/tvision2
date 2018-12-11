@@ -7,10 +7,10 @@ namespace Tvision2.Core.Hooks
 {
     public class HookContext
     {
-        public IComponentTree Components { get; }
+        public IComponentTree ComponentTree { get; }
         public HookContext(ITuiEngine engine)
         {
-            Components = engine.UI;
+            ComponentTree = engine.UI;
         }
     }
 }

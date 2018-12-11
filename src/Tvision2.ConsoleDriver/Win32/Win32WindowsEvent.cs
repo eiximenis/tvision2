@@ -7,7 +7,7 @@ namespace Tvision2.Events.Win32
     {
         private WINDOW_BUFFER_SIZE_RECORD _windowBufferSizeEvent;
 
-        public Win32WindowsEvent(WINDOW_BUFFER_SIZE_RECORD windowBufferSizeEvent) : base(windowBufferSizeEvent.dwSize.X, windowBufferSizeEvent.dwSize.Y - 1)
+        public Win32WindowsEvent(WINDOW_BUFFER_SIZE_RECORD windowBufferSizeEvent) : base(cols: windowBufferSizeEvent.dwSize.X, rows: windowBufferSizeEvent.dwSize.Y)
         {
             _windowBufferSizeEvent = windowBufferSizeEvent;
         }

@@ -50,7 +50,7 @@ namespace Tvision2.Core.Components
         }
         public IViewport Viewport => _viewports.TryGetValue(Guid.Empty, out IViewport value) ? value : null;
         public IViewport GetViewport(Guid guid) => _viewports.TryGetValue(guid, out IViewport value) ? value : null;
-        public IEnumerable<IViewport> Viewports => _viewports.Values;
+        public IEnumerable<KeyValuePair<Guid, IViewport>> Viewports => _viewports;
 
         public IEnumerable<IBehaviorMetadata> BehaviorsMetadatas => _behaviorsMetadata;
 

@@ -23,7 +23,7 @@ namespace Tvision2.ConsoleDriver.Win32
                         events.Add(new Win32ConsoleMouseEvent(record.MouseEvent));
                         break;
                     case ConsoleEventTypes.WINDOW_BUFFER_SIZE_EVENT:
-                        events.Add(new Win32WindowsEvent(record.WindowBufferSizeEvent));
+                        events.SetWindowEvent(new Win32WindowsEvent(record.WindowBufferSizeEvent));
                         break;
                 }
             }

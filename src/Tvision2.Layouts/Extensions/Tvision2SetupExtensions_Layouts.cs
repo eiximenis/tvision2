@@ -11,10 +11,9 @@ namespace Tvision2.Core.Engine
     {
         public static Tvision2Setup UseLayoutManager(this Tvision2Setup setup)
         {
-            setup.AddHook<WindowResizedHook>();
             setup.Builder.ConfigureServices((hc, sc) =>
             {
-                sc.AddTransient<IViewportFactory, ViewportFactory>();
+ 
                 sc.AddSingleton<ILayoutManager, LayoutManager>();
             });
             return setup;

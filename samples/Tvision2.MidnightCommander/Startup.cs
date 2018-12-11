@@ -39,10 +39,10 @@ namespace Tvision2.MidnightCommander
         Task ITvisionAppStartup.Startup(ITuiEngine tui)
         {
             var skin = _skinManager.CurrentSkin;
-            var vpf = _layoutManager.ViewportFactory;
+            var dvpf = _layoutManager.DynamicViewportFactory;
 
             var mainStackPanel = new TvStackPanel(tui.UI, "mainStackPanel");
-            mainStackPanel.AsComponent().AddViewport(vpf.FullViewport().Translate(new TvPoint(0, 1)).Grow(0, -3));
+            mainStackPanel.AsComponent().AddViewport(dvpf.Create(vpf => vpf.FullViewport().Translate(new TvPoint(0, 1)).Grow(0, -3)));
             mainStackPanel.Layout.Add("*", "3");
             var listFilesGrid = new TvGrid(tui.UI, new GridState(1, 2));
             mainStackPanel.At(0).Add(listFilesGrid);
@@ -81,7 +81,7 @@ namespace Tvision2.MidnightCommander
                 .When(f => (f.FileAttributes & System.IO.FileAttributes.Hidden) == System.IO.FileAttributes.Hidden)
                 .AppliesToColumn(1);
 
-            var menu = new TvMenuBar(skin, vpf.FullViewport().TakeRows(1, 0),
+            var menu = new TvMenuBar(skin, dvpf.Create(vpf => vpf.FullViewport().TakeRows(1, 0)),
                 new MenuBarState(new[] { "Left", "Edit", "Command", "Options", "Help", "Right" }), opt=>
                 {
                     opt.ItemsSpacedBy(4);
@@ -95,7 +95,7 @@ namespace Tvision2.MidnightCommander
                 new LabelState() { Text = "In Window" });
             
            
-            var dialog = _dialogManager.CreateDialog(vpf.FullViewport().CreateCentered(20, 10),
+            var dialog = _dialogManager.CreateDialog(dvpf.Create(vpf => vpf.FullViewport().CreateCentered(20, 10)),
                 d => { d.State.UI.Add(label); });
            
 
@@ -136,7 +136,7 @@ namespace Tvision2.MidnightCommander
             listFilesGrid.Use(0, 1).Add(right);
             var bottom = new TvStackPanel(tui.UI, "BottomContainer");
             bottom.Layout.Add(new LayoutSize());
-            bottom.AsComponent().AddViewport(vpf.BottomViewport(2));
+            bottom.AsComponent().AddViewport(dvpf.Create(vpf => vpf.BottomViewport(2)));
             bottom.At(0).Add(textbox);
             tui.UI.Add(bottom);
             tui.UI.Add(menu);

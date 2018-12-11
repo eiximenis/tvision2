@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Tvision2.Core\Tvision2.Core.csproj" />
+    <ProjectReference Include="..\Tvision2.Viewports\Tvision2.Viewports.csproj" />
   </ItemGroup>
 
 </Project>

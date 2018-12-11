@@ -10,7 +10,7 @@ namespace Tvision2.Viewports
         private ComponentTree _attachedComponentTree;
         public void InvalidateViewport(IViewport viewportToInvalidate)
         {
-            var components = _attachedComponentTree.Components.Where(c => c.Viewports.Any(vp => vp.Intersects(viewportToInvalidate)));
+            var components = _attachedComponentTree.Components.Where(c => c.Viewports.Any(vp => vp.Value.Intersects(viewportToInvalidate)));
             foreach (var component in components)
             {
                 component.Invalidate();
@@ -49,7 +49,6 @@ namespace Tvision2.Viewports
 
         private void OnViewportChanged(object sender, ViewportUpdatedEventArgs e)
         {
-            // TODO: process viewportchange
             var data = sender as IComponentMetadata;
             _attachedComponentTree.ClearViewport(e.Previous);
             data.Component.Invalidate();

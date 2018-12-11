@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Tvision2.Engine.Console;
+using Tvision2.Viewports;
 
 namespace Tvision2.Layouts
 {
@@ -9,10 +10,12 @@ namespace Tvision2.Layouts
     {
         private Dictionary<string, ITvContainer> _containers;
         public IViewportFactory ViewportFactory { get; }
-        public LayoutManager(IViewportFactory viewportFactory)
+        public IDynamicViewportFactory DynamicViewportFactory { get; }
+        public LayoutManager(IViewportFactory viewportFactory, IDynamicViewportFactory dynamicViewportFactory)
         {
             _containers = new Dictionary<string, ITvContainer>();
             ViewportFactory = viewportFactory;
+            DynamicViewportFactory = dynamicViewportFactory;
         }
         public void Add(ITvContainer container)
         {

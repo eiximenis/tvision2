@@ -1,21 +1,18 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Tvision2.Core.Hooks;
 using Tvision2.Core.Render;
 using Tvision2.Engine.Console;
-using Tvision2.Core.Components.Draw;
 
 namespace Tvision2.Core.Engine
 {
     public class TuiEngine : ITuiEngine
     {
-        
+
         private const long TIME_PER_FRAME = (int)((1.0f / 30.0f) * 1000) * TimeSpan.TicksPerMillisecond;
         private readonly EventPumper _eventPumper;
         private readonly Stopwatch _watcher;
@@ -67,6 +64,12 @@ namespace Tvision2.Core.Engine
             {
                 _watcher.Start();
                 var evts = _eventPumper.ReadEvents();
+
+                if (evts.HasWindowEvent)
+                {
+                    _currentConsole.Resize(evts.WindowEvent.NewRows, evts.WindowEvent.NewColumns);
+                }
+
                 EventHookManager.ProcessEvents(evts);
                 _ui.Update(evts);
                 PerformDrawOperations(force: false);
