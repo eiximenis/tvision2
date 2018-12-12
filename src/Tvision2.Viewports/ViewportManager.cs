@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
@@ -51,6 +52,7 @@ namespace Tvision2.Viewports
         {
             var data = sender as IComponentMetadata;
             _attachedComponentTree.ClearViewport(e.Previous);
+            Debug.WriteLine($"Changed viewport of {e.ComponentName}");
             data.Component.Invalidate();
             InvalidateViewport(e.Previous);
         }

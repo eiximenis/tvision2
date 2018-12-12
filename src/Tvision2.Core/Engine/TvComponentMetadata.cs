@@ -19,7 +19,7 @@ namespace Tvision2.Core.Engine
         public void OnViewportChanged(Guid id, IViewport previous, IViewport current)
         {
             var handler = ViewportChanged;
-            handler?.Invoke(this, new ViewportUpdatedEventArgs(id, previous, current));
+            handler?.Invoke(this, new ViewportUpdatedEventArgs(id, previous, current, Component.Name));
         }
     }
 

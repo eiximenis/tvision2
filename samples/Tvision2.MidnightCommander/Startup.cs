@@ -47,6 +47,8 @@ namespace Tvision2.MidnightCommander
             var listFilesGrid = new TvGrid(tui.UI, new GridState(1, 2));
             mainStackPanel.At(0).Add(listFilesGrid);
 
+            tui.UI.Add(mainStackPanel);
+            
             // TODO: Implement BorderedPanel
             // mainStackPanel.At(1).Add(new BorderedPanel());
 
