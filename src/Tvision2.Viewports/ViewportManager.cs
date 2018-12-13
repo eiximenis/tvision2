@@ -52,7 +52,6 @@ namespace Tvision2.Viewports
         {
             var data = sender as IComponentMetadata;
             _attachedComponentTree.ClearViewport(e.Previous);
-            Debug.WriteLine($"Changed viewport of {e.ComponentName}");
             data.Component.Invalidate();
             InvalidateViewport(e.Previous);
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Tvision2.Controls.Drawers;
 using Tvision2.Controls.Styles;
@@ -62,6 +61,11 @@ namespace Tvision2.Controls.List
                         var attr = tvitem.Attributes[column];
                         context.DrawStringAt(text, new TvPoint(1 + lenDrawn, idx + 1), selected ? selectedAttr : attr);
                         lenDrawn += text.Length;
+                    }
+                    var remaining = viewport.Columns - 2 - lenDrawn;
+                    if (remaining > 0)
+                    {
+                        context.DrawChars(' ', remaining, new TvPoint(1 + lenDrawn, idx + 1), selected ? selectedAttr :  CurrentStyle.Standard);
                     }
                 }
                 else
