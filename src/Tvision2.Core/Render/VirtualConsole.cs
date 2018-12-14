@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Tvision2.Core.Colors;
 using Tvision2.Engine.Console;
 
@@ -41,6 +42,10 @@ namespace Tvision2.Core.Render
                 Height = height;
                 Width = width;
                 InitData();
+                for (var idx = 0; idx<_dirtyMap.Length; idx++)
+                {
+                    _dirtyMap[idx] = DirtyStatus.CharAndAttr;
+                }
             }
         }
 
@@ -128,7 +133,7 @@ namespace Tvision2.Core.Render
         public void DrawAt(string text, TvPoint location, int zIndex, CharacterAttribute attr)
         {
             var start = location.Left + (Width * location.Top);
-            var end = start + text.Length;
+            var end = start + Math.Min(text.Length, Width - location.Left - 1);
             var textIdx = 0;
             var dirty = IsDirty;
             var charCol = location.Left;
@@ -182,7 +187,7 @@ namespace Tvision2.Core.Render
         {
             var start = location.Left + (Width * location.Top);
             var zindex = charToCopy.ZIndex;
-            var end = start + count;
+            var end = start + Math.Min(count, Width - location.Left - 1);
             var charCol = location.Left;
             var charRow = location.Top;
             var dirty = IsDirty;
