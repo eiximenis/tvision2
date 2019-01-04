@@ -6,7 +6,7 @@ namespace Tvision2.MidnightCommander.Stores
 {
     internal static class FileListReducers
     {
-        public static FileList RefreshFolder(FileList state, TvAction action)
+        public static FileList FileListActions(FileList state, TvAction action)
         {
             if (action.Name == "FETCH_DIR")
             {
@@ -42,6 +42,15 @@ namespace Tvision2.MidnightCommander.Stores
                 });
 
                 return new FileList(folder.FullName, items.ToArray());
+            }
+
+            return state;
+        }
+        public static GlobalState FileActions(GlobalState state, TvAction action)
+        {
+            if (action.Name == "BEGIN_RENAME")
+            {
+                return state;
             }
 
             return state;

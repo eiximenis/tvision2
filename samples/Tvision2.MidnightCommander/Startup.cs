@@ -104,7 +104,7 @@ namespace Tvision2.MidnightCommander
 
             var sleft = TvStatexControl.Wrap<TvList<FileItem>, ListState<FileItem>, FileList>(left, opt =>
             {
-                opt.UseStore("left");
+                opt.UseDefaultStore("left");
                 opt.UseStatexTransformation((fl, cs) =>
                 {
                     cs.Clear();
@@ -120,10 +120,13 @@ namespace Tvision2.MidnightCommander
                 opt.OnKeyEvent(e => e.AsConsoleKeyInfo().Key == System.ConsoleKey.Backspace)
                     .Dispatch(s => new TvAction("FETCH_BACK"));
 
+                opt.OnKeyEvent(e => e.AsConsoleKeyInfo().Key == System.ConsoleKey.F2)
+                    .DispatchTo("GlobalStore", s => new TvAction<FileItem>("BEGIN_RENAME", s[s.SelectedIndex]));
+
             });
             var sright = TvStatexControl.Wrap<TvList<FileItem>, ListState<FileItem>, FileList>(right, opt =>
             {
-                opt.UseStore("right");
+                opt.UseDefaultStore("right");
                 opt.UseStatexTransformation((fl, cs) =>
                 {
                     cs.Clear();

@@ -1,13 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Tvision2.Controls.Dropdown
 {
-    public class DropdownState : IDirtyObject
+    public class DropdownState : IBuildableDropDownState, IDirtyObject
     {
 
-        public IEnumerable<string> Values => new[] { "v1", "v2", "v3" };
+        private readonly List<DropDownValue> _values;
+        public IEnumerable<DropDownValue> Values => _values;
+
+        public DropdownState()
+        {
+            _values = new List<DropDownValue>();
+        }
+
+        public void AddValue(DropDownValue value)
+        {
+            _values.Add(value);
+            IsDirty = true;
+        }
 
         public bool IsDirty { get; private set; }
 

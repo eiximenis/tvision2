@@ -27,7 +27,7 @@ namespace Tvision2.Statex.Controls
             _keyActionCreators = new List<StatexKeyActionCreatorBinder<TControlState>>();
         }
 
-        public void UseStore(string storeName)
+        public void UseDefaultStore(string storeName)
         {
             StoreName = storeName;
         }

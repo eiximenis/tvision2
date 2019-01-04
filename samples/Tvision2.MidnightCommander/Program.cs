@@ -29,9 +29,11 @@ namespace Tvision2.MidnightCommander
                     .AddStateManager(sm =>
                     {
                         var ls = sm.AddStore<FileListStore, FileList>("left", new FileListStore(FileList.Empty));
-                        ls.AddReducer(FileListReducers.RefreshFolder);
+                        ls.AddReducer(FileListReducers.FileListActions);
                         var rs = sm.AddStore<FileListStore, FileList>("right", new FileListStore(FileList.Empty));
-                        rs.AddReducer(FileListReducers.RefreshFolder);
+                        rs.AddReducer(FileListReducers.FileListActions);
+                        var gs = sm.AddStore<GlobalStore, GlobalState>("GlobalStore", new GlobalStore());
+                        gs.AddReducer(FileListReducers.FileActions);
                     });
             }).UseConsoleLifetime();
             await builder.RunTvisionConsoleApp();

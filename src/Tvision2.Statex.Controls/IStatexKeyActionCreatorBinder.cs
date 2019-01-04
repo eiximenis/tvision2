@@ -7,5 +7,6 @@ namespace Tvision2.Statex.Controls
         where TControlState : IDirtyObject
     {
         void Dispatch(Func<TControlState, TvAction> actionCreator);
+        void DispatchTo(string storeName, Func<TControlState, TvAction> actionCreator);
     }
 }

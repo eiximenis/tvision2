@@ -14,7 +14,7 @@ namespace Tvision2.Statex.Controls
 
 
         internal Func<TvConsoleKeyboardEvent, bool> Predicate { get; private set; }
-        internal Func<TControlState, TvAction> ActionCreator { get; private set; }
+        internal (string StoreName, Func<TControlState, TvAction> Creator) ActionCreator { get; private set; }
 
 
 
@@ -26,7 +26,14 @@ namespace Tvision2.Statex.Controls
 
         public void Dispatch(Func<TControlState, TvAction> actionCreator)
         {
-            ActionCreator = actionCreator;
+            ActionCreator = (null, actionCreator);
         }
+
+        public void DispatchTo(string storeName, Func<TControlState, TvAction> actionCreator)
+        {
+            ActionCreator = (storeName, actionCreator);
+        }
+
+
     }
 }

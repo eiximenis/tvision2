@@ -36,8 +36,9 @@ namespace Tvision2.Statex.Behaviors
                 {
                     if (binder.Predicate(evt))
                     {
-                        var action = binder.ActionCreator(updateContext.State);
-                        _storeSelector.GetStore(_storeName).Dispatch(action);
+                        var storeName = string.IsNullOrEmpty(binder.ActionCreator.StoreName) ? _storeName : binder.ActionCreator.StoreName;
+                        var action = binder.ActionCreator.Creator(updateContext.State);
+                        _storeSelector.GetStore(storeName).Dispatch(action);
                         evt.Handle();
                         updated = true;
                     }
