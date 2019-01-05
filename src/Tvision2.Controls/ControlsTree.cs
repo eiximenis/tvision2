@@ -51,6 +51,10 @@ namespace Tvision2.Controls
         {
             _controls.Remove(cdata);
             _indexedControls.Remove(cdata.ControlId);
+            if (_focused == cdata)
+            {
+                _focused = null;
+            }
         }
 
 

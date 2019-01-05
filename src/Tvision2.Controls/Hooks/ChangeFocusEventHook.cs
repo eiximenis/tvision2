@@ -15,13 +15,8 @@ namespace Tvision2.Controls.Hooks
             var tab = events.AcquireFirstKeyboard(ke => ke.IsKeyDown && ke.AsConsoleKeyInfo().Key == ConsoleKey.Tab);
             if (tab != null)
             {
-                var focusChanged = _ctree.MoveFocusToNext();
-                if (focusChanged)
-                {
-                    _ctree.CurrentFocused().Control.OnFocus();
-                }
+                _ctree.MoveFocusToNext();
             }
-
         }
     }
 }

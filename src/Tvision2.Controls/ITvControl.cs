@@ -11,6 +11,7 @@ namespace Tvision2.Controls
         TvControlMetadata Metadata { get; }
 
         void OnFocus();
+        void OnLostFocus();
     }
 
     public interface ITvControl<TState> : ITvControl

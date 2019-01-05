@@ -68,6 +68,10 @@ namespace Tvision2.Controls
         {
         }
 
+        public virtual void OnLostFocus()
+        {
+        }
+
         public TvComponent<TState> AsComponent() => _component;
 
         TvComponent ITvControl.AsComponent() => _component;

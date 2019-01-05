@@ -31,7 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Statex.Controls", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.HelloWorld", "samples\Tvision2.HelloWorld\Tvision2.HelloWorld.csproj", "{CD6F38CC-1A3E-4F11-8FFE-2BD8F188730B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.Dialogs", "src\Tvision2.Dialogs\Tvision2.Dialogs.csproj", "{300A2B0D-4FE0-486C-B820-D5B092E9B8BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Dialogs", "src\Tvision2.Dialogs\Tvision2.Dialogs.csproj", "{300A2B0D-4FE0-486C-B820-D5B092E9B8BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.ControlsGallery", "samples\Tvision2.ControlsGallery\Tvision2.ControlsGallery.csproj", "{25CEE6D9-0F67-4E31-BEC4-19069AE2C575}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +93,10 @@ Global
 		{300A2B0D-4FE0-486C-B820-D5B092E9B8BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{300A2B0D-4FE0-486C-B820-D5B092E9B8BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{300A2B0D-4FE0-486C-B820-D5B092E9B8BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25CEE6D9-0F67-4E31-BEC4-19069AE2C575}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25CEE6D9-0F67-4E31-BEC4-19069AE2C575}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25CEE6D9-0F67-4E31-BEC4-19069AE2C575}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25CEE6D9-0F67-4E31-BEC4-19069AE2C575}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +105,7 @@ Global
 		{63234481-D20C-40EA-ABC4-57F42482DA3C} = {31E0103B-CAA7-43A4-89C3-BEE4C29A6363}
 		{B272F9AF-7C0E-448E-B68A-163A2CC39EAE} = {1FFF334B-6239-454C-8B05-991DC83C0D5A}
 		{CD6F38CC-1A3E-4F11-8FFE-2BD8F188730B} = {1FFF334B-6239-454C-8B05-991DC83C0D5A}
+		{25CEE6D9-0F67-4E31-BEC4-19069AE2C575} = {1FFF334B-6239-454C-8B05-991DC83C0D5A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF2528A0-913B-4BF1-9136-4E8723945398}

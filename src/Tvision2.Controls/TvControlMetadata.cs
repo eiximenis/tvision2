@@ -39,6 +39,7 @@ namespace Tvision2.Controls
         {
             IsDirty = true;
             IsFocused = false;
+            Control.OnLostFocus();
         }
 
         public void Validate() => IsDirty = false;
