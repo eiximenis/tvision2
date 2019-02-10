@@ -20,6 +20,7 @@ namespace Tvision2.Core.Components
     public abstract class TvComponent
     {
         private readonly TvComponentMetadata _metadata;
+        private bool _mustBeCleared;
         protected Dictionary<Guid, IViewport> _viewports;
         public RedrawNeededAction NeedToRedraw { get; protected set; }
         public string Name { get; }
@@ -31,14 +32,21 @@ namespace Tvision2.Core.Components
         protected readonly List<ITvDrawer> _drawers;
         protected readonly List<IBehaviorMetadata> _behaviorsMetadata;
 
-        public TvComponent(string name)
+        public TvComponent(string name, Action<IConfigurableComponentMetadata> configAction = null)
         {
+            _mustBeCleared = false;
             ComponentId = Guid.NewGuid();
             _metadata = new TvComponentMetadata(this);
+            configAction?.Invoke(_metadata);
             _drawers = new List<ITvDrawer>();
             _behaviorsMetadata = new List<IBehaviorMetadata>();
             _viewports = new Dictionary<Guid, IViewport>();
             Name = string.IsNullOrEmpty(name) ? $"TvComponent-{ComponentId}" : name.Replace("<$>", ComponentId.ToString());
+        }
+
+        public void Clear()
+        {
+            _mustBeCleared = true;
         }
 
         public Guid AddViewport(IViewport viewport)
@@ -78,12 +86,37 @@ namespace Tvision2.Core.Components
             _drawers.Insert(0, drawer);
         }
 
+        internal void MountedTo(IComponentTree owner)
+        {
+            _metadata.MountAction?.Invoke(this, owner);
+        }
+        internal void UnmountedFrom(IComponentTree owner)
+        {
+            _metadata.UnmountAction?.Invoke(this, owner);
+        }
+
         protected internal abstract void Update(TvConsoleEvents evts);
-        protected internal abstract void Draw(VirtualConsole console);
-     
+
+        protected abstract void DoDraw(VirtualConsole console);
+
+        protected internal void Draw(VirtualConsole console)
+        {
+            if (_mustBeCleared)
+            {
+                foreach (var vpkv in _viewports)
+                {
+                    console.Clear(vpkv.Value);
+                }
+                _mustBeCleared = false;
+            }
+
+            DoDraw(console);
+            NeedToRedraw = RedrawNeededAction.None;
+        }
+
     }
 
-    public class TvComponent<T> : TvComponent
+    public sealed class TvComponent<T> : TvComponent
     {
         public T State { get; private set; }
 
@@ -95,7 +128,7 @@ namespace Tvision2.Core.Components
         }
 
 
-        public TvComponent(T initialState, string name = null) : base(name)
+        public TvComponent(T initialState, string name = null, Action<IConfigurableComponentMetadata> configAction = null) : base(name, configAction)
         {
             NeedToRedraw = RedrawNeededAction.None;
             State = initialState;
@@ -110,7 +143,7 @@ namespace Tvision2.Core.Components
 
         public void AddBehavior(Func<BehaviorContext<T>, bool> behaviorFunc, Action<IBehaviorMetadata<T>> metadataAction = null) => AddBehavior(new ActionBehavior<T>(behaviorFunc), metadataAction);
 
-        public void AddBehavior<TB>(Action<IFactoryBehaviorMetadata<TB,T>> metadataAction = null)
+        public void AddBehavior<TB>(Action<IFactoryBehaviorMetadata<TB, T>> metadataAction = null)
             where TB : ITvBehavior<T>
         {
             var metadata = new FactoryBehaviorMetadata<TB, T>();
@@ -153,7 +186,7 @@ namespace Tvision2.Core.Components
         }
 
 
-        protected internal override void Draw(VirtualConsole console)
+        protected override void DoDraw(VirtualConsole console)
         {
             foreach (var vpnk in _viewports)
             {
@@ -161,10 +194,8 @@ namespace Tvision2.Core.Components
                 foreach (var drawer in _drawers)
                 {
                     drawer?.Draw(context);
-               }
+                }
             }
-            NeedToRedraw = RedrawNeededAction.None;
-
         }
 
     }

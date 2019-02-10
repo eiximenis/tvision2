@@ -10,7 +10,24 @@ namespace Tvision2.Controls.Textbox
 {
     public class TvTextbox : TvControl<TextboxState>
     {
-        public TvTextbox(ISkin skin, IViewport boxModel, TextboxState initialState) : base(skin, boxModel, initialState)
+
+        public static ITvControlCreationParametersBuilder<TextboxState> CreationParametersBuilder(Action<TextboxState> stateConfig = null)
+        {
+            if (stateConfig != null) {
+                return TvControlCreationParametersBuilder.ForState<TextboxState>(() =>
+                {
+                var state = new TextboxState();
+                stateConfig(state);
+                return state;
+                });
+            }
+
+            return TvControlCreationParametersBuilder.ForDefaultState<TextboxState>();
+        }
+
+        public TvTextbox(ITvControlCreationParametersBuilder<TextboxState> parameters) : this (parameters.Build()) { }
+
+        public TvTextbox(TvControlCreationParameters<TextboxState> parameters) : base(parameters)
         {
             RequestControlManagement((ctx, state) => ctx.SetCursorAt(state.CaretPos, 0));
         }

@@ -1,5 +1,4 @@
-﻿using Tvision2.Controls.Styles;
-using Tvision2.Core.Components;
+﻿using Tvision2.Core.Components;
 
 namespace Tvision2.Controls
 {
@@ -7,11 +6,8 @@ namespace Tvision2.Controls
     {
         TvComponent AsComponent();
         string ControlType { get; }
-
+        string Name { get; }
         TvControlMetadata Metadata { get; }
-
-        void OnFocus();
-        void OnLostFocus();
     }
 
     public interface ITvControl<TState> : ITvControl

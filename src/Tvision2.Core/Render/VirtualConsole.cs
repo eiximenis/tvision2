@@ -176,7 +176,7 @@ namespace Tvision2.Core.Render
                     var idx = col + (Width * row);
                     _buffer[idx].Character = ' ';
                     _buffer[idx].Attributes = new CharacterAttribute();
-                    _buffer[idx].ZIndex = -1;
+                    _dirtyMap[idx] = DirtyStatus.CharAndAttr;
                 }
             }
 

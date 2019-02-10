@@ -9,6 +9,7 @@ namespace Tvision2.Viewports
     internal class ViewportManager : IViewportManager
     {
         private ComponentTree _attachedComponentTree;
+
         public void InvalidateViewport(IViewport viewportToInvalidate)
         {
             var components = _attachedComponentTree.Components.Where(c => c.Viewports.Any(vp => vp.Value.Intersects(viewportToInvalidate)));
@@ -36,6 +37,9 @@ namespace Tvision2.Viewports
         {
             var removed = e.ComponentMetadata;
             var viewport = e.ComponentMetadata.Component.Viewport;
+
+            removed.Component.Clear();
+
             if (viewport != null)
             {
                 InvalidateViewport(viewport);

@@ -11,10 +11,15 @@ namespace Tvision2.Controls.Menu
 
         private readonly TvMenuBarOptions _options;
 
-        public TvMenuBar(ISkin skin, IViewport boxModel, MenuBarState data, Action<ITvMenuBarOptions> optionsAction = null) : base(skin, boxModel, data)
+        public TvMenuBar(ITvControlCreationParametersBuilder<MenuBarState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : base(parameters.Build()) { }
+        public TvMenuBar(TvControlCreationParameters<MenuBarState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : base(parameters)
         {
             _options = new TvMenuBarOptions();
             optionsAction?.Invoke(_options);
+        }
+        public static ITvControlCreationParametersBuilder<MenuBarState> CreationParametersBuilder(IEnumerable<string> options)
+        {
+            return TvControlCreationParametersBuilder.ForState<MenuBarState>(() => new MenuBarState(options));
         }
 
         protected override void OnDraw(RenderContext<MenuBarState> context)

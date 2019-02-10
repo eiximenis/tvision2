@@ -14,5 +14,7 @@ namespace Tvision2.Controls
         bool MoveFocusToNext();
         IEnumerable<TvControlMetadata> ControlsMetadata { get; }
         TvControlMetadata this[Guid id] { get; }
+
+        event EventHandler<FocusChangedEventArgs> FocusChanged;
     }
 }

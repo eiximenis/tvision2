@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Tvision2.Controls.Styles;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Render;
 
@@ -10,9 +10,13 @@ namespace Tvision2.Controls.Button
     {
         public ICommand<ButtonState> OnClick { get; set; }
 
-        public TvButton(ISkin skin, IViewport boxModel, ButtonState data) : base(skin, boxModel, data)
+        public static ITvControlCreationParametersBuilder<ButtonState> CreationParametersBuilder(Action<ButtonState> stateCfg = null)
         {
+            return TvControlCreationParametersBuilder.ForDefaultState<ButtonState>(stateCfg);
         }
+
+        public TvButton(ITvControlCreationParametersBuilder<ButtonState> parameters) : this(parameters.Build()) { }
+        public TvButton(TvControlCreationParameters<ButtonState> parameters) : base(parameters) { }
 
 
         protected override IEnumerable<ITvBehavior<ButtonState>> GetEventedBehaviors()

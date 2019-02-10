@@ -13,5 +13,6 @@ namespace Tvision2.Controls
     {
         Guid Add(ICommand<TData> command);
         Task Invoke(TData item);
+        Guid Add(Func<TData, Task<bool>> commandFunc);
     }
 }

@@ -9,9 +9,4 @@ namespace Tvision2.Core.Engine
         TvComponent Component { get; }
         event EventHandler<ViewportUpdatedEventArgs> ViewportChanged;
     }
-
-    public interface IComponentMetadata<TExtra> : IComponentMetadata
-    {
-        TExtra ExtraData { get; }
-    }
 }

@@ -22,6 +22,10 @@ namespace Tvision2.Controls
         }
 
 
+
+        public Guid Add(Func<TData, Task<bool>> commandFunc) =>
+            Add(new DelegateCommand<TData>(commandFunc));
+
         public Guid Add(ICommand<TData> command)
         {
             var guid = Guid.NewGuid();

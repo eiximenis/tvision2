@@ -12,10 +12,10 @@ namespace Tvision2.Controls.Window
 {
     public class TvWindow : TvControl<WindowState>
     {
-        public TvWindow(ISkin skin, IViewport boxModel, WindowState initialState)
-            : base(skin, boxModel.Layer(ViewportLayer.Top, -1), initialState, $"TvWindow_{Guid.NewGuid()}")
+        public TvWindow(ITvControlCreationParametersBuilder<WindowState> parameters) : base(parameters.Build()) { }
+        public TvWindow(TvControlCreationParameters<WindowState> parameters) : base(parameters)
         {
-            initialState.SetOwnerWindow(this);
+            parameters.InitialState.SetOwnerWindow(this);
             AsComponent().Metadata.ViewportChanged += MyViewportChanged;
         }
 

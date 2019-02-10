@@ -1,4 +1,4 @@
-﻿using Tvision2.Controls.Styles;
+﻿using System;
 using Tvision2.Core.Components;
 using Tvision2.Core.Render;
 
@@ -10,7 +10,24 @@ namespace Tvision2.Controls.ActivityIndicator
         private int _ticks;
         private int _idx;
 
-        public TvActivityIndicator(ISkin skin, IViewport viewport, ActivityIndicatorState state) : base(skin, viewport, state)
+
+        public static ITvControlCreationParametersBuilder<ActivityIndicatorState> CreationParametersBuilder(Action<ActivityIndicatorState> stateConfig = null)
+        {
+            if (stateConfig != null)
+            {
+                return TvControlCreationParametersBuilder.ForState<ActivityIndicatorState>(() =>
+                {
+                    var state = new ActivityIndicatorState();
+                    stateConfig(state);
+                    return state;
+                });
+            }
+
+            return TvControlCreationParametersBuilder.ForDefaultState<ActivityIndicatorState>();
+        }
+
+        public TvActivityIndicator(ITvControlCreationParametersBuilder<ActivityIndicatorState> parameters) : this(parameters.Build()) { }
+        public TvActivityIndicator(TvControlCreationParameters<ActivityIndicatorState> parameters) : base(parameters)
         {
             _ticks = 0;
             _idx = 0;

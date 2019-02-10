@@ -13,6 +13,8 @@ namespace Tvision2.Controls
         private IComponentTree _componentTree;
         private TvControlMetadata _focused;
 
+        public event EventHandler<FocusChangedEventArgs> FocusChanged;
+
         public IEnumerable<TvControlMetadata> ControlsMetadata => _controls;
 
 
@@ -43,8 +45,13 @@ namespace Tvision2.Controls
 
         public void Add(TvControlMetadata cdata)
         {
+            if (cdata.OwnerTree != null && cdata.OwnerTree != this)
+            {
+                throw new InvalidOperationException("TvControl belongs to another ControlsTree. Operation not allowed.");
+            }
             _controls.AddLast(cdata);
             _indexedControls.Add(cdata.ControlId, cdata);
+            cdata.OwnerTree = this;
         }
 
         public void Remove(TvControlMetadata cdata)
@@ -55,12 +62,13 @@ namespace Tvision2.Controls
             {
                 _focused = null;
             }
+            cdata.OwnerTree = null;
         }
 
 
         public TvControlMetadata NextControl(TvControlMetadata current)
         {
-            var next = _controls.Find(current)?.Next;
+            var next = current != null ? _controls.Find(current)?.Next : null;
             return next != null ? next.Value : _controls.First.Value;
         }
 
@@ -75,12 +83,12 @@ namespace Tvision2.Controls
         {
             if (_focused != controlToFocus)
             {
-                if (_focused != null)
-                {
-                    _focused.Unfocus();
-                }
-                controlToFocus.Focus();
+                var previous = _focused;
+                System.Diagnostics.Debug.WriteLine($">>> ControlsTree. Focus will move from {previous?.Control.AsComponent().Name ?? "<null>"} to {controlToFocus?.Control.AsComponent().Name ?? "<null>"}");
+                previous?.Unfocus();
                 _focused = controlToFocus;
+                controlToFocus.DoFocus();
+                OnFocusChanged(previous);
                 return true;
             }
 
@@ -95,18 +103,33 @@ namespace Tvision2.Controls
             {
                 return false;
             }
-
-            var currentFocused = _focused ?? _controls.First.Value;
-
+            var currentFocused = _focused;
             var next = NextControl(_focused);
-            while (!next.CanFocus && next != currentFocused)
+            while (!IsValidTargetForFocus(currentFocused, next) && next != currentFocused )
             {
                 next = NextControl(next);
+            }
+            if (next.AcceptFocus(currentFocused) == false)
+            {
+                return false;
             }
             return Focus(next);
         }
 
+
+        private bool IsValidTargetForFocus(TvControlMetadata currentFocused, TvControlMetadata nextWanted)
+        {
+            if (currentFocused != null && currentFocused.OwnerId == nextWanted.ControlId) return false;
+            return nextWanted.AcceptFocus(currentFocused);
+        }
+
         public TvControlMetadata this[Guid id] => 
             _indexedControls.TryGetValue(id, out TvControlMetadata result) ? result : null;
+
+        private void OnFocusChanged(TvControlMetadata previous)
+        {
+            var handler = FocusChanged;
+            handler?.Invoke(this, new FocusChangedEventArgs(this, previous, _focused));
+        }
     }
 }

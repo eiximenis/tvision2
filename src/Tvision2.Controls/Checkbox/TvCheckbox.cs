@@ -10,7 +10,8 @@ namespace Tvision2.Controls.Checkbox
 {
     public class TvCheckbox : TvControl<CheckboxState>
     {
-        public TvCheckbox(ISkin skin, IViewport boxModel, CheckboxState state) : base(skin, boxModel, state)
+        public TvCheckbox(ITvControlCreationParametersBuilder<CheckboxState> parameters) : this(parameters.Build()) { }
+        public TvCheckbox(TvControlCreationParameters<CheckboxState> parameters) : base(parameters)
         {
             RequestControlManagement((ctx, _) => ctx.SetCursorAt(1,0));
         }

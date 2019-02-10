@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Events;
 
@@ -22,8 +20,16 @@ namespace Tvision2.Controls.Dropdown
             var info = evt.AsConsoleKeyInfo();
             if (info.Key == ConsoleKey.Enter)
             {
-                _owner.DisplayList();
-                return true;
+                if (_owner.HasListDisplayed)
+                {
+                    _owner.HideList(focusToLabel: true);
+                    return true;
+                }
+                else
+                {
+                    _owner.DisplayList();
+                    return true;
+                }
             }
 
             return false;

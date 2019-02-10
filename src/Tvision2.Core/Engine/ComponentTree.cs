@@ -36,19 +36,23 @@ namespace Tvision2.Core.Engine
 
         private void DoPendingRemovals()
         {
-            if (_pendingRemovals.Count > 0)
+            if (_pendingRemovals.Count == 0)
             {
-                var deleted = new List<IComponentMetadata>();
-                foreach (var kvp in _pendingRemovals)
-                {
-                    _components.Remove(kvp.Key);
-                    deleted.Add(kvp.Value);
-                }
-                _pendingRemovals.Clear();
-                foreach (var deletedComponent in deleted)
-                {
-                    OnComponentRemoved(deletedComponent);
-                }
+                return;
+            }
+
+            var toDelete = _pendingRemovals.ToArray();
+            _pendingRemovals.Clear();
+            var deleted = new List<IComponentMetadata>();
+            foreach (var kvp in toDelete)
+            {
+                _components.Remove(kvp.Key);
+                deleted.Add(kvp.Value);
+            }
+            foreach (var deletedComponent in deleted)
+            {
+                deletedComponent.Component.UnmountedFrom(this);
+                OnComponentRemoved(deletedComponent);
             }
         }
 
@@ -71,14 +75,22 @@ namespace Tvision2.Core.Engine
 
         private void DoPendingAdds()
         {
-            foreach (var kvp in _pendingAdds)
+            if (_pendingAdds.Count == 0)
+            {
+                return;
+            }
+
+            var toAdd = _pendingAdds.ToArray();
+            _pendingAdds.Clear();
+
+            foreach (var kvp in toAdd)
             {
                 _components.Add(kvp.Key, kvp.Value);
                 CreateNeededBehaviors(kvp.Value.Component);
+                kvp.Value.Component.MountedTo(this);
                 kvp.Value.Component.Invalidate();
                 OnComponentAdded(kvp.Value);
             }
-            _pendingAdds.Clear();
         }
 
         private void CreateNeededBehaviors(TvComponent component)

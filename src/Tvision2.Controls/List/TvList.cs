@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Tvision2.Controls.Drawers;
-using Tvision2.Controls.Styles;
 using Tvision2.Core.Components;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Render;
@@ -20,13 +19,19 @@ namespace Tvision2.Controls.List
 
         public IListStyleProvider<TItem> StyleProvider => _styleProvider;
 
-        public TvList(ISkin skin, IViewport boxModel, ListState<TItem> data, Action<ITvListOptions<TItem>> optionsAction = null) : base(skin, boxModel, data)
+        public static ITvControlCreationParametersBuilder<ListState<TItem>> CreationParametersBuilder(Func<ListState<TItem>> stateCreator)
+        {
+            return TvControlCreationParametersBuilder.ForState<ListState<TItem>>(stateCreator);
+        }
+
+        public TvList(ITvControlCreationParametersBuilder<ListState<TItem>> parameters, Action<ITvListOptions<TItem>> optionsAction = null) : this(parameters.Build()) { }
+        public TvList(TvControlCreationParameters<ListState<TItem>> parameters, Action<ITvListOptions<TItem>> optionsAction = null) : base(parameters)
         {
             _options = new TvListOptions<TItem>();
             optionsAction?.Invoke(_options);
             OnItemClicked = new CommandChain<TItem>();
-            _styleProvider = new TvListStyleProvider<TItem>(skin.ColorManager);
-            _styleProvider.UseSkin(skin);
+            _styleProvider = new TvListStyleProvider<TItem>(parameters.Skin.ColorManager);
+            _styleProvider.UseSkin(parameters.Skin);
             _itemsCache = new TvListItemCache<TItem>(State.Columns, _styleProvider);
             State.SetCache(_itemsCache);
         }
@@ -65,7 +70,7 @@ namespace Tvision2.Controls.List
                     var remaining = viewport.Columns - 2 - lenDrawn;
                     if (remaining > 0)
                     {
-                        context.DrawChars(' ', remaining, new TvPoint(1 + lenDrawn, idx + 1), selected ? selectedAttr :  CurrentStyle.Standard);
+                        context.DrawChars(' ', remaining, new TvPoint(1 + lenDrawn, idx + 1), selected ? selectedAttr : CurrentStyle.Standard);
                     }
                 }
                 else

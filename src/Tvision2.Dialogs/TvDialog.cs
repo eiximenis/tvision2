@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Tvision2.Controls;
 using Tvision2.Controls.Drawers;
 using Tvision2.Controls.Styles;
@@ -12,7 +11,9 @@ namespace Tvision2.Dialogs
     public class TvDialog : TvControl<DialogState>
     {
         internal TvDialog(ISkin skin, IViewport viewport, IComponentTree owner, string name = null)
-            : base(skin, viewport.Layer(ViewportLayer.Top, -1), new DialogState(skin, name ?? $"TvDialog_{Guid.NewGuid()}"))
+            : base(new TvControlCreationParameters<DialogState>(
+                skin, viewport.Layer(ViewportLayer.Top, -1), 
+                new DialogState(skin, name ?? $"TvDialog_{Guid.NewGuid()}")))
         {
             Metadata.CanFocus = false;
             State.Init(this, owner);
