@@ -23,6 +23,7 @@ namespace Tvision2.Controls.Dropdown
         }
 
         public bool IsDirty { get; private set; }
+        public string SelectedValue { get; internal set; }
 
         public void Validate() => IsDirty = false;
     }

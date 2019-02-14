@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Tvision2.Core.Components;
 using Tvision2.Core.Render;
 using Tvision2.Engine.Console;
@@ -11,12 +12,14 @@ namespace Tvision2.Core.Engine
 
         public event EventHandler<ViewportUpdatedEventArgs> ViewportChanged;
 
-        internal Action<TvComponent, IComponentTree> MountAction { get; private set; }
-        internal Action<TvComponent, IComponentTree> UnmountAction { get; private set; }
+        public IActionChain<ComponentMoutingContext> OnComponentMounted { get; }
+        public IActionChain<ComponentMoutingContext> OnComponentUnmounted { get; }
 
         public TvComponentMetadata(TvComponent component)
         {
             Component = component;
+            OnComponentMounted = new ActionChain<ComponentMoutingContext>();
+            OnComponentUnmounted = new ActionChain<ComponentMoutingContext>();
         }
 
         public void OnViewportChanged(Guid id, IViewport previous, IViewport current)
@@ -25,14 +28,14 @@ namespace Tvision2.Core.Engine
             handler?.Invoke(this, new ViewportUpdatedEventArgs(id, previous, current, Component.Name));
         }
 
-        public void WhenComponentMounted(Action<TvComponent, IComponentTree> mountAction)
+        public void WhenComponentMounted(Func<ComponentMoutingContext, Task<bool>> mountAction)
         {
-            MountAction = mountAction;
+            OnComponentMounted.Add(mountAction);
         }
 
-        public void WhenComponentUnmounted(Action<TvComponent, IComponentTree> unmountAction)
+        public void WhenComponentUnmounted(Func<ComponentMoutingContext, Task<bool>> unmountAction)
         {
-            UnmountAction = unmountAction;
+            OnComponentUnmounted.Add(unmountAction);
         }
     }
 

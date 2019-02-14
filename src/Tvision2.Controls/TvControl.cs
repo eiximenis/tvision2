@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 using Tvision2.Controls.Behavior;
 using Tvision2.Controls.Drawers;
 using Tvision2.Controls.Styles;
@@ -9,7 +9,6 @@ using Tvision2.Core.Components;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
-using Tvision2.Events;
 
 namespace Tvision2.Controls
 {
@@ -37,8 +36,8 @@ namespace Tvision2.Controls
             _component = new TvComponent<TState>(initialState, name ?? $"TvControl_<$>",
                 cfg =>
                 {
-                    cfg.WhenComponentMounted((cmp, ct) => OnControlMounted(ct));
-                    cfg.WhenComponentUnmounted((cmp, ct) => OnControlUnmounted(ct));
+                    cfg.WhenComponentMounted(ctx => OnComponentMounted(ctx.OwnerTree));
+                    cfg.WhenComponentUnmounted(ctx => OnComponentUnmounted(ctx.OwnerTree));
                 });
 
             _metadata = new Lazy<TvControlMetadata>(() => new TvControlMetadata(this, ConfigureStandardMetadataOptions));
@@ -63,8 +62,25 @@ namespace Tvision2.Controls
 
         protected virtual void ConfigureMetadataOptions(TvControlMetadataOptions options) { }
 
+        private Task<bool> OnComponentUnmounted(IComponentTree owner)
+        {
+            var ctree = _metadata.Value.OwnerTree as ControlsTree;
+            ctree.Remove(Metadata);
+            OnControlUnmounted(owner);
+            _metadata.Value.OwnerTree = null;
+            return Task.FromResult(true);
+        }
+
         protected virtual void OnControlUnmounted(IComponentTree owner)
         {
+        }
+
+        private Task<bool> OnComponentMounted(IComponentTree owner)
+        {
+            var ctree = owner.RootControls() as ControlsTree;
+            ctree.Add(Metadata);
+            OnControlMounted(owner);
+            return Task.FromResult(true);
         }
 
         protected virtual void OnControlMounted(IComponentTree owner)

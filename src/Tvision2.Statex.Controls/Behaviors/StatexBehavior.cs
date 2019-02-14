@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Tvision2.Controls;
 using Tvision2.Controls.Behavior;
+using Tvision2.Core;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Statex.Behaviors;
 
@@ -45,7 +46,7 @@ namespace Tvision2.Statex.Controls.Behaviors
         {
             foreach (var creator in _options.ActionCreators)
             {
-                var commandType = typeof(DelegateCommand<>);
+                var commandType = typeof(DelegateAction<>);
                 commandType = commandType.MakeGenericType(creator.CommandType);
 
                 Func<object, Task> @delegate = delegate (object o)
@@ -56,8 +57,8 @@ namespace Tvision2.Statex.Controls.Behaviors
                     return Task.CompletedTask;
                 };
 
-                var command = Activator.CreateInstance(commandType, @delegate, creator.Predicate) as ICommand;
-                var chain = creator.CommandMember.GetValue(control) as ICommandChain;
+                var command = Activator.CreateInstance(commandType, @delegate, creator.Predicate) as IAction;
+                var chain = creator.CommandMember.GetValue(control) as IActionChain;
                 chain.Add(command);
             }
         }

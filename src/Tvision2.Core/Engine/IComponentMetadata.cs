@@ -8,5 +8,7 @@ namespace Tvision2.Core.Engine
     {
         TvComponent Component { get; }
         event EventHandler<ViewportUpdatedEventArgs> ViewportChanged;
+        IActionChain<ComponentMoutingContext> OnComponentMounted { get; }
+        IActionChain<ComponentMoutingContext> OnComponentUnmounted { get; }
     }
 }

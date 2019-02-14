@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Tvision2.Controls.Drawers;
+using Tvision2.Core;
 using Tvision2.Core.Components;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Render;
@@ -15,7 +16,7 @@ namespace Tvision2.Controls.List
         protected readonly TvListStyleProvider<TItem> _styleProvider;
         private readonly TvListOptions<TItem> _options;
 
-        public ICommandChain<TItem> OnItemClicked { get; }
+        public IActionChain<TItem> OnItemClicked { get; }
 
         public IListStyleProvider<TItem> StyleProvider => _styleProvider;
 
@@ -29,7 +30,7 @@ namespace Tvision2.Controls.List
         {
             _options = new TvListOptions<TItem>();
             optionsAction?.Invoke(_options);
-            OnItemClicked = new CommandChain<TItem>();
+            OnItemClicked = new ActionChain<TItem>();
             _styleProvider = new TvListStyleProvider<TItem>(parameters.Skin.ColorManager);
             _styleProvider.UseSkin(parameters.Skin);
             _itemsCache = new TvListItemCache<TItem>(State.Columns, _styleProvider);

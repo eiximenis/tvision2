@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Tvision2.Core;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Render;
 
@@ -8,7 +9,7 @@ namespace Tvision2.Controls.Button
 {
     public class TvButton : TvControl<ButtonState>
     {
-        public ICommand<ButtonState> OnClick { get; set; }
+        public IActionChain<ButtonState> OnClick { get; }
 
         public static ITvControlCreationParametersBuilder<ButtonState> CreationParametersBuilder(Action<ButtonState> stateCfg = null)
         {
@@ -16,7 +17,10 @@ namespace Tvision2.Controls.Button
         }
 
         public TvButton(ITvControlCreationParametersBuilder<ButtonState> parameters) : this(parameters.Build()) { }
-        public TvButton(TvControlCreationParameters<ButtonState> parameters) : base(parameters) { }
+        public TvButton(TvControlCreationParameters<ButtonState> parameters) : base(parameters)
+        {
+            OnClick = new ActionChain<ButtonState>();
+        }
 
 
         protected override IEnumerable<ITvBehavior<ButtonState>> GetEventedBehaviors()

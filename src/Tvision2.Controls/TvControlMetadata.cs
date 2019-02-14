@@ -1,4 +1,5 @@
 ﻿using System;
+using Tvision2.Core;
 
 namespace Tvision2.Controls
 {
@@ -26,8 +27,8 @@ namespace Tvision2.Controls
         private readonly TvControlMetadataOptions _options;
         public Guid ControlId { get; }
 
-        public ICommandChain<TvFocusEventData> OnFocusGained { get; }
-        public ICommandChain<TvFocusEventData> OnFocusLost { get; }
+        public IActionChain<TvFocusEventData> OnFocusGained { get; }
+        public IActionChain<TvFocusEventData> OnFocusLost { get; }
 
         public bool IsFocused
         {
@@ -57,8 +58,8 @@ namespace Tvision2.Controls
 
         public TvControlMetadata(ITvControl control, Action<TvControlMetadataOptions> optionsAction = null)
         {
-            OnFocusGained = new CommandChain<TvFocusEventData>();
-            OnFocusLost = new CommandChain<TvFocusEventData>();
+            OnFocusGained = new ActionChain<TvFocusEventData>();
+            OnFocusLost = new ActionChain<TvFocusEventData>();
             Control = control;
             FocusTransferred = false;
             CanFocus = true;

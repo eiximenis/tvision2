@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using Tvision2.Controls;
+using Tvision2.Core;
 using Tvision2.Events;
 
 namespace Tvision2.Statex.Controls
@@ -37,7 +38,7 @@ namespace Tvision2.Statex.Controls
             _controlStateUpdater = controlStateUpdater;
         }
 
-        public IStatexCommandActionCreatorBinder<TControlState, TCommandArg> On<TCommandArg>(Expression<Func<TControl, ICommandChain<TCommandArg>>> commandSelector)
+        public IStatexCommandActionCreatorBinder<TControlState, TCommandArg> On<TCommandArg>(Expression<Func<TControl, IActionChain<TCommandArg>>> commandSelector)
         {
             if (commandSelector.Body is MemberExpression expr && expr.Member is PropertyInfo pi)
             {

@@ -88,11 +88,11 @@ namespace Tvision2.Core.Components
 
         internal void MountedTo(IComponentTree owner)
         {
-            _metadata.MountAction?.Invoke(this, owner);
+            _metadata.OnComponentMounted.Invoke(new ComponentMoutingContext(owner,this));
         }
         internal void UnmountedFrom(IComponentTree owner)
         {
-            _metadata.UnmountAction?.Invoke(this, owner);
+            _metadata.OnComponentUnmounted.Invoke(new ComponentMoutingContext(owner, this));
         }
 
         protected internal abstract void Update(TvConsoleEvents evts);

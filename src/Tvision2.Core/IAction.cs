@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tvision2.Controls
+namespace Tvision2.Core
 {
-    public interface ICommand { }
-    public interface ICommand<TData> : ICommand
+    public interface IAction { }
+    public interface IAction<TData> : IAction
     { 
         Task<bool> Invoke(TData data);
     }

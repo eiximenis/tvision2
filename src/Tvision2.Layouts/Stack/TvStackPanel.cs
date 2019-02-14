@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
@@ -27,7 +26,7 @@ namespace Tvision2.Layouts.Stack
         public void Clear()
         {
             var layout = _thisComponent.State;
-            for (var idx=0; idx < layout.ItemsCount; idx++)
+            for (var idx = 0; idx < layout.ItemsCount; idx++)
             {
                 At(idx).Clear();
             }
@@ -38,7 +37,7 @@ namespace Tvision2.Layouts.Stack
             RepositionChildren(TvPoint.Zero);
         }
 
-        public IComponentTree At (int idx)
+        public IComponentTree At(int idx)
         {
             var layout = _thisComponent.State;
             if (layout.ItemsCount > idx)
@@ -48,7 +47,7 @@ namespace Tvision2.Layouts.Stack
             }
             else
             {
-                throw new ArgumentOutOfRangeException(nameof(idx), idx, $"Value {idx} out of range 0..{layout.ItemsCount -1 }");
+                throw new ArgumentOutOfRangeException(nameof(idx), idx, $"Value {idx} out of range 0..{layout.ItemsCount - 1 }");
             }
 
         }

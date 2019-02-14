@@ -56,13 +56,15 @@ namespace Tvision2.Controls
 
         public void Remove(TvControlMetadata cdata)
         {
-            _controls.Remove(cdata);
-            _indexedControls.Remove(cdata.ControlId);
-            if (_focused == cdata)
+            if (_indexedControls.ContainsKey(cdata.ControlId))
             {
-                _focused = null;
+                _controls.Remove(cdata);
+                _indexedControls.Remove(cdata.ControlId);
+                if (_focused == cdata)
+                {
+                    _focused = null;
+                }
             }
-            cdata.OwnerTree = null;
         }
 
 
@@ -84,7 +86,6 @@ namespace Tvision2.Controls
             if (_focused != controlToFocus)
             {
                 var previous = _focused;
-                System.Diagnostics.Debug.WriteLine($">>> ControlsTree. Focus will move from {previous?.Control.AsComponent().Name ?? "<null>"} to {controlToFocus?.Control.AsComponent().Name ?? "<null>"}");
                 previous?.Unfocus();
                 _focused = controlToFocus;
                 controlToFocus.DoFocus();
