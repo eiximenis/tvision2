@@ -16,7 +16,9 @@ namespace Tvision2.Controls.List
         protected readonly TvListStyleProvider<TItem> _styleProvider;
         private readonly TvListOptions<TItem> _options;
 
-        public IActionChain<TItem> OnItemClicked { get; }
+        private readonly ActionChain<TItem> _onItemClicked;
+
+        public IActionChain<TItem> OnItemClicked => _onItemClicked;
 
         public IListStyleProvider<TItem> StyleProvider => _styleProvider;
 
@@ -30,7 +32,7 @@ namespace Tvision2.Controls.List
         {
             _options = new TvListOptions<TItem>();
             optionsAction?.Invoke(_options);
-            OnItemClicked = new ActionChain<TItem>();
+            _onItemClicked = new ActionChain<TItem>();
             _styleProvider = new TvListStyleProvider<TItem>(parameters.Skin.ColorManager);
             _styleProvider.UseSkin(parameters.Skin);
             _itemsCache = new TvListItemCache<TItem>(State.Columns, _styleProvider);
@@ -44,7 +46,7 @@ namespace Tvision2.Controls.List
 
         protected override IEnumerable<ITvBehavior<ListState<TItem>>> GetEventedBehaviors()
         {
-            yield return new ListBehavior<TItem>(async () => await (OnItemClicked.Invoke(State[State.SelectedIndex]) ?? Task.CompletedTask));
+            yield return new ListBehavior<TItem>(() => _onItemClicked.Invoke(State[State.SelectedIndex]));
         }
 
         protected override void OnDraw(RenderContext<ListState<TItem>> context)

@@ -38,8 +38,6 @@ namespace Tvision2.Viewports
             var removed = e.ComponentMetadata;
             var viewport = e.ComponentMetadata.Component.Viewport;
 
-            removed.Component.Clear();
-
             if (viewport != null)
             {
                 InvalidateViewport(viewport);

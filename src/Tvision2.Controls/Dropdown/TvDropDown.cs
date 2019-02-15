@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Tvision2.Controls.Label;
 using Tvision2.Controls.List;
-using Tvision2.Controls.Styles;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
@@ -31,11 +30,11 @@ namespace Tvision2.Controls.Dropdown
             _hidingList = false;
             var viewport = parameters.Viewport;
             var labelViewport = new Viewport(viewport.Position, viewport.Columns, 1, viewport.ZIndex);
-            var listParameters = new TvControlCreationParameters<ListState<DropDownValue>>(parameters.Skin, viewport, 
+            var listParameters = new TvControlCreationParameters<ListState<DropDownValue>>(parameters.Skin, viewport,
                 new ListState<DropDownValue>(parameters.InitialState.Values, new TvListColumnSpec<DropDownValue>() { Transformer = x => x.Text }), "_list", this);
             _list = new TvList<DropDownValue>(listParameters, opt =>
             {
-                
+
             });
             var labelParameters = new TvControlCreationParameters<LabelState>(parameters.Skin, labelViewport, new LabelState() { Text = "value" }, Name + "_label", this);
             _label = new TvLabel(labelParameters);
@@ -47,20 +46,18 @@ namespace Tvision2.Controls.Dropdown
 
 
 
-        private Task<bool> ListLostFocus(TvFocusEventData arg)
+        private void ListLostFocus(TvFocusEventData arg)
         {
             HideList(focusToLabel: false);
-            return Task.FromResult(true);
         }
 
 
         protected override void OnControlMounted(IComponentTree owner)
         {
-            _idClickedSubs = _list.OnItemClicked.Add(async el =>
+            _idClickedSubs = _list.OnItemClicked.Add(el =>
             {
                 State.SelectedValue = el.Text;
                 _label.State.Text = el.Text;
-                return true;
             });
             _ownerUi = owner;
             _ownerUi.Add(_label);
@@ -87,9 +84,8 @@ namespace Tvision2.Controls.Dropdown
                 .AddOnce(ctx =>
                 {
                     _list.Metadata.Focus(force: true);
-                    return Task.FromResult(true);
                 });
-            
+
             _ownerUi.Remove(_label);
             HasListDisplayed = true;
             // TODO: Need to insert _list in same index as this and make it focused.
@@ -108,13 +104,12 @@ namespace Tvision2.Controls.Dropdown
                     .AddOnce(ctx =>
                     {
                         _label.Metadata.Focus(force: true);
-                        return Task.FromResult(true);
+                        _hidingList = false;
                     });
             }
 
             _ownerUi.Add(_label);
             _ownerUi.Remove(_list);
-            _hidingList = false;
             HasListDisplayed = false;
         }
 

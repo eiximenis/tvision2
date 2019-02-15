@@ -20,11 +20,13 @@ namespace Tvision2.Core.Components
     public abstract class TvComponent
     {
         private readonly TvComponentMetadata _metadata;
-        private bool _mustBeCleared;
         protected Dictionary<Guid, IViewport> _viewports;
         public RedrawNeededAction NeedToRedraw { get; protected set; }
         public string Name { get; }
-        public void Invalidate() => NeedToRedraw = RedrawNeededAction.Standard;
+        public void Invalidate()
+        {
+            NeedToRedraw = RedrawNeededAction.Standard;
+        }
         public IComponentMetadata Metadata => _metadata;
 
         public Guid ComponentId { get; }
@@ -34,7 +36,6 @@ namespace Tvision2.Core.Components
 
         public TvComponent(string name, Action<IConfigurableComponentMetadata> configAction = null)
         {
-            _mustBeCleared = false;
             ComponentId = Guid.NewGuid();
             _metadata = new TvComponentMetadata(this);
             configAction?.Invoke(_metadata);
@@ -44,10 +45,6 @@ namespace Tvision2.Core.Components
             Name = string.IsNullOrEmpty(name) ? $"TvComponent-{ComponentId}" : name.Replace("<$>", ComponentId.ToString());
         }
 
-        public void Clear()
-        {
-            _mustBeCleared = true;
-        }
 
         public Guid AddViewport(IViewport viewport)
         {
@@ -86,30 +83,12 @@ namespace Tvision2.Core.Components
             _drawers.Insert(0, drawer);
         }
 
-        internal void MountedTo(IComponentTree owner)
-        {
-            _metadata.OnComponentMounted.Invoke(new ComponentMoutingContext(owner,this));
-        }
-        internal void UnmountedFrom(IComponentTree owner)
-        {
-            _metadata.OnComponentUnmounted.Invoke(new ComponentMoutingContext(owner, this));
-        }
-
         protected internal abstract void Update(TvConsoleEvents evts);
 
         protected abstract void DoDraw(VirtualConsole console);
 
         protected internal void Draw(VirtualConsole console)
         {
-            if (_mustBeCleared)
-            {
-                foreach (var vpkv in _viewports)
-                {
-                    console.Clear(vpkv.Value);
-                }
-                _mustBeCleared = false;
-            }
-
             DoDraw(console);
             NeedToRedraw = RedrawNeededAction.None;
         }
@@ -164,7 +143,6 @@ namespace Tvision2.Core.Components
             return this;
         }
 
-
         protected internal override void Update(TvConsoleEvents evts)
         {
             var updated = NeedToRedraw != RedrawNeededAction.None;
@@ -181,7 +159,6 @@ namespace Tvision2.Core.Components
                     }
                 }
             }
-
             NeedToRedraw = updated ? RedrawNeededAction.Standard : RedrawNeededAction.None;
         }
 

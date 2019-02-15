@@ -179,8 +179,7 @@ namespace Tvision2.Core.Render
                     _dirtyMap[idx] = DirtyStatus.CharAndAttr;
                 }
             }
-
-
+            IsDirty = true;
         }
 
         public void CopyCharacter(TvPoint location, ConsoleCharacter charToCopy, int count)

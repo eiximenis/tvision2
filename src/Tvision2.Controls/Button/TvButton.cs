@@ -9,7 +9,8 @@ namespace Tvision2.Controls.Button
 {
     public class TvButton : TvControl<ButtonState>
     {
-        public IActionChain<ButtonState> OnClick { get; }
+        private readonly ActionChain<ButtonState> _onClick;
+        public IActionChain<ButtonState> OnClick => _onClick;
 
         public static ITvControlCreationParametersBuilder<ButtonState> CreationParametersBuilder(Action<ButtonState> stateCfg = null)
         {
@@ -19,13 +20,13 @@ namespace Tvision2.Controls.Button
         public TvButton(ITvControlCreationParametersBuilder<ButtonState> parameters) : this(parameters.Build()) { }
         public TvButton(TvControlCreationParameters<ButtonState> parameters) : base(parameters)
         {
-            OnClick = new ActionChain<ButtonState>();
+            _onClick = new ActionChain<ButtonState>();
         }
 
 
         protected override IEnumerable<ITvBehavior<ButtonState>> GetEventedBehaviors()
         {
-            yield return new ButtonBehavior(async () => await (OnClick?.Invoke(State) ?? Task.CompletedTask));
+            yield return new ButtonBehavior(() => _onClick.Invoke(State) );
         }
 
         protected override void OnDraw(RenderContext<ButtonState> context)

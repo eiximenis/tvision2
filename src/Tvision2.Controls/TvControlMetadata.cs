@@ -27,8 +27,11 @@ namespace Tvision2.Controls
         private readonly TvControlMetadataOptions _options;
         public Guid ControlId { get; }
 
-        public IActionChain<TvFocusEventData> OnFocusGained { get; }
-        public IActionChain<TvFocusEventData> OnFocusLost { get; }
+        private readonly ActionChain<TvFocusEventData> _onFocusGained;
+        private readonly ActionChain<TvFocusEventData> _onFocusLost;
+
+        public IActionChain<TvFocusEventData> OnFocusGained => _onFocusGained;
+        public IActionChain<TvFocusEventData> OnFocusLost => _onFocusLost;
 
         public bool IsFocused
         {
@@ -58,8 +61,8 @@ namespace Tvision2.Controls
 
         public TvControlMetadata(ITvControl control, Action<TvControlMetadataOptions> optionsAction = null)
         {
-            OnFocusGained = new ActionChain<TvFocusEventData>();
-            OnFocusLost = new ActionChain<TvFocusEventData>();
+            _onFocusGained = new ActionChain<TvFocusEventData>();
+            _onFocusLost = new ActionChain<TvFocusEventData>();
             Control = control;
             FocusTransferred = false;
             CanFocus = true;
@@ -95,7 +98,7 @@ namespace Tvision2.Controls
             FocusTransferred = true;
             IsDirty = true;
             _options.OnFocusAction?.Invoke();
-            OnFocusGained.Invoke(new TvFocusEventData(OwnerTree, ControlId, focusGained: true));
+            _onFocusGained.Invoke(new TvFocusEventData(OwnerTree, ControlId, focusGained: true));
         }
 
         internal void Unfocus()
@@ -103,7 +106,7 @@ namespace Tvision2.Controls
             IsDirty = true;
             FocusTransferred = false;
             _options.OnLostFocusAction?.Invoke();
-            OnFocusLost.Invoke(new TvFocusEventData(OwnerTree, ControlId, focusGained: false));
+            _onFocusLost.Invoke(new TvFocusEventData(OwnerTree, ControlId, focusGained: false));
         }
 
         public void Validate() => IsDirty = false;

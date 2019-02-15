@@ -7,7 +7,7 @@ namespace Tvision2.Core
 {
     public interface IAction { }
     public interface IAction<TData> : IAction
-    { 
-        Task<bool> Invoke(TData data);
+    {
+        ActionResult Invoke(TData data);
     }
 }

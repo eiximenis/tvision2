@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Tvision2.Core.Components;
 using Tvision2.Core.Render;
@@ -9,9 +10,10 @@ namespace Tvision2.Core.Engine
 {
     public class ComponentTree : IComponentTree
     {
-        private readonly Dictionary<string, IComponentMetadata> _components;
-        private readonly Dictionary<string, IComponentMetadata> _pendingAdds;
-        private readonly Dictionary<string, IComponentMetadata> _pendingRemovals;
+        private readonly Dictionary<string, TvComponentMetadata> _components;
+        private readonly Dictionary<string, TvComponentMetadata> _pendingAdds;
+        private readonly Dictionary<string, TvComponentMetadata> _pendingRemovalsPhase1;
+        private readonly Dictionary<string, TvComponentMetadata> _pendingRemovalsPhase2;
         private readonly List<IViewport> _viewportsToClear;
         public TuiEngine Engine { get; }
         public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
@@ -21,57 +23,69 @@ namespace Tvision2.Core.Engine
 
         public TvComponent GetComponent(string name) => _components.TryGetValue(name, out var metadata) ? metadata.Component : null;
 
-        public bool Remove(IComponentMetadata metadata)
+
+        public bool Remove(TvComponent component)
         {
-            var name = metadata.Component.Name;
+            var name = component.Name;
             var found = _components.ContainsKey(name);
             if (found)
             {
-                _pendingRemovals.Add(name, metadata);
+                _pendingRemovalsPhase1.Add(name, component.Metadata as TvComponentMetadata);
             }
             return found;
         }
 
-        public bool Remove(TvComponent component) => Remove(component.Metadata);
-
-        private void DoPendingRemovals()
+        private void DoPendingRemovalsPhase1()
         {
-            if (_pendingRemovals.Count == 0)
+            if (_pendingRemovalsPhase1.Count == 0)
+            {
+                return;
+            }
+            var toDelete = _pendingRemovalsPhase1.ToArray();
+            _pendingRemovalsPhase1.Clear();
+            foreach (var kvp in toDelete)
+            {   
+                var canBeUnmounted = kvp.Value.CanBeUnmountedFrom(this);
+                if (canBeUnmounted)
+                {
+                    _pendingRemovalsPhase2.Add(kvp.Key, kvp.Value);
+                    _viewportsToClear.AddRange(kvp.Value.Component.Viewports.Select(x => x.Value));
+                    _components.Remove(kvp.Key);
+                }
+            }
+        }
+
+        private void DoPendingRemovalsPhase2()
+        {
+            if (_pendingRemovalsPhase2.Count == 0)
             {
                 return;
             }
 
-            var toDelete = _pendingRemovals.ToArray();
-            _pendingRemovals.Clear();
-            var deleted = new List<IComponentMetadata>();
-            foreach (var kvp in toDelete)
+            foreach (var kvp in _pendingRemovalsPhase2)
             {
-                _components.Remove(kvp.Key);
-                deleted.Add(kvp.Value);
+                kvp.Value.UnmountedFrom(this);
+                OnComponentRemoved(kvp.Value);
             }
-            foreach (var deletedComponent in deleted)
-            {
-                deletedComponent.Component.UnmountedFrom(this);
-                OnComponentRemoved(deletedComponent);
-            }
+
+            _pendingRemovalsPhase2.Clear();
         }
 
         public ComponentTree(TuiEngine owner)
         {
-            _components = new Dictionary<string, IComponentMetadata>();
-            _pendingAdds = new Dictionary<string, IComponentMetadata>();
-            _pendingRemovals = new Dictionary<string, IComponentMetadata>();
+            _components = new Dictionary<string, TvComponentMetadata>();
+            _pendingAdds = new Dictionary<string, TvComponentMetadata>();
+            _pendingRemovalsPhase1 = new Dictionary<string, TvComponentMetadata>();
+            _pendingRemovalsPhase2 = new Dictionary<string, TvComponentMetadata>();
             _viewportsToClear = new List<IViewport>();
             Engine = owner;
         }
 
-        public IComponentMetadata Add(IComponentMetadata metadata)
+        public IComponentMetadata Add(TvComponent component)
         {
-            _pendingAdds.Add(metadata.Component.Name, metadata);
-            return metadata;
+            _pendingAdds.Add(component.Name, component.Metadata as TvComponentMetadata);
+            return component.Metadata;
         }
-
-        public IComponentMetadata Add(TvComponent component) => Add(component.Metadata);
 
         private void DoPendingAdds()
         {
@@ -87,7 +101,7 @@ namespace Tvision2.Core.Engine
             {
                 _components.Add(kvp.Key, kvp.Value);
                 CreateNeededBehaviors(kvp.Value.Component);
-                kvp.Value.Component.MountedTo(this);
+                kvp.Value.MountedTo(this);
                 kvp.Value.Component.Invalidate();
                 OnComponentAdded(kvp.Value);
             }
@@ -109,7 +123,6 @@ namespace Tvision2.Core.Engine
 
         private void OnComponentRemoved(IComponentMetadata metadata)
         {
-            ClearViewport(metadata.Component.Viewport);
             ComponentRemoved?.Invoke(this, new TreeUpdatedEventArgs(metadata));
         }
 
@@ -131,15 +144,13 @@ namespace Tvision2.Core.Engine
 
         internal void Update(TvConsoleEvents evts)
         {
-            DoPendingRemovals();
+            DoPendingRemovalsPhase1();
             DoPendingAdds();
             foreach (var cdata in _components.Values)
             {
                 cdata.Component.Update(evts);
             }
         }
-
-
 
         internal void Draw(VirtualConsole console, bool force)
         {
@@ -155,6 +166,8 @@ namespace Tvision2.Core.Engine
             }
 
             _viewportsToClear.Clear();
+
+            DoPendingRemovalsPhase2();
         }
 
     }

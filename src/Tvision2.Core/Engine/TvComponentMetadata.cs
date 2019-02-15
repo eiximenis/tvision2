@@ -12,14 +12,21 @@ namespace Tvision2.Core.Engine
 
         public event EventHandler<ViewportUpdatedEventArgs> ViewportChanged;
 
-        public IActionChain<ComponentMoutingContext> OnComponentMounted { get; }
-        public IActionChain<ComponentMoutingContext> OnComponentUnmounted { get; }
+        private readonly ActionChain<ComponentMoutingContext> _onComponentMounted;
+        private readonly ActionChain<ComponentMoutingContext> _onComponentUnmounted;
+        private readonly ActionChain<ComponentMountingCancellableContext> _onComponentWillBeUnmounted;
+
+
+        public IActionChain<ComponentMoutingContext> OnComponentMounted => _onComponentMounted;
+        public IActionChain<ComponentMoutingContext> OnComponentUnmounted => _onComponentUnmounted;
+        public IActionChain<ComponentMountingCancellableContext> OnComponentWillBeUnmounted => _onComponentWillBeUnmounted;
 
         public TvComponentMetadata(TvComponent component)
         {
             Component = component;
-            OnComponentMounted = new ActionChain<ComponentMoutingContext>();
-            OnComponentUnmounted = new ActionChain<ComponentMoutingContext>();
+            _onComponentMounted = new ActionChain<ComponentMoutingContext>();
+            _onComponentUnmounted = new ActionChain<ComponentMoutingContext>();
+            _onComponentWillBeUnmounted = new ActionChain<ComponentMountingCancellableContext>();
         }
 
         public void OnViewportChanged(Guid id, IViewport previous, IViewport current)
@@ -28,15 +35,39 @@ namespace Tvision2.Core.Engine
             handler?.Invoke(this, new ViewportUpdatedEventArgs(id, previous, current, Component.Name));
         }
 
-        public void WhenComponentMounted(Func<ComponentMoutingContext, Task<bool>> mountAction)
+        public void WhenComponentMounted(Action<ComponentMoutingContext> mountAction)
         {
-            OnComponentMounted.Add(mountAction);
+            _onComponentMounted.Add(mountAction);
         }
 
-        public void WhenComponentUnmounted(Func<ComponentMoutingContext, Task<bool>> unmountAction)
+        public void WhenComponentUnmounted(Action<ComponentMoutingContext> unmountAction)
         {
-            OnComponentUnmounted.Add(unmountAction);
+            _onComponentUnmounted.Add(unmountAction);
         }
+
+        internal bool CanBeUnmountedFrom(ComponentTree owner)
+        {
+            var ctx = new ComponentMountingCancellableContext(owner, this.Component);
+            _onComponentWillBeUnmounted.Invoke(ctx);
+            return !ctx.IsCancelled;
+        }
+
+        public void WhenComponentWillbeUnmounted(Action<ComponentMountingCancellableContext> unmountAction)
+        {
+            _onComponentWillBeUnmounted.Add(unmountAction);
+        }
+
+        internal void MountedTo(IComponentTree owner)
+        {
+            _onComponentMounted.Invoke(new ComponentMoutingContext(owner, this.Component));
+        }
+
+        internal void UnmountedFrom(ComponentTree owner)
+        {
+            _onComponentUnmounted.Invoke(new ComponentMoutingContext(owner, this.Component));
+        }
+
+
     }
 
 }

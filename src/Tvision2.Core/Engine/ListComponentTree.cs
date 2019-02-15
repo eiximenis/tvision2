@@ -33,13 +33,6 @@ namespace Tvision2.Core.Engine
             return metadata;
         }
 
-        public IComponentMetadata Add(IComponentMetadata metadata)
-        {
-            _parent.Add(metadata);
-            _myComponents.Add(metadata.Component);
-            OnComponentAdded(metadata);
-            return metadata;
-        }
 
         public TvComponent GetComponent(string name)
         {

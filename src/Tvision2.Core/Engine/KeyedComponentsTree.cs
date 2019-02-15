@@ -55,7 +55,6 @@ namespace Tvision2.Core.Engine
             return component.Metadata;
         }
 
-        IComponentMetadata IComponentTree.Add(IComponentMetadata metadata) => ((IComponentTree)this).Add(metadata.Component);
         IEnumerable<TvComponent> IComponentTree.Components => _myComponents.Values.SelectMany(c => c.Components);
 
         TvComponent IComponentTree.GetComponent(string name)
@@ -72,8 +71,6 @@ namespace Tvision2.Core.Engine
         {
             ComponentRemoved?.Invoke(this, new TreeUpdatedEventArgs(metadata));
         }
-
-        bool IComponentTree.Remove(IComponentMetadata metadata) => ((IComponentTree)this).Remove(metadata.Component);
 
         bool IComponentTree.Remove(TvComponent component)
         {

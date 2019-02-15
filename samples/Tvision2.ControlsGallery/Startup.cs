@@ -45,7 +45,6 @@ namespace Tvision2.ControlsGallery
             button.OnClick.Add(state =>
             {
                 ShowDialog(state, combo.State);
-                return Task.FromResult(true);
             });
             tui.UI.Add(combo);
             tui.UI.Add(button);

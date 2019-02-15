@@ -10,5 +10,6 @@ namespace Tvision2.Core.Engine
         event EventHandler<ViewportUpdatedEventArgs> ViewportChanged;
         IActionChain<ComponentMoutingContext> OnComponentMounted { get; }
         IActionChain<ComponentMoutingContext> OnComponentUnmounted { get; }
+        IActionChain<ComponentMountingCancellableContext> OnComponentWillBeUnmounted { get; }
     }
 }

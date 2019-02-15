@@ -49,12 +49,11 @@ namespace Tvision2.Statex.Controls.Behaviors
                 var commandType = typeof(DelegateAction<>);
                 commandType = commandType.MakeGenericType(creator.CommandType);
 
-                Func<object, Task> @delegate = delegate (object o)
+                Action<object> @delegate = delegate (object o)
                 {
                     var action = creator.ActionCreator.DynamicInvoke(control.State, o);
                     var store = _storeSelector.GetStore(_options.StoreName);
                     store.Dispatch(action as TvAction);
-                    return Task.CompletedTask;
                 };
 
                 var command = Activator.CreateInstance(commandType, @delegate, creator.Predicate) as IAction;

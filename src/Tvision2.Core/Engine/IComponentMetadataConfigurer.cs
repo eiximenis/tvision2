@@ -8,7 +8,8 @@ namespace Tvision2.Core.Engine
 {
     public interface IConfigurableComponentMetadata
     {
-        void WhenComponentMounted(Func<ComponentMoutingContext, Task<bool>> mountAction);
-        void WhenComponentUnmounted(Func<ComponentMoutingContext, Task<bool>> unmountAction);
+        void WhenComponentMounted(Action<ComponentMoutingContext> mountAction);
+        void WhenComponentUnmounted(Action<ComponentMoutingContext> unmountAction);
+        void WhenComponentWillbeUnmounted(Action<ComponentMountingCancellableContext> unmountAction);
     }
 }
