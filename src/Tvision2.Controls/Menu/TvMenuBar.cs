@@ -11,7 +11,7 @@ namespace Tvision2.Controls.Menu
 
         private readonly TvMenuBarOptions _options;
 
-        public TvMenuBar(ITvControlCreationParametersBuilder<MenuBarState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : base(parameters.Build()) { }
+        public TvMenuBar(ITvControlCreationParametersBuilder<MenuBarState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : this(parameters.Build()) { }
         public TvMenuBar(TvControlCreationParameters<MenuBarState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : base(parameters)
         {
             _options = new TvMenuBarOptions();
