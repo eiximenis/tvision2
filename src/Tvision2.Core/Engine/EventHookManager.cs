@@ -45,5 +45,10 @@ namespace Tvision2.Core.Engine
                 action();
             }
         }
+
+        public void AddHook(IEventHook hookInstance)
+        {
+            _hooks.Add(hookInstance);
+        }
     }
 }

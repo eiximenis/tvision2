@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,9 @@ namespace Tvision2.Core.Engine
 {
     public static class ComponentTreeExtensions_Controls
     {
-        public static void Add(this IComponentTree componentTree, ITvControl control)
+        public static void Add(this IComponentTree componentTree, ITvControl control, Action afterAdd = null)
         {
-            componentTree.Add(control.AsComponent());
+            componentTree.Add(control.AsComponent(), afterAdd);
         }
 
         public static bool Remove(this IComponentTree componentTree, ITvControl control)

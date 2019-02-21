@@ -17,12 +17,13 @@ namespace Tvision2.Core.Engine
         private readonly EventPumper _eventPumper;
         private readonly Stopwatch _watcher;
         private readonly Tvision2Options _options;
+        private EventHookManager _eventHookManager;
 
         private readonly ComponentTree _ui;
 
         private VirtualConsole _currentConsole;
         public IConsoleDriver ConsoleDriver { get; }
-        public IEventHookManager EventHookManager { get; private set; }
+        public IEventHookManager EventHookManager  => _eventHookManager;
         public IComponentTree UI => _ui;
         public IServiceProvider ServiceProvider { get; }
 
@@ -41,7 +42,7 @@ namespace Tvision2.Core.Engine
             ConsoleDriver.Init();
             _currentConsole = new VirtualConsole();
             var hookContext = new HookContext(this);
-            EventHookManager = new EventHookManager(_options.HookTypes ?? Enumerable.Empty<Type>(), _options.AfterUpdates ?? Enumerable.Empty<Action>(), hookContext, ServiceProvider);
+            _eventHookManager = new EventHookManager(_options.HookTypes ?? Enumerable.Empty<Type>(), _options.AfterUpdates ?? Enumerable.Empty<Action>(), hookContext, ServiceProvider);
             foreach (var afterCreateTask in _options.AfterCreateInvokers)
             {
                 afterCreateTask.Invoke(this, ServiceProvider);
@@ -70,10 +71,10 @@ namespace Tvision2.Core.Engine
                     _currentConsole.Resize(evts.WindowEvent.NewRows, evts.WindowEvent.NewColumns);
                 }
 
-                EventHookManager.ProcessEvents(evts);
+                _eventHookManager.ProcessEvents(evts);
                 _ui.Update(evts);
                 PerformDrawOperations(force: false);
-                EventHookManager.ProcessAfterUpdateActions();
+                _eventHookManager.ProcessAfterUpdateActions();
                 // TODO: At this point we still have all events in evts, but:
                 //  1. No clue of which events had been processed (should annotate that)
                 //  2. Don't do anything with remaining events. A list of pluggable "remaining events handler" could be implemented

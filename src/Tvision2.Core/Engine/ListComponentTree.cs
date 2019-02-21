@@ -25,9 +25,9 @@ namespace Tvision2.Core.Engine
             _parent = root;
         }
 
-        public IComponentMetadata Add(TvComponent component)
+        public IComponentMetadata Add(TvComponent component, Action afterAddAction = null)
         {
-            var metadata = _parent.Add(component);
+            var metadata = _parent.Add(component, afterAddAction);
             _myComponents.Add(component);
             OnComponentAdded(component.Metadata);
             return metadata;

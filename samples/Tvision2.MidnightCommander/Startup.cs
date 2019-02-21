@@ -81,7 +81,7 @@ namespace Tvision2.MidnightCommander
                 .When(f => (f.FileAttributes & System.IO.FileAttributes.Hidden) == System.IO.FileAttributes.Hidden)
                 .AppliesToColumn(1);
 
-            var menu = new TvMenuBar(TvMenuBar.CreationParametersBuilder(new[] { "Left", "Edit", "Command", "Options", "Help", "Right" })
+            var menu = new TvMenuBar(TvMenuBar.CreationParametersBuilder(new[] { "_Left", "_Edit", "_Command", "_Options", "_Help", "_Right" })
                 .UseSkin(skin).UseViewport(dvpf.Create(vpf => vpf.FullViewport().TakeRows(1, 0))), opt =>
                  {
                      opt.ItemsSpacedBy(4);

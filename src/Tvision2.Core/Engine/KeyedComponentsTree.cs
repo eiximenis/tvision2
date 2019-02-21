@@ -38,17 +38,17 @@ namespace Tvision2.Core.Engine
             _parent = root;
         }
 
-        IComponentMetadata IComponentTree.Add(TvComponent component)
+        IComponentMetadata IComponentTree.Add(TvComponent component, Action afterAddAction = null)
         {
             if (_myComponents.ContainsKey(_currentKey))
             {
-                _myComponents[_currentKey].Add(component);
+                _myComponents[_currentKey].Add(component, afterAddAction);
             }
             else
             {
                 var child = new ListComponentTree(_parent);
                 _myComponents.Add(_currentKey, child);
-                child.Add(component);
+                child.Add(component, afterAddAction);
             }
 
             OnComponentAdded(component.Metadata);

@@ -51,18 +51,20 @@ namespace Tvision2.Dialogs
 
         public void ShowDialog(TvDialog dialog)
         {
-            var controlsTree = dialog.State.UI.RootControls();
-            var insideControls = dialog.State.UI.OwnedControls().Union(dialog.State.Buttons.Select(b => b.Metadata));
-
-            foreach (var controlMetadata in controlsTree.ControlsMetadata)
+            _ui.Add(dialog, () =>
             {
-                if (!insideControls.Contains(controlMetadata))
+                var controlsTree = dialog.State.UI.RootControls();
+                var insideControls = dialog.State.UI.OwnedControls().Union(dialog.State.Buttons.Select(b => b.Metadata));
+
+                foreach (var controlMetadata in controlsTree.ControlsMetadata)
                 {
-                    controlMetadata.DisableFocusability();
-                    _outsideDialogControls.Add(controlMetadata);
+                    if (!insideControls.Contains(controlMetadata))
+                    {
+                        controlMetadata.DisableFocusability();
+                        _outsideDialogControls.Add(controlMetadata);
+                    }
                 }
-            }
-            _ui.Add(dialog);
+            });
             DialogShown = dialog;
         }
     }

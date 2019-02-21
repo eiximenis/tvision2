@@ -37,8 +37,10 @@ namespace Tvision2.Controls.Styles
 
                 sb.AddStyle("tvmenubar", style =>
                 {
-                    style.DesiredFocused(TvColor.White, TvColor.Cyan, CharacterAttributeModifiers.Bold);
+                    style.DesiredFocused(TvColor.White, TvColor.Black, CharacterAttributeModifiers.Bold);
                     style.DesiredStandard(TvColor.Black, TvColor.Cyan);
+                    style.DesiredAlternate(TvColor.Yellow, TvColor.Cyan, CharacterAttributeModifiers.Bold);
+                    style.DesiredAlternateFocused(TvColor.Yellow, TvColor.Black, CharacterAttributeModifiers.Bold);
                 });
             });
 

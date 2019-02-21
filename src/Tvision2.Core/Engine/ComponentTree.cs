@@ -11,7 +11,7 @@ namespace Tvision2.Core.Engine
     public class ComponentTree : IComponentTree
     {
         private readonly Dictionary<string, TvComponentMetadata> _components;
-        private readonly Dictionary<string, TvComponentMetadata> _pendingAdds;
+        private readonly Dictionary<string, (TvComponentMetadata Metadata, Action AfterAdd)> _pendingAdds;
         private readonly Dictionary<string, TvComponentMetadata> _pendingRemovalsPhase1;
         private readonly Dictionary<string, TvComponentMetadata> _pendingRemovalsPhase2;
         private readonly List<IViewport> _viewportsToClear;
@@ -74,16 +74,16 @@ namespace Tvision2.Core.Engine
         public ComponentTree(TuiEngine owner)
         {
             _components = new Dictionary<string, TvComponentMetadata>();
-            _pendingAdds = new Dictionary<string, TvComponentMetadata>();
+            _pendingAdds = new Dictionary<string, (TvComponentMetadata Metadata, Action AfterAdd)>();
             _pendingRemovalsPhase1 = new Dictionary<string, TvComponentMetadata>();
             _pendingRemovalsPhase2 = new Dictionary<string, TvComponentMetadata>();
             _viewportsToClear = new List<IViewport>();
             Engine = owner;
         }
 
-        public IComponentMetadata Add(TvComponent component)
+        public IComponentMetadata Add(TvComponent component, Action afterAddAction = null)
         {
-            _pendingAdds.Add(component.Name, component.Metadata as TvComponentMetadata);
+            _pendingAdds.Add(component.Name, (component.Metadata as TvComponentMetadata, afterAddAction));
             return component.Metadata;
         }
 
@@ -99,11 +99,14 @@ namespace Tvision2.Core.Engine
 
             foreach (var kvp in toAdd)
             {
-                _components.Add(kvp.Key, kvp.Value);
-                CreateNeededBehaviors(kvp.Value.Component);
-                kvp.Value.MountedTo(this);
-                kvp.Value.Component.Invalidate();
-                OnComponentAdded(kvp.Value);
+                var metadata = kvp.Value.Metadata;
+                var afterAdd = kvp.Value.AfterAdd;
+                _components.Add(kvp.Key, metadata);
+                CreateNeededBehaviors(metadata.Component);
+                metadata.MountedTo(this);
+                metadata.Component.Invalidate();
+                afterAdd?.Invoke();
+                OnComponentAdded(metadata);
             }
         }
 

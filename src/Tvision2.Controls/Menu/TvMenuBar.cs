@@ -24,17 +24,30 @@ namespace Tvision2.Controls.Menu
 
         protected override void OnDraw(RenderContext<MenuBarState> context)
         {
-            var pairIdx = Metadata.IsFocused ? CurrentStyle.Focused : CurrentStyle.Standard;
             var coordx = 0;
+            var optidx = 0;
+
+            var selectedItemPairIdx = Metadata.IsFocused ? CurrentStyle.Focused : CurrentStyle.Standard;
+            var selectedItemAlternatePairidx = Metadata.IsFocused ? CurrentStyle.AlternateFocused : CurrentStyle.Alternate;
+
             foreach (var option in State.Options)
             {
-                context.DrawStringAt($"{option}", new TvPoint(coordx, 0), pairIdx);
-                coordx += option.Length;
+                var pairIdx = State.SelectedIndex == optidx ? selectedItemPairIdx : CurrentStyle.Standard;
+                var alternatePairIdx = State.SelectedIndex == optidx ? selectedItemAlternatePairidx : CurrentStyle.Alternate;
+                var text = option.Text;
+                for (var pos = 0; pos < text.Length; pos ++)
+                {
+                    var pairIdxToUse = pos == option.ShortcutPos ? alternatePairIdx : pairIdx;
+                    context.DrawStringAt($"{option.Text[pos]}", new TvPoint(coordx + pos, 0), pairIdxToUse);
+                }
+                
+                coordx += option.Text.Length;
                 context.DrawChars(' ', _options.SpaceBetweenItems, new TvPoint(coordx, 0), pairIdx);
                 coordx += _options.SpaceBetweenItems;
+                optidx++;
             }
 
-            context.DrawChars(' ', Viewport.Columns - coordx, new TvPoint(coordx, 0), pairIdx);
+            context.DrawChars(' ', Viewport.Columns - coordx, new TvPoint(coordx, 0), CurrentStyle.Standard);
         }
     }
 }

@@ -33,10 +33,10 @@ namespace Tvision2.Layouts.Grid
         public event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
 
 
-        public IComponentMetadata Add(TvComponent component)
+        public IComponentMetadata Add(TvComponent component, Action afterAddAction = null)
         {
             _childs.Add((CurrentRow, CurrentColumn), component);
-            _root.Add(component);
+            _root.Add(component, afterAddAction);
             OnComponentAdded(component.Metadata);
             return component.Metadata;
         }
