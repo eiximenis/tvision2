@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Tvision2.Controls.Styles;
+using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 
 namespace Tvision2.Controls.Menu
@@ -10,12 +11,15 @@ namespace Tvision2.Controls.Menu
     {
 
         private readonly TvMenuBarOptions _options;
+        private Guid _hookGuid;
 
-        public TvMenuBar(ITvControlCreationParametersBuilder<MenuBarState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : this(parameters.Build()) { }
+        public TvMenuBar(ITvControlCreationParametersBuilder<MenuBarState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : this(parameters.Build(), optionsAction) { }
         public TvMenuBar(TvControlCreationParameters<MenuBarState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : base(parameters)
         {
+            _hookGuid = Guid.Empty;
             _options = new TvMenuBarOptions();
             optionsAction?.Invoke(_options);
+            Metadata.CanFocus = false;
         }
         public static ITvControlCreationParametersBuilder<MenuBarState> CreationParametersBuilder(IEnumerable<string> options)
         {
@@ -35,12 +39,12 @@ namespace Tvision2.Controls.Menu
                 var pairIdx = State.SelectedIndex == optidx ? selectedItemPairIdx : CurrentStyle.Standard;
                 var alternatePairIdx = State.SelectedIndex == optidx ? selectedItemAlternatePairidx : CurrentStyle.Alternate;
                 var text = option.Text;
-                for (var pos = 0; pos < text.Length; pos ++)
+                for (var pos = 0; pos < text.Length; pos++)
                 {
                     var pairIdxToUse = pos == option.ShortcutPos ? alternatePairIdx : pairIdx;
                     context.DrawStringAt($"{option.Text[pos]}", new TvPoint(coordx + pos, 0), pairIdxToUse);
                 }
-                
+
                 coordx += option.Text.Length;
                 context.DrawChars(' ', _options.SpaceBetweenItems, new TvPoint(coordx, 0), pairIdx);
                 coordx += _options.SpaceBetweenItems;
@@ -48,6 +52,24 @@ namespace Tvision2.Controls.Menu
             }
 
             context.DrawChars(' ', Viewport.Columns - coordx, new TvPoint(coordx, 0), CurrentStyle.Standard);
+        }
+
+        protected override void OnControlMounted(IComponentTree owner)
+        { 
+            if (_options.Hotkey != ConsoleKey.NoName)
+            {
+                var evtHook = AsComponent().Metadata.Engine.EventHookManager;
+                _hookGuid =  evtHook.AddHook(new TvMenuBarHook(_options.Hotkey, Metadata));
+            }
+        }
+
+        protected override void OnControlUnmounted(IComponentTree owner)
+        {
+            if (_hookGuid != Guid.Empty)
+            {
+                var evtHook = AsComponent().Metadata.Engine.EventHookManager;
+                evtHook.RemoveHook(_hookGuid);
+            }
         }
     }
 }

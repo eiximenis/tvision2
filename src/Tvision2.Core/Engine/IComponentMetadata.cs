@@ -6,6 +6,8 @@ namespace Tvision2.Core.Engine
 {
     public interface IComponentMetadata
     {
+        bool IsMounted { get; }
+        ITuiEngine Engine { get;  }
         TvComponent Component { get; }
         event EventHandler<ViewportUpdatedEventArgs> ViewportChanged;
         IActionChain<ComponentMoutingContext> OnComponentMounted { get; }

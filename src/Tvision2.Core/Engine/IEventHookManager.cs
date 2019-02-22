@@ -8,6 +8,7 @@ namespace Tvision2.Core.Engine
 {
     public interface IEventHookManager
     {
-        void AddHook(IEventHook hookInstance);
+        Guid AddHook(IEventHook hookInstance);
+        bool RemoveHook(Guid id);
     }
 }

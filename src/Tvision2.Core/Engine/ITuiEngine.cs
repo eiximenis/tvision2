@@ -8,7 +8,7 @@ namespace Tvision2.Core.Engine
     {
         Task Start(CancellationToken cancellationToken);
         IComponentTree UI { get; }
-
+        IEventHookManager EventHookManager { get; }
         IServiceProvider ServiceProvider { get; }
     }
 }

@@ -9,12 +9,13 @@ namespace Tvision2.Core.Engine
     internal class TvComponentMetadata : IComponentMetadata, IConfigurableComponentMetadata
     {
         public TvComponent Component { get; }
-
         public event EventHandler<ViewportUpdatedEventArgs> ViewportChanged;
-
         private readonly ActionChain<ComponentMoutingContext> _onComponentMounted;
         private readonly ActionChain<ComponentMoutingContext> _onComponentUnmounted;
         private readonly ActionChain<ComponentMountingCancellableContext> _onComponentWillBeUnmounted;
+
+        public ITuiEngine Engine { get; private set; }
+        public bool IsMounted { get; private set; }
 
 
         public IActionChain<ComponentMoutingContext> OnComponentMounted => _onComponentMounted;
@@ -45,6 +46,11 @@ namespace Tvision2.Core.Engine
             _onComponentUnmounted.Add(unmountAction);
         }
 
+        public void WhenComponentWillbeUnmounted(Action<ComponentMountingCancellableContext> unmountAction)
+        {
+            _onComponentWillBeUnmounted.Add(unmountAction);
+        }
+
         internal bool CanBeUnmountedFrom(ComponentTree owner)
         {
             var ctx = new ComponentMountingCancellableContext(owner, this.Component);
@@ -52,18 +58,17 @@ namespace Tvision2.Core.Engine
             return !ctx.IsCancelled;
         }
 
-        public void WhenComponentWillbeUnmounted(Action<ComponentMountingCancellableContext> unmountAction)
-        {
-            _onComponentWillBeUnmounted.Add(unmountAction);
-        }
-
         internal void MountedTo(IComponentTree owner)
         {
+            Engine = owner.Engine;
+            IsMounted = true;
             _onComponentMounted.Invoke(new ComponentMoutingContext(owner, this.Component));
         }
 
         internal void UnmountedFrom(ComponentTree owner)
         {
+            Engine = null;
+            IsMounted = false;
             _onComponentUnmounted.Invoke(new ComponentMoutingContext(owner, this.Component));
         }
 

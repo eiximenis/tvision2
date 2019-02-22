@@ -85,6 +85,7 @@ namespace Tvision2.MidnightCommander
                 .UseSkin(skin).UseViewport(dvpf.Create(vpf => vpf.FullViewport().TakeRows(1, 0))), opt =>
                  {
                      opt.ItemsSpacedBy(4);
+                     opt.UseHotKey(System.ConsoleKey.F9);
                  });
 
             //var window = new TvWindow(skin, vpf.FullViewport().CreateCentered(20, 10), new WindowState(tui.UI));
