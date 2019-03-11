@@ -15,6 +15,8 @@ namespace Tvision2.Controls
         IEnumerable<TvControlMetadata> ControlsMetadata { get; }
         TvControlMetadata this[Guid id] { get; }
 
+        bool ReturnFocusToPrevious();
+
         event EventHandler<FocusChangedEventArgs> FocusChanged;
     }
 }

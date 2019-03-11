@@ -2,7 +2,7 @@
 
 namespace Tvision2.Controls
 {
-    public class TvControlMetadataOptions
+    public class TvControlMetadataOptions 
     {
         private Func<bool> _hasFocus;
         internal bool? HasFocus => _hasFocus?.Invoke();
@@ -13,9 +13,12 @@ namespace Tvision2.Controls
         internal Func<TvControlMetadata, bool> AcceptFocusPredicate { get; private set; }
         internal Guid OwnerId { get; private set; }
 
+        internal bool IsDrawable { get; private set; }
+
         public TvControlMetadataOptions()
         {
             OwnerId = Guid.Empty;
+            IsDrawable = true;
         }
 
         public void WhenControlIsAskedIfItHasFocus(Func<bool> hasFocus)
@@ -38,10 +41,16 @@ namespace Tvision2.Controls
             AcceptFocusPredicate = acceptFocusPredicate;
         }
 
+        public void AvoidDrawControl()
+        {
+            IsDrawable = false;
+        }
+
+
         internal void UseOwner(ITvControl owner)
         {
             var newOwnerId = owner.AsComponent().ComponentId;
-            if (OwnerId != Guid.Empty &&  OwnerId != newOwnerId)
+            if (OwnerId != Guid.Empty && OwnerId != newOwnerId)
             {
                 throw new InvalidOperationException("Can't set OwnerId twice.");
             }

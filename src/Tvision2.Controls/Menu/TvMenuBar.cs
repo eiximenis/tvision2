@@ -2,31 +2,32 @@
 using System.Collections.Generic;
 using System.Text;
 using Tvision2.Controls.Styles;
+using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 
 namespace Tvision2.Controls.Menu
 {
-    public class TvMenuBar : TvControl<MenuBarState>
+    public class TvMenuBar : TvControl<MenuState>
     {
 
         private readonly TvMenuBarOptions _options;
         private Guid _hookGuid;
 
-        public TvMenuBar(ITvControlCreationParametersBuilder<MenuBarState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : this(parameters.Build(), optionsAction) { }
-        public TvMenuBar(TvControlCreationParameters<MenuBarState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : base(parameters)
+        public TvMenuBar(ITvControlCreationParametersBuilder<MenuState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : this(parameters.Build(), optionsAction) { }
+        public TvMenuBar(TvControlCreationParameters<MenuState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : base(parameters)
         {
             _hookGuid = Guid.Empty;
             _options = new TvMenuBarOptions();
             optionsAction?.Invoke(_options);
             Metadata.CanFocus = false;
         }
-        public static ITvControlCreationParametersBuilder<MenuBarState> CreationParametersBuilder(IEnumerable<string> options)
+        public static ITvControlCreationParametersBuilder<MenuState> CreationParametersBuilder(IEnumerable<string> options)
         {
-            return TvControlCreationParametersBuilder.ForState<MenuBarState>(() => new MenuBarState(options));
+            return TvControlCreationParametersBuilder.ForState<MenuState>(() => new MenuState(options));
         }
 
-        protected override void OnDraw(RenderContext<MenuBarState> context)
+        protected override void OnDraw(RenderContext<MenuState> context)
         {
             var coordx = 0;
             var optidx = 0;
@@ -52,6 +53,11 @@ namespace Tvision2.Controls.Menu
             }
 
             context.DrawChars(' ', Viewport.Columns - coordx, new TvPoint(coordx, 0), CurrentStyle.Standard);
+        }
+
+        protected override IEnumerable<ITvBehavior<MenuState>> GetEventedBehaviors()
+        {
+            yield return new MenuBarBehavior(Metadata, _options);
         }
 
         protected override void OnControlMounted(IComponentTree owner)

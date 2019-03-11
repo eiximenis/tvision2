@@ -12,16 +12,15 @@ namespace Tvision2.Controls
         private Dictionary<Guid, TvControlMetadata> _indexedControls;
         private IComponentTree _componentTree;
         private TvControlMetadata _focused;
-
+        private TvControlMetadata _previousFocused;
         public event EventHandler<FocusChangedEventArgs> FocusChanged;
-
         public IEnumerable<TvControlMetadata> ControlsMetadata => _controls;
-
 
         public ControlsTree()
         {
             _controls = new LinkedList<TvControlMetadata>();
             _focused = null;
+            _previousFocused = null;
             _componentTree = null;
             _indexedControls = new Dictionary<Guid, TvControlMetadata>();
         }
@@ -52,6 +51,11 @@ namespace Tvision2.Controls
             _controls.AddLast(cdata);
             _indexedControls.Add(cdata.ControlId, cdata);
             cdata.OwnerTree = this;
+
+            if (_focused == null)
+            {
+                TryToSetInitialFocus();
+            }
         }
 
         public void Remove(TvControlMetadata cdata)
@@ -60,9 +64,10 @@ namespace Tvision2.Controls
             {
                 _controls.Remove(cdata);
                 _indexedControls.Remove(cdata.ControlId);
+                cdata.OwnerTree = null;
                 if (_focused == cdata)
                 {
-                    _focused = null;
+                    MoveFocusToNext();
                 }
             }
         }
@@ -81,19 +86,14 @@ namespace Tvision2.Controls
 
         public TvControlMetadata CurrentFocused() => _focused;
 
+        public bool ReturnFocusToPrevious()
+        {
+            return TransferFocus(_focused, _previousFocused);
+        }
+
         public bool Focus(TvControlMetadata controlToFocus)
         {
-            if (_focused != controlToFocus)
-            {
-                var previous = _focused;
-                previous?.Unfocus();
-                _focused = controlToFocus;
-                controlToFocus.DoFocus();
-                OnFocusChanged(previous);
-                return true;
-            }
-
-            return false;
+            return TransferFocus(_focused, controlToFocus);
         }
 
         public TvControlMetadata First() => _controls.First?.Value;
@@ -118,10 +118,33 @@ namespace Tvision2.Controls
         }
 
 
+
         private bool IsValidTargetForFocus(TvControlMetadata currentFocused, TvControlMetadata nextWanted)
         {
             if (currentFocused != null && currentFocused.OwnerId == nextWanted.ControlId) return false;
             return nextWanted.AcceptFocus(currentFocused);
+        }
+        private void TryToSetInitialFocus()
+        {
+            var toBeFocused = _controls.FirstOrDefault(x => x.AcceptFocus(null));
+            TransferFocus(null, toBeFocused);
+        }
+
+        private bool TransferFocus(TvControlMetadata toBeUnfocused, TvControlMetadata toBeFocused)
+        {
+            if (toBeUnfocused == toBeFocused)
+            {
+                return false;
+            }
+            if (toBeFocused != null)
+            {
+                toBeUnfocused?.Unfocus();
+                toBeFocused.DoFocus();
+                OnFocusChanged(toBeUnfocused);
+            }
+            _previousFocused = _focused;
+            _focused = toBeFocused;
+            return true;
         }
 
         public TvControlMetadata this[Guid id] => 

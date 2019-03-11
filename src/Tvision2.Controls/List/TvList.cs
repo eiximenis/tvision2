@@ -9,6 +9,20 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Controls.List
 {
+    public static class TvList
+    {
+        public static ITvControlCreationParametersBuilder<ListState<TItem>> CreationParametersBuilder<TItem>(Func<ListState<TItem>> stateCreator)
+        {
+            return TvControlCreationParametersBuilder.ForState(stateCreator);
+        }
+
+        public static ITvControlCreationParametersBuilder<ListState<TItem>> CreationParametersBuilder<TItem>(IEnumerable<TItem> initialData)
+        {
+            return TvControlCreationParametersBuilder.ForState(() => ListState.FromEnumerable(initialData));
+        }
+
+    }
+
     public class TvList<TItem> : TvControl<ListState<TItem>>
     {
 
@@ -21,11 +35,6 @@ namespace Tvision2.Controls.List
         public IActionChain<TItem> OnItemClicked => _onItemClicked;
 
         public IListStyleProvider<TItem> StyleProvider => _styleProvider;
-
-        public static ITvControlCreationParametersBuilder<ListState<TItem>> CreationParametersBuilder(Func<ListState<TItem>> stateCreator)
-        {
-            return TvControlCreationParametersBuilder.ForState<ListState<TItem>>(stateCreator);
-        }
 
         public TvList(ITvControlCreationParametersBuilder<ListState<TItem>> parameters, Action<ITvListOptions<TItem>> optionsAction = null) : this(parameters.Build()) { }
         public TvList(TvControlCreationParameters<ListState<TItem>> parameters, Action<ITvListOptions<TItem>> optionsAction = null) : base(parameters)

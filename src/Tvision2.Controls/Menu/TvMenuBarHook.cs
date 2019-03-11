@@ -17,6 +17,7 @@ namespace Tvision2.Controls.Menu
 
         public void ProcessEvents(TvConsoleEvents events, HookContext context)
         {
+            if (_metadata.IsFocused) return;
             var @event = events.AcquireFirstKeyboard(evt => evt.IsKeyDown && evt.AsConsoleKeyInfo().Key == _hotkey);
             if (@event != null)
             {

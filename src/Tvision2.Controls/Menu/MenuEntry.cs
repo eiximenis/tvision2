@@ -1,11 +1,11 @@
 ﻿namespace Tvision2.Controls.Menu
 {
-    public class MenuBarEntry
+    public class MenuEntry
     {
         public string Text { get; }
         public char Shortcut { get; }
         public int ShortcutPos { get; }
-        public MenuBarEntry(string text)
+        public MenuEntry(string text)
         {
 
             (ShortcutPos, Shortcut) = FindShortcutByText(text);

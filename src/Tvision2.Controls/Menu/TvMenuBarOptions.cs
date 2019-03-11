@@ -9,7 +9,7 @@ namespace Tvision2.Controls.Menu
         ITvMenuBarOptions UseHotKey(ConsoleKey key);
     }
 
-    class TvMenuBarOptions : ITvMenuBarOptions
+    public class TvMenuBarOptions : ITvMenuBarOptions
     {
         public int SpaceBetweenItems { get; private set; }
         public ConsoleKey Hotkey  {get; private set; }

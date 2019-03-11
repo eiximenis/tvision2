@@ -41,6 +41,8 @@ namespace Tvision2.Controls
             }
         }
 
+        public bool IsDrawable => _options.IsDrawable;
+
         public bool IsDirty { get; private set; }
         public bool CanFocus { get; set; }
         public IControlsTree OwnerTree { get; internal set; }

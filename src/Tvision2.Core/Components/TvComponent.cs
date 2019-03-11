@@ -46,6 +46,16 @@ namespace Tvision2.Core.Components
         }
 
 
+        public void RemoveAllBehaviors()
+        {
+            _behaviorsMetadata.Clear();
+        }
+
+        public void RemoveAllDrawers()
+        {
+            _drawers.Clear();
+        }
+
         public Guid AddViewport(IViewport viewport)
         {
             var key = _viewports.Any() ? Guid.NewGuid() : Guid.Empty;

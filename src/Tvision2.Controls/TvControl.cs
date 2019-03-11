@@ -46,9 +46,8 @@ namespace Tvision2.Controls
             ControlType = genericIdx != -1 ? typename.Substring(0, genericIdx) : typename;
             CurrentStyle = creationParams.Skin.GetControlStyle(this);
             State = initialState;
-            _component.AddViewport(creationParams.Viewport);
+            _component.AddViewport(creationParams.GetViewport(State));
             _owner = creationParams.Owner;
-            AddElements();
         }
 
         private void ConfigureStandardMetadataOptions(TvControlMetadataOptions options)
@@ -65,6 +64,8 @@ namespace Tvision2.Controls
         private Task<bool> OnComponentUnmounted(IComponentTree owner)
         {
             var ctree = _metadata.Value.OwnerTree as ControlsTree;
+            AsComponent().RemoveAllBehaviors();
+            AsComponent().RemoveAllDrawers();
             ctree.Remove(Metadata);
             OnControlUnmounted(owner);
             _metadata.Value.OwnerTree = null;
@@ -79,6 +80,7 @@ namespace Tvision2.Controls
         {
             var ctree = owner.RootControls() as ControlsTree;
             ctree.Add(Metadata);
+            AddElements();
             OnControlMounted(owner);
             return Task.FromResult(true);
         }
@@ -90,7 +92,10 @@ namespace Tvision2.Controls
         private void AddElements()
         {
             _component.AddBehavior(new ControlStateBehavior<TState>(Metadata));
-            _component.AddDrawer(OnDraw);
+            if (Metadata.IsDrawable)
+            {
+                _component.AddDrawer(OnDraw);
+            }
             foreach (var behavior in GetEventedBehaviors())
             {
                 _component.AddBehavior(new FocusControlBeheavior<TState>(Metadata, behavior), opt => opt.UseScheduler(BehaviorSchedule.OnEvents));
@@ -104,7 +109,7 @@ namespace Tvision2.Controls
             return Enumerable.Empty<ITvBehavior<TState>>();
         }
 
-        protected abstract void OnDraw(RenderContext<TState> context);
+        protected virtual void OnDraw(RenderContext<TState> context) { }
 
         protected virtual void AddCustomElements(TvComponent<TState> component) { }
 

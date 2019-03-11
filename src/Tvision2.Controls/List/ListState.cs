@@ -4,6 +4,15 @@ using System.Linq;
 
 namespace Tvision2.Controls.List
 {
+
+    public static class ListState
+    {
+        public static ListState<T> FromEnumerable<T>(IEnumerable<T> data)
+        {
+            return new ListState<T>(data);
+        }
+    }
+
     public class ListState<T> : IDirtyObject
     {
         private readonly List<T> _values;

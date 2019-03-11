@@ -60,7 +60,7 @@ namespace Tvision2.MidnightCommander
             tui.UI.Add(actind);
 
 
-            var left = new TvList<FileItem>(TvList<FileItem>.CreationParametersBuilder(
+            var left = new TvList<FileItem>(TvList.CreationParametersBuilder(
                     () => ListState<FileItem>
                         .From(Enumerable.Empty<FileItem>())
                         .AddFixedColumn(fi => fi.IsDirectory ? "*" : " ", width: 2)

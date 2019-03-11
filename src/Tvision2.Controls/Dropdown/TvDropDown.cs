@@ -28,7 +28,7 @@ namespace Tvision2.Controls.Dropdown
         public TvDropdown(TvControlCreationParameters<DropdownState> parameters) : base(parameters)
         {
             _hidingList = false;
-            var viewport = parameters.Viewport;
+            var viewport = parameters.GetViewport(State);
             var labelViewport = new Viewport(viewport.Position, viewport.Columns, 1, viewport.ZIndex);
             var listParameters = new TvControlCreationParameters<ListState<DropDownValue>>(parameters.Skin, viewport,
                 new ListState<DropDownValue>(parameters.InitialState.Values, new TvListColumnSpec<DropDownValue>() { Transformer = x => x.Text }), "_list", this);
