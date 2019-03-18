@@ -52,7 +52,7 @@ namespace Tvision2.Controls.Menu
                 optidx++;
             }
 
-            context.DrawChars(' ', Viewport.Columns - coordx, new TvPoint(coordx, 0), CurrentStyle.Standard);
+            context.DrawChars(' ', context.Viewport.Bounds.Cols - coordx, new TvPoint(coordx, 0), CurrentStyle.Standard);
         }
 
         protected override IEnumerable<ITvBehavior<MenuState>> GetEventedBehaviors()

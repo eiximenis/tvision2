@@ -21,21 +21,24 @@ namespace Tvision2.Controls.Drawers
             var viewport = context.Viewport;
 
             var colorIdx = _metadata.IsFocused ? _style.Focused : _style.Standard;
+
+            var columns = viewport.Bounds.Cols;
+            var rows = viewport.Bounds.Rows;
             
-            if (viewport.Rows > 2 && viewport.Columns > 2)
+            if (rows > 2 && columns > 2)
             {
                 context.DrawChars('\u2554', 1, TvPoint.Zero,colorIdx);
-                context.DrawChars('\u2557', 1, new TvPoint(viewport.Columns - 1, 0), colorIdx);
-                context.DrawChars('\u2550', viewport.Columns - 2, new TvPoint(1, 0), colorIdx);
-                for (var row = 1; row < viewport.Rows - 1; row++)
+                context.DrawChars('\u2557', 1, new TvPoint(columns - 1, 0), colorIdx);
+                context.DrawChars('\u2550', columns - 2, new TvPoint(1, 0), colorIdx);
+                for (var row = 1; row < rows - 1; row++)
                 {
                     context.DrawChars('\u2551', 1, new TvPoint(0, row), colorIdx);
-                    context.DrawChars('\u2551', 1, new TvPoint(viewport.Columns - 1, row), colorIdx);
+                    context.DrawChars('\u2551', 1, new TvPoint(columns - 1, row), colorIdx);
                 }
 
-                context.DrawChars('\u255a', 1, new TvPoint(0, viewport.Rows - 1), colorIdx);
-                context.DrawChars('\u255d', 1, new TvPoint(viewport.Columns - 1, viewport.Rows - 1), colorIdx);
-                context.DrawChars('\u2550', viewport.Columns - 2, new TvPoint(1, viewport.Rows - 1), colorIdx);
+                context.DrawChars('\u255a', 1, new TvPoint(0, rows - 1), colorIdx);
+                context.DrawChars('\u255d', 1, new TvPoint(columns - 1, rows - 1), colorIdx);
+                context.DrawChars('\u2550', columns - 2, new TvPoint(1, rows - 1), colorIdx);
             }
         }
     }

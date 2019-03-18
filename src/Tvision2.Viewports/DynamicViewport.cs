@@ -34,9 +34,8 @@ namespace Tvision2.Viewports
 
         public int ZIndex => _viewport.ZIndex;
 
-        public int Columns => _viewport.Columns;
+        public TvBounds Bounds => _viewport.Bounds;
 
-        public int Rows => _viewport.Rows;
 
         public IViewport Clone()
         {

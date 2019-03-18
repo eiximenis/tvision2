@@ -28,9 +28,9 @@ namespace Tvision2.Dialogs
         protected override void OnDraw(RenderContext<DialogState> context)
         {
             var pairIdx = CurrentStyle.Standard;
-            for (var row = 1; row < Viewport.Rows - 2; row++)
+            for (var row = 1; row < context.Viewport.Bounds.Rows - 2; row++)
             {
-                context.DrawChars(' ', Viewport.Columns - 2, new TvPoint(1, row), pairIdx);
+                context.DrawChars(' ', context.Viewport.Bounds.Cols - 2, new TvPoint(1, row), pairIdx);
             }
             context.Fill(pairIdx);
         }

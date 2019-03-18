@@ -15,10 +15,13 @@ namespace Tvision2.Controls.Window
         public TvWindow(ITvControlCreationParametersBuilder<WindowState> parameters) : base(parameters.Build()) { }
         public TvWindow(TvControlCreationParameters<WindowState> parameters) : base(parameters)
         {
-            parameters.InitialState.SetOwnerWindow(this);
-            AsComponent().Metadata.ViewportChanged += MyViewportChanged;
         }
 
+        protected override void OnControlMounted(IComponentTree owner)
+        {
+            State.SetOwnerWindow(this);
+            AsComponent().Metadata.ViewportChanged += MyViewportChanged;
+        }
         private void MyViewportChanged(object sender, ViewportUpdatedEventArgs e)
         {
             var childs = State.UI.Components.ToList();
@@ -53,9 +56,9 @@ namespace Tvision2.Controls.Window
         protected override void OnDraw(RenderContext<WindowState> context)
         {
             var pairIdx = CurrentStyle.Standard;
-            for (var row = 1; row < Viewport.Rows - 2; row++)
+            for (var row = 1; row < context.Viewport.Bounds.Rows - 2; row++)
             {
-                context.DrawChars(' ', Viewport.Columns - 2, new TvPoint(1, row), pairIdx);
+                context.DrawChars(' ', context.Viewport.Bounds.Cols - 2, new TvPoint(1, row), pairIdx);
             }
             context.Fill(pairIdx);
 

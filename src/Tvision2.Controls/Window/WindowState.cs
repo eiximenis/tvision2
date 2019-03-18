@@ -27,7 +27,7 @@ namespace Tvision2.Controls.Window
             _myWindow = ownerWindow;
             foreach (var existingChild in _children.Components)
             {
-                existingChild.UpdateViewport(existingChild.Viewport.InnerViewport(_myWindow.Viewport, new TvPoint(1,1)));
+                existingChild.UpdateViewport(existingChild.Viewport.InnerViewport(_myWindow.AsComponent().Viewport, new TvPoint(1,1)));
             }
             IsDirty = true;
         }

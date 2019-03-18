@@ -14,7 +14,6 @@ namespace Tvision2.Controls
         ITvControlCreationParametersBuilder<TState> ConfigureState(Action<TState> stateConfiguration);
         ITvControlCreationParametersBuilder<TState> UseViewport(IViewport viewport);
         ITvControlCreationParametersBuilder<TState> UseTopLeftPosition(TvPoint position);
-        ITvControlCreationParametersBuilder<TState> CreateViewportFromState(Func<TState, TvPoint, IViewport> viewportCreator);
         ITvControlCreationParametersBuilder<TState> UseControlName(string name);
         TvControlCreationParameters<TState> Build();
     }

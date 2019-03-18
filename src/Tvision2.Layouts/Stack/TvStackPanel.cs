@@ -68,7 +68,7 @@ namespace Tvision2.Layouts.Stack
                 {
                     for (var layoutIdx = 0; layoutIdx < layout.ItemsCount; layoutIdx++)
                     {
-                        var height = Layout.GetRealSize(Layout[layoutIdx], _thisComponent.Viewport.Rows);
+                        var height = Layout.GetRealSize(Layout[layoutIdx], _thisComponent.Viewport.Bounds.Rows);
                         var itemChilds = _childs.ComponentsForKey(layoutIdx);
                         foreach (var childComponent in itemChilds)
                         {

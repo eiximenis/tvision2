@@ -6,12 +6,12 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Layouts.Grid
 {
-    public class TvGrid:  ITvContainer
+    public class TvGrid : ITvContainer
     {
         private readonly TvComponent<GridState> _component;
         private readonly IComponentTree _root;
         private readonly TvGridComponentTree _ui;
-        
+
         private readonly GridState _state;
         public string Name { get; }
         public TvComponent AsComponent() => _component;
@@ -77,8 +77,8 @@ namespace Tvision2.Layouts.Grid
                 return;
             }
 
-            var cellHeight = myViewport.Rows / _state.Rows;
-            var cellWidth = myViewport.Columns / _state.Cols;
+            var cellHeight = myViewport.Bounds.Rows / _state.Rows;
+            var cellWidth = myViewport.Bounds.Cols / _state.Cols;
 
             foreach (var kvpChild in _ui.Values)
             {
@@ -96,7 +96,7 @@ namespace Tvision2.Layouts.Grid
             var startCol = ctrCol * cellWidth;
             var startRow = ctrRow * cellHeight;
 
-            return myViewport.InnerViewport(new TvPoint(startCol, startRow), cellWidth, cellHeight);
+            return myViewport.InnerViewport(new TvPoint(startCol, startRow), new TvBounds(cellHeight, cellWidth));
 
         }
     }

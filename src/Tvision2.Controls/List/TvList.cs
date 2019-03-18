@@ -63,15 +63,15 @@ namespace Tvision2.Controls.List
             var selectedAttr = Metadata.IsFocused ? CurrentStyle.AlternateFocused : CurrentStyle.Alternate;
             var viewport = context.Viewport;
             var numitems = State.Count;
-            State.ItemsView.Adjust(viewport.Rows - 2);
-            for (var idx = 0; idx < viewport.Rows - 2; idx++)
+            State.ItemsView.Adjust(viewport.Bounds.Rows - 2);
+            for (var idx = 0; idx < viewport.Bounds.Rows - 2; idx++)
             {
                 if (idx < State.ItemsView.NumItems)
                 {
                     var lenDrawn = 0;
                     var item = State.ItemsView[idx];
                     var selected = State.SelectedIndex == idx + State.ItemsView.From;
-                    var tvitem = _itemsCache.GetTvItemFor(item, idx + State.ItemsView.From, viewport.Columns - 2 - State.ColumnsTotalFixedWidth);
+                    var tvitem = _itemsCache.GetTvItemFor(item, idx + State.ItemsView.From, viewport.Bounds.Cols - 2 - State.ColumnsTotalFixedWidth);
                     for (var column = 0; column < State.Columns.Length; column++)
                     {
                         var text = tvitem.Texts[column];
@@ -79,7 +79,7 @@ namespace Tvision2.Controls.List
                         context.DrawStringAt(text, new TvPoint(1 + lenDrawn, idx + 1), selected ? selectedAttr : attr);
                         lenDrawn += text.Length;
                     }
-                    var remaining = viewport.Columns - 2 - lenDrawn;
+                    var remaining = viewport.Bounds.Cols - 2 - lenDrawn;
                     if (remaining > 0)
                     {
                         context.DrawChars(' ', remaining, new TvPoint(1 + lenDrawn, idx + 1), selected ? selectedAttr : CurrentStyle.Standard);
@@ -88,7 +88,7 @@ namespace Tvision2.Controls.List
                 else
                 {
                     var attr = CurrentStyle.Standard;
-                    context.DrawChars(' ', viewport.Columns - 2, new TvPoint(1, idx + 1), attr);
+                    context.DrawChars(' ', viewport.Bounds.Cols - 2, new TvPoint(1, idx + 1), attr);
                 }
             }
         }

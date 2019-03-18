@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Tvision2.Controls.Label;
 using Tvision2.Controls.List;
+using Tvision2.Controls.Styles;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
@@ -11,10 +12,11 @@ namespace Tvision2.Controls.Dropdown
 {
     public class TvDropdown : TvControl<DropdownState>
     {
-        private readonly TvList<DropDownValue> _list;
-        private readonly TvLabel _label;
+        private TvList<DropDownValue> _list;
+        private TvLabel _label;
         private IComponentTree _ownerUi;
         private Guid _idClickedSubs;
+        private readonly ISkin _skin;
 
         internal bool HasListDisplayed { get; private set; }
         private bool _hidingList;
@@ -28,18 +30,7 @@ namespace Tvision2.Controls.Dropdown
         public TvDropdown(TvControlCreationParameters<DropdownState> parameters) : base(parameters)
         {
             _hidingList = false;
-            var viewport = parameters.GetViewport(State);
-            var labelViewport = new Viewport(viewport.Position, viewport.Columns, 1, viewport.ZIndex);
-            var listParameters = new TvControlCreationParameters<ListState<DropDownValue>>(parameters.Skin, viewport,
-                new ListState<DropDownValue>(parameters.InitialState.Values, new TvListColumnSpec<DropDownValue>() { Transformer = x => x.Text }), "_list", this);
-            _list = new TvList<DropDownValue>(listParameters, opt =>
-            {
-
-            });
-            var labelParameters = new TvControlCreationParameters<LabelState>(parameters.Skin, labelViewport, new LabelState() { Text = "value" }, Name + "_label", this);
-            _label = new TvLabel(labelParameters);
-            _label.Metadata.CanFocus = true;
-            _list.Metadata.OnFocusLost.Add(ListLostFocus);
+            _skin = parameters.Skin;
             Metadata.CanFocus = false;
             HasListDisplayed = false;
         }
@@ -51,6 +42,28 @@ namespace Tvision2.Controls.Dropdown
             HideList(focusToLabel: false);
         }
 
+        protected override void OnViewportCreated(IViewport viewport)
+        {
+            if (_list == null)
+            {
+                var listParameters = new TvControlCreationParameters<ListState<DropDownValue>>(_skin, viewport,
+                    new ListState<DropDownValue>(State.Values, new TvListColumnSpec<DropDownValue>() { Transformer = x => x.Text }), "_list", this);
+                _list = new TvList<DropDownValue>(listParameters, opt =>
+                {
+
+                });
+                _list.Metadata.OnFocusLost.Add(ListLostFocus);
+            }
+
+            if (_label == null)
+            {
+                var labelViewport = new Viewport(viewport.Position,viewport.Bounds.SingleRow(), viewport.ZIndex);
+                var labelParameters = new TvControlCreationParameters<LabelState>(_skin, labelViewport, new LabelState() { Text = "value" }, Name + "_label", this);
+                _label = new TvLabel(labelParameters);
+                _label.Metadata.CanFocus = true;
+            }
+
+        }
 
         protected override void OnControlMounted(IComponentTree owner)
         {
@@ -73,6 +86,7 @@ namespace Tvision2.Controls.Dropdown
 
         protected override void ConfigureMetadataOptions(TvControlMetadataOptions options)
         {
+            options.AvoidDrawControl();
             options.WhenControlIsAskedIfItHasFocus(() => Metadata.FocusTransferred || _label.Metadata.IsFocused || _list.Metadata.IsFocused);
         }
 
@@ -128,10 +142,6 @@ namespace Tvision2.Controls.Dropdown
             {
                 _label.Metadata.Focus(force: true);
             }
-        }
-
-        protected override void OnDraw(RenderContext<DropdownState> context)
-        {
         }
     }
 }

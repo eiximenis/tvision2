@@ -34,7 +34,7 @@ namespace Tvision2.Controls.Label
         protected override void OnDraw(RenderContext<LabelState> context)
         {
             var state = context.State;
-            var currentcols = context.Viewport.Columns;
+            var currentcols = context.Viewport.Bounds.Cols;
             var focused = Metadata.IsFocused;
             var pairIdx = focused ? CurrentStyle.Focused : CurrentStyle.Standard;
             var value = state.Text.ToString() ?? "";

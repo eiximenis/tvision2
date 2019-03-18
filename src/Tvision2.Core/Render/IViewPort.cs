@@ -8,8 +8,7 @@ namespace Tvision2.Core.Render
     {
         TvPoint Position { get; }
         int ZIndex { get; }
-        int Columns { get; }
-        int Rows { get; }
+        TvBounds Bounds { get; }
 
         IViewport ResizeTo(int cols, int rows);
         IViewport Grow(int ncols, int nrows);

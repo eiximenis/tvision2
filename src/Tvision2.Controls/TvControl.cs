@@ -24,8 +24,6 @@ namespace Tvision2.Controls
         public TvControlMetadata Metadata => _metadata.Value;
         public TState State { get; }
 
-        public IViewport Viewport => _component.Viewport;
-
         public string Name => AsComponent().Name;
 
         public TvControl(TvControlCreationParameters<TState> creationParams)
@@ -46,9 +44,21 @@ namespace Tvision2.Controls
             ControlType = genericIdx != -1 ? typename.Substring(0, genericIdx) : typename;
             CurrentStyle = creationParams.Skin.GetControlStyle(this);
             State = initialState;
-            _component.AddViewport(creationParams.GetViewport(State));
+
+            
+            if (creationParams.AutoCreateViewport)
+            {
+                Metadata.ViewportAutoCreated = true;
+            }
+            else
+            {
+                _component.AddViewport(creationParams.Viewport);
+                Metadata.ViewportAutoCreated = false;
+            }
+
             _owner = creationParams.Owner;
         }
+
 
         private void ConfigureStandardMetadataOptions(TvControlMetadataOptions options)
         {
@@ -78,6 +88,13 @@ namespace Tvision2.Controls
 
         private Task<bool> OnComponentMounted(IComponentTree owner)
         {
+            if (Metadata.ViewportAutoCreated)
+            {
+                CreateAndSetViewport();
+            }
+
+            OnViewportCreated(AsComponent().Viewport);
+
             var ctree = owner.RootControls() as ControlsTree;
             ctree.Add(Metadata);
             AddElements();
@@ -88,6 +105,20 @@ namespace Tvision2.Controls
         protected virtual void OnControlMounted(IComponentTree owner)
         {
         }
+
+
+        private void CreateAndSetViewport()
+        {
+            _component.AddViewport(CalculateViewport());
+        }
+
+        protected virtual void OnViewportCreated(IViewport viewport) { }
+
+        protected virtual IViewport CalculateViewport()
+        {
+            throw new InvalidOperationException($"This control (type {GetType().Name} do not support autocreating viewports.");
+        }
+
 
         private void AddElements()
         {

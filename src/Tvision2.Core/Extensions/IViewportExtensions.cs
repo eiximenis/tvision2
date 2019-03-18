@@ -12,29 +12,29 @@ namespace Tvision2.Core.Render
 
             var x1 = vp.Position.Left;
             var y1 = vp.Position.Top;
-            var x2 = x1 + vp.Columns;
-            var y2 = y1 + vp.Rows;
+            var x2 = x1 + vp.Bounds.Cols;
+            var y2 = y1 + vp.Bounds.Rows;
 
             var x1o = otherPos.Left;
             var y1o = otherPos.Top;
-            var x2o = x1o + another.Columns;
-            var y2o = y1o + another.Rows;
+            var x2o = x1o + another.Bounds.Cols;
+            var y2o = y1o + another.Bounds.Rows;
 
             return (x2o >= x1 && x1o <= x2) && (y2o >= y1 && y1o <= y2);
         }
 
         public static IViewport Layer(this IViewport viewport, ViewportLayer layer, int zIndexDisplacement = 0) 
-            => new Viewport(viewport.Position, viewport.Columns, viewport.Rows, (int)layer + zIndexDisplacement);
-        public static IViewport InnerViewport(this IViewport containerViewport, TvPoint pos, int cols, int rows)
+            => new Viewport(viewport.Position, viewport.Bounds, (int)layer + zIndexDisplacement);
+        public static IViewport InnerViewport(this IViewport containerViewport, TvPoint pos, TvBounds bounds)
         {
             var vppos = pos + containerViewport.Position;
             var displacement = pos;
 
-            var availableCols = containerViewport.Columns - displacement.Left;
-            var availableRows = containerViewport.Rows - displacement.Top;
-            var vpCols = cols < availableCols ? cols : availableCols;
-            var vpRows = rows < availableRows ? rows : availableRows;
-            var vp = new Viewport(vppos, vpCols, vpRows, containerViewport.ZIndex);
+            var availableCols = containerViewport.Bounds.Cols - displacement.Left;
+            var availableRows = containerViewport.Bounds.Rows - displacement.Top;
+            var vpCols = bounds.Cols < availableCols ? bounds.Cols : availableCols;
+            var vpRows = bounds.Rows < availableRows ? bounds.Rows : availableRows;
+            var vp = new Viewport(vppos, new TvBounds(vpRows, vpCols), containerViewport.ZIndex);
             return vp;
         }
 
@@ -42,11 +42,11 @@ namespace Tvision2.Core.Render
         {
             if (innerViewport == null)
             {
-                return new Viewport(TvPoint.Zero + displacement, containerViewport.Columns, containerViewport.Rows, containerViewport.ZIndex);
+                return new Viewport(TvPoint.Zero + displacement, containerViewport.Bounds, containerViewport.ZIndex);
             }
             else
             {
-                return containerViewport.InnerViewport(innerViewport.Position + displacement, innerViewport.Columns, innerViewport.Rows);
+                return containerViewport.InnerViewport(innerViewport.Position + displacement, innerViewport.Bounds);
             }
         }
     }

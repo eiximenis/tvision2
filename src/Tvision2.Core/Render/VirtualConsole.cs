@@ -166,8 +166,8 @@ namespace Tvision2.Core.Render
         {
             var initcol = viewport.Position.Left;
             var initrow = viewport.Position.Top;
-            var maxcol = Math.Min(initcol + viewport.Columns, Width - 1);
-            var maxrow = Math.Min(initrow + viewport.Rows, Height - 1);
+            var maxcol = Math.Min(initcol + viewport.Bounds.Cols, Width - 1);
+            var maxrow = Math.Min(initrow + viewport.Bounds.Rows, Height - 1);
 
             for (var row = initrow; row <= maxrow; row++)
             {

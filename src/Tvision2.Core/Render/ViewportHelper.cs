@@ -14,9 +14,9 @@ namespace Tvision2.Core.Render
             var consoleLocation = ViewPointToConsolePoint(location, boxModel.Position);
             var zindex = boxModel.ZIndex;
 
-            if (boxModel.Columns < text.Length)
+            if (boxModel.Bounds.Cols < text.Length)
             {
-                text = text.Substring(0, boxModel.Columns);
+                text = text.Substring(0, boxModel.Bounds.Cols);
             }
             console.DrawAt(text, consoleLocation, zindex, attr);
         }
@@ -40,16 +40,17 @@ namespace Tvision2.Core.Render
         public static void Fill(CharacterAttribute attr, IViewport boxModel, VirtualConsole console)
         {
             var location = ViewPointToConsolePoint(new TvPoint(0, 0), boxModel.Position);
-            for (var rows = 0; rows < boxModel.Rows; rows++)
+            var vpRows = boxModel.Bounds.Rows;
+            for (var rows = 0; rows < vpRows; rows++)
             {
-                console.DrawAt(new string(' ', boxModel.Columns), location + new TvPoint(0, rows), boxModel.ZIndex, attr);
+                console.DrawAt(new string(' ', boxModel.Bounds.Cols), location + new TvPoint(0, rows), boxModel.ZIndex, attr);
             }
         }
 
         public static void Clear(IViewport boxModel, VirtualConsole console)
         {
             var location = ViewPointToConsolePoint(new TvPoint(0, 0), boxModel.Position);
-            console.DrawAt(new string(' ', boxModel.Columns), location, int.MinValue, new CharacterAttribute());
+            console.DrawAt(new string(' ', boxModel.Bounds.Cols), location, int.MinValue, new CharacterAttribute());
         }
 
 

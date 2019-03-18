@@ -56,7 +56,7 @@ namespace Tvision2.MidnightCommander
             var textbox = new TvTextbox(TvTextbox.CreationParametersBuilder().UseSkin(skin).UseViewport(null));
             //var left = new TvList<FileItem>(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
             //    new ListState<FileItem>(Enumerable.Empty<FileItem>(), f => new TvListItem() { Text = f.Name }));
-            var actind = new TvActivityIndicator(TvActivityIndicator.CreationParametersBuilder().UseSkin(skin).UseViewport(new Viewport(new TvPoint(0, 22), 1, 1, 0)));
+            var actind = new TvActivityIndicator(TvActivityIndicator.CreationParametersBuilder().UseSkin(skin).UseViewport(new Viewport(new TvPoint(0, 22),new TvBounds(1, 1), 0)));
             tui.UI.Add(actind);
 
 
@@ -66,14 +66,14 @@ namespace Tvision2.MidnightCommander
                         .AddFixedColumn(fi => fi.IsDirectory ? "*" : " ", width: 2)
                         .AddColumn(fi => fi.Name)
                         .Build())
-                    .UseSkin(skin).UseViewport(new Viewport(new TvPoint(0, 0), 10, 1, 0)));
+                    .UseSkin(skin).UseViewport(new Viewport(new TvPoint(0, 0), new TvBounds(1,10), 0)));
 
             left.StyleProvider
                 .Use(Core.Colors.TvColor.Red, Core.Colors.TvColor.Blue)
                 .When(f => (f.FileAttributes & System.IO.FileAttributes.Hidden) == System.IO.FileAttributes.Hidden)
                 .AppliesToColumn(1);
 
-            var right = new TvList<FileItem>(new TvControlCreationParameters<ListState<FileItem>>(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
+            var right = new TvList<FileItem>(new TvControlCreationParameters<ListState<FileItem>>(skin, new Viewport(new TvPoint(0, 0),new TvBounds(1, 10), 0),
                 new ListState<FileItem>(Enumerable.Empty<FileItem>(), new TvListColumnSpec<FileItem>() { Transformer = f => f.Name })));
 
             right.StyleProvider
@@ -93,7 +93,7 @@ namespace Tvision2.MidnightCommander
             //window.State.UI.Add(label);
 
             var label = new TvLabel(TvLabel.CreationParametersBuilder(s => s.Text = "In Window" )
-                .UseSkin(skin).UseViewport(new Viewport(new TvPoint(0, 0), 9, 1, 0)));
+                .UseSkin(skin).UseViewport(new Viewport(new TvPoint(0, 0), new TvBounds(1,9), 0)));
             var dialog = _dialogManager.CreateDialog(dvpf.Create(vpf => vpf.FullViewport().CreateCentered(20, 10)),
                 d => { d.State.UI.Add(label); });
             var sleft = TvStatexControl.Wrap<TvList<FileItem>, ListState<FileItem>, FileList>(left, opt =>

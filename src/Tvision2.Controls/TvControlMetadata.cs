@@ -41,6 +41,8 @@ namespace Tvision2.Controls
             }
         }
 
+        public bool ViewportAutoCreated { get; internal set; }
+
         public bool IsDrawable => _options.IsDrawable;
 
         public bool IsDirty { get; private set; }

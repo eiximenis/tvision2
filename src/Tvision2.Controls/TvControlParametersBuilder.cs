@@ -26,11 +26,11 @@ namespace Tvision2.Controls
         where TState : IDirtyObject
     {
 
+        private bool _positionSet;
         public ISkin SkinToUse { get; private set; }
         public Action<TState> StateConfigurator { get; private set; }
         public IViewport Viewport { get; private set; }
         private readonly Func<TState> _stateCreator;
-        public Func<TState, TvPoint, IViewport> ViewportCreator { get; private set; }
         private string _name;
 
         public TvPoint Position { get; private set; }
@@ -39,6 +39,7 @@ namespace Tvision2.Controls
         public TvControlCreationParametersBuilder(Func<TState> stateCreator)
         {
             _stateCreator = stateCreator;
+            _positionSet = false;
         }
 
         public ITvControlCreationParametersBuilder<TState> UseSkin(ISkin skin)
@@ -55,23 +56,14 @@ namespace Tvision2.Controls
 
         public ITvControlCreationParametersBuilder<TState> UseViewport(IViewport viewport)
         {
-            if (ViewportCreator != null)
+            if (_positionSet)
             {
-                throw new InvalidOperationException("Can't set Viewport and ViewportBuilder together");
+                throw new InvalidOperationException("Can't set Viewport AND position together");
             }
             Viewport = viewport;
             return this;
         }
 
-        public ITvControlCreationParametersBuilder<TState> CreateViewportFromState(Func<TState, TvPoint, IViewport> viewportCreator)
-        {
-            if (Viewport != null)
-            {
-                throw new InvalidOperationException("Can't set Viewport AND ViewportCreator together");
-            }
-            ViewportCreator = viewportCreator;
-            return this;
-        }
 
         public ITvControlCreationParametersBuilder<TState> UseTopLeftPosition(TvPoint position)
         {
@@ -80,6 +72,7 @@ namespace Tvision2.Controls
                 throw new InvalidOperationException("Can't set Viewport AND position together");
             }
             Position = position;
+            _positionSet = true;
             return this;
         }
 
@@ -93,9 +86,9 @@ namespace Tvision2.Controls
         {
             var state = _stateCreator();
             StateConfigurator?.Invoke(state);
-            return Viewport != null
-                ? new TvControlCreationParameters<TState>(SkinToUse, Viewport, state, _name)
-                : new TvControlCreationParameters<TState>(SkinToUse, ViewportCreator ?? FixedViewportCreator<TState>.NullViewport(),  Position, state, _name);
+            return _positionSet
+                ? new TvControlCreationParameters<TState>(SkinToUse, Position, state, _name)
+                : new TvControlCreationParameters<TState>(SkinToUse, Viewport, state, _name);
         }
 
     }

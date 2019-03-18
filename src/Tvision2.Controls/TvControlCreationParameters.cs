@@ -10,8 +10,7 @@ namespace Tvision2.Controls
 
         public ISkin Skin { get; }
         public TState InitialState { get; }
-
-        private Func<TState, TvPoint, IViewport> _viewportCreator;
+        public bool AutoCreateViewport { get; private set; }
 
         public string Name { get; }
 
@@ -19,14 +18,15 @@ namespace Tvision2.Controls
 
         public TvPoint Position { get; }
 
-        public IViewport GetViewport(TState state) => _viewportCreator(state, Position);
+        public IViewport Viewport { get; }
 
         public TvControlCreationParameters(ISkin skin, IViewport viewport, TState initialState)
         {
             Skin = skin;
             InitialState = initialState;
-            Position = viewport.Position;
-            _viewportCreator = FixedViewportCreator<TState>.Return(viewport);
+            Position = viewport?.Position ?? TvPoint.Zero;
+            Viewport = viewport;
+            AutoCreateViewport = false;
         }
 
         public TvControlCreationParameters(ISkin skin, IViewport viewport, TState initialState, string name) : this(skin, viewport, initialState)
@@ -39,20 +39,21 @@ namespace Tvision2.Controls
             Owner = owner;
         }
 
-        public TvControlCreationParameters(ISkin skin, Func<TState, TvPoint, IViewport> viewportCreator, TvPoint position, TState initialState)
+        public TvControlCreationParameters(ISkin skin, TvPoint position, TState initialState)
         {
             Skin = skin;
-            _viewportCreator = viewportCreator;
+            AutoCreateViewport = true;
             Position = position;
+            Viewport = null;
             InitialState = initialState;
         }
 
-        public TvControlCreationParameters(ISkin skin, Func<TState, TvPoint, IViewport> viewportCreator, TvPoint position, TState initialState, string name) : this(skin, viewportCreator, position, initialState)
+        public TvControlCreationParameters(ISkin skin, TvPoint position, TState initialState, string name) : this(skin, position, initialState)
         {
             Name = name;
         }
 
-        public TvControlCreationParameters(ISkin skin, Func<TState, TvPoint, IViewport> viewportCreator, TvPoint position, TState initialState, string name, ITvControl owner) : this(skin, viewportCreator, position, initialState, name)
+        public TvControlCreationParameters(ISkin skin, TvPoint position, TState initialState, string name, ITvControl owner) : this(skin, position, initialState, name)
         {
             Owner = owner;
         }

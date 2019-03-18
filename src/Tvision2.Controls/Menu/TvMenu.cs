@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Tvision2.Controls.List;
+using Tvision2.Controls.Styles;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 
@@ -12,22 +13,15 @@ namespace Tvision2.Controls.Menu
         private readonly TvMenuBarOptions _options;
         private TvList<MenuEntry> _list;
         private IComponentTree _ownerUi;
+        private readonly ISkin _skin;
 
         public TvMenu(ITvControlCreationParametersBuilder<MenuState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : this(parameters.Build(), optionsAction) { }
         public TvMenu(TvControlCreationParameters<MenuState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : base(parameters)
         {
             _options = new TvMenuBarOptions();
             optionsAction?.Invoke(_options);
-            var builder = TvList.CreationParametersBuilder(State.Options);
-            builder.UseSkin(parameters.Skin);
-            builder.UseViewport(CalculateViewport());
-            _list = new TvList<MenuEntry>(builder);
             Metadata.CanFocus = false;
-        }
-
-        private IViewport CalculateViewport()
-        {
-            throw new NotImplementedException();
+            _skin = parameters.Skin;
         }
 
         public static ITvControlCreationParametersBuilder<MenuState> CreationParametersBuilder(IEnumerable<string> options)
@@ -38,6 +32,14 @@ namespace Tvision2.Controls.Menu
         protected override void ConfigureMetadataOptions(TvControlMetadataOptions options)
         {
             options.AvoidDrawControl();
+        }
+
+        protected override void OnViewportCreated(IViewport viewport)
+        {
+            var builder = TvList.CreationParametersBuilder(State.Options);
+            builder.UseSkin(_skin);
+            builder.UseTopLeftPosition(viewport.Position);
+            _list = new TvList<MenuEntry>(builder);
         }
 
         protected override void OnControlMounted(IComponentTree owner)
