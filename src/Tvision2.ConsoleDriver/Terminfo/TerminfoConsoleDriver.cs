@@ -6,6 +6,7 @@ using Tvision2.ConsoleDriver.Terminfo;
 using Tvision2.Core.Colors;
 using Tvision2.Engine.Console;
 using Tvision2.Events;
+using Unix.Terminal;
 
 namespace Tvision2.ConsoleDriver
 {
@@ -14,10 +15,12 @@ namespace Tvision2.ConsoleDriver
 
 
         private readonly TerminfoTerminal _terminal;
+        private readonly ITerminfoColorManager _colorManager;
 
-        public TerminfoConsoleDriver()
+        public TerminfoConsoleDriver(ITerminfoColorManager colorManager)
         {
             _terminal = new  TerminfoTerminal();
+            _colorManager = colorManager;
         }
         
         
@@ -36,29 +39,28 @@ namespace Tvision2.ConsoleDriver
             {
                 throw new InvalidOperationException($"Terminal '${terminalName}' definition not found in Terminfo db. Is TERM value set to the right value?");
             }
-           
 
-            
+            Curses.initscr();
+            Curses.raw();;
             var smcup = TerminfoBindings.tigetstr("smcup");
-            
-            TerminfoBindings.putp(TerminfoBindings.tparm(smcup));
+
+            TerminfoBindings.putp(smcup);
            
             _terminal.Load();
+            _colorManager.Init();
         }
         
         public void WriteCharacterAt(int x, int y, char character)
         {
-            TerminfoBindings.putp(_terminal.Cup(x, y));
-
-            TerminfoBindings.putp(character + "");
+            TerminfoBindings.putp(_terminal.Cup(y, x));
+            TerminfoBindings.putp(character.ToString());
         }
 
         public void WriteCharacterAt(int x, int y, char character, CharacterAttribute attribute)
-        {
-            // TODO: Implement using terminfo capabalities
-
+        {   
             TerminfoBindings.putp(_terminal.Cup(y, x));
-            TerminfoBindings.putp(character + "");
+            _colorManager.SetAttributes(attribute);
+            TerminfoBindings.putp(character.ToString());
         }
 
         public void WriteCharactersAt(int x, int y, int count, char character, CharacterAttribute attribute)

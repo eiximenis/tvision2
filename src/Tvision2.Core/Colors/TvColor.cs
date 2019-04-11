@@ -33,6 +33,7 @@ namespace Tvision2.Core.Colors
     public struct TvColor
     {
         public readonly int Value;
+        private const int RGB_MARKER = (1 << 31);
 
         public TvColor(int value) => Value = value;
 
@@ -53,6 +54,19 @@ namespace Tvision2.Core.Colors
 
         public static bool operator ==(TvColor one, int other) => one.Value == other;
         public static bool operator !=(TvColor one, int other) => one.Value == other;
+
+        public bool IsRgb => (Value & RGB_MARKER) != 0;
+        
+        public static TvColor FromRaw(int raw) => new TvColor(raw);
+        
+        public static TvColor FromRGB(byte red, byte green, byte blue)
+        {
+            var value = red | (green << 8) | (blue << 16) | (1 << 31);
+            return new TvColor(value);
+        }
+
+        public (byte red, byte green, byte blue) Rgb =>
+            ((byte) (Value & 0xff), (byte) (Value >> 8), (byte) (Value >> 16));
 
 
         public override bool Equals(object obj)

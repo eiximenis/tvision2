@@ -11,11 +11,7 @@ namespace Tvision2.Debug
 
         public DebugDrawer()
         {
-            _attribute = new CharacterAttribute()
-            {
-                ColorIdx = new Random().Next(1, 16),
-                Modifiers = CharacterAttributeModifiers.Normal
-            };
+            _attribute = new CharacterAttribute(new Random().Next(1, 16), CharacterAttributeModifiers.Normal);
         }
 
         public void Draw(RenderContext context)

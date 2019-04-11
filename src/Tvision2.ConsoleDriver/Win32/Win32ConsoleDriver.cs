@@ -15,7 +15,7 @@ namespace Tvision2.ConsoleDriver
         private readonly IntPtr _hstdout;
         public bool SupportsVt100 { get; }
         private IWindowsColorManager _colorManager;
-        private readonly ConsoleDriverOptions _options;
+        private readonly WindowsConsoleDriverOptions _options;
         private CONSOLE_CURSOR_INFO _initialCursorInfo;
 
         public (int rows, int cols) GetConsoleWindowSize()
@@ -30,7 +30,7 @@ namespace Tvision2.ConsoleDriver
 
         internal void AttachColorManager(IWindowsColorManager colorManager) => _colorManager = colorManager;
 
-        public Win32ConsoleDriver(ConsoleDriverOptions options)
+        public Win32ConsoleDriver(WindowsConsoleDriverOptions options)
         {
             _hstdin = ConsoleNative.GetStdHandle(STDIN);
             _hstdout = ConsoleNative.GetStdHandle(STDOUT);

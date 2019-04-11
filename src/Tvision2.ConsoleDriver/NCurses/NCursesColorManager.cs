@@ -29,11 +29,7 @@ namespace Tvision2.ConsoleDriver.NCurses
             _supportsBgHilite = false;
             _pairs = new Dictionary<(TvColor fore, TvColor back), int>();
             _lastPairUsedIdx = 0;
-            DefaultAttribute = new CharacterAttribute()
-            {
-                ColorIdx = 0,
-                Modifiers = CharacterAttributeModifiers.Normal
-            };
+            DefaultAttribute = new CharacterAttribute(0, CharacterAttributeModifiers.Normal);
         }
 
         public int GetPairIndexFor(TvColor fore, TvColor back)
@@ -102,17 +98,13 @@ namespace Tvision2.ConsoleDriver.NCurses
                 }
             }
 
-            return new CharacterAttribute()
-            {    
-                ColorIdx = coloridx,
-                Modifiers = attrs
-            };
+            return new CharacterAttribute(coloridx, attrs);
         }
 
         public void SetAttributes(CharacterAttribute attributes)
         {
             var attr = (int)(attributes.Modifiers) & ~(int)CharacterAttributeModifiers.BackgroundBold;    
-            Curses.attrset(Curses.ColorPair(attributes.ColorIdx) | (attr << 8));
+            Curses.attrset(Curses.ColorPair((int)attributes.ColorIdx) | (attr << 8));
         }
     }
 }

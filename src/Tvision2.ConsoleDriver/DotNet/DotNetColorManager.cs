@@ -83,10 +83,7 @@ namespace Tvision2.ConsoleDriver.Colors
         public int GetPairIndexFor(TvColor fore, TvColor back) => (int)fore + ((int)back << 3);
 
         public CharacterAttribute BuildAttributeFor(TvColor fore, TvColor back,
-            CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal) => new CharacterAttribute()
-            {
-                ColorIdx = (int)fore + ((int)back << 3),
-                Modifiers = attrs
-            };
+            CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal) =>
+             new CharacterAttribute((int) fore + ((int) back << 3), attrs);
     }
 }

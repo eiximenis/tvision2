@@ -40,11 +40,7 @@ namespace Tvision2.ConsoleDriver.Win32
         public CharacterAttribute BuildAttributeFor(TvColor fore, TvColor back,
             CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal)
         {
-            return new CharacterAttribute()
-            {
-                ColorIdx = GetPairIndexFor(fore, back),
-                Modifiers = attrs
-            };
+            return new CharacterAttribute(GetPairIndexFor(fore, back), attrs);
         }
 
         private Win32StdColorPair AddColorPair(TvColor fore, TvColor back)
@@ -70,7 +66,7 @@ namespace Tvision2.ConsoleDriver.Win32
 
         public int AttributeToWin32Colors(CharacterAttribute attribute)
         {
-            var winAttr = _indexedPairs[attribute.ColorIdx].WinColor;
+            var winAttr = _indexedPairs[(int)attribute.ColorIdx].WinColor;
             if ((attribute.Modifiers & CharacterAttributeModifiers.Bold) != 0)
             {
                 winAttr |= (Win32ConsoleColor.FOREGROUND_INTENSITY);

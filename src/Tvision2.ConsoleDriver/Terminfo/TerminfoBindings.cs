@@ -7,55 +7,55 @@ namespace Tvision2.ConsoleDriver.Terminfo
 {
     public class TerminfoBindings
     {
-        [DllImport("libtinfo.so")]
+        [DllImport("libtinfo.so.5")]
         public static extern int tgetent(IntPtr ignored, string name);
         
 
-        [DllImport("libtinfo.so")]
+        [DllImport("libtinfo.so.5")]
         public static extern int putp([MarshalAs(UnmanagedType.LPStr)]string str);
         
-        [DllImport("libtinfo.so")]
+        [DllImport("libtinfo.so.5")]
         public static extern int tigetnum (string capname);
         
-        [DllImport("libtinfo.so")]
+        [DllImport("libtinfo.so.5")]
         public static extern int tigetflag(string capname);
 
         
-        [DllImport("libtinfo.so", EntryPoint = "tigetstr")]
+        [DllImport("libtinfo.so.5", EntryPoint = "tigetstr")]
         public static extern IntPtr _tigetstr (string capname);
         
-        [DllImport("libtinfo.so")]
+        [DllImport("libtinfo.so.5")]
         public static extern int setupterm(string name, int filddes, IntPtr errret);
  
-        [DllImport("libtinfo.so", EntryPoint = "tparm")]
+        [DllImport("libtinfo.so.5", EntryPoint = "tparm")]
         private static extern IntPtr _tparm(string str);
 
-        [DllImport("libtinfo.so", EntryPoint = "tparm")]
+        [DllImport("libtinfo.so.5", EntryPoint = "tparm")]
         private static extern IntPtr _tparm(string str, int p0);
 
-        [DllImport("libtinfo.so", EntryPoint = "tparm")]
+        [DllImport("libtinfo.so.5", EntryPoint = "tparm")]
         private static extern  IntPtr _tparm(string str, int p0, int p1);
         
 
-        [DllImport("libtinfo.so", EntryPoint = "tparm")]
+        [DllImport("libtinfo.so.5", EntryPoint = "tparm")]
         private static extern IntPtr _tparm(string str, int p0, int p1, int p2);
 
-        [DllImport("libtinfo.so", EntryPoint = "tparm")]
+        [DllImport("libtinfo.so.5", EntryPoint = "tparm")]
         private static extern IntPtr _tparm(string str, int p0, int p1, int p2, int p3);
 
-        [DllImport("libtinfo.so", EntryPoint = "tparm")]
+        [DllImport("libtinfo.so.5", EntryPoint = "tparm")]
         private static extern IntPtr _tparm(string str, int p0, int p1, int p2, int p3, int p4);
         
-        [DllImport("libtinfo.so", EntryPoint = "tparm")]
+        [DllImport("libtinfo.so.5", EntryPoint = "tparm")]
         private static extern IntPtr _tparm(string str, int p0, int p1, int p2, int p3, int p4, int p5);
 
-        [DllImport("libtinfo.so", EntryPoint = "tparm")]
+        [DllImport("libtinfo.so.5", EntryPoint = "tparm")]
         private static extern IntPtr _tparm(string str, int p0, int p1, int p2, int p3, int p4, int p5, int p6);
         
-        [DllImport("libtinfo.so", EntryPoint = "tparm")]
+        [DllImport("libtinfo.so.5", EntryPoint = "tparm")]
         private static extern IntPtr _tparm(string str, int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7);
 
-        [DllImport("libtinfo.so", EntryPoint = "tparm")]
+        [DllImport("libtinfo.so.5", EntryPoint = "tparm")]
         private static extern IntPtr _tparm(string str, int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8);
 
 
@@ -74,6 +74,12 @@ namespace Tvision2.ConsoleDriver.Terminfo
         public static string tparm(string str, int p0, int p1)
         {
             var ptr = _tparm(str, p0, p1);
+            return Marshal.PtrToStringAnsi(ptr);
+        }
+        
+        public static string tparm(string str, int p0, int p1, int p2)
+        {
+            var ptr = _tparm(str, p0, p1, p2);
             return Marshal.PtrToStringAnsi(ptr);
         }
         

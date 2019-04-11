@@ -5,8 +5,8 @@ namespace Tvision2.Core.Colors
     public struct CharacterAttribute : IEquatable<CharacterAttribute>
     {
         
-        public CharacterAttributeModifiers Modifiers;
-        public int ColorIdx;
+        public readonly CharacterAttributeModifiers Modifiers;
+        public readonly long ColorIdx;
 
         public bool Equals(CharacterAttribute other)
         {
@@ -17,7 +17,7 @@ namespace Tvision2.Core.Colors
         {
             unchecked
             {
-                return ((int) Modifiers * 397) ^ ColorIdx;
+                return (int)(((int) Modifiers * 397) ^ ColorIdx);
             }
         }
 
@@ -38,7 +38,7 @@ namespace Tvision2.Core.Colors
             return obj is CharacterAttribute other && Equals(other);
         }
 
-        public CharacterAttribute(int colorIdx, CharacterAttributeModifiers modifiers = CharacterAttributeModifiers.Normal)
+        public CharacterAttribute(long colorIdx, CharacterAttributeModifiers modifiers = CharacterAttributeModifiers.Normal)
         {
             ColorIdx = colorIdx;
             Modifiers = modifiers;

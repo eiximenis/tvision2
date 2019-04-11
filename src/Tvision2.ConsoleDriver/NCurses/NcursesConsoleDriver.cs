@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Xml;
+using Tvision2.ConsoleDriver.Common;
 using Tvision2.ConsoleDriver.NCurses;
 using Tvision2.Core.Colors;
 using Tvision2.Engine.Console;
@@ -14,12 +15,12 @@ namespace Tvision2.ConsoleDriver
 {
     public class NcursesConsoleDriver : IConsoleDriver
     {
-        private readonly ConsoleDriverOptions _options;
+        private readonly LinuxConsoleDriverOptions _options;
         private readonly NcursesColorManager _colorDriver;
 
         private const int EscKey = 27;
 
-        public NcursesConsoleDriver(ConsoleDriverOptions options, NcursesColorManager colorDriver)
+        public NcursesConsoleDriver(LinuxConsoleDriverOptions options, NcursesColorManager colorDriver)
         {
             _options = options;
             _colorDriver = colorDriver;
