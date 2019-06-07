@@ -2,11 +2,12 @@ using System;
 
 namespace Tvision2.Core.Colors
 {
+
     public struct CharacterAttribute : IEquatable<CharacterAttribute>
     {
         
         public readonly CharacterAttributeModifiers Modifiers;
-        public readonly long ColorIdx;
+        public readonly ulong ColorIdx;
 
         public bool Equals(CharacterAttribute other)
         {
@@ -17,7 +18,7 @@ namespace Tvision2.Core.Colors
         {
             unchecked
             {
-                return (int)(((int) Modifiers * 397) ^ ColorIdx);
+                return (int)(((int) Modifiers * 397) ^ (long)ColorIdx);
             }
         }
 
@@ -38,11 +39,15 @@ namespace Tvision2.Core.Colors
             return obj is CharacterAttribute other && Equals(other);
         }
 
-        public CharacterAttribute(long colorIdx, CharacterAttributeModifiers modifiers = CharacterAttributeModifiers.Normal)
+        public CharacterAttribute(int colorIdx, CharacterAttributeModifiers modifiers = CharacterAttributeModifiers.Normal)
+        {
+            ColorIdx = (ulong)colorIdx;
+            Modifiers = modifiers;
+        }
+        public CharacterAttribute(ulong colorIdx, CharacterAttributeModifiers modifiers = CharacterAttributeModifiers.Normal)
         {
             ColorIdx = colorIdx;
             Modifiers = modifiers;
         }
-              
     }
 }

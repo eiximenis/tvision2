@@ -18,7 +18,8 @@ namespace Tvision2.MidnightCommander
             {
                 setup.UsePlatformConsoleDriver(opt => 
                     opt.Configure()
-                        .OnLinux(lo => lo.UseDirectAccess(dop => dop.UseTrueColor())))
+                        .OnLinux(lo => lo.UseDirectAccess(dop => dop.UseTrueColor()))
+                        .OnWindows(w => w.EnableAnsiSequences()))
                     .UseViewportManager()
                     .UseLayoutManager()
                     .AddTvDialogs()

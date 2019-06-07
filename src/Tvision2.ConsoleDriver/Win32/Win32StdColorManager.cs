@@ -3,7 +3,7 @@ using Tvision2.Core.Colors;
 
 namespace Tvision2.ConsoleDriver.Win32
 {
-    class Win32StdColorManager : IWindowsColorManager
+    class Win32StdColorManager : IColorManager
     {
 
         class Win32StdColorPair

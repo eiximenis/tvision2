@@ -14,32 +14,20 @@ namespace Tvision2.ConsoleDriver.Terminfo
         
         public TerminfoTrueColorManager()
         {
-            MaxColors = 16 * 1024 * 1024;
+            MaxColors = -1;
         }
 
         public void Init()
         {
             _setaf = TerminfoBindings.tigetstr("setaf");
             _setab = TerminfoBindings.tigetstr("setab");
-
-
             var x = TerminfoBindings.tigetstr("RGB");
         }
    
         public CharacterAttribute BuildAttributeFor(TvColor fore, TvColor back,
             CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal)
         {
-            return new CharacterAttribute(fore.Value & (back.Value >> 31), attrs);
-        }
-        
-        
-
-
-        private (TvColor fore, TvColor back) DecodeColorsFromAttribute(CharacterAttribute attr)
-        {
-            var fvalue = (int) (attr.ColorIdx & 0xffffffff);
-            var bvalue = (int) ((attr.ColorIdx << 31) & 0xffffffff);
-            return (TvColor.FromRaw(fvalue), TvColor.FromRaw(bvalue));
+            return CharacterAttributeExtensions.EncodeColorsInAttribute(fore, back, attrs);
         }
         
 
@@ -48,7 +36,7 @@ namespace Tvision2.ConsoleDriver.Terminfo
 
         public void SetAttributes(CharacterAttribute attributes)
         {
-            var (fore, back) = DecodeColorsFromAttribute(attributes);
+            var (fore, back) = attributes.DecodeColorsFromAttribute();
             var (fr, fg, fb) = fore.Rgb;
             var foreString = TerminfoBindings.tparm(_setaf, fr, fg, fb);
             TerminfoBindings.putp(foreString);

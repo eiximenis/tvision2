@@ -1,37 +1,39 @@
 ﻿using System;
 using Tvision2.ConsoleDriver.Win32;
 using Tvision2.Core.Colors;
+using Tvision2.Core.Render;
 using Tvision2.Engine.Console;
 using Tvision2.Events;
 
 namespace Tvision2.ConsoleDriver
 {
-    public class Win32ConsoleDriver : IConsoleDriver
+    class Win32StdConsoleDriver : IConsoleDriver
     {
         private const int STDIN = -10;
         private const int STDOUT = -11;
         private const int CP_TOUSE = 65001;     // UTF8
         private readonly IntPtr _hstdin;
         private readonly IntPtr _hstdout;
-        public bool SupportsVt100 { get; }
-        private IWindowsColorManager _colorManager;
         private readonly WindowsConsoleDriverOptions _options;
+        private readonly Win32StdColorManager _colorManager;
         private CONSOLE_CURSOR_INFO _initialCursorInfo;
 
-        public (int rows, int cols) GetConsoleWindowSize()
+        public IColorManager ColorManager => _colorManager;
+        public TvBounds ConsoleBounds { get; private set; }
+
+        private TvBounds GetConsoleWindowSize()
         {
             CONSOLE_SCREEN_BUFFER_INFO csbi;
 
             ConsoleNative.GetConsoleScreenBufferInfo(_hstdout, out csbi);
             var columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
             var rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-            return (rows, columns);
+            return new TvBounds(rows, columns);
         }
 
-        internal void AttachColorManager(IWindowsColorManager colorManager) => _colorManager = colorManager;
-
-        public Win32ConsoleDriver(WindowsConsoleDriverOptions options)
+        public Win32StdConsoleDriver(WindowsConsoleDriverOptions options)
         {
+            _colorManager = new Win32StdColorManager();
             _hstdin = ConsoleNative.GetStdHandle(STDIN);
             _hstdout = ConsoleNative.GetStdHandle(STDOUT);
             _options = options;
@@ -39,10 +41,10 @@ namespace Tvision2.ConsoleDriver
             ConsoleNative.SetConsoleOutputCP(CP_TOUSE);
             ConsoleNative.GetConsoleMode(_hstdout, out uint dwOutModes);
             ConsoleNative.GetConsoleMode(_hstdin, out uint dwInputModes);
+
             SetConsoleMode(options, dwOutModes, dwInputModes);
             //ConsoleNative.SetConsoleMode(_hstdin, (uint)(ConsoleInputModes.ENABLE_MOUSE_INPUT | ConsoleInputModes.ENABLE_WINDOW_INPUT | ConsoleInputModes.ENABLE_VIRTUAL_TERMINAL_INPUT));
-            dwOutModes |= (uint)ConsoleOutputModes.ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-            SupportsVt100 = ConsoleNative.SetConsoleMode(_hstdout, dwOutModes);
+            
         }
 
         private void SetConsoleMode(ConsoleDriverOptions options, uint currentOutModes, uint currentInputModes)
@@ -52,7 +54,8 @@ namespace Tvision2.ConsoleDriver
 
         public void Init()
         {
-            var (rows, cols) = GetConsoleWindowSize();
+            var rows = Console.WindowHeight;
+            var cols = Console.WindowWidth;
             var requestedCols = _options.WindowOptions.Cols > 0 ? _options.WindowOptions.Cols : cols;
             var requestedRows = _options.WindowOptions.Rows > 0 ? _options.WindowOptions.Rows : rows;
             var rect = new SMALL_RECT()
@@ -71,6 +74,8 @@ namespace Tvision2.ConsoleDriver
             CONSOLE_CURSOR_INFO cursorInfo;
             ConsoleNative.GetConsoleCursorInfo(_hstdout, out cursorInfo);
             _initialCursorInfo = cursorInfo;
+
+            ConsoleBounds = GetConsoleWindowSize();
         }
 
         public TvConsoleEvents ReadEvents()
@@ -87,11 +92,6 @@ namespace Tvision2.ConsoleDriver
             {
                 return TvConsoleEvents.Empty;
             }
-        }
-
-        public void WriteCharacterAt(int x, int y, char character)
-        {
-            ConsoleNative.FillConsoleOutputCharacter(_hstdout, character, (uint)1, new COORD((short)x, (short)y), out var numWritten);
         }
 
         public void WriteCharacterAt(int x, int y, char character, CharacterAttribute attribute)
@@ -118,6 +118,12 @@ namespace Tvision2.ConsoleDriver
         {
             var info = new CONSOLE_CURSOR_INFO(isVisible, _initialCursorInfo.Size);
             ConsoleNative.SetConsoleCursorInfo(_hstdout, ref info);
+        }
+
+        public void ProcessWindowEvent(TvWindowEvent windowEvent)
+        {
+            var bounds = GetConsoleWindowSize();
+            windowEvent.Update(bounds.Cols, bounds.Rows);
         }
     }
 }

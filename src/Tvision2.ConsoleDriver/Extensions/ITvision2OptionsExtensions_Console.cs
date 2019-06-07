@@ -24,17 +24,16 @@ namespace Tvision2.Core
 
         private static Tvision2Setup UseWin32ConsoleDriver(this Tvision2Setup tv2, WindowsConsoleDriverOptions options)
         {
-            var driver = new Win32ConsoleDriver(options);
-            var colorManager = driver.SupportsVt100
-                // TODO: Change for using Win32Vt100ColorManager if allowed
-                ? (IWindowsColorManager)new Win32StdColorManager()
-                : (IWindowsColorManager)new Win32StdColorManager();
-            driver.AttachColorManager(colorManager);
+
+            var driverFactory = new Win32ConsoleDriverFactory(options);
+            var driver = driverFactory.CreateWindowsDriver();
+
+
             tv2.Options.UseConsoleDriver(driver);
             tv2.Builder.ConfigureServices((hc, sc) =>
             {
                 sc.AddSingleton<IConsoleDriver>(driver);
-                sc.AddSingleton<IColorManager>(colorManager);
+                sc.AddSingleton<IColorManager>(driver.ColorManager);
             });
             return tv2;
         }

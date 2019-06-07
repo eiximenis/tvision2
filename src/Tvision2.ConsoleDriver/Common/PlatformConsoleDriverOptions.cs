@@ -5,34 +5,31 @@ namespace Tvision2.ConsoleDriver.Common
 {
     class PlatformConsoleDriverOptions : IPlatformConsoleDriverOptions, IPlatformConsoleDriverOptiosnConfigurator
     {
-        private readonly LinuxConsoleDriverOptions _linuxOptions;
-        private readonly WindowsConsoleDriverOptions _windowsOptions;
-
-        public WindowsConsoleDriverOptions WindowsOptions => _windowsOptions;
-        public LinuxConsoleDriverOptions LinuxOptions => _linuxOptions;
+        public WindowsConsoleDriverOptions WindowsOptions { get; }
+        public LinuxConsoleDriverOptions LinuxOptions { get; }
 
         public PlatformConsoleDriverOptions()
         {
-            _linuxOptions = new LinuxConsoleDriverOptions();
-            _windowsOptions = new WindowsConsoleDriverOptions();
+            LinuxOptions = new LinuxConsoleDriverOptions();
+            WindowsOptions = new WindowsConsoleDriverOptions();
         }
         
         IPlatformConsoleDriverOptiosnConfigurator IPlatformConsoleDriverOptions.Configure(Action<IConsoleDriverOptions> commonOptions = null)
         {
-            commonOptions?.Invoke(_linuxOptions);
-            commonOptions?.Invoke(_windowsOptions);
+            commonOptions?.Invoke(LinuxOptions);
+            commonOptions?.Invoke(WindowsOptions);
             return this;
         }
 
         IPlatformConsoleDriverOptiosnConfigurator IPlatformConsoleDriverOptiosnConfigurator.OnWindows(Action<IWindowsConsoleDriverOptions> winOptionsSetup)
         {
-            winOptionsSetup.Invoke(_windowsOptions);
+            winOptionsSetup.Invoke(WindowsOptions);
             return this;
         }
 
         IPlatformConsoleDriverOptiosnConfigurator IPlatformConsoleDriverOptiosnConfigurator.OnLinux(Action<ILinuxConsoleDriverOptions> linuxOptionsSetup)
         {
-            linuxOptionsSetup.Invoke(_linuxOptions);
+            linuxOptionsSetup.Invoke(LinuxOptions);
             return this;
         }
     }

@@ -28,10 +28,10 @@ namespace Tvision2.Core.Render
 
         public VirtualConsoleCursor Cursor { get; private set; }
 
-        public VirtualConsole()
+        public VirtualConsole(int height, int width)
         {
-            Width = Console.WindowWidth;
-            Height = Console.WindowHeight;
+            Width = width;
+            Height = height;
             InitData();
         }
 

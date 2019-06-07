@@ -4,6 +4,7 @@ using System.Text;
 using Tvision2.ConsoleDriver.Colors;
 using Tvision2.ConsoleDriver.DotNet;
 using Tvision2.Core.Colors;
+using Tvision2.Core.Render;
 using Tvision2.Engine.Console;
 using Tvision2.Events;
 
@@ -14,12 +15,19 @@ namespace Tvision2.ConsoleDriver
         private readonly ConsoleDriverOptions _options;
         private readonly DotNetColorManager _colorManager;
 
+        public IColorManager ColorManager => _colorManager;
+        public TvBounds ConsoleBounds { get; private set; }
+
         public DotNetConsoleDriver(ConsoleDriverOptions options, DotNetColorManager colorManager)
         {
             _options = options;
             _colorManager = colorManager;
         }
-        public void Init() {}
+
+        public void Init()
+        {
+            ConsoleBounds = new TvBounds(Console.WindowHeight, Console.WindowWidth);
+        }
         public TvConsoleEvents ReadEvents()
         {
             if (Console.KeyAvailable)
@@ -36,16 +44,10 @@ namespace Tvision2.ConsoleDriver
             }
         }
 
-        public void WriteCharacterAt(int x, int y, char character)
-        {
-            Console.SetCursorPosition(x, y);
-            Console.Write(character);
-        }
 
-
-        public void WriteCharacterAt(int x, int y, char character,  CharacterAttribute attribute)
+        public void WriteCharacterAt(int x, int y, char character, CharacterAttribute attribute)
         {
-            var (fg, bg)  = _colorManager.AttributeToDotNetColors(attribute);
+            var (fg, bg) = _colorManager.AttributeToDotNetColors(attribute);
             Console.ForegroundColor = fg;
             Console.BackgroundColor = bg;
             Console.SetCursorPosition(x, y);
@@ -66,14 +68,13 @@ namespace Tvision2.ConsoleDriver
             Console.SetCursorPosition(x, y);
         }
 
-        public (int rows, int cols) GetConsoleWindowSize()
-        {
-            return (Console.WindowHeight, Console.WindowWidth);
-        }
-
         public void SetCursorVisibility(bool isVisible)
         {
             Console.CursorVisible = isVisible;
+        }
+
+        public void ProcessWindowEvent(TvWindowEvent windowEvent)
+        {
         }
     }
 }

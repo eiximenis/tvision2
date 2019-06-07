@@ -15,5 +15,11 @@ namespace Tvision2.Events
             NewColumns = cols;
             NewRows = rows;
         }
+
+        public void Update(int newCols, int newRows)
+        {
+            NewColumns = newCols;
+            NewRows = newRows;
+        }
     }
 }

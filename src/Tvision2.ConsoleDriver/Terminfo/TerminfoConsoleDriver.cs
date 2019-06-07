@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Extensions.FileSystemGlobbing.Internal.PathSegments;
 using Tvision2.ConsoleDriver.Terminfo;
 using Tvision2.Core.Colors;
+using Tvision2.Core.Render;
 using Tvision2.Engine.Console;
 using Tvision2.Events;
 using Unix.Terminal;
@@ -16,6 +17,9 @@ namespace Tvision2.ConsoleDriver
 
         private readonly TerminfoTerminal _terminal;
         private readonly ITerminfoColorManager _colorManager;
+        public TvBounds ConsoleBounds { get; private set; }
+
+        public IColorManager ColorManager => _colorManager;
 
         public TerminfoConsoleDriver(ITerminfoColorManager colorManager)
         {
@@ -26,6 +30,7 @@ namespace Tvision2.ConsoleDriver
         
         public void Init()
         {
+            ConsoleBounds = new TvBounds(Console.WindowHeight, Console.WindowWidth);
             var terminalName = System.Environment.GetEnvironmentVariable("TERM");
             var ret = TerminfoBindings.setupterm(terminalName, 1, IntPtr.Zero);
             
@@ -50,12 +55,6 @@ namespace Tvision2.ConsoleDriver
             _colorManager.Init();
         }
         
-        public void WriteCharacterAt(int x, int y, char character)
-        {
-            TerminfoBindings.putp(_terminal.Cup(y, x));
-            TerminfoBindings.putp(character.ToString());
-        }
-
         public void WriteCharacterAt(int x, int y, char character, CharacterAttribute attribute)
         {   
             TerminfoBindings.putp(_terminal.Cup(y, x));
@@ -91,6 +90,10 @@ namespace Tvision2.ConsoleDriver
         }
 
         public void SetCursorVisibility(bool isVisible)
+        {
+        }
+
+        public void ProcessWindowEvent(TvWindowEvent windowEvent)
         {
         }
     }

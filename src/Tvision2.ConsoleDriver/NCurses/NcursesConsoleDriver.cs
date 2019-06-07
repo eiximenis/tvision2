@@ -5,6 +5,7 @@ using System.Xml;
 using Tvision2.ConsoleDriver.Common;
 using Tvision2.ConsoleDriver.NCurses;
 using Tvision2.Core.Colors;
+using Tvision2.Core.Render;
 using Tvision2.Engine.Console;
 using Tvision2.Events;
 using Tvision2.Events.NCurses;
@@ -20,6 +21,9 @@ namespace Tvision2.ConsoleDriver
 
         private const int EscKey = 27;
 
+        public IColorManager ColorManager => _colorDriver;
+        public TvBounds ConsoleBounds { get; private set; }
+
         public NcursesConsoleDriver(LinuxConsoleDriverOptions options, NcursesColorManager colorDriver)
         {
             _options = options;
@@ -28,6 +32,9 @@ namespace Tvision2.ConsoleDriver
 
         public void Init()
         {
+
+            ConsoleBounds = new TvBounds(Console.WindowHeight, Console.WindowWidth);
+
             Curses.setlocale(6, "");
             Curses.initscr();
             _colorDriver.Init();
@@ -88,11 +95,6 @@ namespace Tvision2.ConsoleDriver
             return TvConsoleEvents.Empty;
         }
 
-        public void WriteCharacterAt(int x, int y, char character)
-        {
-            Console.SetCursorPosition(x, y);
-            Console.Write(character);
-        }
 
         public void WriteCharacterAt(int x, int y, char character, CharacterAttribute attributes)
         {
@@ -128,6 +130,10 @@ namespace Tvision2.ConsoleDriver
         }
 
         public void SetCursorVisibility(bool isVisible)
+        {
+        }
+
+        public void ProcessWindowEvent(TvWindowEvent windowEvent)
         {
         }
     }

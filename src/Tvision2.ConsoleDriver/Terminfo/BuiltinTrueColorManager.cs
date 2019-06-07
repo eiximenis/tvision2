@@ -26,7 +26,7 @@ namespace Tvision2.ConsoleDriver.Terminfo
         public CharacterAttribute BuildAttributeFor(TvColor fore, TvColor back,
             CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal)
         {
-            return new CharacterAttribute(fore.Value & (back.Value >> 31), attrs);
+            return new CharacterAttribute(fore.Value | (back.Value >> 31), attrs);
         }
         
         

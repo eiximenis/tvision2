@@ -40,7 +40,8 @@ namespace Tvision2.Core.Engine
         public async Task Start(CancellationToken cancellationToken)
         {
             ConsoleDriver.Init();
-            _currentConsole = new VirtualConsole();
+            var bounds = ConsoleDriver.ConsoleBounds;
+            _currentConsole = new VirtualConsole(bounds.Rows, bounds.Cols);
             var hookContext = new HookContext(this);
             _eventHookManager = new EventHookManager(_options.HookTypes ?? Enumerable.Empty<Type>(), _options.AfterUpdates ?? Enumerable.Empty<Action>(), hookContext, ServiceProvider);
             foreach (var afterCreateTask in _options.AfterCreateInvokers)
@@ -68,6 +69,7 @@ namespace Tvision2.Core.Engine
 
                 if (evts.HasWindowEvent)
                 {
+                    ConsoleDriver.ProcessWindowEvent(evts.WindowEvent);
                     _currentConsole.Resize(evts.WindowEvent.NewRows, evts.WindowEvent.NewColumns);
                 }
 
