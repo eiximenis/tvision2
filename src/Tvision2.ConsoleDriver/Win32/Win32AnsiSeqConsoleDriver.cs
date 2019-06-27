@@ -100,7 +100,10 @@ namespace Tvision2.ConsoleDriver
             Console.Write(_seqManager.GetCursorSequence(x, y));
             var ansiSeq = _seqManager.GetAttributeSequence(attribute);
             Console.Write(ansiSeq);
-            Console.Write(character);
+            for (var rep = 0; rep < count; rep++)
+            {
+                Console.Write(character);
+            }
         }
 
 

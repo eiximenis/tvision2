@@ -108,8 +108,10 @@ namespace Tvision2.MidnightCommander
                     .Dispatch((s, args) => new TvAction<string>("FETCH_DIR", args.FullName))
                     .When(f => f.IsDirectory);
 
+                /*
                 opt.OnKeyEvent(e => e.AsConsoleKeyInfo().Key == System.ConsoleKey.Enter)
                     .Dispatch(s => new TvAction<FileItem>("FETCH_INFO", s[s.SelectedIndex]));
+                */
 
                 opt.OnKeyEvent(e => e.AsConsoleKeyInfo().Key == System.ConsoleKey.Backspace)
                     .Dispatch(s => new TvAction("FETCH_BACK"));
