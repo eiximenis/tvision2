@@ -18,12 +18,13 @@ namespace Tvision2.ConsoleDriver.Win32
             }
         }
 
-        public int MaxColors => 8;
         public int MaxPairs => 64;
 
         private int _currentLastPair = -1;
 
         public CharacterAttribute DefaultAttribute { get; }
+
+        public IPalette Palette { get; }
 
         private readonly Dictionary<(TvColor fore, TvColor back), Win32StdColorPair> _pairs;
         private List<Win32StdColorPair> _indexedPairs;
@@ -32,8 +33,17 @@ namespace Tvision2.ConsoleDriver.Win32
         {
             _pairs = new Dictionary<(TvColor fore, TvColor back), Win32StdColorPair>();
             _indexedPairs = new List<Win32StdColorPair>();
-            AddColorPair(TvColor.White, TvColor.Black);
             DefaultAttribute = BuildAttributeFor(TvColor.White, TvColor.Black, CharacterAttributeModifiers.Normal);
+
+            foreach (var back in TvColorNames.AllStandardColors())
+            {
+                foreach (var fore in TvColorNames.AllStandardColors())
+                {
+                    AddColorPair(TvColor.FromRaw(fore), TvColor.FromRaw(back));
+                }
+            }
+
+            Palette = new Win32StdPalette();
         }
 
 

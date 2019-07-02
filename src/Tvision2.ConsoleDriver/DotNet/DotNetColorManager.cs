@@ -6,20 +6,18 @@ namespace Tvision2.ConsoleDriver.Colors
 {
     class DotNetColorManager : IColorManager
     {
-        private const int DOTNET_MAX_COLORS = 8; // On DotNet only support 8 basic colors (+ 8 with "Bold Attribute")
-        private const int DOTNET_MAX_PAIRS = 256; // In .net all basic combinations are allowed, thus 8 fg * 8 bg
-
-        public int MaxColors => DOTNET_MAX_COLORS;
-
-        public int MaxPairs => 64;
         public CharacterAttribute DefaultAttribute { get; }
 
         private readonly Dictionary<(TvColor, TvColor), int> _pairs;
         private readonly ConsoleColor[,] _dotnetMap;
 
+        public IPalette Palette { get; }
+
         public DotNetColorManager()
         {
-            _dotnetMap = new ConsoleColor[DOTNET_MAX_COLORS, 2];
+
+            Palette = new DotNetPalette();
+            _dotnetMap = new ConsoleColor[DotNetPalette.DOTNET_MAX_COLORS, 2];
 
             foreach (var stdcolor in TvColorNames.AllStandardColors())
             {

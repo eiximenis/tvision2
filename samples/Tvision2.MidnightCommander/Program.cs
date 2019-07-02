@@ -13,13 +13,30 @@ namespace Tvision2.MidnightCommander
     {
         private static async Task Main(string[] args)
         {
+            bool useFullColor = false;
+            foreach (var arg in args)
+            {
+                if (arg == "--fullcolor") { useFullColor = true; }
+            }
             var builder = new HostBuilder();
             builder.UseTvision2(setup =>
             {
                 setup.UsePlatformConsoleDriver(opt => 
                     opt.Configure()
-                        .OnLinux(lo => lo.UseDirectAccess(dop => dop.UseTrueColor()))
-                        .OnWindows(w => w.EnableAnsiSequences())
+                        .OnLinux(lo =>
+                        {
+                            if (useFullColor)
+                            {
+                                lo.UseDirectAccess(dop => dop.UseTrueColor());
+                            }
+                        })
+                        .OnWindows(w =>
+                        {
+                            if (useFullColor)
+                            {
+                                w.EnableAnsiSequences();
+                            }
+                        })
                      )
                     .UseViewportManager()
                     .UseLayoutManager()

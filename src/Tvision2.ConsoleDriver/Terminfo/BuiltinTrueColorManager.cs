@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using Microsoft.Extensions.Logging.Internal;
+using Tvision2.ConsoleDriver.Common;
 using Tvision2.Core.Colors;
 
 namespace Tvision2.ConsoleDriver.Terminfo
@@ -10,13 +11,13 @@ namespace Tvision2.ConsoleDriver.Terminfo
 
         private const string setafFormat = "\x1b[38;2;{0};{1};{2}m";
         private const string setabFormat = "\x1b[48;2;{0};{1};{2}m";
-        
-        
-        public int MaxColors { get; }
+
+        public IPalette Palette { get; }
+       
         
         public BuiltinTrueColorManager()
         {
-            MaxColors = 16 * 1024 * 1024;
+            Palette = new DirectPalette();
         }
 
         public void Init()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Tvision2.ConsoleDriver.Common;
 using Tvision2.Core.Colors;
 
 namespace Tvision2.ConsoleDriver.Win32
@@ -13,13 +14,15 @@ namespace Tvision2.ConsoleDriver.Win32
         private const string SGR = "\x1b[{0}m";
         private const string CUP = "\x1b[{0};{1}H";
         private const ulong BACKCOL_MASK = 0xFFFFFFFF00000000;
-        public int MaxColors => -1;
 
         public CharacterAttribute DefaultAttribute { get; }
+
+        public IPalette Palette { get; }
 
         public Win32AnsiSequencesManager()
         {
             DefaultAttribute = BuildAttributeFor(TvColor.White, TvColor.Black, CharacterAttributeModifiers.Normal);
+            Palette = new DirectPalette();
         }
 
         public CharacterAttribute BuildAttributeFor(TvColor fore, TvColor back,

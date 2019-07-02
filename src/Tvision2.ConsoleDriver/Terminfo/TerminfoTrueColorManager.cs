@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging.Internal;
+using Tvision2.ConsoleDriver.Common;
 using Tvision2.Core.Colors;
 
 namespace Tvision2.ConsoleDriver.Terminfo
@@ -6,15 +7,15 @@ namespace Tvision2.ConsoleDriver.Terminfo
     public class TerminfoTrueColorManager : ITerminfoColorManager
     {
 
-        private  string _setaf;
-        private  string _setab;
-        
-        
-        public int MaxColors { get; }
-        
+        private string _setaf;
+        private string _setab;
+
+
+        public IPalette Palette { get; }
+
         public TerminfoTrueColorManager()
         {
-            MaxColors = -1;
+            Palette = new DirectPalette();
         }
 
         public void Init()
@@ -23,13 +24,13 @@ namespace Tvision2.ConsoleDriver.Terminfo
             _setab = TerminfoBindings.tigetstr("setab");
             var x = TerminfoBindings.tigetstr("RGB");
         }
-   
+
         public CharacterAttribute BuildAttributeFor(TvColor fore, TvColor back,
             CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal)
         {
             return CharacterAttributeExtensions.EncodeColorsInAttribute(fore, back, attrs);
         }
-        
+
 
         public CharacterAttribute DefaultAttribute { get; }
 
@@ -43,7 +44,7 @@ namespace Tvision2.ConsoleDriver.Terminfo
             var (br, bg, bb) = back.Rgb;
             var backString = TerminfoBindings.tparm(_setab, br, bg, bb);
             TerminfoBindings.putp(backString);
-            
+
         }
     }
 }

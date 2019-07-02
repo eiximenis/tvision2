@@ -21,5 +21,26 @@ namespace Tvision2.Controls.Styles
         public StyleEntry AlternateFocused { get; internal set; }
         public StyleEntry this[string name] => _customValues.TryGetValue(name, out StyleEntry result) ? result : Standard;
         internal void SetupCustomValue(string name, StyleEntry attr) => _customValues.Add(name, attr);
+
+        public void Mix(Style styleDelta)
+        {
+            Standard.Mix(styleDelta.Standard);
+            Focused.Mix(styleDelta.Focused);
+            Alternate.Mix(styleDelta.Alternate);
+            AlternateFocused.Mix(styleDelta.Focused);
+
+            
+            foreach (var entry in styleDelta._customValues)
+            {
+                if (_customValues.ContainsKey(entry.Key))
+                {
+                    _customValues[entry.Key].Mix(entry.Value);
+                }
+                else
+                {
+                    _customValues.Add(entry.Key, entry.Value);
+                }
+            }
+        }
     }
 }

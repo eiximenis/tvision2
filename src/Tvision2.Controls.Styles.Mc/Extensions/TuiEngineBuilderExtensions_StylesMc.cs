@@ -12,11 +12,11 @@ namespace Tvision2.Controls.Styles
 
                 sb.AddBaseStyle(style =>
                 {
-                    style.DesiredStandard(o =>
+                    style.Default().DesiredStandard(o =>
                         o.UseForeground(TvColor.White)
                          .UseBackground(TvColor.Blue)
                     );
-                    style.DesiredFocused(o =>
+                    style.Default().DesiredFocused(o =>
                         o.UseForeground(TvColor.Black)
                          .UseBackground(TvColor.Cyan)
                     );
@@ -24,21 +24,26 @@ namespace Tvision2.Controls.Styles
 
                 sb.AddStyle("tvlist", style =>
                 {
-
-                    style.DesiredStandard(o =>
+                    style.Default().DesiredStandard(o =>
                         o.UseForeground(TvColor.White)
-                         .UseBackground(() => new VerticalGradientBackgroundProvider(TvColor.FromRGB(0, 200, 100), TvColor.FromRGB(50, 50, 50)))
+                         .UseBackground(TvColor.Blue)
+                    );
+                    style
+                        .When(cm => cm == Core.ColorMode.Palettized || cm == Core.ColorMode.Direct)
+                        .DesiredStandard(o =>
+                            o.UseBackground(() => new VerticalGradientBackgroundProvider(
+                                TvColor.FromRGB(0, 200, 100), TvColor.FromRGB(50, 50, 50)))
                         );
-                    style.DesiredFocused(o =>
+                    style.Default().DesiredFocused(o =>
                         o.UseForeground(TvColor.White)
                          .UseBackground(TvColor.Blue)
                          .AddModifier(CharacterAttributeModifiers.BackgroundBold)
                     );
-                    style.DesiredAlternate(o =>
+                    style.Default().DesiredAlternate(o =>
                         o.UseForeground(TvColor.Black)
                          .UseBackground(TvColor.Cyan)
                     );
-                    style.DesiredAlternateFocused(o =>
+                    style.Default().DesiredAlternateFocused(o =>
                         o.UseForeground(TvColor.Black)
                          .UseBackground(TvColor.White)
                     );
@@ -46,11 +51,11 @@ namespace Tvision2.Controls.Styles
 
                 sb.AddStyle("tvtextbox", style =>
                 {
-                    style.DesiredStandard(o =>
+                    style.Default().DesiredStandard(o =>
                         o.UseForeground(TvColor.Black)
                          .UseBackground(TvColor.White)
                     );
-                    style.DesiredFocused(o =>
+                    style.Default().DesiredFocused(o =>
                         o.UseForeground(TvColor.White)
                          .UseBackground(TvColor.Black)
                     );
@@ -58,11 +63,11 @@ namespace Tvision2.Controls.Styles
 
                 sb.AddStyle("tvdialog", style =>
                 {
-                    style.DesiredStandard(o =>
+                    style.Default().DesiredStandard(o =>
                         o.UseForeground(TvColor.Black)
                          .UseBackground(TvColor.White)
                     );
-                    style.DesiredFocused(o =>
+                    style.Default().DesiredFocused(o =>
                         o.UseForeground(TvColor.White)
                          .UseBackground(TvColor.Black)
                     );
@@ -70,21 +75,21 @@ namespace Tvision2.Controls.Styles
 
                 sb.AddStyle("tvmenubar", style =>
                 {
-                    style.DesiredStandard(o =>
+                    style.Default().DesiredStandard(o =>
                         o.UseForeground(TvColor.White)
                          .UseBackground(TvColor.Black)
                          .AddModifier(CharacterAttributeModifiers.Bold)
                     );
-                    style.DesiredFocused(o =>
+                    style.Default().DesiredFocused(o =>
                         o.UseForeground(TvColor.Black)
                          .UseBackground(TvColor.Cyan)
                     );
-                    style.DesiredAlternate(o =>
+                    style.Default().DesiredAlternate(o =>
                         o.UseForeground(TvColor.Yellow)
                          .UseBackground(TvColor.Cyan)
                          .AddModifier(CharacterAttributeModifiers.Bold)
                     );
-                    style.DesiredAlternateFocused(o =>
+                    style.Default().DesiredAlternateFocused(o =>
                         o.UseForeground(TvColor.Yellow)
                          .UseBackground(TvColor.Black)
                          .AddModifier(CharacterAttributeModifiers.Bold)

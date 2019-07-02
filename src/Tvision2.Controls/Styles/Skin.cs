@@ -13,7 +13,6 @@ namespace Tvision2.Controls.Styles
         public Skin(IDictionary<string, IStyle> styles, IColorManager colorManager)
         {
             _styles = styles ?? throw new ArgumentNullException(nameof(styles));
-            ColorManager = colorManager;
         }
 
         public IStyle this[string name]

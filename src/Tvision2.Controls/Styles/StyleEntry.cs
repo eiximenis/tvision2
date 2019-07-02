@@ -1,3 +1,4 @@
+using System;
 using Tvision2.Controls.Backgrounds;
 using Tvision2.Core.Colors;
 using Tvision2.Core.Render;
@@ -6,11 +7,11 @@ namespace Tvision2.Controls.Styles
 {
     public class StyleEntry
     {
-        public TvColor Foreground { get; }
-        public IBackgroundProvider Background { get; }
-        public CharacterAttributeModifiers Attributes { get; }
+        public TvColor Foreground { get; private set; }
+        public IBackgroundProvider Background { get; private set; }
+        public CharacterAttributeModifiers Attributes { get; private set; }
 
-        private readonly TvColor? _fixedBackground;
+        private TvColor? _fixedBackground;
 
 
 
@@ -19,12 +20,19 @@ namespace Tvision2.Controls.Styles
             Foreground = foreground;
             Background = background;
             Attributes = modifiers;
+
+            EvaluateIfBackgroundIsFixedColor();
+        }
+
+        private void EvaluateIfBackgroundIsFixedColor()
+        {
             _fixedBackground = null;
 
             if (Background?.IsFixedBackgroundColor == true)
             {
-                _fixedBackground = background.GetColorFor(0, 0, TvBounds.Empty);
+                _fixedBackground = Background.GetColorFor(0, 0, TvBounds.Empty);
             }
+
         }
 
         public CharacterAttribute ToCharacterAttribute(TvPoint location, TvBounds bounds)
@@ -34,6 +42,23 @@ namespace Tvision2.Controls.Styles
                 Background.GetColorFor(location.Top, location.Left, bounds));
 
             return new CharacterAttribute(pair, Attributes);
+        }
+
+        internal void Mix(StyleEntry other)
+        {
+            if (other == null)
+            {
+                return;
+            }
+
+            Foreground = other.Foreground;
+            if (other.Background != null)
+            {
+                Background = other.Background;
+                EvaluateIfBackgroundIsFixedColor();
+            }
+            Attributes |= other.Attributes;
+
         }
     }
 }
