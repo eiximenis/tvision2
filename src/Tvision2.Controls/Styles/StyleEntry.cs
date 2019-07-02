@@ -21,7 +21,7 @@ namespace Tvision2.Controls.Styles
             Attributes = modifiers;
             if (Background.IsFixedBackgroundColor)
             {
-                _fixedBackground = background.GetColorFor(0, 0);
+                _fixedBackground = background.GetColorFor(0, 0, TvBounds.Empty);
             }
             else
             {
@@ -29,11 +29,11 @@ namespace Tvision2.Controls.Styles
             }
         }
 
-        public CharacterAttribute ToCharacterAttribute(TvPoint location)
+        public CharacterAttribute ToCharacterAttribute(TvPoint location, TvBounds bounds)
         {
             var pair = new TvColorPair(Foreground, _fixedBackground.HasValue ? 
                 _fixedBackground.Value : 
-                Background.GetColorFor(location.Top, location.Left));
+                Background.GetColorFor(location.Top, location.Left, bounds));
 
             return new CharacterAttribute(pair, Attributes);
         }

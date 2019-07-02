@@ -86,5 +86,12 @@ namespace Tvision2.Core.Colors
             var msg = diff > 0 ? $"+ {diff}" : "";
             return $"{Value} (TvColor.{colname} {msg})";
         }
+
+        public (int red, int green, int blue) Diff(TvColor other)
+        {
+            var rgb = this.Rgb;
+            var otherRgb = other.Rgb;
+            return (rgb.red - otherRgb.red, rgb.green - otherRgb.green, rgb.blue - otherRgb.blue);
+        }
     }
 }

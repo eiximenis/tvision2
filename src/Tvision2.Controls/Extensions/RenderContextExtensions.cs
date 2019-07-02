@@ -12,14 +12,14 @@ namespace Tvision2.Controls.Extensions
         {
             if (style.Background.IsFixedBackgroundColor)
             {
-                context.DrawChars(value, count, location, style.ToCharacterAttribute(location));
+                context.DrawChars(value, count, location, style.ToCharacterAttribute(location, context.Viewport.Bounds));
             }
             else
             {
                 for (var idx=0; idx < count; idx++)
                 {
                     var point = new TvPoint(location.Left + idx, location.Top);
-                    context.DrawChars(value, 1, point, style.ToCharacterAttribute(point));
+                    context.DrawChars(value, 1, point, style.ToCharacterAttribute(point, context.Viewport.Bounds));
                 }
             }
         }
@@ -28,14 +28,14 @@ namespace Tvision2.Controls.Extensions
         {
             if (style.Background.IsFixedBackgroundColor)
             {
-                context.DrawStringAt(value, location, style.ToCharacterAttribute(location));
+                context.DrawStringAt(value, location, style.ToCharacterAttribute(location, context.Viewport.Bounds));
             }
             else
             {
                 for (var idx = 0; idx < value.Length; idx++)
                 {
                     var point = new TvPoint(location.Left + idx, location.Top);
-                    context.DrawChars(value[idx], 1, point, style.ToCharacterAttribute(point));
+                    context.DrawChars(value[idx], 1, point, style.ToCharacterAttribute(point, context.Viewport.Bounds));
                 }
             }
         }
@@ -44,7 +44,7 @@ namespace Tvision2.Controls.Extensions
         {
             if (style.Background.IsFixedBackgroundColor)
             {
-                context.Fill(style.ToCharacterAttribute(TvPoint.Zero));
+                context.Fill(style.ToCharacterAttribute(TvPoint.Zero, context.Viewport.Bounds));
             }
             else
             {
@@ -54,7 +54,7 @@ namespace Tvision2.Controls.Extensions
                     for (var col = 0; col < bounds.Cols; col++)
                     {
                         var point = new TvPoint(col, row);
-                        context.DrawChars(' ', 1, point, style.ToCharacterAttribute(point));
+                        context.DrawChars(' ', 1, point, style.ToCharacterAttribute(point, context.Viewport.Bounds));
                     }
                 }
             }

@@ -1,4 +1,5 @@
-﻿using Tvision2.Core.Colors;
+﻿using Tvision2.Controls.Backgrounds;
+using Tvision2.Core.Colors;
 
 namespace Tvision2.Controls.Styles
 {
@@ -26,8 +27,8 @@ namespace Tvision2.Controls.Styles
 
                     style.DesiredStandard(o =>
                         o.UseForeground(TvColor.White)
-                         .UseBackground(TvColor.Blue)
-                    );
+                         .UseBackground(() => new VerticalGradientBackgroundProvider(TvColor.FromRGB(200, 0, 100), TvColor.FromRGB(0, 0, 0)))
+                        );
                     style.DesiredFocused(o =>
                         o.UseForeground(TvColor.White)
                          .UseBackground(TvColor.Blue)

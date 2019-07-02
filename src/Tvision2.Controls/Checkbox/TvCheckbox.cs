@@ -36,7 +36,7 @@ namespace Tvision2.Controls.Checkbox
                     break;
             }
 
-            context.DrawStringAt($"[{value}]", TvPoint.Zero, pairIdx.ToCharacterAttribute(TvPoint.Zero));
+            context.DrawStringAt($"[{value}]", TvPoint.Zero, pairIdx.ToCharacterAttribute(TvPoint.Zero, context.Viewport.Bounds));
         }
 
     }

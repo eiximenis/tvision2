@@ -94,8 +94,10 @@ namespace Tvision2.MidnightCommander
 
             var label = new TvLabel(TvLabel.CreationParametersBuilder(s => s.Text = "In Window" )
                 .UseSkin(skin).UseViewport(new Viewport(new TvPoint(0, 0), new TvBounds(1,9), 0)));
+            /*
             var dialog = _dialogManager.CreateDialog(dvpf.Create(vpf => vpf.FullViewport().CreateCentered(20, 10)),
                 d => { d.State.UI.Add(label); });
+            */
             var sleft = TvStatexControl.Wrap<TvList<FileItem>, ListState<FileItem>, FileList>(left, opt =>
             {
                 opt.UseDefaultStore("left");
@@ -144,7 +146,7 @@ namespace Tvision2.MidnightCommander
 
             //tui.UI.Add(window);
 
-            _dialogManager.ShowDialog(dialog);
+            //_dialogManager.ShowDialog(dialog);
 
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {

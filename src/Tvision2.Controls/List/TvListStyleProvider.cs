@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Tvision2.Controls.Styles;
 using Tvision2.Core.Colors;
+using Tvision2.Core.Render;
 
 namespace Tvision2.Controls.List
 {
@@ -71,7 +72,7 @@ namespace Tvision2.Controls.List
             // TODO: Search for a way to invoke tje real "GetColorFor" of the Background.
             // Right now we assume row 0, but this can look ugly if list Background is not
             // fixed color
-            return new TvColorPair(_style.Standard.Foreground, _style.Standard.Background.GetColorFor(0,colidx));
+            return new TvColorPair(_style.Standard.Foreground, _style.Standard.Background.GetColorFor(0,colidx, TvBounds.Empty));
 
         }
     }
