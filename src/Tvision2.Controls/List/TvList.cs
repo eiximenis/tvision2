@@ -83,6 +83,10 @@ namespace Tvision2.Controls.List
                         }
                         else
                         {
+                            if (attr.Background == null)
+                            {
+                                attr = new Styles.StyleEntry(attr.Foreground, CurrentStyle.Standard.Background, attr.Attributes);
+                            }
                             context.DrawStringAt(text, new TvPoint(1 + lenDrawn, idx + 1), attr);
                         }
 

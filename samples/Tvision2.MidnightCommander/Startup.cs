@@ -69,7 +69,7 @@ namespace Tvision2.MidnightCommander
                     .UseSkin(skin).UseViewport(new Viewport(new TvPoint(0, 0), new TvBounds(1,10), 0)));
 
             left.StyleProvider
-                .Use(Core.Colors.TvColor.Red, Core.Colors.TvColor.Blue)
+                .Use(Core.Colors.TvColor.Red)
                 .When(f => (f.FileAttributes & System.IO.FileAttributes.Hidden) == System.IO.FileAttributes.Hidden)
                 .AppliesToColumn(1);
 

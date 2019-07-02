@@ -9,6 +9,8 @@ namespace Tvision2.Controls.List
     public class TvListItem
     {
         public string[] Texts { get; set; }
-        public TvColorPair[] Attributes { get; set; }
+        public StyleEntry[] Attributes { get; set; }
+
+
     }
 }

@@ -25,7 +25,7 @@ namespace Tvision2.Controls.List
                 tvitem = new TvListItem();
                 tvitem.Texts = _columns.Select(c => c.Transformer(item).PadRight(c.Width > 0 ? c.Width : variableWidth)).ToArray();
                 tvitem.Attributes = Enumerable.Range(0, numColumns)
-                    .Select(colidx => _styleProvider.GetColorsForItem(item, colidx))
+                    .Select(colidx => _styleProvider.GetStyleForItem(item, colidx))
                     .ToArray();
 
                 _cachedItems.Add(idx, tvitem);

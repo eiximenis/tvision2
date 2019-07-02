@@ -19,20 +19,18 @@ namespace Tvision2.Controls.Styles
             Foreground = foreground;
             Background = background;
             Attributes = modifiers;
-            if (Background.IsFixedBackgroundColor)
+            _fixedBackground = null;
+
+            if (Background?.IsFixedBackgroundColor == true)
             {
                 _fixedBackground = background.GetColorFor(0, 0, TvBounds.Empty);
-            }
-            else
-            {
-                _fixedBackground = null;  
             }
         }
 
         public CharacterAttribute ToCharacterAttribute(TvPoint location, TvBounds bounds)
         {
-            var pair = new TvColorPair(Foreground, _fixedBackground.HasValue ? 
-                _fixedBackground.Value : 
+            var pair = new TvColorPair(Foreground, _fixedBackground.HasValue ?
+                _fixedBackground.Value :
                 Background.GetColorFor(location.Top, location.Left, bounds));
 
             return new CharacterAttribute(pair, Attributes);

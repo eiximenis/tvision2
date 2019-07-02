@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tvision2.Controls.Backgrounds;
 using Tvision2.Controls.Styles;
 using Tvision2.Core.Colors;
 using Tvision2.Core.Render;
@@ -13,8 +14,7 @@ namespace Tvision2.Controls.List
         class ListStyleProviderItem
         {
             public Func<T, bool> Predicate { get; set; }
-            public TvColor Foreground { get; set; }
-            public TvColor Background { get; set; }
+            public StyleEntry Style { get; set; }
             public int ColumnIdx { get; set; } = ALL_COLUMNS;
         }
 
@@ -33,12 +33,21 @@ namespace Tvision2.Controls.List
             return this;
         }
 
+        public IListStyleProviderConditionBuilder<T> Use(TvColor fore)
+        {
+            _items.Add(new ListStyleProviderItem()
+            {
+                Style = new StyleEntry(fore, null, CharacterAttributeModifiers.Normal)
+            });
+
+            return this;
+        }
+
         public IListStyleProviderConditionBuilder<T> Use(TvColor fore, TvColor back)
         {
             _items.Add(new ListStyleProviderItem()
             {
-                Background = back,
-                Foreground = fore
+                Style = new StyleEntry(fore, new SolidColorBackgroundProvider(back),CharacterAttributeModifiers.Normal)
             });
             return this;
         }
@@ -62,18 +71,14 @@ namespace Tvision2.Controls.List
             return this;
         }
 
-        public TvColorPair GetColorsForItem(T item, int colidx)
+        public StyleEntry GetStyleForItem(T item, int colidx)
         {
             foreach (var comparison in _items.Where(i => i.ColumnIdx == ALL_COLUMNS || i.ColumnIdx == colidx))
             {
-                if (comparison.Predicate(item)) return new TvColorPair(comparison.Foreground, comparison.Background);
+                if (comparison.Predicate(item)) return comparison.Style;
             }
 
-            // TODO: Search for a way to invoke tje real "GetColorFor" of the Background.
-            // Right now we assume row 0, but this can look ugly if list Background is not
-            // fixed color
-            return new TvColorPair(_style.Standard.Foreground, _style.Standard.Background.GetColorFor(0,colidx, TvBounds.Empty));
-
+            return _style.Standard;
         }
     }
 

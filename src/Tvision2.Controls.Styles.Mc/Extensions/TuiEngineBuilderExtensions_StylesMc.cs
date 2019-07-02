@@ -27,7 +27,7 @@ namespace Tvision2.Controls.Styles
 
                     style.DesiredStandard(o =>
                         o.UseForeground(TvColor.White)
-                         .UseBackground(() => new VerticalGradientBackgroundProvider(TvColor.FromRGB(200, 0, 100), TvColor.FromRGB(0, 0, 0)))
+                         .UseBackground(() => new VerticalGradientBackgroundProvider(TvColor.FromRGB(0, 200, 100), TvColor.FromRGB(50, 50, 50)))
                         );
                     style.DesiredFocused(o =>
                         o.UseForeground(TvColor.White)
