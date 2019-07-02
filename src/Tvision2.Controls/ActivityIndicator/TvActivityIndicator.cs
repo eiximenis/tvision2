@@ -51,8 +51,8 @@ namespace Tvision2.Controls.ActivityIndicator
 
         protected override void OnDraw(RenderContext<ActivityIndicatorState> context)
         {
-            var attr = this.CurrentStyle.Standard;
-            context.DrawChars(_chars[_idx], 1, TvPoint.Zero, attr);
+            var style = this.CurrentStyle.Standard;
+            context.DrawChars(_chars[_idx], 1, TvPoint.Zero, style.ToCharacterAttribute(TvPoint.Zero));
         }
     }
 }

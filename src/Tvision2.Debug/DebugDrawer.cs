@@ -11,7 +11,9 @@ namespace Tvision2.Debug
 
         public DebugDrawer()
         {
-            _attribute = new CharacterAttribute(new Random().Next(1, 16), CharacterAttributeModifiers.Normal);
+            var fore = TvColor.White;
+            var back = TvColor.FromRaw(new Random().Next(1, 8));
+            _attribute = new CharacterAttribute(new TvColorPair(fore, back), CharacterAttributeModifiers.Normal);
         }
 
         public void Draw(RenderContext context)

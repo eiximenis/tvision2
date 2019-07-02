@@ -4,10 +4,10 @@ namespace Tvision2.Controls.Styles
 {
     public interface IStyle
     {
-        CharacterAttribute Standard { get; }
-        CharacterAttribute Focused { get; }
-        CharacterAttribute Alternate { get; }
-        CharacterAttribute AlternateFocused { get; }
-        CharacterAttribute this[string name] { get; }
+        StyleEntry Standard { get; }
+        StyleEntry Focused { get; }
+        StyleEntry Alternate { get; }
+        StyleEntry AlternateFocused { get; }
+        StyleEntry this[string name] { get; }
     }
 }

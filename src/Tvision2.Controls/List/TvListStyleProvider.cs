@@ -12,8 +12,8 @@ namespace Tvision2.Controls.List
         class ListStyleProviderItem
         {
             public Func<T, bool> Predicate { get; set; }
-            public TvColor Fore { get; set; }
-            public TvColor Back { get; set; }
+            public TvColor Foreground { get; set; }
+            public TvColor Background { get; set; }
             public int ColumnIdx { get; set; } = ALL_COLUMNS;
         }
 
@@ -21,9 +21,8 @@ namespace Tvision2.Controls.List
         private List<ListStyleProviderItem> _items;
         private IStyle _style;
 
-        public TvListStyleProvider(IColorManager colorManager)
+        public TvListStyleProvider()
         {
-            _colorManager = colorManager;
             _items = new List<ListStyleProviderItem>();
         }
 
@@ -37,8 +36,8 @@ namespace Tvision2.Controls.List
         {
             _items.Add(new ListStyleProviderItem()
             {
-                Back = back,
-                Fore = fore
+                Background = back,
+                Foreground = fore
             });
             return this;
         }
@@ -62,14 +61,18 @@ namespace Tvision2.Controls.List
             return this;
         }
 
-        public CharacterAttribute GetAttributesForItem(T item, int colidx)
+        public TvColorPair GetColorsForItem(T item, int colidx)
         {
             foreach (var comparison in _items.Where(i => i.ColumnIdx == ALL_COLUMNS || i.ColumnIdx == colidx))
             {
-                if (comparison.Predicate(item)) return _colorManager.BuildAttributeFor(comparison.Fore, comparison.Back, CharacterAttributeModifiers.Normal);
+                if (comparison.Predicate(item)) return new TvColorPair(comparison.Foreground, comparison.Background);
             }
 
-            return _style?.Standard ?? _colorManager.DefaultAttribute;
+            // TODO: Search for a way to invoke tje real "GetColorFor" of the Background.
+            // Right now we assume row 0, but this can look ugly if list Background is not
+            // fixed color
+            return new TvColorPair(_style.Standard.Foreground, _style.Standard.Background.GetColorFor(0,colidx));
+
         }
     }
 

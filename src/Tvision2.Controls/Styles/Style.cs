@@ -8,18 +8,18 @@ namespace Tvision2.Controls.Styles
 {
     class Style : IStyle
     {
-        private readonly Dictionary<string, CharacterAttribute> _customValues;
+        private readonly Dictionary<string, StyleEntry> _customValues;
 
         public Style()
         {
-            _customValues = new Dictionary<string, CharacterAttribute>();
+            _customValues = new Dictionary<string, StyleEntry>();
         }
 
-        public CharacterAttribute Standard { get; internal set; }
-        public CharacterAttribute Focused { get; internal set; }
-        public CharacterAttribute Alternate { get; internal set; }
-        public CharacterAttribute AlternateFocused { get; internal set; }
-        public CharacterAttribute this[string name] => _customValues.TryGetValue(name, out CharacterAttribute result) ? result : Standard;
-        internal void SetupCustomValue(string name, CharacterAttribute attr) => _customValues.Add(name, attr);
+        public StyleEntry Standard { get; internal set; }
+        public StyleEntry Focused { get; internal set; }
+        public StyleEntry Alternate { get; internal set; }
+        public StyleEntry AlternateFocused { get; internal set; }
+        public StyleEntry this[string name] => _customValues.TryGetValue(name, out StyleEntry result) ? result : Standard;
+        internal void SetupCustomValue(string name, StyleEntry attr) => _customValues.Add(name, attr);
     }
 }

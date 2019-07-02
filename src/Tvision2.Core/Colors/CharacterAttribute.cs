@@ -7,18 +7,19 @@ namespace Tvision2.Core.Colors
     {
         
         public readonly CharacterAttributeModifiers Modifiers;
-        public readonly ulong ColorIdx;
+        public readonly TvColor Fore;
+        public readonly TvColor Back;
 
         public bool Equals(CharacterAttribute other)
         {
-            return Modifiers == other.Modifiers && ColorIdx == other.ColorIdx;
+            return Modifiers == other.Modifiers && Back == other.Back && Fore == other.Fore;
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return (int)(((int) Modifiers * 397) ^ (long)ColorIdx);
+                return (int)(((int) Modifiers * 397) ^ (long)(Fore.Value << 31 | Back.Value));
             }
         }
 
@@ -39,14 +40,10 @@ namespace Tvision2.Core.Colors
             return obj is CharacterAttribute other && Equals(other);
         }
 
-        public CharacterAttribute(int colorIdx, CharacterAttributeModifiers modifiers = CharacterAttributeModifiers.Normal)
+        public CharacterAttribute(TvColorPair colors, CharacterAttributeModifiers modifiers = CharacterAttributeModifiers.Normal)
         {
-            ColorIdx = (ulong)colorIdx;
-            Modifiers = modifiers;
-        }
-        public CharacterAttribute(ulong colorIdx, CharacterAttributeModifiers modifiers = CharacterAttributeModifiers.Normal)
-        {
-            ColorIdx = colorIdx;
+            Back = colors.Background;
+            Fore = colors.ForeGround;
             Modifiers = modifiers;
         }
     }

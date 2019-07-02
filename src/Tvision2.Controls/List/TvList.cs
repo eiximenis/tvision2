@@ -6,6 +6,7 @@ using Tvision2.Core;
 using Tvision2.Core.Components;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Render;
+using Tvision2.Controls.Extensions;
 
 namespace Tvision2.Controls.List
 {
@@ -42,7 +43,7 @@ namespace Tvision2.Controls.List
             _options = new TvListOptions<TItem>();
             optionsAction?.Invoke(_options);
             _onItemClicked = new ActionChain<TItem>();
-            _styleProvider = new TvListStyleProvider<TItem>(parameters.Skin.ColorManager);
+            _styleProvider = new TvListStyleProvider<TItem>();
             _styleProvider.UseSkin(parameters.Skin);
             _itemsCache = new TvListItemCache<TItem>(State.Columns, _styleProvider);
             State.SetCache(_itemsCache);
@@ -76,7 +77,15 @@ namespace Tvision2.Controls.List
                     {
                         var text = tvitem.Texts[column];
                         var attr = tvitem.Attributes[column];
-                        context.DrawStringAt(text, new TvPoint(1 + lenDrawn, idx + 1), selected ? selectedAttr : attr);
+                        if (selected)
+                        {
+                            context.DrawStringAt(text, new TvPoint(1 + lenDrawn, idx + 1), selectedAttr);
+                        }
+                        else
+                        {
+                            context.DrawStringAt(text, new TvPoint(1 + lenDrawn, idx + 1), attr);
+                        }
+
                         lenDrawn += text.Length;
                     }
                     var remaining = viewport.Bounds.Cols - 2 - lenDrawn;

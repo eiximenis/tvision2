@@ -26,7 +26,7 @@ namespace Tvision2.ConsoleDriver.Terminfo
         public CharacterAttribute BuildAttributeFor(TvColor fore, TvColor back,
             CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal)
         {
-            return new CharacterAttribute(fore.Value | (back.Value >> 31), attrs);
+            return new CharacterAttribute(new TvColorPair(fore, back), attrs);
         }
         
         
@@ -34,9 +34,7 @@ namespace Tvision2.ConsoleDriver.Terminfo
 
         private (TvColor fore, TvColor back) DecodeColorsFromAttribute(CharacterAttribute attr)
         {
-            var fvalue = (int) (attr.ColorIdx & 0xffffffff);
-            var bvalue = (int) ((attr.ColorIdx << 31) & 0xffffffff);
-            return (TvColor.FromRaw(fvalue), TvColor.FromRaw(bvalue));
+            return (attr.Fore, attr.Back);
         }
         
 

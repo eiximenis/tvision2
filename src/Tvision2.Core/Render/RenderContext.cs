@@ -10,15 +10,26 @@ namespace Tvision2.Core.Render
         protected readonly VirtualConsole _console;
         public IViewport Viewport { get; private set; }
         ICursorContext CursorContext => this;
+
         public RenderContext(IViewport viewport, VirtualConsole console)
         {
             _console = console;
             Viewport = viewport;
         }
 
+        public void DrawStringAt(string value, TvPoint location, TvColorPair colors)
+        {
+            ViewportHelper.DrawStringAt(value, location, new CharacterAttribute(colors), Viewport, _console);
+        }
+
         public void DrawStringAt(string value, TvPoint location, CharacterAttribute attr)
         {
             ViewportHelper.DrawStringAt(value, location, attr, Viewport, _console);
+        }
+
+        public void DrawChars(char value, int count, TvPoint location, TvColorPair colors)
+        {
+            ViewportHelper.DrawChars(value, count, location, new CharacterAttribute(colors), Viewport, _console);
         }
 
         public void DrawChars(char value, int count, TvPoint location, CharacterAttribute attribute)

@@ -17,7 +17,6 @@ namespace Tvision2.Core.Render
             CharAndAttr = 3
         }
 
-
         private ConsoleCharacter[] _buffer;
         private DirtyStatus[] _dirtyMap;
         public VirtualConsoleUpdateActions UpdateActions { get; }
@@ -194,6 +193,7 @@ namespace Tvision2.Core.Render
             {
                 var cchar = _buffer[idx];
                 if (cchar.ZIndex <= zindex)
+
                 {
                     var comparison = cchar.CompareContents(charToCopy.Character, charToCopy.Attributes);
                     if (comparison != ConsoleCharacterComparison.Equals)

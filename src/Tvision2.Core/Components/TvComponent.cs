@@ -177,7 +177,7 @@ namespace Tvision2.Core.Components
         {
             foreach (var vpnk in _viewports)
             {
-                var context = new RenderContext<T>(vpnk.Value, console, State);
+                var context = new RenderContext<T>(vpnk.Value, console,  State);
                 foreach (var drawer in _drawers)
                 {
                     drawer?.Draw(context);

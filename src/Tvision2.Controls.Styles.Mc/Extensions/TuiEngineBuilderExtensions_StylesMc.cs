@@ -11,36 +11,83 @@ namespace Tvision2.Controls.Styles
 
                 sb.AddBaseStyle(style =>
                 {
-                    style.DesiredStandard(TvColor.White, TvColor.Blue);
-                    style.DesiredFocused(TvColor.Black, TvColor.Cyan);
+                    style.DesiredStandard(o =>
+                        o.UseForeground(TvColor.White)
+                         .UseBackground(TvColor.Blue)
+                    );
+                    style.DesiredFocused(o =>
+                        o.UseForeground(TvColor.Black)
+                         .UseBackground(TvColor.Cyan)
+                    );
                 });
-                
+
                 sb.AddStyle("tvlist", style =>
                 {
-                    style.DesiredStandard(TvColor.White, TvColor.Blue);
-                    style.DesiredFocused(TvColor.White, TvColor.Blue, CharacterAttributeModifiers.BackgroundBold);
-                    style.DesiredAlternate(TvColor.Black, TvColor.Cyan);
-                    style.DesiredAlternateFocused(TvColor.Black, TvColor.White);
+
+                    style.DesiredStandard(o =>
+                        o.UseForeground(TvColor.White)
+                         .UseBackground(TvColor.Blue)
+                    );
+                    style.DesiredFocused(o =>
+                        o.UseForeground(TvColor.White)
+                         .UseBackground(TvColor.Blue)
+                         .AddModifier(CharacterAttributeModifiers.BackgroundBold)
+                    );
+                    style.DesiredAlternate(o =>
+                        o.UseForeground(TvColor.Black)
+                         .UseBackground(TvColor.Cyan)
+                    );
+                    style.DesiredAlternateFocused(o =>
+                        o.UseForeground(TvColor.Black)
+                         .UseBackground(TvColor.White)
+                    );
                 });
 
                 sb.AddStyle("tvtextbox", style =>
                 {
-                    style.DesiredStandard(TvColor.Black, TvColor.White);
-                    style.DesiredFocused(TvColor.White, TvColor.Black);
+                    style.DesiredStandard(o =>
+                        o.UseForeground(TvColor.Black)
+                         .UseBackground(TvColor.White)
+                    );
+                    style.DesiredFocused(o =>
+                        o.UseForeground(TvColor.White)
+                         .UseBackground(TvColor.Black)
+                    );
                 });
 
                 sb.AddStyle("tvdialog", style =>
                 {
-                    style.DesiredStandard(TvColor.Black, TvColor.White);
-                    style.DesiredFocused(TvColor.White, TvColor.Black);
+                    style.DesiredStandard(o =>
+                        o.UseForeground(TvColor.Black)
+                         .UseBackground(TvColor.White)
+                    );
+                    style.DesiredFocused(o =>
+                        o.UseForeground(TvColor.White)
+                         .UseBackground(TvColor.Black)
+                    );
                 });
 
                 sb.AddStyle("tvmenubar", style =>
                 {
-                    style.DesiredFocused(TvColor.White, TvColor.Black, CharacterAttributeModifiers.Bold);
-                    style.DesiredStandard(TvColor.Black, TvColor.Cyan);
-                    style.DesiredAlternate(TvColor.Yellow, TvColor.Cyan, CharacterAttributeModifiers.Bold);
-                    style.DesiredAlternateFocused(TvColor.Yellow, TvColor.Black, CharacterAttributeModifiers.Bold);
+                    style.DesiredStandard(o =>
+                        o.UseForeground(TvColor.White)
+                         .UseBackground(TvColor.Black)
+                         .AddModifier(CharacterAttributeModifiers.Bold)
+                    );
+                    style.DesiredFocused(o =>
+                        o.UseForeground(TvColor.Black)
+                         .UseBackground(TvColor.Cyan)
+                    );
+                    style.DesiredAlternate(o =>
+                        o.UseForeground(TvColor.Yellow)
+                         .UseBackground(TvColor.Cyan)
+                         .AddModifier(CharacterAttributeModifiers.Bold)
+                    );
+                    style.DesiredAlternateFocused(o =>
+                        o.UseForeground(TvColor.Yellow)
+                         .UseBackground(TvColor.Black)
+                         .AddModifier(CharacterAttributeModifiers.Bold)
+                    );
                 });
             });
 

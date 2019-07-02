@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Tvision2.Core;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Render;
+using Tvision2.Controls.Extensions;
 
 namespace Tvision2.Controls.Button
 {
@@ -32,9 +33,9 @@ namespace Tvision2.Controls.Button
         protected override void OnDraw(RenderContext<ButtonState> context)
         {
             var focused = Metadata.IsFocused;
-            var pairIdx = focused ? CurrentStyle.Focused : CurrentStyle.Standard;
+            var styleToUse = focused ? CurrentStyle.Focused : CurrentStyle.Standard;
             var value = $"[ {State.Text.ToString()} ]";
-            context.DrawStringAt(value, new TvPoint(0, 0), pairIdx);
+            context.DrawStringAt(value, new TvPoint(0, 0), styleToUse);
         }
     }
 }

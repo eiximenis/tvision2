@@ -4,15 +4,16 @@ using System.Text;
 
 namespace Tvision2.Core.Colors
 {
-    public struct ColorPair
+    public struct TvColorPair
     {
-        public TvColor ForeGround { get; set; }
-        public TvColor Background { get; set; }
-
-        public ColorPair(TvColor fore, TvColor back)
+        public TvColor ForeGround { get;  }
+        public TvColor Background { get; }
+        public TvColorPair(TvColor fore, TvColor back)
         {
             ForeGround = fore;
             Background = back;
         }
+
+
     }
 }

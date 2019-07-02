@@ -11,92 +11,69 @@ namespace Tvision2.Controls.Styles
     {
         public readonly Style _style;
 
-        private readonly IDictionary<string, StyleDefinition> _customDefinitions;
-        private StyleDefinition _standard;
-        private StyleDefinition _focused;
-        private StyleDefinition _alternate;
-        private StyleDefinition _alternateFocused;
+        private readonly IDictionary<string, StyleEntry> _customDefinitions;
+        private StyleEntry _standard;
+        private StyleEntry _focused;
+        private StyleEntry _alternate;
+        private StyleEntry _alternateFocused;
 
         public StyleBuilder()
         {
             _style = new Style();
-            _customDefinitions = new Dictionary<string, StyleDefinition>();
+            _customDefinitions = new Dictionary<string, StyleEntry>();
         }
 
-        public IStyleBuilder DesiredFocused(TvColor fore, TvColor back,
-            CharacterAttributeModifiers attributes = CharacterAttributeModifiers.Normal)
-        {
-            _focused = new StyleDefinition()
-            {
-                Foreground = fore,
-                Background = back,
-                Attributes = attributes
-            };
-            return this;
-        }
-
-        public IStyleBuilder DesiredStandard(TvColor fore, TvColor back,
-            CharacterAttributeModifiers attributes = CharacterAttributeModifiers.Normal)
-        {
-            _standard = new StyleDefinition()
-            {
-                Foreground = fore,
-                Background = back,
-                Attributes = attributes
-            };
-            return this;
-        }
-
-        public IStyleBuilder DesiredAlternate(TvColor fore, TvColor back,
-            CharacterAttributeModifiers attributes = CharacterAttributeModifiers.Normal)
-        {
-            _alternate = new StyleDefinition()
-            {
-                Foreground = fore,
-                Background = back,
-                Attributes = attributes
-            };
-            return this;
-        }
-
-        public IStyleBuilder DesiredAlternateFocused(TvColor fore, TvColor back,
-            CharacterAttributeModifiers attributes = CharacterAttributeModifiers.Normal)
-        {
-            _alternateFocused = new StyleDefinition()
-            {
-                Foreground = fore,
-                Background = back,
-                Attributes = attributes
-            };
-            return this;
-        }
-
-        public IStyleBuilder DesiredCustom(string name, TvColor fore, TvColor back,
-            CharacterAttributeModifiers attributes = CharacterAttributeModifiers.Normal)
-        {
-            _customDefinitions.Add(name, new StyleDefinition()
-            {
-                Foreground = fore,
-                Background = back,
-                Attributes = attributes
-            });
-            return this;
-        }
 
         public IStyle Build(IColorManager colorManager)
         {
-            _style.Standard =
-                colorManager.BuildAttributeFor(_standard.Foreground, _standard.Background, _standard.Attributes);
-            _style.Focused = colorManager.BuildAttributeFor(_focused.Foreground, _focused.Background, _focused.Attributes);
-            _style.Alternate = colorManager.BuildAttributeFor(_alternate.Foreground, _alternate.Background, _alternate.Attributes);
-            _style.AlternateFocused = colorManager.BuildAttributeFor(_alternateFocused.Foreground, _alternateFocused.Background, _alternateFocused.Attributes);
+            _style.Standard = _standard;
+            _style.Focused = _focused;
+            _style.Alternate = _alternate;
+            _style.AlternateFocused = _alternateFocused;
             foreach (var custom in _customDefinitions)
             {
-                _style.SetupCustomValue(custom.Key,
-                    colorManager.BuildAttributeFor(custom.Value.Foreground, custom.Value.Background, custom.Value.Attributes));
+                _style.SetupCustomValue(custom.Key, custom.Value);
             }
 
             return _style;
+        }
+
+        public IStyleBuilder DesiredStandard(Action<StyleDefintionOptions> optionsAction)
+        {
+            _standard = BuildDefinition(optionsAction);
+            return this;
+        }
+
+        private StyleEntry BuildDefinition(Action<StyleDefintionOptions> optionsAction)
+        {
+            var options = new StyleDefintionOptions();
+            optionsAction.Invoke(options);
+            return new StyleEntry(options.ForeColor, options.Background, options.Modifiers);
+        }
+
+        public IStyleBuilder DesiredFocused(Action<StyleDefintionOptions> optionsAction)
+        {
+            _focused = BuildDefinition(optionsAction);
+            return this;
+        }
+
+        public IStyleBuilder DesiredAlternate(Action<StyleDefintionOptions> optionsAction)
+        {
+            _alternate = BuildDefinition(optionsAction);
+            return this;
+        }
+
+        public IStyleBuilder DesiredAlternateFocused(Action<StyleDefintionOptions> optionsAction)
+        {
+            _alternateFocused = BuildDefinition(optionsAction);
+            return this;
+        }
+
+        public IStyleBuilder DesiredCustom(string name, Action<StyleDefintionOptions> optionsAction)
+        {
+            var def = BuildDefinition(optionsAction);
+            _customDefinitions.Add(name, def);
+            return this;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Tvision2.Core.Colors;
 
 namespace Tvision2.ConsoleDriver.Colors
@@ -13,7 +14,7 @@ namespace Tvision2.ConsoleDriver.Colors
         public int MaxPairs => 64;
         public CharacterAttribute DefaultAttribute { get; }
 
-        private readonly ColorPair[] _pairs;
+        private readonly Dictionary<(TvColor, TvColor), int> _pairs;
         private readonly ConsoleColor[,] _dotnetMap;
 
         public DotNetColorManager()
@@ -59,31 +60,27 @@ namespace Tvision2.ConsoleDriver.Colors
                 }
             }
 
-            _pairs = new ColorPair[TvColorNames.StandardColorsCount];
+            _pairs = new Dictionary<(TvColor, TvColor), int>(TvColorNames.StandardColorsCount * TvColorNames.StandardColorsCount);
             for (var fore = TvColorNames.StandardColorsCount - 1; fore >= 0; fore--)
             {
                 for (var back = 0; back < TvColorNames.StandardColorsCount; back++)
                 {
-                    _pairs[fore + (back << 3)] = new ColorPair(new TvColor(fore), new TvColor(back));
+                    _pairs.Add((TvColor.FromRaw(fore), TvColor.FromRaw(back)), fore + (back << 3));
                 }
             }
 
             DefaultAttribute = BuildAttributeFor(TvColor.White, TvColor.Black, CharacterAttributeModifiers.Normal);
         }
 
-        public ColorPair this[int idx] => _pairs[idx];
-
         public (ConsoleColor fore, ConsoleColor back) AttributeToDotNetColors(CharacterAttribute attribute)
         {
-            var pair = _pairs[attribute.ColorIdx];
+            var pair = new TvColorPair(attribute.Fore, attribute.Back);
             var bright = (attribute.Modifiers | CharacterAttributeModifiers.Bold) != 0;
             return (_dotnetMap[pair.ForeGround.Value, bright ? 1 : 0], _dotnetMap[pair.Background.Value, bright ? 1 : 0]);
         }
 
-        public int GetPairIndexFor(TvColor fore, TvColor back) => (int)fore + ((int)back << 3);
-
         public CharacterAttribute BuildAttributeFor(TvColor fore, TvColor back,
             CharacterAttributeModifiers attrs = CharacterAttributeModifiers.Normal) =>
-             new CharacterAttribute((int) fore + ((int) back << 3), attrs);
+             new CharacterAttribute(new TvColorPair(fore, back), attrs);
     }
 }
