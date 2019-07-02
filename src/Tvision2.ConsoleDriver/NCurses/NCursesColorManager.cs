@@ -42,7 +42,11 @@ namespace Tvision2.ConsoleDriver.NCurses
             }
 
             _lastPairUsedIdx++;
-            Curses.init_pair((short)_lastPairUsedIdx, (short)fore, (short)back);
+
+            var foreColorNumber = GetColorNumber(fore);
+            var backColorNumber = GetColorNumber(back);
+
+            Curses.init_pair((short)_lastPairUsedIdx, (short)foreColorNumber, (short)backColorNumber);
             _pairs.Add((fore, back), _lastPairUsedIdx);
             var lastPair = _lastPairUsedIdx;
             if (_supportsBgHilite)
@@ -55,6 +59,11 @@ namespace Tvision2.ConsoleDriver.NCurses
             return lastPair;
         }
 
+        private int GetColorNumber(TvColor color)
+        {
+            if (!color.IsRgb) return color.Value;
+            return 1;
+        }
 
         internal void Init()
         {
@@ -100,7 +109,7 @@ namespace Tvision2.ConsoleDriver.NCurses
 
         public void SetAttributes(CharacterAttribute attributes)
         {
-            var pairIdx = _pairs[(attributes.Fore, attributes.Back)];
+            var pairIdx = GetPairIndexFor(attributes.Fore, attributes.Back);
             var attr = (int)(attributes.Modifiers) & ~(int)CharacterAttributeModifiers.BackgroundBold;
             Curses.attrset(Curses.ColorPair(pairIdx | (attr << 8)));
         }

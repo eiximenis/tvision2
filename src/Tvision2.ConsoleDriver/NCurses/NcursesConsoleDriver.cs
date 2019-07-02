@@ -98,14 +98,7 @@ namespace Tvision2.ConsoleDriver
 
         public void WriteCharacterAt(int x, int y, char character, CharacterAttribute attributes)
         {
-
             _colorDriver.SetAttributes(attributes);
-            //_colorDriver.SetColor(pairIdx, CharacterAttributes.Italic | CharacterAttributes.Blink);
-            //Console.SetCursorPosition(x, y);
-
-            //var wchar = new CcharT(pairIdx << 8, character);
-            // Curses.mvadd_wch(y, x, ref wchar);
-            //Curses.addch(character);
             Curses.move(y, x);
             Curses.addch(character);
         }
