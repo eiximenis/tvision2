@@ -61,8 +61,9 @@ namespace Tvision2.ConsoleDriver.NCurses
 
         private int GetColorNumber(TvColor color)
         {
-            if (!color.IsRgb) return color.Value;
-            return 1;
+            if (!color.IsRgb) return color.PaletteIndex;
+            
+            return 2;
         }
 
         internal void Init()
@@ -86,7 +87,6 @@ namespace Tvision2.ConsoleDriver.NCurses
             Curses.InitColor((short)(TvColorNames.Magenta + 8), 800, 0, 800);
             Curses.InitColor((short)(TvColorNames.Cyan + 8), 0, 800, 800);
             Curses.InitColor((short)(TvColorNames.White + 8), 800, 800, 800);
-
         }
 
 

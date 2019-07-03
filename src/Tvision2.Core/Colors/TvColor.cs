@@ -34,6 +34,7 @@ namespace Tvision2.Core.Colors
     {
         public readonly int Value;
         private const int RGB_MARKER = (1 << 31);
+        private const int PALETTE_MARKER = (1 << 30);
 
         public TvColor(int value) => Value = value;
 
@@ -48,7 +49,7 @@ namespace Tvision2.Core.Colors
         public static readonly TvColor Cyan = new TvColor(TvColorNames.Cyan);
         public static readonly TvColor White = new TvColor(TvColorNames.White);
 
-        public static explicit operator short(TvColor color) => (short)color.Value;
+        public static explicit operator short(TvColor color) => (short) color.Value;
         public static bool operator ==(TvColor one, TvColor other) => one.Value == other.Value;
         public static bool operator !=(TvColor one, TvColor other) => one.Value != other.Value;
 
@@ -56,13 +57,35 @@ namespace Tvision2.Core.Colors
         public static bool operator !=(TvColor one, int other) => one.Value == other;
 
         public bool IsRgb => (Value & RGB_MARKER) != 0;
-        
+
+        public bool IsPalettized => (Value & PALETTE_MARKER) != 0;
+
         public static TvColor FromRaw(int raw) => new TvColor(raw);
-        
+
         public static TvColor FromRGB(byte red, byte green, byte blue)
         {
-            var value = red | (green << 8) | (blue << 16) | (1 << 31);
+            var value = red | (green << 8) | (blue << 16) | RGB_MARKER;
             return new TvColor(value);
+        }
+
+        public static TvColor FromPaletteIndex(short index)
+        {
+            var value = (int) index | PALETTE_MARKER;
+            return new TvColor(value);
+        }
+
+        public int PaletteIndex
+        {
+            get
+            {
+                if (IsRgb)
+                {
+                    return -1;
+                }
+
+                return Value & ~PALETTE_MARKER;
+
+            }
         }
 
         public (byte red, byte green, byte blue) Rgb =>
