@@ -8,7 +8,7 @@ namespace Tvision2.Core.Colors
 
     public static class TvColorNames
     {
-        private static string[] _names = new[] { "Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White"};
+        private static readonly string[] _names = new[] { "Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White"};
         public const int Black = 0;
         public const int Red = 1;
         public const int Green = 2;
@@ -21,6 +21,8 @@ namespace Tvision2.Core.Colors
         public static IEnumerable<int> AllStandardColors() =>
             new[] {Black, Red, Green, Yellow, Blue, Magenta, Cyan, White};
         public const int StandardColorsCount = 8;
+
+        public static IEnumerable<string> AlLStandardColorNames => _names;
 
         public static string NameOf(int value)
         {
@@ -60,6 +62,7 @@ namespace Tvision2.Core.Colors
 
         public bool IsPalettized => (Value & PALETTE_MARKER) != 0;
 
+
         public static TvColor FromRaw(int raw) => new TvColor(raw);
 
         public static TvColor FromRGB(byte red, byte green, byte blue)
@@ -74,19 +77,7 @@ namespace Tvision2.Core.Colors
             return new TvColor(value);
         }
 
-        public int PaletteIndex
-        {
-            get
-            {
-                if (IsRgb)
-                {
-                    return -1;
-                }
-
-                return Value & ~PALETTE_MARKER;
-
-            }
-        }
+        public int PaletteIndex => Value & ~PALETTE_MARKER;
 
         public (byte red, byte green, byte blue) Rgb =>
             ((byte) (Value & 0xff), (byte) (Value >> 8), (byte) (Value >> 16));
@@ -103,11 +94,25 @@ namespace Tvision2.Core.Colors
 
         public override string ToString()
         {
-            var colvalue = Value % TvColorNames.StandardColorsCount;
-            var colname = TvColorNames.NameOf(colvalue);
-            var diff = Value - (Value % TvColorNames.StandardColorsCount);
-            var msg = diff > 0 ? $"+ {diff}" : "";
-            return $"{Value} (TvColor.{colname} {msg})";
+            if (IsRgb)
+            {
+                var (r, g, b) = Rgb;
+                return $"RGB({r},{g},{b}) ({Value})";
+            }
+
+            if (IsPalettized)
+            {
+                return $"PAL({PaletteIndex}) ({Value})";
+            }
+
+            if (Value < TvColorNames.StandardColorsCount)
+            {
+                
+                return $"STD({TvColorNames.NameOf(Value)}) ({Value})";
+            }
+
+            return $"???({Value})";
+
         }
 
         public (int red, int green, int blue) Diff(TvColor other)

@@ -2,7 +2,8 @@
 using System.Threading.Tasks;
 using Tvision2.Controls.Styles;
 using Tvision2.Core;
-using Tvision2.Core.Engine;
+    using Tvision2.Core.Colors;
+    using Tvision2.Core.Engine;
 using Tvision2.DependencyInjection;
 
 using Tvision2.MidnightCommander.Stores;
@@ -23,17 +24,29 @@ namespace Tvision2.MidnightCommander
             {
                 setup.UsePlatformConsoleDriver(opt => 
                     opt.Configure()
+                        // Linux specific config
                         .OnLinux(lo =>
                         {
+                            // We want to load the color setup of our terminañ
+                            lo.UsePalette(p =>
+                                p.InitFromTerminalName()
+                                    .TranslateRgbColorsWith((col, pal) => 1));
                             if (useFullColor)
                             {
+                                // We want to use full color if possible. We will
+                                // be able to translate between palettized colors and rgb ones because we
+                                // used UsePalette and load a palette.
                                 lo.UseDirectAccess(dop => dop.UseTrueColor());
                             }
                         })
+                        // Windows specific config
                         .OnWindows(w =>
                         {
                             if (useFullColor)
                             {
+                                // We want to use ANSI sequences, allowing full color also. This is only
+                                // available in Win10. If running in older windows, application will be in
+                                // basic color mode.
                                 w.EnableAnsiSequences();
                             }
                         })

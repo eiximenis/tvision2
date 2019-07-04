@@ -14,6 +14,7 @@ namespace Tvision2.ConsoleDriver.Win32
         private const string SGR = "\x1b[{0}m";
         private const string CUP = "\x1b[{0};{1}H";
         private const ulong BACKCOL_MASK = 0xFFFFFFFF00000000;
+        private const int MAXPALETTESIZE = 256; 
 
         public CharacterAttribute DefaultAttribute { get; }
 
@@ -22,7 +23,7 @@ namespace Tvision2.ConsoleDriver.Win32
         public Win32AnsiSequencesManager()
         {
             DefaultAttribute = BuildAttributeFor(TvColor.White, TvColor.Black, CharacterAttributeModifiers.Normal);
-            Palette = new DirectPalette();
+            Palette = new DirectPalette(MAXPALETTESIZE);
         }
 
         public CharacterAttribute BuildAttributeFor(TvColor fore, TvColor back,

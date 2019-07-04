@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Tvision2.Core\Tvision2.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="ColorDefinitions\xterm-256color.txt" />
+  </ItemGroup>
+
 </Project>

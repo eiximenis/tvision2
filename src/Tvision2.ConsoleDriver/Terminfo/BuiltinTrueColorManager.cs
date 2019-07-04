@@ -12,12 +12,14 @@ namespace Tvision2.ConsoleDriver.Terminfo
         private const string setafFormat = "\x1b[38;2;{0};{1};{2}m";
         private const string setabFormat = "\x1b[48;2;{0};{1};{2}m";
 
+        private const int MAXPALETTESIZE = 256; 
+
         public IPalette Palette { get; }
        
         
         public BuiltinTrueColorManager()
         {
-            Palette = new DirectPalette();
+            Palette = new DirectPalette(MAXPALETTESIZE);
         }
 
         public void Init()

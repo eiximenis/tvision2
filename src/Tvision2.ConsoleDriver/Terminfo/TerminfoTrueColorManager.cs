@@ -9,13 +9,14 @@ namespace Tvision2.ConsoleDriver.Terminfo
 
         private string _setaf;
         private string _setab;
+        private const int MAXPALETTESIZE = 256; 
 
 
         public IPalette Palette { get; }
 
         public TerminfoTrueColorManager()
         {
-            Palette = new DirectPalette();
+            Palette = new DirectPalette(MAXPALETTESIZE);
         }
 
         public void Init()

@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Xml;
 using Tvision2.ConsoleDriver.Common;
-using Tvision2.ConsoleDriver.NCurses;
 using Tvision2.Core.Colors;
 using Tvision2.Core.Render;
 using Tvision2.Engine.Console;

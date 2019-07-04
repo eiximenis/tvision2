@@ -29,7 +29,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using Tvision2.ConsoleDriver.NCurses;
+using Tvision2.ConsoleDriver.Common;
 
 namespace Unix.Terminal {
 

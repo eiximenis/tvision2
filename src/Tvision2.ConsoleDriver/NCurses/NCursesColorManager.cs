@@ -5,14 +5,13 @@ using System.Text;
 using Tvision2.Core.Colors;
 using Unix.Terminal;
 
-namespace Tvision2.ConsoleDriver.NCurses
+namespace Tvision2.ConsoleDriver.Common
 {
     public class NcursesColorManager : IColorManager
     {
 
-        private bool _supportsBgHilite;
+        private bool _useBgHilite;
         private readonly NcursesPalette _palette;
-
         public int MaxPairs { get; private set; }
 
 
@@ -24,18 +23,22 @@ namespace Tvision2.ConsoleDriver.NCurses
         public IPalette Palette => _palette;
 
 
-        public NcursesColorManager()
+
+        public NcursesColorManager(PaletteOptions options)
         {
-            _supportsBgHilite = false;
+            _useBgHilite = true;        // Todo: Need option to change this.
             _pairs = new Dictionary<(TvColor fore, TvColor back), int>();
             _lastPairUsedIdx = 0;
             DefaultAttribute = new CharacterAttribute(new TvColorPair(TvColor.White, TvColor.Black), CharacterAttributeModifiers.Normal);
             GetPairIndexFor(DefaultAttribute.Fore, DefaultAttribute.Back);
-            _palette = new NcursesPalette();
+            _palette = new NcursesPalette(options);
         }
 
         public int GetPairIndexFor(TvColor fore, TvColor back)
         {
+            
+            
+            
             if (_pairs.TryGetValue((fore, back), out int pairidx))
             {
                 return pairidx;
@@ -49,7 +52,7 @@ namespace Tvision2.ConsoleDriver.NCurses
             Curses.init_pair((short)_lastPairUsedIdx, (short)foreColorNumber, (short)backColorNumber);
             _pairs.Add((fore, back), _lastPairUsedIdx);
             var lastPair = _lastPairUsedIdx;
-            if (_supportsBgHilite)
+            if (_useBgHilite)
             {
                 _lastPairUsedIdx++;
                 Curses.init_pair((short)_lastPairUsedIdx, (short)(fore), (short)(back.Plus(TvColorNames.StandardColorsCount)));
@@ -68,26 +71,10 @@ namespace Tvision2.ConsoleDriver.NCurses
 
         internal void Init()
         {
-            _palette.Init();
             MaxPairs = Curses.ColorPairs;
-            if (!_palette.IsFreezed)
-            {
-                CreateHiliteBgColors();
-                _supportsBgHilite = true;
-            }
+            _palette.Init();
         }
 
-        private void CreateHiliteBgColors()
-        {
-            Curses.InitColor((short)(TvColorNames.Black + 8), 0, 0, 0);
-            Curses.InitColor((short)(TvColorNames.Red + 8), 800, 0, 0);
-            Curses.InitColor((short)(TvColorNames.Green + 8), 0, 800, 0);
-            Curses.InitColor((short)(TvColorNames.Yellow + 8), 800, 800, 0);
-            Curses.InitColor((short)(TvColorNames.Blue + 8), 0, 0, 800);
-            Curses.InitColor((short)(TvColorNames.Magenta + 8), 800, 0, 800);
-            Curses.InitColor((short)(TvColorNames.Cyan + 8), 0, 800, 800);
-            Curses.InitColor((short)(TvColorNames.White + 8), 800, 800, 800);
-        }
 
 
         public CharacterAttribute BuildAttributeFor(TvColor fore, TvColor back,
@@ -95,7 +82,7 @@ namespace Tvision2.ConsoleDriver.NCurses
         {
             var coloridx = GetPairIndexFor(fore, back);
 
-            if (_supportsBgHilite)
+            if (_useBgHilite)
             {
 
                 if ((attrs & CharacterAttributeModifiers.BackgroundBold) == CharacterAttributeModifiers.BackgroundBold)

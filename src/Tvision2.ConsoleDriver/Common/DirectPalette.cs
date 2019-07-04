@@ -6,14 +6,21 @@ using Tvision2.Core.Colors;
 
 namespace Tvision2.ConsoleDriver.Common
 {
-    class DirectPalette : IPalette
+    class DirectPalette : BasePalette, IPalette
     {
         public bool IsFreezed => true;
 
-        public int MaxColors => -1;
-
         public ColorMode ColorMode => ColorMode.Direct;
-
+        
         public bool RedefineColor(int idx, TvColor newColor) => false;
+
+        public DirectPalette(int size)
+        {
+            InitSize(size);
+        }
+        
+        
+        
+        
     }
 }

@@ -4,7 +4,6 @@ using System.Diagnostics;
 using Tvision2.ConsoleDriver;
 using Tvision2.ConsoleDriver.Colors;
 using Tvision2.ConsoleDriver.Common;
-using Tvision2.ConsoleDriver.NCurses;
 using Tvision2.ConsoleDriver.Terminfo;
 using Tvision2.ConsoleDriver.Win32;
 using Tvision2.Core.Colors;
@@ -48,7 +47,7 @@ namespace Tvision2.Core
 
         private static Tvision2Setup UseNcursesConsoleDriver(this Tvision2Setup tv2, LinuxConsoleDriverOptions options)
         {
-            var colorManager = new NcursesColorManager();
+            var colorManager = new NcursesColorManager(options.PaletteOptions);
             var driver = new NcursesConsoleDriver(options, colorManager);
             tv2.Options.UseConsoleDriver(driver);
             tv2.Builder.ConfigureServices((hc, sc) =>

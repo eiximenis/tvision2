@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Tvision2.ConsoleDriver.NCurses
+namespace Tvision2.ConsoleDriver.Common
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct  CcharT
