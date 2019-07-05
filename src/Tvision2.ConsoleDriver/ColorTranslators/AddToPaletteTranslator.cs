@@ -10,7 +10,7 @@ namespace Tvision2.ConsoleDriver.ColorTranslators
 
         public AddToPaletteTranslator()
         {
-            _translatedColors = new Dictionary<TvColor, int>();
+            _translatedColors = new Dictionary<TvColor, int>();             
         }
         public int GetColorIndexFromRgb(TvColor rgbColor, IPalette palette)
         {

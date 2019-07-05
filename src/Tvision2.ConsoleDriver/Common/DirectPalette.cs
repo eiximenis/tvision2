@@ -18,9 +18,6 @@ namespace Tvision2.ConsoleDriver.Common
         {
             InitSize(size);
         }
-        
-        
-        
-        
+
     }
 }

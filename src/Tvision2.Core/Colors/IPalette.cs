@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Tvision2.Core.Colors
 {
@@ -17,6 +18,8 @@ namespace Tvision2.Core.Colors
         
         TvColor this[string name] { get; }
         TvColor this[int idx] { get; }
+
+        IEnumerable<(int idx, TvColor rgbColor)> Entries { get; }
 
     }
 }

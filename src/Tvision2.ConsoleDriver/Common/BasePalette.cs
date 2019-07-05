@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Tvision2.Core;
@@ -77,29 +78,47 @@ namespace Tvision2.ConsoleDriver.Common
         public TvColor this[string name] => _colorIndexes.TryGetValue(name, out var index)  ? (_colors[index] ?? TvColor.Black) : TvColor.Black;
 
         public TvColor this[int idx] => _colors[idx] ?? TvColor.Black;
+
+        public IEnumerable<(int, TvColor)> Entries
+        {
+            get
+            {
+                for (var idx = 0; idx < _colors.Length; idx++)
+                {
+                    var color = _colors[idx];
+                    if (color.HasValue)
+                    {
+                        yield return (idx, color.Value);
+                    }
+                }
+            }
+        }
         
         protected void LoadPalette(string terminalName, IPaletteDefinitionParser parser, UpdateTerminalEntries whenInvokeCallback)
         {
-
             var assembly = Assembly.GetExecutingAssembly();
             var stream =
                 assembly.GetManifestResourceStream(
                     $"Tvision2.ConsoleDriver.ColorDefinitions.{terminalName}.txt");
             using (var reader = new StreamReader(stream, Encoding.UTF8))
             {
+                var idx = 0;
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
                     var parsedLine = parser.ParseLine(line);
-                    AddColor(parsedLine.idx, parsedLine.rgbColor, parsedLine.name);
-                    var invoke = (whenInvokeCallback == UpdateTerminalEntries.All) ||
-                             (whenInvokeCallback == UpdateTerminalEntries.AllButAnsi3bit &&
-                              parsedLine.idx <= TvColor.ANSI3BIT_MAX_VALUE) ||
-                             (whenInvokeCallback == UpdateTerminalEntries.AllButAnsi4bit &&
-                              parsedLine.idx <= TvColor.ANSI4BIT_MAX_VALUE);
-                    if (invoke)
+                    if (parsedLine.idx < MaxColors)
                     {
-                        OnColorAdded(parsedLine.rgbColor, parsedLine.idx);
+                        AddColor(parsedLine.idx, parsedLine.rgbColor, parsedLine.name);
+                        var invoke = (whenInvokeCallback == UpdateTerminalEntries.All) ||
+                                     (whenInvokeCallback == UpdateTerminalEntries.AllButAnsi3bit &&
+                                      parsedLine.idx <= TvColor.ANSI3BIT_MAX_VALUE) ||
+                                     (whenInvokeCallback == UpdateTerminalEntries.AllButAnsi4bit &&
+                                      parsedLine.idx <= TvColor.ANSI4BIT_MAX_VALUE);
+                        if (invoke)
+                        {
+                            OnColorAdded(parsedLine.rgbColor, parsedLine.idx);
+                        }
                     }
                 }
             }

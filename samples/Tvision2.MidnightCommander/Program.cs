@@ -32,10 +32,10 @@ namespace Tvision2.MidnightCommander
                             lo.UsePalette(p =>
                             {
                                 // Will init the palette using our terminal name (currently only xterm-256color is supported)
-                                // p.LoadFromTerminalName();
+                                p.LoadFromTerminalName();
                                 // We want to be able to use RGB colors, but if we are in palette mode (no full direct color)
                                 // we need to setup a translator that translates any RGB color in a palette color. 
-                                p.TranslateRgbColorsWith(new AddToPaletteTranslator());
+                                p.TranslateRgbColorsWith(new  InterpolationPaletteTranslator());
                             });
                             if (useFullColor)
                             {

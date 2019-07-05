@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Tvision2.Core;
 using Tvision2.Core.Colors;
 
@@ -44,6 +45,8 @@ namespace Tvision2.ConsoleDriver.Colors
             }
         }
 
+        public IEnumerable<(int, TvColor)> Entries => Enumerable.Range(0, MaxColors).Select(i => (i, this[i]));
+
         public DotNetPalette()
         {
             _names = TvColorNames.AlLStandardColorNames.ToArray();
@@ -51,5 +54,7 @@ namespace Tvision2.ConsoleDriver.Colors
 
         public bool RedefineColor(int idx, TvColor newColor) => false;
         public bool IsFull => true;
+        
+        
     }
 }

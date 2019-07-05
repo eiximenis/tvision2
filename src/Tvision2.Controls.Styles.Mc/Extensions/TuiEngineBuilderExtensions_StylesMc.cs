@@ -1,4 +1,5 @@
 ﻿using Tvision2.Controls.Backgrounds;
+using Tvision2.Core;
 using Tvision2.Core.Colors;
 
 namespace Tvision2.Controls.Styles
@@ -29,7 +30,7 @@ namespace Tvision2.Controls.Styles
                          .UseBackground(TvColor.Blue)
                     );
                     style
-                        .When(cm => cm == Core.ColorMode.Palettized || cm == Core.ColorMode.Direct)
+                        .When(p =>  p.ColorMode ==ColorMode.Direct  || p.ColorMode == ColorMode.Palettized)
                         .DesiredStandard(o =>
                             o.UseBackground(() => new VerticalGradientBackgroundProvider(
                                 TvColor.FromRGB(0, 200, 100), TvColor.FromRGB(50, 50, 50)))

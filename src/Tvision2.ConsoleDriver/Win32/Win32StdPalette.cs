@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Tvision2.Core;
 using Tvision2.Core.Colors;
 
@@ -52,6 +53,8 @@ namespace Tvision2.ConsoleDriver.Win32
                 return TvColor.Black;
             }
         }
+        
+        public IEnumerable<(int, TvColor)> Entries => Enumerable.Range(0, MaxColors).Select(i => (i,this[i]));
 
     }
 }
