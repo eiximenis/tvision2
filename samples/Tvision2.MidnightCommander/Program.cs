@@ -1,6 +1,7 @@
 ﻿    using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
-using Tvision2.Controls.Styles;
+    using Tvision2.ConsoleDriver.ColorTranslators;
+    using Tvision2.Controls.Styles;
 using Tvision2.Core;
     using Tvision2.Core.Colors;
     using Tvision2.Core.Engine;
@@ -27,10 +28,15 @@ namespace Tvision2.MidnightCommander
                         // Linux specific config
                         .OnLinux(lo =>
                         {
-                            // We want to load the color setup of our terminañ
+                            // We want to setup our palette
                             lo.UsePalette(p =>
-                                p.InitFromTerminalName()
-                                    .TranslateRgbColorsWith((col, pal) => 1));
+                            {
+                                // Will init the palette using our terminal name (currently only xterm-256color is supported)
+                                // p.LoadFromTerminalName();
+                                // We want to be able to use RGB colors, but if we are in palette mode (no full direct color)
+                                // we need to setup a translator that translates any RGB color in a palette color. 
+                                p.TranslateRgbColorsWith(new AddToPaletteTranslator());
+                            });
                             if (useFullColor)
                             {
                                 // We want to use full color if possible. We will

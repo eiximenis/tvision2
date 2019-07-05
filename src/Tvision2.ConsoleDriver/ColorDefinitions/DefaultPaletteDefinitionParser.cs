@@ -6,6 +6,13 @@ namespace Tvision2.ConsoleDriver.ColorDefinitions
 {
     public class DefaultPaletteDefinitionParser : IPaletteDefinitionParser
     {
+        private static DefaultPaletteDefinitionParser _instance;
+
+        static DefaultPaletteDefinitionParser() => _instance = new DefaultPaletteDefinitionParser();
+
+        public static IPaletteDefinitionParser Instance => _instance; 
+        
+        
         public (string name, int idx, TvColor rgbColor) ParseLine(string line)
         {
             line.Trim();

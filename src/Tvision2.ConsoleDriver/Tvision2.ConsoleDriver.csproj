@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="ColorDefinitions\xterm-256color.txt" />
+    <EmbeddedResource Include="ColorDefinitions\ansi.txt" />
   </ItemGroup>
 
 </Project>

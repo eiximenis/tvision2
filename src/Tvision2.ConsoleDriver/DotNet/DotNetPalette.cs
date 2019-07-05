@@ -11,6 +11,8 @@ namespace Tvision2.ConsoleDriver.Colors
         public bool IsFreezed => true;
         public int MaxColors => DOTNET_MAX_COLORS;
 
+        public int AddColor(TvColor color, string name = null) => -1;
+
         public ColorMode ColorMode => ColorMode.Basic;
 
         public TvColor this[string name]
@@ -48,5 +50,6 @@ namespace Tvision2.ConsoleDriver.Colors
         }
 
         public bool RedefineColor(int idx, TvColor newColor) => false;
+        public bool IsFull => true;
     }
 }

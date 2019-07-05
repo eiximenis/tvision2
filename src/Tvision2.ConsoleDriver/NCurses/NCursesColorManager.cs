@@ -15,48 +15,49 @@ namespace Tvision2.ConsoleDriver.Common
         public int MaxPairs { get; private set; }
 
 
-        private readonly Dictionary<(TvColor fore, TvColor back), int> _pairs;
+        private readonly Dictionary<(int fore, int back), int> _pairs;
         private int _lastPairUsedIdx;
 
         public CharacterAttribute DefaultAttribute { get; }
 
         public IPalette Palette => _palette;
 
+        private readonly IRgbColortranslator _colorTranslator;
+
 
 
         public NcursesColorManager(PaletteOptions options)
         {
             _useBgHilite = true;        // Todo: Need option to change this.
-            _pairs = new Dictionary<(TvColor fore, TvColor back), int>();
+            _pairs = new Dictionary<(int fore, int back), int>();
             _lastPairUsedIdx = 0;
             DefaultAttribute = new CharacterAttribute(new TvColorPair(TvColor.White, TvColor.Black), CharacterAttributeModifiers.Normal);
             GetPairIndexFor(DefaultAttribute.Fore, DefaultAttribute.Back);
             _palette = new NcursesPalette(options);
+            _colorTranslator = options.ColorTranslator;
         }
 
         public int GetPairIndexFor(TvColor fore, TvColor back)
         {
+            var foreColorNumber = GetColorNumber(fore);
+            var backColorNumber = GetColorNumber(back);
             
-            
-            
-            if (_pairs.TryGetValue((fore, back), out int pairidx))
+            if (_pairs.TryGetValue((foreColorNumber, backColorNumber), out int pairidx))
             {
                 return pairidx;
             }
 
             _lastPairUsedIdx++;
 
-            var foreColorNumber = GetColorNumber(fore);
-            var backColorNumber = GetColorNumber(back);
 
             Curses.init_pair((short)_lastPairUsedIdx, (short)foreColorNumber, (short)backColorNumber);
-            _pairs.Add((fore, back), _lastPairUsedIdx);
+            _pairs.Add((foreColorNumber, backColorNumber), _lastPairUsedIdx);
             var lastPair = _lastPairUsedIdx;
-            if (_useBgHilite)
+            if (_useBgHilite && back.IsBasic)
             {
                 _lastPairUsedIdx++;
-                Curses.init_pair((short)_lastPairUsedIdx, (short)(fore), (short)(back.Plus(TvColorNames.StandardColorsCount)));
-                _pairs.Add((fore, back.Plus(TvColorNames.StandardColorsCount)), _lastPairUsedIdx);
+                Curses.init_pair((short)_lastPairUsedIdx, (short)foreColorNumber, (short)(backColorNumber  + TvColorNames.StandardColorsCount));
+                _pairs.Add((foreColorNumber, backColorNumber + TvColorNames.StandardColorsCount), _lastPairUsedIdx);
             }
 
             return lastPair;
@@ -65,8 +66,7 @@ namespace Tvision2.ConsoleDriver.Common
         private int GetColorNumber(TvColor color)
         {
             if (!color.IsRgb) return color.PaletteIndex;
-            
-            return 2;
+            return _colorTranslator.GetColorIndexFromRgb(color, _palette);
         }
 
         internal void Init()

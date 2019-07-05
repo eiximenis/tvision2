@@ -5,17 +5,19 @@ namespace Tvision2.ConsoleDriver.Common
 {
     public interface IPaletteOptions
     {
-        IPaletteOptionsWithPaletteInitialized InitFromTerminalName(string name = null);
-        IPaletteOptionsWithPaletteInitialized InitFromDefinition();
+        IPaletteOptionsWithPaletteInitialized LoadFromTerminalName(string name = null);
+        IPaletteOptionsWithPaletteInitialized LoadFromDefinition();
+        
+        void TranslateRgbColorsWith(IRgbColortranslator translator);
+        void TranslateRgbColorsWith(Func<TvColor, IPalette, int> translatorFunc);
     }
 
     public interface IPaletteOptionsWithPaletteInitialized
     {
-        IPaletteOptionsWithPaletteInitialized UpdateTerminal(bool update=true);
+        IPaletteOptionsWithPaletteInitialized UpdateTerminal(UpdateTerminalEntries entriesToUpdate = UpdateTerminalEntries.AllButAnsi4bit);
         IPaletteOptionsWithPaletteInitialized ParseWith(IPaletteDefinitionParser parser);
         IPaletteOptionsWithPaletteInitialized ParseWith(Func<string, (string name, int idx, TvColor rgbColor)> parserFunc);
 
-        IPaletteOptionsWithPaletteInitialized TranslateRgbColorsWith(IRgbColortranslator translator);
-        IPaletteOptionsWithPaletteInitialized TranslateRgbColorsWith(Func<TvColor, IPalette, int> translatorFunc);
+
     }
 }

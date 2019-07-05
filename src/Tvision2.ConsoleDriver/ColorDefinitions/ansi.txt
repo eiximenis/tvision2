@@ -1,0 +1,17 @@
+0 Black  #000000 
+1 Maroon  #800000 
+2 Green  #008000 
+3 Olive  #808000 
+4 Navy  #000080 
+5 Purple  #800080 
+6 Teal  #008080 
+7 Silver  #c0c0c0 
+8 Grey  #808080 
+9 Red  #ff0000 
+10 Lime  #00ff00 
+11 Yellow  #ffff00 
+12 Blue  #0000ff 
+13 Fuchsia  #ff00ff 
+14 Aqua  #00ffff 
+15 White  #ffffff 
+16 Grey0 #000000 

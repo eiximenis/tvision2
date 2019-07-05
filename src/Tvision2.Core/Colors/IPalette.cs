@@ -8,6 +8,10 @@ namespace Tvision2.Core.Colors
         int MaxColors { get; }
 
         bool RedefineColor(int idx, TvColor newColor);
+        
+        bool IsFull { get; }
+
+        int AddColor(TvColor color, string name = null);
 
         ColorMode ColorMode { get; }
         

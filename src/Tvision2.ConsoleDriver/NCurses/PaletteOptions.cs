@@ -10,7 +10,7 @@ namespace Tvision2.ConsoleDriver.Common
     public class PaletteOptions : IPaletteOptions, IPaletteOptionsWithPaletteInitialized
     {
         
-        public bool UpdateTerminal { get; private set; }
+        public UpdateTerminalEntries UpdateTerminalEntries { get; private set; }
         public  string PaletteToLoad { get; private set; }
         
         public IRgbColortranslator ColorTranslator { get; private set; }
@@ -19,16 +19,16 @@ namespace Tvision2.ConsoleDriver.Common
         
         public PaletteOptions()
         {
-            UpdateTerminal = false;
+            UpdateTerminalEntries = UpdateTerminalEntries.None;
             PaletteToLoad = null;
-            PaletteParser = new DefaultPaletteDefinitionParser();
+            PaletteParser = DefaultPaletteDefinitionParser.Instance;
             ColorTranslator = null;
         }
 
         public bool SupportRgbColors => ColorTranslator != null;
         
         
-        IPaletteOptionsWithPaletteInitialized IPaletteOptions.InitFromTerminalName(string name = null)
+        IPaletteOptionsWithPaletteInitialized IPaletteOptions.LoadFromTerminalName(string name = null)
         {
             name = name ?? Environment.GetEnvironmentVariable("TERM");
             PaletteToLoad = name;
@@ -36,14 +36,25 @@ namespace Tvision2.ConsoleDriver.Common
         }
         
 
-        IPaletteOptionsWithPaletteInitialized IPaletteOptions.InitFromDefinition()
+        IPaletteOptionsWithPaletteInitialized IPaletteOptions.LoadFromDefinition()
         {
             return this;
         }
         
-        IPaletteOptionsWithPaletteInitialized IPaletteOptionsWithPaletteInitialized.UpdateTerminal(bool update = true)
+        void IPaletteOptions.TranslateRgbColorsWith(IRgbColortranslator translator)
         {
-            UpdateTerminal = update;
+            ColorTranslator = translator;
+        }
+
+        void IPaletteOptions.TranslateRgbColorsWith(
+            Func<TvColor, IPalette, int> translatorFunc)
+        {
+            ColorTranslator = new DelegateRgbColorTranslator(translatorFunc);
+        }
+        
+        IPaletteOptionsWithPaletteInitialized IPaletteOptionsWithPaletteInitialized.UpdateTerminal(UpdateTerminalEntries entriesToUpdate = UpdateTerminalEntries.AllButAnsi4bit)
+        {
+            UpdateTerminalEntries = entriesToUpdate;
             return this;
         }
 
@@ -59,18 +70,13 @@ namespace Tvision2.ConsoleDriver.Common
             PaletteParser = new DelegatePaletteParser(parserFunc);
             return this;
         }
+    }
 
-        IPaletteOptionsWithPaletteInitialized IPaletteOptionsWithPaletteInitialized.TranslateRgbColorsWith(IRgbColortranslator translator)
-        {
-            ColorTranslator = translator;
-            return this;
-        }
-
-        IPaletteOptionsWithPaletteInitialized IPaletteOptionsWithPaletteInitialized.TranslateRgbColorsWith(
-            Func<TvColor, IPalette, int> translatorFunc)
-        {
-            ColorTranslator = new DelegateRgbColorTranslator(translatorFunc);
-            return this;
-        }
+    public enum UpdateTerminalEntries
+    {
+        None,
+        AllButAnsi3bit,
+        AllButAnsi4bit,
+        All
     }
 }

@@ -37,6 +37,8 @@ namespace Tvision2.Core.Colors
         public readonly int Value;
         private const int RGB_MARKER = (1 << 31);
         private const int PALETTE_MARKER = (1 << 30);
+        public const int ANSI3BIT_MAX_VALUE = 7;
+        public const int ANSI4BIT_MAX_VALUE = 15;
 
         public TvColor(int value) => Value = value;
 
@@ -81,6 +83,8 @@ namespace Tvision2.Core.Colors
 
         public (byte red, byte green, byte blue) Rgb =>
             ((byte) (Value & 0xff), (byte) (Value >> 8), (byte) (Value >> 16));
+
+        public bool IsBasic => Value <= ANSI3BIT_MAX_VALUE;
 
 
         public override bool Equals(object obj)

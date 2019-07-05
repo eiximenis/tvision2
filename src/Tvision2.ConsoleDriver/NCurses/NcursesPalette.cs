@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Tvision2.ConsoleDriver.ColorDefinitions;
 using Tvision2.ConsoleDriver.Common;
 using Tvision2.Core;
 using Tvision2.Core.Colors;
@@ -18,7 +20,7 @@ namespace Tvision2.ConsoleDriver.Common
 
         public ColorMode ColorMode { get; private set; }
         
-        public NcursesPalette(PaletteOptions options)
+        public NcursesPalette(PaletteOptions options) 
         {
             IsFreezed = true;
             MaxColors = 0;
@@ -44,45 +46,41 @@ namespace Tvision2.ConsoleDriver.Common
             if (Curses.HasColors)
             {
                 Curses.StartColor();
-                IsFreezed = !Curses.CanChangeColor();
                 MaxColors = Curses.Colors;
                 InitSize(MaxColors);
-                LoadPalette();
+                if (!string.IsNullOrEmpty(_options.PaletteToLoad))
+                {
+                    LoadPalette(_options.PaletteToLoad, _options.PaletteParser, _options.UpdateTerminalEntries);
+                }
+                else
+                {
+                    LoadPalette("ansi", DefaultPaletteDefinitionParser.Instance, _options.UpdateTerminalEntries);
+                }
+
+                IsFreezed = !Curses.CanChangeColor();
             }
             else
             {
                 ColorMode = ColorMode.NoColors;
-                IsFreezed = true;
                 MaxColors = 2;
-                InitSize(1);
-                SetColorAt(0, TvColor.Black);
-                SetColorAt(0, TvColor.White);
+                InitSize(2);
+                AddColor(0, TvColor.Black,TvColorNames.NameOf(TvColorNames.Black));
+                AddColor(1, TvColor.White,TvColorNames.NameOf(TvColorNames.White));
+                IsFreezed = true;
             }
         }
 
-        private void LoadPalette()
+        protected override  void OnColorAdded(TvColor color, int idx)
         {
-            
-            if (!string.IsNullOrEmpty(_options.PaletteToLoad))
+            if (!IsFreezed)
             {
-                var assembly = Assembly.GetExecutingAssembly();
-                var stream =
-                    assembly.GetManifestResourceStream(
-                        $"Tvision2.ConsoleDriver.ColorDefinitions.{_options.PaletteToLoad}.txt");
-                using (var reader = new StreamReader(stream, Encoding.UTF8))
-                {
-                    while (!reader.EndOfStream)
-                    {
-                        var line = reader.ReadLine();
-                        var parsedLine = _options.PaletteParser.ParseLine(line);
-                        SetColorAt(parsedLine.idx, parsedLine.rgbColor, parsedLine.name);
-                    }
-                } 
+                var (cr, cg, cb) = color.Rgb;
+                var (r, g, b) = ((short) (cr / 256f * 1000), (short) (cg / 256f * 1000), (short) (cb / 256f * 1000));
 
+                Curses.InitColor((short) idx, r, g, b);
             }
-            
         }
-        
+
         
     }
 }

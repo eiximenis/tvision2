@@ -11,10 +11,13 @@ namespace Tvision2.ConsoleDriver.Win32
 
         public int MaxColors => TvColorNames.StandardColorsCount;
 
+        public int AddColor(TvColor color, string name = null) => -1;
+
         public ColorMode ColorMode => ColorMode.Basic;
 
         public bool RedefineColor(int idx, TvColor newColor) => false;
-        
+        public bool IsFull => true;
+
         public Win32StdPalette()
         {
             _names = TvColorNames.AlLStandardColorNames.ToArray();
