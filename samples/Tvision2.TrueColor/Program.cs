@@ -11,6 +11,12 @@ namespace Tvision2.TrueColor
 {
     class Program
     {
+        class StringAndColor
+        {
+            public string Text { get; set; }
+            public TvColor Fore { get; set; }
+        }
+
         static async Task Main(string[] args)
         {
             var builder = new HostBuilder();
@@ -24,25 +30,23 @@ namespace Tvision2.TrueColor
                 });
                 setup.Options.UseStartup((sp, tui) =>
                 {
-                    var cm = sp.GetService<IColorManager>();
-                    
-                    (byte fr, byte fg, byte fb, CharacterAttribute attr) cs = (0, 0, 0, default(CharacterAttribute));
-                    cs.attr = cm.BuildAttributeFor(TvColor.FromRGB(cs.fr, cs.fg, cs.fb), TvColor.FromRGB(0, 0, 0));
-                    var helloWorld = new TvComponent<string>("Tvision2 rocks!");
+                    var state = new StringAndColor()
+                    {
+                        Fore = TvColor.FromRGB(0, 0, 0),
+                        Text = "Tvision2 rocks!"
+                    };
+                    var helloWorld = new TvComponent<StringAndColor>(state);
                     helloWorld.AddDrawer(ctx =>
                     {
-                        ctx.DrawStringAt(ctx.State, TvPoint.Zero, cs.attr);
+                        ctx.DrawStringAt(ctx.State.Text, TvPoint.Zero, new TvColorPair(ctx.State.Fore, TvColor.FromRGB(0, 0, 0)));
                     });
                     helloWorld.AddBehavior(ctx =>
                     {
                         var r = new Random();
-                        cs.fr = (byte)((cs.fr +1) % 256);
-                        cs.fb = (byte)((cs.fb +1) % 256);
-                        cs.fg = (byte)((cs.fg +1) % 256);
-                        cs.attr = cm.BuildAttributeFor(TvColor.FromRGB(cs.fr, cs.fg, cs.fb), TvColor.FromRGB(0, 0, 0));
+                        var (red, green, blue) = ctx.State.Fore.Rgb;
+                        ctx.State.Fore = TvColor.FromRGB((byte)((red + 1) % 256), (byte)((green + 1) % 256), (byte)((blue + 1) % 256));
                         return true;
                     });
-
                     helloWorld.AddViewport(new Viewport(new TvPoint(10, 10), 30));
                     tui.UI.Add(helloWorld);
                     return Task.CompletedTask;

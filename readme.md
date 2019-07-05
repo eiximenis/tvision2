@@ -36,7 +36,7 @@ This is the minimum code to start Tvision2 and configure it to use one specific 
 
 Of course this code do nothing useful: you should see a black screen. This is because we need to create some component. Here is a typical Hello world, that prints "Tvision2 rocks!" on a yellow text over blue background in the position (10,10) of the console:
 
-```
+```csharp
 private static async Task Main(string[] args)
 {
     var builder = new HostBuilder();
@@ -45,12 +45,10 @@ private static async Task Main(string[] args)
         setup.UseDotNetConsoleDriver();
         setup.Options.UseStartup((sp, tui) =>
         {
-            var cm = sp.GetService<IColorManager>();
-            var attr = cm.BuildAttributeFor(DefaultColorName.Yellow, DefaultColorName.Blue, CharacterAttributeModifiers.Normal);
             var helloWorld = new TvComponent<string>("Tvision2 rocks!");
             helloWorld.AddDrawer(ctx =>
             {
-                ctx.DrawStringAt(ctx.State, TvPoint.Zero, attr) ;
+                ctx.DrawStringAt(ctx.State, TvPoint.Zero, new TvColorPair(TvColor.Blue, TvColor.Yellow)) ;
             });
             helloWorld.AddViewport(new Viewport(new TvPoint(10, 10), 30));
             tui.UI.Add(helloWorld);
@@ -65,15 +63,75 @@ You may think "Wow! This is a lot of code for a Hello world!". And you are true,
 
 ### What is doing this code?
 
-The `setup.Options.Startup` allows us to add code to run **before** Tvision2 starts its game-loop. It is not the only way to do that, and not the most common one, but for small apps can be enough. Don't bother about the parameters received by the lambda. You'll learn later what they are and how to use them.
+The `setup.Options.UseStartup` allows us to add code to run **before** Tvision2 starts its game-loop. It is not the only way to do that, and not the most common one, but for small apps can be enough. Don't bother about the parameters received by the lambda. You'll learn later what they are and how to use them.
 
-In the 1st line we create a `TvComponent<string>` object. That is a `TvComponent` that "holds" one string object as data. Next we use `AddDrawer` to add a drawer. A component must have at least one drawer if we want to display them on the screen. The parameter of the drawer is an object of type `RenderContext<T>` where `T` is the generic type of `TvComponent`. In our case as we are using a `TvComponent<string>` the `ctx` parameter is a `RenderContext<string>`. The `RenderContext<T>` contains methods to draw onto the virtual console and one property (`State`) of type `T` which contains the value hold by the `TvComponent<T>` object. Our drawer implementation is very easy: just draw the string in the (0,0) (upper-left) position.
+In the 1st line we create a `TvComponent<string>` object. That is a `TvComponent` that "holds" one string object as data. Next we use `AddDrawer` to add a drawer. A component must have at least one drawer if we want to display them on the screen. The parameter of the drawer is an object of type `RenderContext<T>` where `T` is the generic type of `TvComponent`. In our case as we are using a `TvComponent<string>` the `ctx` parameter is a `RenderContext<string>`. The `RenderContext<T>` contains methods to draw onto the virtual console and one property (`State`) of type `T` which contains the value hold by the `TvComponent<T>` object. Our drawer implementation is very easy: just draw the string in the (0,0) (upper-left) position using blue foreground over yellow background.
 
 Every drawing operation is performed into a _viewport_ So this (0,0) is relative to the viewport of the component. A component can have zero, one or even more than one viewport, but at least one is needed to make it visible on the console. So, we use the `AddViewport` method to add a _viewport_ located in the position (10,10) and with a width of 30 characters. This position (10,10) is a absolute position. As in the drawer func we draw the text in the upper-left position and the _viewport_ is located at (10,10), the text will be drawn in the position (10,10) of the console.
 
 Finally we need to add the component to the Tvision2 engine. The parameter `tui` that we received in the lambda is the Tvision2 engine, so we can add items on it using its `UI` property.
 
 And that's all :)
+
+## I want something fancier!
+
+What about _true color_? How that sounds?
+
+```csharp
+class StringAndColor
+{
+    public string Text { get; set; }
+    public TvColor Fore { get; set; }
+}
+
+static async Task Main(string[] args)
+{
+    var builder = new HostBuilder();
+    builder.UseTvision2(setup =>
+    {
+        setup.UsePlatformConsoleDriver(opt =>
+        {
+            opt.Configure()
+                .OnLinux(l => l.UseDirectAccess(da => da.UseTrueColor().WithBuiltInSequences()))
+                .OnWindows(w => w.EnableAnsiSequences());
+        });
+        setup.Options.UseStartup((sp, tui) =>
+        {
+            var state = new StringAndColor()
+            {
+                Fore = TvColor.FromRGB(0, 0, 0),
+                Text = "Tvision2 rocks!"
+            };
+            var helloWorld = new TvComponent<StringAndColor>(state);
+            helloWorld.AddDrawer(ctx =>
+            {
+                ctx.DrawStringAt(ctx.State.Text, TvPoint.Zero, new TvColorPair(ctx.State.Fore, TvColor.FromRGB(0, 0, 0)));
+            });
+            helloWorld.AddBehavior(ctx =>
+            {
+                var r = new Random();
+                var (red, green, blue) = ctx.State.Fore.Rgb;
+                ctx.State.Fore = TvColor.FromRGB((byte)((red + 1) % 256), (byte)((green + 1) % 256), (byte)((blue + 1) % 256));
+                return true;
+            });
+            helloWorld.AddViewport(new Viewport(new TvPoint(10, 10), 30));
+            tui.UI.Add(helloWorld);
+            return Task.CompletedTask;
+        });
+    }).UseConsoleLifetime();
+    await builder.RunTvisionConsoleApp();
+}
+``` 
+
+Wow! It can look too complex, but is not! Let's see what this does!
+
+* We can't use the _dotnet console driver_ because this driver do not support true color. So we use `UsePlatformConsoleDriver` to select a platform-specific driver. By default the platform in Linux is a ncurses driver and in windows is a Win32 console api driver. But then we configure the driver to enable full color. As Linux and Windows behave very differently the configuration is different for each OS: Use `OnLinux` to configure the driver for Linux and `OnWindows` to configure the driver for Windows. The `UseDirectAccess` changes the driver in Linux for another driver that do not uses ncurses (as ncurses do not support true color). The status of the driver in Linux is experimental right now. The `EnableAnsiSequences` changes the driver in Windows, for a driver that do not uses the Win32 console API (that also do not support true color) but escape sequences instead. This is only possible starting with Windows 10.
+
+* We create a `TvComponent` that holds a `StringAndColor` object as its state. The drawer just displays the `Text` property of the state, with text color of the `Fore` property of the state.
+
+* We create a Behavior. A Behavior is a code that runs on every loop and can change the state of the component. In this case, the behavior changes the `Fore` property. This causes the component to be redrawn in the console in the next loop.
+
+The result is a text that changes its color, going from black to white, through a grey scale (once white goes to black again and starts over).
 
 ## Current Status of Libraries
 
