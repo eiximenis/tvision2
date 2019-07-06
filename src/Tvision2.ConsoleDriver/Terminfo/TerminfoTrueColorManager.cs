@@ -14,9 +14,9 @@ namespace Tvision2.ConsoleDriver.Terminfo
 
         public IPalette Palette { get; }
 
-        public TerminfoTrueColorManager()
+        public TerminfoTrueColorManager(PaletteOptions options)
         {
-            Palette = new DirectPalette(MAXPALETTESIZE);
+            Palette = new DirectPalette(MAXPALETTESIZE, options);
         }
 
         public void Init()

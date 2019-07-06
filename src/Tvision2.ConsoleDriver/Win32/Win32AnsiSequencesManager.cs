@@ -20,10 +20,10 @@ namespace Tvision2.ConsoleDriver.Win32
 
         public IPalette Palette { get; }
 
-        public Win32AnsiSequencesManager()
+        public Win32AnsiSequencesManager(PaletteOptions options)
         {
             DefaultAttribute = BuildAttributeFor(TvColor.White, TvColor.Black, CharacterAttributeModifiers.Normal);
-            Palette = new DirectPalette(MAXPALETTESIZE);
+            Palette = new DirectPalette(MAXPALETTESIZE, options);
         }
 
         public CharacterAttribute BuildAttributeFor(TvColor fore, TvColor back,

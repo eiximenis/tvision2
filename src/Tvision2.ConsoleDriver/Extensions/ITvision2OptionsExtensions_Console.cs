@@ -64,8 +64,8 @@ namespace Tvision2.Core
             // TODO: need to create IndexedColorManager for Terminfo
             
             var colorManager = options.DirectAccessOptions.TrueColorEnabled
-                ? options.DirectAccessOptions.TrueColorOptions.GetTerminfoColorManager()
-                : new TerminfoTrueColorManager();
+                ? options.DirectAccessOptions.TrueColorOptions.GetTerminfoColorManager(options.PaletteOptions)
+                : new TerminfoTrueColorManager(options.PaletteOptions);
             var driver = new TerminfoConsoleDriver(colorManager);
             tv2.Options.UseConsoleDriver(driver);
             tv2.Builder.ConfigureServices((hc, sc) =>

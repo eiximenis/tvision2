@@ -6,11 +6,11 @@ namespace Tvision2.ConsoleDriver.Common
     {
         public TrueColorProvider Provider { get; private set; }
         
-        public ITerminfoColorManager GetTerminfoColorManager()
+        public ITerminfoColorManager GetTerminfoColorManager(PaletteOptions options)
         {
             return Provider == TrueColorProvider.Terminfo
-                ? (ITerminfoColorManager) new TerminfoTrueColorManager()
-                : (ITerminfoColorManager) new BuiltinTrueColorManager();
+                ? (ITerminfoColorManager) new TerminfoTrueColorManager(options)
+                : (ITerminfoColorManager) new BuiltinTrueColorManager(options);
         }
 
 

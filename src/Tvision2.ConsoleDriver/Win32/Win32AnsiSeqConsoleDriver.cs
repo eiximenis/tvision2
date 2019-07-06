@@ -39,7 +39,7 @@ namespace Tvision2.ConsoleDriver
         {
             _hstdin = ConsoleNative.GetStdHandle(STDIN);
             _hstdout = ConsoleNative.GetStdHandle(STDOUT);
-            _seqManager = new Win32AnsiSequencesManager();
+            _seqManager = new Win32AnsiSequencesManager(options.PaletteOptions);
             _options = options;
         }
 

@@ -26,6 +26,7 @@ namespace Tvision2.ConsoleDriver.Common
 
         protected void InitSize(int size)
         {
+            MaxColors = size;
             _colors = new TvColor?[size];
         }
 
