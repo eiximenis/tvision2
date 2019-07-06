@@ -19,12 +19,10 @@ namespace Tvision2.HelloWorld
                 setup.UseDotNetConsoleDriver();
                 setup.Options.UseStartup((sp, tui) =>
                 {
-                    var cm = sp.GetService<IColorManager>();
-                    var attr = cm.BuildAttributeFor(TvColor.Yellow, TvColor.Blue);
                     var helloWorld = new TvComponent<string>("Tvision2 rocks!");
                     helloWorld.AddDrawer(ctx =>
                     {
-                        ctx.DrawStringAt(ctx.State, TvPoint.Zero, attr) ;
+                        ctx.DrawStringAt(ctx.State, TvPoint.Zero, new TvColorPair(TvColor.Blue, TvColor.Yellow)) ;
                     });
                     helloWorld.AddViewport(new Viewport(new TvPoint(10, 10), 30));
                     tui.UI.Add(helloWorld);
