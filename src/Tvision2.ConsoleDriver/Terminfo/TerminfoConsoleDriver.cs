@@ -95,6 +95,8 @@ namespace Tvision2.ConsoleDriver
 
         public void ProcessWindowEvent(TvWindowEvent windowEvent)
         {
+            ConsoleBounds = new TvBounds(Console.WindowHeight, Console.WindowWidth);
+            windowEvent.Update(ConsoleBounds.Cols, ConsoleBounds.Rows);
         }
     }
 }

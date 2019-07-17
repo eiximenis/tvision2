@@ -124,6 +124,7 @@ namespace Tvision2.ConsoleDriver
         {
             var bounds = GetConsoleWindowSize();
             windowEvent.Update(bounds.Cols, bounds.Rows);
+            ConsoleBounds = bounds;
         }
     }
 }
