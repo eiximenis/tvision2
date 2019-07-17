@@ -12,7 +12,7 @@ namespace Tvision2.ConsoleDriver.Win32
         {
             UseAnsiSequences = false;
             IPaletteOptions ioptions = new PaletteOptions();
-            ioptions.LoadFromTerminalName("xterm256-color");
+            ioptions.LoadFromTerminalName("xterm-256color");
             PaletteOptions = (PaletteOptions) ioptions;
         }
         IWindowsConsoleDriverOptions IWindowsConsoleDriverOptions.EnableAnsiSequences()
