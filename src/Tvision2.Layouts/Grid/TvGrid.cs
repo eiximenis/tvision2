@@ -62,7 +62,7 @@ namespace Tvision2.Layouts.Grid
         }
 
 
-        public IComponentTree Use(int row, int col)
+        public IComponentTree At(int row, int col)
         {
             _ui.CurrentRow = row;
             _ui.CurrentColumn = col;

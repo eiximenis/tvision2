@@ -46,8 +46,8 @@ namespace Tvision2.Dialogs
             _mainPanel.Layout.Add("1", "*");
             _mainPanel.AsComponent().AddViewport(new Viewport(viewport.Position + new TvPoint(1, 1), new TvBounds(viewport.Bounds.Rows -2, viewport.Bounds.Cols - 2), viewport.ZIndex));
             _bottomGrid = new TvGrid(owner, new GridState(1, 2), $"{_prefixNames}_BottomGrid");
-            _bottomGrid.Use(0, 0).Add(_buttons.OkButton);
-            _bottomGrid.Use(0, 1).Add(_buttons.CancelButton);
+            _bottomGrid.At(0, 0).Add(_buttons.OkButton);
+            _bottomGrid.At(0, 1).Add(_buttons.CancelButton);
             _mainCanvas = new TvCanvas(owner, $"{_prefixNames}_BodyCanvas");
             _mainCanvas.AsComponent().AddViewport(Viewport.NullViewport);
 

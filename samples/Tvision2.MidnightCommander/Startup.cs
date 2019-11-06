@@ -47,7 +47,6 @@ namespace Tvision2.MidnightCommander
             mainStackPanel.Layout.Add("*", "3");
             var listFilesGrid = new TvGrid(tui.UI, new GridState(1, 2));
             mainStackPanel.At(0).Add(listFilesGrid);
-
             tui.UI.Add(mainStackPanel);
             var textbox = new TvTextbox(TvTextbox.CreationParametersBuilder().UseSkin(skin).UseViewport(null));
             var actind = new TvActivityIndicator(TvActivityIndicator.CreationParametersBuilder().UseSkin(skin).UseViewport(new Viewport(new TvPoint(0, 22),new TvBounds(1, 1), 0)));
@@ -103,11 +102,8 @@ namespace Tvision2.MidnightCommander
                 opt.On(c => c.OnItemClicked)
                     .Dispatch((s, args) => new TvAction<string>("FETCH_DIR", args.FullName))
                     .When(f => f.IsDirectory);
-
-                /*
-                opt.OnKeyEvent(e => e.AsConsoleKeyInfo().Key == System.ConsoleKey.Enter)
-                    .Dispatch(s => new TvAction<FileItem>("FETCH_INFO", s[s.SelectedIndex]));
-                */
+                opt.On(c => c.OnItemClicked)
+                    .Dispatch((s, args) => new TvAction<FileItem>("FETCH_INFO", args));
 
                 opt.OnKeyEvent(e => e.AsConsoleKeyInfo().Key == System.ConsoleKey.Backspace)
                     .Dispatch(s => new TvAction("FETCH_BACK"));
@@ -125,12 +121,14 @@ namespace Tvision2.MidnightCommander
                     cs.AddRange(fl.Items);
                 });
                 opt.On(c => c.OnItemClicked)
-                .Dispatch((s, args) => new TvAction<string>("FETCH_DIR", args.FullName))
-                .When(f => f.IsDirectory);
+                    .Dispatch((s, args) => new TvAction<string>("FETCH_DIR", args.FullName))
+                    .When(f => f.IsDirectory);
+                opt.On(c => c.OnItemClicked)
+                    .Dispatch((s, args) => new TvAction<FileItem>("FETCH_INFO", args));
             });
 
-            listFilesGrid.Use(0, 0).Add(left);
-            listFilesGrid.Use(0, 1).Add(right);
+            listFilesGrid.At(0, 0).Add(left);
+            listFilesGrid.At(0, 1).Add(right);
             var bottom = new TvStackPanel(tui.UI, "BottomContainer");
             bottom.Layout.Add(new LayoutSize());
             bottom.AsComponent().AddViewport(dvpf.Create(vpf => vpf.BottomViewport(2)));
