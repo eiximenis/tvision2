@@ -20,12 +20,9 @@ namespace Tvision2.Controls.Drawers
         {
 
             var viewport = context.Viewport;
-
             var colorIdx = _metadata.IsFocused ? _style.Focused : _style.Standard;
-
             var columns = viewport.Bounds.Cols;
             var rows = viewport.Bounds.Rows;
-            
             if (rows > 2 && columns > 2)
             {
                 context.DrawChars('\u2554', 1, TvPoint.Zero,colorIdx);

@@ -49,13 +49,7 @@ namespace Tvision2.MidnightCommander
             mainStackPanel.At(0).Add(listFilesGrid);
 
             tui.UI.Add(mainStackPanel);
-
-            // TODO: Implement BorderedPanel
-            // mainStackPanel.At(1).Add(new BorderedPanel());
-
             var textbox = new TvTextbox(TvTextbox.CreationParametersBuilder().UseSkin(skin).UseViewport(null));
-            //var left = new TvList<FileItem>(skin, new Viewport(new TvPoint(0, 0), 10, 1, 0),
-            //    new ListState<FileItem>(Enumerable.Empty<FileItem>(), f => new TvListItem() { Text = f.Name }));
             var actind = new TvActivityIndicator(TvActivityIndicator.CreationParametersBuilder().UseSkin(skin).UseViewport(new Viewport(new TvPoint(0, 22),new TvBounds(1, 1), 0)));
             tui.UI.Add(actind);
 

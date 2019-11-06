@@ -132,7 +132,7 @@ namespace Tvision2.Core.Render
         public void DrawAt(string text, TvPoint location, int zIndex, CharacterAttribute attr)
         {
             var start = location.Left + (Width * location.Top);
-            var end = start + Math.Min(text.Length, Width - location.Left - 1);
+            var end = start + Math.Min(text.Length, Width - location.Left);
             var textIdx = 0;
             var dirty = IsDirty;
             var charCol = location.Left;
@@ -185,7 +185,7 @@ namespace Tvision2.Core.Render
         {
             var start = location.Left + (Width * location.Top);
             var zindex = charToCopy.ZIndex;
-            var end = start + Math.Min(count, Width - location.Left - 1);
+            var end = start + Math.Min(count, Width - location.Left);           
             var charCol = location.Left;
             var charRow = location.Top;
             var dirty = IsDirty;
