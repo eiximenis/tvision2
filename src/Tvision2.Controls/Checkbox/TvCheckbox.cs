@@ -13,7 +13,7 @@ namespace Tvision2.Controls.Checkbox
         public TvCheckbox(ITvControlCreationParametersBuilder<CheckboxState> parameters) : this(parameters.Build()) { }
         public TvCheckbox(TvControlCreationParameters<CheckboxState> parameters) : base(parameters)
         {
-            RequestControlManagement((ctx, _) => ctx.SetCursorAt(1,0));
+            RequestCursorManagement((ctx, _) => ctx.SetCursorAt(1,0));
         }
 
         protected override IEnumerable<ITvBehavior<CheckboxState>> GetEventedBehaviors()

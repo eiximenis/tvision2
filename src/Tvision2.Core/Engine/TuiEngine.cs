@@ -104,7 +104,10 @@ namespace Tvision2.Core.Engine
             if (_currentConsole.IsDirty)
             {
                 flushed = true;
+                var cursorIsVisible = _currentConsole.Cursor.Visible;
                 _currentConsole.Flush(ConsoleDriver);
+                ConsoleDriver.SetCursorVisibility(cursorIsVisible);
+
             }
 
             return flushed;

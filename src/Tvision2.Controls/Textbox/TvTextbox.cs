@@ -30,12 +30,12 @@ namespace Tvision2.Controls.Textbox
 
         public TvTextbox(TvControlCreationParameters<TextboxState> parameters) : base(parameters)
         {
-            RequestControlManagement((ctx, state) => ctx.SetCursorAt(state.CaretPos, 0));
+            RequestCursorManagement((ctx, state) => ctx.SetCursorAt(state.CaretPos, 0));
         }
 
         protected override IEnumerable<ITvBehavior<TextboxState>> GetEventedBehaviors()
         {
-            yield return new TextboxBehavior();
+            yield return new TextboxBehavior(); 
         }
 
         protected override void OnDraw(RenderContext<TextboxState> context)

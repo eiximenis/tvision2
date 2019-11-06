@@ -145,7 +145,7 @@ namespace Tvision2.Controls
         protected virtual void AddCustomElements(TvComponent<TState> component) { }
 
 
-        protected void RequestControlManagement(Action<ICursorContext, TState> cursorAction)
+        protected void RequestCursorManagement(Action<ICursorContext, TState> cursorAction)
         {
             _component.AddDrawer(new TvControlCursorDrawer<TState>(cursorAction, Metadata));
         }
@@ -153,5 +153,6 @@ namespace Tvision2.Controls
         public TvComponent<TState> AsComponent() => _component;
 
         TvComponent ITvControl.AsComponent() => _component;
+
     }
 }

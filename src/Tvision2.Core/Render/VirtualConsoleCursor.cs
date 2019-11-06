@@ -16,7 +16,7 @@
 
         public bool Visible { get; private set; }
 
-        internal void VisibilityChanged(bool isVisible)
+        internal void ChangeVisibility(bool isVisible)
         {
             Visible = isVisible;
             ActionPending = VirtualConsoleCursorAction.None;

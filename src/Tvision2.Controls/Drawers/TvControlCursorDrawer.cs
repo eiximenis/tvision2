@@ -23,10 +23,6 @@ namespace Tvision2.Controls.Drawers
             {
                 _cursorAction(context, context.State);
             }
-            else
-            {
-                ((ICursorContext)context).HideCursor();
-            }
         }
 
         void ITvDrawer.Draw(RenderContext context) => Draw(context as RenderContext<TState>);

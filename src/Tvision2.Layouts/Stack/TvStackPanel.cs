@@ -64,6 +64,7 @@ namespace Tvision2.Layouts.Stack
             if (_thisComponent.Viewport != null)
             {
                 var layout = _thisComponent.State;
+                var rowsUsed = 0;
                 if (layout.ItemsCount > 0)
                 {
                     for (var layoutIdx = 0; layoutIdx < layout.ItemsCount; layoutIdx++)
@@ -73,8 +74,9 @@ namespace Tvision2.Layouts.Stack
                         foreach (var childComponent in itemChilds)
                         {
                             var childvp = childComponent.Viewport;
-                            childComponent.UpdateViewport(_thisComponent.Viewport.TakeRows(height, height * layoutIdx), addIfNotExists: true);
+                            childComponent.UpdateViewport(_thisComponent.Viewport.TakeRows(height, rowsUsed), addIfNotExists: true);
                         }
+                        rowsUsed += height;
 
                     }
                 }

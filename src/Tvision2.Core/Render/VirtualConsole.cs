@@ -58,6 +58,7 @@ namespace Tvision2.Core.Render
 
         public void Flush(IConsoleDriver consoleDriver)
         {
+            consoleDriver.SetCursorVisibility(isVisible: false);
             var idx = 0;
             for (var row = 0; row < Height; row++)
             {
@@ -93,23 +94,25 @@ namespace Tvision2.Core.Render
             }
 
 
-            if (Cursor.ActionPending == VirtualConsoleCursorAction.Show)
-            {
-                consoleDriver.SetCursorVisibility(isVisible: true);
-                Cursor.VisibilityChanged(isVisible: true);
-            }
-
             if (Cursor.MovementPending)
             {
                 consoleDriver.SetCursorAt(Cursor.Position.Left, Cursor.Position.Top);
                 Cursor.MovementPending = false;
             }
+
+            if (Cursor.ActionPending == VirtualConsoleCursorAction.Show)
+            {
+                Cursor.ChangeVisibility(isVisible: true);
+            }
             else if (Cursor.ActionPending == VirtualConsoleCursorAction.Hide)
             {
-                consoleDriver.SetCursorVisibility(isVisible: false);
-                Cursor.VisibilityChanged(isVisible: false);
+                Cursor.ChangeVisibility(isVisible: false);
             }
 
+            if (Cursor.Visible)
+            {
+                consoleDriver.SetCursorAt(Cursor.Position.Left, Cursor.Position.Top);
+            }
 
             IsDirty = false;
         }
