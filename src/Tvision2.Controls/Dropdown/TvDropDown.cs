@@ -65,18 +65,18 @@ namespace Tvision2.Controls.Dropdown
 
         }
 
-        protected override void OnControlMounted(IComponentTree owner)
+        protected override void OnControlMounted(ITuiEngine engine)
         {
             _idClickedSubs = _list.OnItemClicked.Add(el =>
             {
                 State.SelectedValue = el.Text;
                 _label.State.Text = el.Text;
             });
-            _ownerUi = owner;
+            _ownerUi = engine.UI;
             _ownerUi.Add(_label);
         }
 
-        protected override void OnControlUnmounted(IComponentTree owner)
+        protected override void OnControlUnmounted(ITuiEngine engine)
         {
             _ownerUi.Remove(_label);
             _ownerUi.Remove(_list);

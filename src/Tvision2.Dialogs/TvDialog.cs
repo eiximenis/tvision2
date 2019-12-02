@@ -40,8 +40,12 @@ namespace Tvision2.Dialogs
         {
             State.MainPanel.Clear();
 
+            // TODO: Review this -> It is easy to solve
+            /*
             State.UI.Engine.UI.Remove(State.MainPanel.AsComponent());
             State.UI.Engine.UI.Remove(AsComponent());
+
+            */
         }
     }
 }

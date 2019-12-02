@@ -23,8 +23,9 @@ namespace Tvision2.Controls
         private TvComponent<TState> _component;
         public TvControlMetadata Metadata => _metadata.Value;
         public TState State { get; }
-
         public string Name => AsComponent().Name;
+
+
 
         public TvControl(TvControlCreationParameters<TState> creationParams)
         {
@@ -34,11 +35,11 @@ namespace Tvision2.Controls
             _component = new TvComponent<TState>(initialState, name ?? $"TvControl_<$>",
                 cfg =>
                 {
-                    cfg.WhenComponentMounted(ctx => OnComponentMounted(ctx.OwnerTree));
-                    cfg.WhenComponentUnmounted(ctx => OnComponentUnmounted(ctx.OwnerTree));
+                    cfg.WhenComponentMounted(ctx => OnComponentMounted(ctx));
+                    cfg.WhenComponentUnmounted(ctx => OnComponentUnmounted(ctx));
                 });
 
-            _metadata = new Lazy<TvControlMetadata>(() => new TvControlMetadata(this, ConfigureStandardMetadataOptions));
+            _metadata = new Lazy<TvControlMetadata>(() => new TvControlMetadata(this, creationParams, ConfigureStandardMetadataOptions));
             var typename = GetType().Name.ToLowerInvariant();
             var genericIdx = typename.IndexOf('`');
             ControlType = genericIdx != -1 ? typename.Substring(0, genericIdx) : typename;
@@ -71,22 +72,22 @@ namespace Tvision2.Controls
 
         protected virtual void ConfigureMetadataOptions(TvControlMetadataOptions options) { }
 
-        private Task<bool> OnComponentUnmounted(IComponentTree owner)
+        private Task<bool> OnComponentUnmounted(ComponentMoutingContext ctx)
         {
             var ctree = _metadata.Value.OwnerTree as ControlsTree;
             AsComponent().RemoveAllBehaviors();
             AsComponent().RemoveAllDrawers();
             ctree.Remove(Metadata);
-            OnControlUnmounted(owner);
+            OnControlUnmounted(ctx.OwnerEngine);
             _metadata.Value.OwnerTree = null;
             return Task.FromResult(true);
         }
 
-        protected virtual void OnControlUnmounted(IComponentTree owner)
+        protected virtual void OnControlUnmounted(ITuiEngine engine)
         {
         }
 
-        private Task<bool> OnComponentMounted(IComponentTree owner)
+        private Task<bool> OnComponentMounted(ComponentMoutingContext ctx)
         {
             if (Metadata.ViewportAutoCreated)
             {
@@ -95,14 +96,14 @@ namespace Tvision2.Controls
 
             OnViewportCreated(AsComponent().Viewport);
 
-            var ctree = owner.RootControls() as ControlsTree;
+            var ctree = ctx.OwnerEngine.GetControlsTree() as ControlsTree;
             ctree.Add(Metadata);
             AddElements();
-            OnControlMounted(owner);
+            OnControlMounted(ctx.OwnerEngine);
             return Task.FromResult(true);
         }
 
-        protected virtual void OnControlMounted(IComponentTree owner)
+        protected virtual void OnControlMounted(ITuiEngine owner)
         {
         }
 

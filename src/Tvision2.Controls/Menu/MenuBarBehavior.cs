@@ -1,4 +1,8 @@
-﻿using Tvision2.Core.Components.Behaviors;
+﻿using System;
+using Tvision2.Controls.Styles;
+using Tvision2.Core.Components.Behaviors;
+using Tvision2.Core.Engine;
+using Tvision2.Core.Render;
 using Tvision2.Events;
 
 namespace Tvision2.Controls.Menu
@@ -18,6 +22,13 @@ namespace Tvision2.Controls.Menu
         {
 
             var info = evt.AsConsoleKeyInfo();
+
+            if (info.Key == _options.SelectKey)
+            {
+                EnableMenu(updateContext.State);
+                return true;
+            }
+
             if (info.Key == _options.Hotkey)
             {
                 _owner.OwnerTree.ReturnFocusToPrevious();
@@ -25,7 +36,7 @@ namespace Tvision2.Controls.Menu
             }
 
             var optidx = 0;
-            foreach (var option in updateContext.State.Options)
+            foreach (var option in updateContext.State.Entries)
             {
                 if (info.KeyChar == option.Shortcut)
                 {
@@ -38,6 +49,18 @@ namespace Tvision2.Controls.Menu
             return false;
 
         }
+
+        private void EnableMenu(MenuState state)
+        {
+            /*
+            var menu = new TvMenu(TvMenu.CreationParametersBuilder(new[] { "patata", "patata2" })
+                .UseViewport(new Viewport(new TvPoint(10, 10), 20))
+                    // Todo: Must find some skinresolver here :(
+                .UseSkin();
+            _owner.Control.AsComponent().Metadata.Engine.UI.Add(menu);
+            */
+        }
+
         protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<MenuState> updateContext) => false;
 
     }

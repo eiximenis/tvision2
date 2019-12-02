@@ -8,6 +8,7 @@ using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Controls.Extensions;
+using System.Reflection;
 
 namespace Tvision2.Controls.Window
 {
@@ -18,11 +19,20 @@ namespace Tvision2.Controls.Window
         {
         }
 
-        protected override void OnControlMounted(IComponentTree owner)
+        private ITuiEngine _engine;
+
+        protected override void OnControlMounted(ITuiEngine engine)
         {
             State.SetOwnerWindow(this);
             AsComponent().Metadata.ViewportChanged += MyViewportChanged;
+            _engine = engine;
         }
+
+        protected override void OnControlUnmounted(ITuiEngine engine)
+        {
+            _engine = null;
+        }
+
         private void MyViewportChanged(object sender, ViewportUpdatedEventArgs e)
         {
             var childs = State.UI.Components.ToList();
@@ -41,7 +51,7 @@ namespace Tvision2.Controls.Window
                 State.UI.Remove(child);
             }
             AsComponent().Metadata.ViewportChanged -= MyViewportChanged;
-            State.UI.Engine.UI.Remove(AsComponent());
+            _engine.UI.Remove(AsComponent());
         }
 
         protected override IEnumerable<ITvBehavior<WindowState>> GetEventedBehaviors()

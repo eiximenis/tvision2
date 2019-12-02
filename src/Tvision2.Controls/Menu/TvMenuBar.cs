@@ -6,6 +6,7 @@ using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Controls.Extensions;
+using Tvision2.Core.Components;
 
 namespace Tvision2.Controls.Menu
 {
@@ -28,6 +29,7 @@ namespace Tvision2.Controls.Menu
             return TvControlCreationParametersBuilder.ForState<MenuState>(() => new MenuState(options));
         }
 
+
         protected override void OnDraw(RenderContext<MenuState> context)
         {
             var coordx = 0;
@@ -36,7 +38,7 @@ namespace Tvision2.Controls.Menu
             var selectedItemPairIdx = Metadata.IsFocused ? CurrentStyle.Focused : CurrentStyle.Standard;
             var selectedItemAlternatePairidx = Metadata.IsFocused ? CurrentStyle.AlternateFocused : CurrentStyle.Alternate;
 
-            foreach (var option in State.Options)
+            foreach (var option in State.Entries)
             {
                 var pairIdx = State.SelectedIndex == optidx ? selectedItemPairIdx : CurrentStyle.Standard;
                 var alternatePairIdx = State.SelectedIndex == optidx ? selectedItemAlternatePairidx : CurrentStyle.Alternate;
@@ -61,20 +63,20 @@ namespace Tvision2.Controls.Menu
             yield return new MenuBarBehavior(Metadata, _options);
         }
 
-        protected override void OnControlMounted(IComponentTree owner)
+        protected override void OnControlMounted(ITuiEngine engine)
         { 
             if (_options.Hotkey != ConsoleKey.NoName)
             {
-                var evtHook = AsComponent().Metadata.Engine.EventHookManager;
+                var evtHook = engine.EventHookManager;
                 _hookGuid =  evtHook.AddHook(new TvMenuBarHook(_options.Hotkey, Metadata));
             }
         }
 
-        protected override void OnControlUnmounted(IComponentTree owner)
+        protected override void OnControlUnmounted(ITuiEngine engine)
         {
             if (_hookGuid != Guid.Empty)
             {
-                var evtHook = AsComponent().Metadata.Engine.EventHookManager;
+                var evtHook = engine.EventHookManager;
                 evtHook.RemoveHook(_hookGuid);
             }
         }

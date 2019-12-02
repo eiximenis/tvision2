@@ -11,17 +11,21 @@ namespace Tvision2.Core.Engine
     public class ComponentTree : IComponentTree
     {
         private readonly Dictionary<string, TvComponentMetadata> _components;
-        private readonly Dictionary<string, (TvComponentMetadata Metadata, Action AfterAdd)> _pendingAdds;
+        private readonly Dictionary<string, (TvComponentMetadata Metadata, Action<ITuiEngine> AfterAdd)> _pendingAdds;
         private readonly Dictionary<string, TvComponentMetadata> _pendingRemovalsPhase1;
         private readonly Dictionary<string, TvComponentMetadata> _pendingRemovalsPhase2;
         private readonly List<IViewport> _viewportsToClear;
-        public TuiEngine Engine { get; }
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ITuiEngine _engine;
+
         public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
         public event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
 
         public IEnumerable<TvComponent> Components => _components.Values.Select(cm => cm.Component);
 
         public TvComponent GetComponent(string name) => _components.TryGetValue(name, out var metadata) ? metadata.Component : null;
+
+        public T GetInstanceOf<T>() => (T)_engine.ServiceProvider.GetService(typeof(T));
 
 
         public bool Remove(TvComponent component)
@@ -45,7 +49,7 @@ namespace Tvision2.Core.Engine
             _pendingRemovalsPhase1.Clear();
             foreach (var kvp in toDelete)
             {   
-                var canBeUnmounted = kvp.Value.CanBeUnmountedFrom(this);
+                var canBeUnmounted = kvp.Value.CanBeUnmountedFrom(_engine);
                 if (canBeUnmounted)
                 {
                     _pendingRemovalsPhase2.Add(kvp.Key, kvp.Value);
@@ -64,24 +68,25 @@ namespace Tvision2.Core.Engine
 
             foreach (var kvp in _pendingRemovalsPhase2)
             {
-                kvp.Value.UnmountedFrom(this);
+                kvp.Value.UnmountedFrom(_engine);
                 OnComponentRemoved(kvp.Value);
             }
 
             _pendingRemovalsPhase2.Clear();
         }
 
-        public ComponentTree(TuiEngine owner)
+        public ComponentTree(ITuiEngine engine, IServiceProvider serviceProvider)
         {
             _components = new Dictionary<string, TvComponentMetadata>();
-            _pendingAdds = new Dictionary<string, (TvComponentMetadata Metadata, Action AfterAdd)>();
+            _pendingAdds = new Dictionary<string, (TvComponentMetadata Metadata, Action<ITuiEngine> AfterAdd)>();
             _pendingRemovalsPhase1 = new Dictionary<string, TvComponentMetadata>();
             _pendingRemovalsPhase2 = new Dictionary<string, TvComponentMetadata>();
             _viewportsToClear = new List<IViewport>();
-            Engine = owner;
+            _engine = engine;
+            _serviceProvider = serviceProvider;
         }
 
-        public IComponentMetadata Add(TvComponent component, Action afterAddAction = null)
+        public IComponentMetadata Add(TvComponent component, Action<ITuiEngine> afterAddAction = null)
         {
             _pendingAdds.Add(component.Name, (component.Metadata as TvComponentMetadata, afterAddAction));
             return component.Metadata;
@@ -103,9 +108,9 @@ namespace Tvision2.Core.Engine
                 var afterAdd = kvp.Value.AfterAdd;
                 _components.Add(kvp.Key, metadata);
                 CreateNeededBehaviors(metadata.Component);
-                metadata.MountedTo(this);
+                metadata.MountedTo(_engine);
                 metadata.Component.Invalidate();
-                afterAdd?.Invoke();
+                afterAdd?.Invoke(_engine);
                 OnComponentAdded(metadata);
             }
         }
@@ -115,7 +120,7 @@ namespace Tvision2.Core.Engine
             var behaviorsToBeCreated = component.BehaviorsMetadatas.Where(bm => !bm.Created).ToList();
             foreach (var bm in behaviorsToBeCreated)
             {
-                bm.CreateBehavior(Engine.ServiceProvider);
+                bm.CreateBehavior(_serviceProvider);
             }
         }
 

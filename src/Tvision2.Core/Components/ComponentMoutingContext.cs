@@ -7,28 +7,28 @@ namespace Tvision2.Core.Components
 {
     public struct ComponentMoutingContext
     {
-        public IComponentTree OwnerTree { get; }
+        public ITuiEngine OwnerEngine { get; }
         public TvComponent Component { get; }
 
-        public ComponentMoutingContext(IComponentTree tree, TvComponent component)
+        public ComponentMoutingContext(ITuiEngine ownerEngine, TvComponent component)
         {
-            OwnerTree = tree;
+            OwnerEngine = ownerEngine;
             Component = component;
         }
     }
 
     public struct ComponentMountingCancellableContext
     {
-        public IComponentTree OwnerTree { get; }
+        public ITuiEngine OwnerEngine { get; }
         public TvComponent Component { get; }
 
         public bool IsCancelled { get; private set; }
 
         public bool Cancel() => IsCancelled = true;
 
-        public ComponentMountingCancellableContext(IComponentTree tree, TvComponent component)
+        public ComponentMountingCancellableContext(ITuiEngine ownerEngine, TvComponent component)
         {
-            OwnerTree = tree;
+            OwnerEngine = ownerEngine;
             Component = component;
             IsCancelled = false;
         }

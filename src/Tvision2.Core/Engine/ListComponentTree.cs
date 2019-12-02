@@ -14,8 +14,6 @@ namespace Tvision2.Core.Engine
 
         public int Count => _myComponents.Count;
 
-        public TuiEngine Engine => _parent.Engine;
-
         public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
         public event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
 
@@ -25,7 +23,7 @@ namespace Tvision2.Core.Engine
             _parent = root;
         }
 
-        public IComponentMetadata Add(TvComponent component, Action afterAddAction = null)
+        public IComponentMetadata Add(TvComponent component, Action<ITuiEngine> afterAddAction)
         {
             var metadata = _parent.Add(component, afterAddAction);
             _myComponents.Add(component);

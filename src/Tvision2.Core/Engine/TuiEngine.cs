@@ -30,7 +30,7 @@ namespace Tvision2.Core.Engine
         public TuiEngine(Tvision2Options options, IServiceProvider serviceProvider)
         {
             ConsoleDriver = options.ConsoleDriver ?? throw new ArgumentException("No console driver defined");
-            _ui = new ComponentTree(this);
+            _ui = new ComponentTree(this, serviceProvider);
             _eventPumper = new EventPumper(ConsoleDriver);
             _watcher = new Stopwatch();
             ServiceProvider = serviceProvider;

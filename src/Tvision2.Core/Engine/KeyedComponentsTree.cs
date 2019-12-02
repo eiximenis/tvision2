@@ -17,8 +17,6 @@ namespace Tvision2.Core.Engine
 
         public int ItemsCount => _myComponents.Count;
 
-        TuiEngine IComponentTree.Engine => _parent.Engine;
-
         public IEnumerable<KeyValuePair<T, ListComponentTree>> Items => _myComponents;
 
         public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
@@ -38,7 +36,7 @@ namespace Tvision2.Core.Engine
             _parent = root;
         }
 
-        IComponentMetadata IComponentTree.Add(TvComponent component, Action afterAddAction = null)
+        IComponentMetadata IComponentTree.Add(TvComponent component, Action<ITuiEngine> afterAddAction)
         {
             if (_myComponents.ContainsKey(_currentKey))
             {

@@ -11,6 +11,7 @@ namespace Tvision2.DependencyInjection
 {
     public static class TvControlsTuiEngineBuilderExtensions
     {
+
         public static Tvision2Setup AddTvControls(this Tvision2Setup setup, Action<ISkinManagerBuilder> skinOptions = null)
         {
 
@@ -20,7 +21,7 @@ namespace Tvision2.DependencyInjection
             {
                 sc.AddSingleton<ControlsTree>(tree);
                 sc.AddSingleton<IControlsTree>(tree);
-                sc.AddSingleton<ISkinManager>(new SkinManager());
+                sc.AddSingleton<ISkinManager, SkinManager>();
             });
 
             setup.AddHook<ChangeFocusEventHook>();

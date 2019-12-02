@@ -14,11 +14,7 @@ namespace Tvision2.Controls
         public static ITvControlCreationParametersBuilder<TState> ForDefaultState<TState>(Action<TState> stateCfg = null)
             where TState : IDirtyObject, new()
         {
-            return new TvControlCreationParametersBuilder<TState>(() =>
-            {
-                var state = new TState();
-                return state;
-            }).ConfigureState(stateCfg);
+            return new TvControlCreationParametersBuilder<TState>(() => new TState()).ConfigureState(stateCfg);
         }
 
     }

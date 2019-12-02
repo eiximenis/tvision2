@@ -43,10 +43,10 @@ namespace Tvision2.MidnightCommander
             var dvpf = _layoutManager.DynamicViewportFactory;
 
             var mainStackPanel = new TvStackPanel(tui.UI, "mainStackPanel");
-            mainStackPanel.AsComponent().AddViewport(dvpf.Create(vpf => vpf.FullViewport().Translate(new TvPoint(0, 1)).Grow(0, -3)));
-            mainStackPanel.Layout.Add("*", "3");
+            mainStackPanel.AsComponent().AddViewport(dvpf.Create(vpf => vpf.FullViewport()));
+            mainStackPanel.Layout.Add("1","*", "3");
             var listFilesGrid = new TvGrid(tui.UI, new GridState(1, 2));
-            mainStackPanel.At(0).Add(listFilesGrid);
+            mainStackPanel.At(1).Add(listFilesGrid);
             tui.UI.Add(mainStackPanel);
             var textbox = new TvTextbox(TvTextbox.CreationParametersBuilder().UseSkin(skin).UseViewport(null));
             var actind = new TvActivityIndicator(TvActivityIndicator.CreationParametersBuilder().UseSkin(skin).UseViewport(new Viewport(new TvPoint(0, 22),new TvBounds(1, 1), 0)));
@@ -75,11 +75,14 @@ namespace Tvision2.MidnightCommander
                 .AppliesToColumn(1);
 
             var menu = new TvMenuBar(TvMenuBar.CreationParametersBuilder(new[] { "_Left", "_Edit", "_Command", "_Options", "_Help", "_Right" })
-                .UseSkin(skin).UseViewport(dvpf.Create(vpf => vpf.FullViewport().TakeRows(1, 0))), opt =>
+                .UseSkin(skin), opt =>
                  {
                      opt.ItemsSpacedBy(4);
                      opt.UseHotKey(System.ConsoleKey.F9);
                  });
+            mainStackPanel.At(0).Add(menu);
+
+            menu.State["Left"].AddChild("_Exit");
 
             //var window = new TvWindow(skin, vpf.FullViewport().CreateCentered(20, 10), new WindowState(tui.UI));
             //var label = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 9, 1, 0), new LabelState() { Text = "In Window" });
@@ -131,10 +134,8 @@ namespace Tvision2.MidnightCommander
             listFilesGrid.At(0, 1).Add(right);
             var bottom = new TvStackPanel(tui.UI, "BottomContainer");
             bottom.Layout.Add(new LayoutSize());
-            bottom.AsComponent().AddViewport(dvpf.Create(vpf => vpf.BottomViewport(2)));
             bottom.At(0).Add(textbox);
-            tui.UI.Add(bottom);
-            tui.UI.Add(menu);
+            mainStackPanel.At(2).Add(bottom);
 
             //tui.UI.Add(window);
 

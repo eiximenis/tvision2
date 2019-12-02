@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +25,8 @@ namespace Microsoft.Extensions.Hosting
             {
                 sc.AddSingleton<Tvision2Options>(setup.Options as Tvision2Options);
                 sc.AddSingleton<ITuiEngine, TuiEngine>();
+                sc.AddSingleton<IComponentTree, ComponentTree>();
+
             });
 
             return builder;

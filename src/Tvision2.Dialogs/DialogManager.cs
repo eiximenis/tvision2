@@ -13,14 +13,16 @@ namespace Tvision2.Dialogs
         private readonly ISkinManager _skinManager;
         private readonly IComponentTree _ui;
         private readonly List<TvControlMetadata> _outsideDialogControls;
+        private readonly IControlsTree _rootControls;
 
         public TvDialog DialogShown { get; private set; }
 
-        public DialogManager(ISkinManager skinManager, ITuiEngine engine)
+        public DialogManager(ISkinManager skinManager, ITuiEngine engine, IControlsTree rootControls)
         { 
             _skinManager = skinManager;
             _ui = engine.UI;
             _outsideDialogControls = new List<TvControlMetadata>();
+            _rootControls = rootControls;
         }
 
         public TvDialog CreateDialog(IViewport viewport, Action<TvDialog> dialogSetup, string name = null)
@@ -51,12 +53,11 @@ namespace Tvision2.Dialogs
 
         public void ShowDialog(TvDialog dialog)
         {
-            _ui.Add(dialog, () =>
+            _ui.Add(dialog, _ =>
             {
-                var controlsTree = dialog.State.UI.RootControls();
-                var insideControls = dialog.State.UI.OwnedControls().Union(dialog.State.Buttons.Select(b => b.Metadata));
+                var insideControls = dialog.State.UI.OwnedControls(_rootControls).Union(dialog.State.Buttons.Select(b => b.Metadata));
 
-                foreach (var controlMetadata in controlsTree.ControlsMetadata)
+                foreach (var controlMetadata in _rootControls.ControlsMetadata)
                 {
                     if (!insideControls.Contains(controlMetadata))
                     {

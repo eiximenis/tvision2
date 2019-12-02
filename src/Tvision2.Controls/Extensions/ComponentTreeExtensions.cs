@@ -9,7 +9,7 @@ namespace Tvision2.Core.Engine
 {
     public static class ComponentTreeExtensions_Controls
     {
-        public static void Add(this IComponentTree componentTree, ITvControl control, Action afterAdd = null)
+        public static void Add(this IComponentTree componentTree, ITvControl control, Action<ITuiEngine> afterAdd = null)
         {
             componentTree.Add(control.AsComponent(), afterAdd);
         }
@@ -19,12 +19,10 @@ namespace Tvision2.Core.Engine
             return componentTree.Remove(control.AsComponent());
         } 
 
-        public static IControlsTree RootControls(this IComponentTree componentTree) => componentTree.Engine.ServiceProvider.GetService<IControlsTree>();
 
-        public static IEnumerable<TvControlMetadata> OwnedControls(this IComponentTree componentTree)
+        public static IEnumerable<TvControlMetadata> OwnedControls(this IComponentTree componentTree, IControlsTree controlsTree)
         {
-            var allControls = componentTree.RootControls();
-            foreach (var ctlMetadata in allControls.ControlsMetadata)
+            foreach (var ctlMetadata in controlsTree.ControlsMetadata)
             {
                 var ownedComponent = componentTree.Components.SingleOrDefault(c => c.ComponentId == ctlMetadata.ControlId);
                 if (ownedComponent != null)
@@ -33,5 +31,7 @@ namespace Tvision2.Core.Engine
                 }
             }
         }
+
+        public static IControlsTree GetControlsTree(this ITuiEngine engine) => engine.ServiceProvider.GetService<IControlsTree>();
     }
 }

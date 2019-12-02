@@ -25,15 +25,13 @@ namespace Tvision2.Layouts.Grid
             CurrentRow = 0;
         }
 
-        public TuiEngine Engine => _root.Engine;
-
         public IEnumerable<TvComponent> Components => _childs.Values;
 
         public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
         public event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
 
 
-        public IComponentMetadata Add(TvComponent component, Action afterAddAction = null)
+        public IComponentMetadata Add(TvComponent component, Action<ITuiEngine> afterAddAction)
         {
             _childs.Add((CurrentRow, CurrentColumn), component);
             _root.Add(component, afterAddAction);

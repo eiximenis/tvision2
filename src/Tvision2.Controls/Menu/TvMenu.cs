@@ -36,15 +36,15 @@ namespace Tvision2.Controls.Menu
 
         protected override void OnViewportCreated(IViewport viewport)
         {
-            var builder = TvList.CreationParametersBuilder(State.Options);
+            var builder = TvList.CreationParametersBuilder(State.Entries);
             builder.UseSkin(_skin);
             builder.UseTopLeftPosition(viewport.Position);
             _list = new TvList<MenuEntry>(builder);
         }
 
-        protected override void OnControlMounted(IComponentTree owner)
+        protected override void OnControlMounted(ITuiEngine engine)
         {
-            _ownerUi = owner;
+            _ownerUi = engine.UI;
             _ownerUi.Add(_list);
         }
 

@@ -14,7 +14,6 @@ namespace Tvision2.Core.Engine
         private readonly ActionChain<ComponentMoutingContext> _onComponentUnmounted;
         private readonly ActionChain<ComponentMountingCancellableContext> _onComponentWillBeUnmounted;
 
-        public ITuiEngine Engine { get; private set; }
         public bool IsMounted { get; private set; }
 
 
@@ -51,25 +50,23 @@ namespace Tvision2.Core.Engine
             _onComponentWillBeUnmounted.Add(unmountAction);
         }
 
-        internal bool CanBeUnmountedFrom(ComponentTree owner)
+        internal bool CanBeUnmountedFrom(ITuiEngine ownerEngine)
         {
-            var ctx = new ComponentMountingCancellableContext(owner, this.Component);
+            var ctx = new ComponentMountingCancellableContext(ownerEngine, this.Component);
             _onComponentWillBeUnmounted.Invoke(ctx);
             return !ctx.IsCancelled;
         }
 
-        internal void MountedTo(IComponentTree owner)
+        internal void MountedTo(ITuiEngine ownerEngine)
         {
-            Engine = owner.Engine;
             IsMounted = true;
-            _onComponentMounted.Invoke(new ComponentMoutingContext(owner, this.Component));
+            _onComponentMounted.Invoke(new ComponentMoutingContext(ownerEngine, this.Component));
         }
 
-        internal void UnmountedFrom(ComponentTree owner)
+        internal void UnmountedFrom(ITuiEngine ownerEngine)
         {
-            Engine = null;
             IsMounted = false;
-            _onComponentUnmounted.Invoke(new ComponentMoutingContext(owner, this.Component));
+            _onComponentUnmounted.Invoke(new ComponentMoutingContext(ownerEngine, this.Component));
         }
 
 

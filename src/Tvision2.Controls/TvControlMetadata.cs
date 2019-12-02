@@ -51,6 +51,8 @@ namespace Tvision2.Controls
         public ITvControl Control { get; }
         public Guid OwnerId { get; private set; }
 
+        public TvControlCreationParameters CreationParameters { get; }
+
         public bool AcceptFocus(TvControlMetadata currentFocused)
         {
             var accept = CanFocus;
@@ -63,8 +65,9 @@ namespace Tvision2.Controls
         }
 
 
-        public TvControlMetadata(ITvControl control, Action<TvControlMetadataOptions> optionsAction = null)
+        public TvControlMetadata(ITvControl control, TvControlCreationParameters creationParameters, Action<TvControlMetadataOptions> optionsAction = null)
         {
+            CreationParameters = creationParameters;
             _onFocusGained = new ActionChain<TvFocusEventData>();
             _onFocusLost = new ActionChain<TvFocusEventData>();
             Control = control;
@@ -95,6 +98,15 @@ namespace Tvision2.Controls
             {
                 OwnerTree?.Focus(this);
             }
+        }
+
+        public void AddCreatedControl<TState>(TvControl<TState> control)
+            where TState : IDirtyObject
+        {
+            if (OwnerTree == null) return;
+
+            
+
         }
 
         internal void DoFocus()
