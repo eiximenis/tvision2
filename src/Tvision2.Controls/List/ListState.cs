@@ -7,9 +7,9 @@ namespace Tvision2.Controls.List
 
     public static class ListState
     {
-        public static ListState<T> FromEnumerable<T>(IEnumerable<T> data)
+        public static ListState<T> FromEnumerable<T>(IEnumerable<T> data, params TvListColumnSpec<T>[] columns)
         {
-            return new ListState<T>(data);
+            return new ListState<T>(data, columns);
         }
     }
 

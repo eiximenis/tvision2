@@ -5,6 +5,7 @@ using Tvision2.Controls.List;
 using Tvision2.Controls.Styles;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
+using Tvision2.Controls.Extensions;
 
 namespace Tvision2.Controls.Menu
 {
@@ -29,6 +30,7 @@ namespace Tvision2.Controls.Menu
             return TvControlCreationParametersBuilder.ForState<MenuState>(() => new MenuState(options));
         }
 
+
         protected override void ConfigureMetadataOptions(TvControlMetadataOptions options)
         {
             options.AvoidDrawControl();
@@ -36,9 +38,15 @@ namespace Tvision2.Controls.Menu
 
         protected override void OnViewportCreated(IViewport viewport)
         {
-            var builder = TvList.CreationParametersBuilder(State.Entries);
+
+            var builder = TvList.CreationParametersBuilder<MenuEntry>(
+                    () => ListState<MenuEntry>
+                        .From(State.Entries)
+                        .AddColumn(me => me.Text)
+                        .Build());
             builder.UseSkin(_skin);
-            builder.UseTopLeftPosition(viewport.Position);
+            builder.UseViewport(viewport);
+            //builder.UseTopLeftPosition(viewport.Position);
             _list = new TvList<MenuEntry>(builder);
         }
 
@@ -48,5 +56,10 @@ namespace Tvision2.Controls.Menu
             _ownerUi.Add(_list);
         }
 
+        protected override void OnControlUnmounted(ITuiEngine engine)
+        {
+            _ownerUi.Remove(_list);
+            _ownerUi = null;
+        }
     }
 }

@@ -22,6 +22,7 @@ namespace Tvision2.Controls.List
             return TvControlCreationParametersBuilder.ForState(() => ListState.FromEnumerable(initialData));
         }
 
+
     }
 
     public class TvList<TItem> : TvControl<ListState<TItem>>

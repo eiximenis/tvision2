@@ -15,14 +15,18 @@ namespace Tvision2.Controls.Menu
 
         private readonly TvMenuBarOptions _options;
         private Guid _hookGuid;
+        protected readonly TvControlCreationParameters _creationParameters;
+        private ITuiEngine _engine;
 
         public TvMenuBar(ITvControlCreationParametersBuilder<MenuState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : this(parameters.Build(), optionsAction) { }
         public TvMenuBar(TvControlCreationParameters<MenuState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : base(parameters)
         {
+            _creationParameters = parameters;
             _hookGuid = Guid.Empty;
             _options = new TvMenuBarOptions();
             optionsAction?.Invoke(_options);
             Metadata.CanFocus = false;
+            _engine = null;
         }
         public static ITvControlCreationParametersBuilder<MenuState> CreationParametersBuilder(IEnumerable<string> options)
         {
@@ -60,25 +64,36 @@ namespace Tvision2.Controls.Menu
 
         protected override IEnumerable<ITvBehavior<MenuState>> GetEventedBehaviors()
         {
-            yield return new MenuBarBehavior(Metadata, _options);
+            yield return new MenuBarBehavior(this, _options);
         }
 
         protected override void OnControlMounted(ITuiEngine engine)
-        { 
+        {
+            _engine = engine;
             if (_options.Hotkey != ConsoleKey.NoName)
             {
                 var evtHook = engine.EventHookManager;
-                _hookGuid =  evtHook.AddHook(new TvMenuBarHook(_options.Hotkey, Metadata));
+                _hookGuid = evtHook.AddHook(new TvMenuBarHook(_options.Hotkey, Metadata));
             }
         }
 
         protected override void OnControlUnmounted(ITuiEngine engine)
         {
+            _engine = null;
             if (_hookGuid != Guid.Empty)
             {
                 var evtHook = engine.EventHookManager;
                 evtHook.RemoveHook(_hookGuid);
             }
+        }
+
+        internal void EnableMenu(MenuState state)
+        {
+            var menu = new TvMenu(TvMenu.CreationParametersBuilder(new[] { "patata", "patata2" })
+                .UseViewport(new Viewport(new TvPoint(10, 10), new TvBounds(10, 20), Int32.MaxValue))
+                .UseSkin(_creationParameters.Skin));
+            _engine.UI.Add(menu);
+
         }
     }
 }

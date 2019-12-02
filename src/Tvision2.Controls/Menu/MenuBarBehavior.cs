@@ -10,10 +10,10 @@ namespace Tvision2.Controls.Menu
     public class MenuBarBehavior : KeyboardBehavior<MenuState>
     {
 
-        private readonly TvControlMetadata _owner;
+        private readonly TvMenuBar _owner;
         private readonly TvMenuBarOptions _options;
 
-        public MenuBarBehavior(TvControlMetadata owner, TvMenuBarOptions options)
+        public MenuBarBehavior(TvMenuBar owner, TvMenuBarOptions options)
         {
             _owner = owner;
             _options = options;
@@ -25,13 +25,13 @@ namespace Tvision2.Controls.Menu
 
             if (info.Key == _options.SelectKey)
             {
-                EnableMenu(updateContext.State);
+                _owner.EnableMenu(updateContext.State);
                 return true;
             }
 
             if (info.Key == _options.Hotkey)
             {
-                _owner.OwnerTree.ReturnFocusToPrevious();
+                _owner.Metadata.OwnerTree.ReturnFocusToPrevious();
                 return false;
             }
 
@@ -50,16 +50,7 @@ namespace Tvision2.Controls.Menu
 
         }
 
-        private void EnableMenu(MenuState state)
-        {
-            /*
-            var menu = new TvMenu(TvMenu.CreationParametersBuilder(new[] { "patata", "patata2" })
-                .UseViewport(new Viewport(new TvPoint(10, 10), 20))
-                    // Todo: Must find some skinresolver here :(
-                .UseSkin();
-            _owner.Control.AsComponent().Metadata.Engine.UI.Add(menu);
-            */
-        }
+
 
         protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<MenuState> updateContext) => false;
 
