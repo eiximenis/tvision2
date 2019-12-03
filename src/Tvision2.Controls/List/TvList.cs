@@ -80,7 +80,7 @@ namespace Tvision2.Controls.List
                         var attr = tvitem.Attributes[column];
                         if (selected)
                         {
-                            context.DrawStringAt(text, new TvPoint(1 + lenDrawn, idx + 1), selectedAttr);
+                            context.DrawStringAt(text, TvPoint.FromXY(1 + lenDrawn, idx + 1), selectedAttr);
                         }
                         else
                         {
@@ -88,7 +88,7 @@ namespace Tvision2.Controls.List
                             {
                                 attr = new Styles.StyleEntry(attr.Foreground, CurrentStyle.Standard.Background, attr.Attributes);
                             }
-                            context.DrawStringAt(text, new TvPoint(1 + lenDrawn, idx + 1), attr);
+                            context.DrawStringAt(text, TvPoint.FromXY(1 + lenDrawn, idx + 1), attr);
                         }
 
                         lenDrawn += text.Length;
@@ -96,13 +96,13 @@ namespace Tvision2.Controls.List
                     var remaining = viewport.Bounds.Cols - 2 - lenDrawn;
                     if (remaining > 0)
                     {
-                        context.DrawChars(' ', remaining, new TvPoint(1 + lenDrawn, idx + 1), selected ? selectedAttr : CurrentStyle.Standard);
+                        context.DrawChars(' ', remaining, TvPoint.FromXY(1 + lenDrawn, idx + 1), selected ? selectedAttr : CurrentStyle.Standard);
                     }
                 }
                 else
                 {
                     var attr = CurrentStyle.Standard;
-                    context.DrawChars(' ', viewport.Bounds.Cols - 2, new TvPoint(1, idx + 1), attr);
+                    context.DrawChars(' ', viewport.Bounds.Cols - 2, TvPoint.FromXY(1, idx + 1), attr);
                 }
             }
         }

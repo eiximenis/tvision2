@@ -18,7 +18,7 @@ namespace Tvision2.Controls.Extensions
             {
                 for (var idx=0; idx < count; idx++)
                 {
-                    var point = new TvPoint(location.Left + idx, location.Top);
+                    var point = TvPoint.FromXY(location.Left + idx, location.Top);
                     context.DrawChars(value, 1, point, style.ToCharacterAttribute(point, context.Viewport.Bounds));
                 }
             }
@@ -34,7 +34,7 @@ namespace Tvision2.Controls.Extensions
             {
                 for (var idx = 0; idx < value.Length; idx++)
                 {
-                    var point = new TvPoint(location.Left + idx, location.Top);
+                    var point = TvPoint.FromXY(location.Left + idx, location.Top);
                     context.DrawChars(value[idx], 1, point, style.ToCharacterAttribute(point, context.Viewport.Bounds));
                 }
             }
@@ -53,7 +53,7 @@ namespace Tvision2.Controls.Extensions
                 {
                     for (var col = 0; col < bounds.Cols; col++)
                     {
-                        var point = new TvPoint(col, row);
+                        var point = TvPoint.FromXY(col, row);
                         context.DrawChars(' ', 1, point, style.ToCharacterAttribute(point, context.Viewport.Bounds));
                     }
                 }

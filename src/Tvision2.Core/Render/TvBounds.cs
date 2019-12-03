@@ -10,11 +10,13 @@ namespace Tvision2.Core.Render
         public int Rows { get; }
         public int Cols { get; }
 
-        public TvBounds(int rows, int cols)
+        private TvBounds(int rows, int cols)
         {
             Rows = rows;
             Cols = cols;
         }
+
+        public static TvBounds FromRowsAndCols(int rows, int cols) => new TvBounds(rows, cols);
 
         public TvBounds SingleRow() => new TvBounds(1, Cols);
 

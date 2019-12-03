@@ -13,7 +13,7 @@ namespace Tvision2.Dialogs
     {
         internal TvDialog(ISkin skin, IViewport viewport, IComponentTree owner, string name = null)
             : base(new TvControlCreationParameters<DialogState>(
-                skin, viewport.Layer(ViewportLayer.Top, -1), 
+                skin, viewport.Layer(Layer.Top, -1), 
                 new DialogState(skin, name ?? $"TvDialog_{Guid.NewGuid()}")))
         {
             Metadata.CanFocus = false;
@@ -31,7 +31,7 @@ namespace Tvision2.Dialogs
             var pairIdx = CurrentStyle.Standard;
             for (var row = 1; row < context.Viewport.Bounds.Rows - 2; row++)
             {
-                context.DrawChars(' ', context.Viewport.Bounds.Cols - 2, new TvPoint(1, row), pairIdx);
+                context.DrawChars(' ', context.Viewport.Bounds.Cols - 2, TvPoint.FromXY(1, row), pairIdx);
             }
             context.Fill(pairIdx);
         }

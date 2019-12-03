@@ -35,7 +35,7 @@ namespace Tvision2.Controls.Button
             var focused = Metadata.IsFocused;
             var styleToUse = focused ? CurrentStyle.Focused : CurrentStyle.Standard;
             var value = $"[ {State.Text.ToString()} ]";
-            context.DrawStringAt(value, new TvPoint(0, 0), styleToUse);
+            context.DrawStringAt(value, TvPoint.Zero, styleToUse);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Tvision2.ConsoleDriver
         public void Init()
         {
 
-            ConsoleBounds = new TvBounds(Console.WindowHeight, Console.WindowWidth);
+            ConsoleBounds = TvBounds.FromRowsAndCols(Console.WindowHeight, Console.WindowWidth);
 
             Curses.setlocale(6, "");
             Curses.initscr();
@@ -127,7 +127,7 @@ namespace Tvision2.ConsoleDriver
 
         public void ProcessWindowEvent(TvWindowEvent windowEvent)
         {
-            ConsoleBounds = new TvBounds(Console.WindowHeight, Console.WindowWidth);
+            ConsoleBounds = TvBounds.FromRowsAndCols(Console.WindowHeight, Console.WindowWidth);
             windowEvent.Update(ConsoleBounds.Cols, ConsoleBounds.Rows);
         }
     }

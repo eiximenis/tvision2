@@ -2,20 +2,20 @@
 {
     public sealed class Viewport : IViewport
     {
-        private static Viewport _nullViewport = new Viewport(TvPoint.Zero, TvBounds.Empty, 0);
+        private static Viewport _nullViewport = new Viewport(TvPoint.Zero, TvBounds.Empty, Layer.Bottom);
         public TvPoint Position { get; }
         public TvBounds Bounds { get; }
 
-        public int ZIndex { get; }
+        public Layer ZIndex { get; }
 
 
         public static IViewport NullViewport => _nullViewport;
 
-        public Viewport(TvPoint point, int cols) : this(point, new TvBounds(0, cols), 0)
+        public Viewport(TvPoint point, int cols) : this(point, TvBounds.FromRowsAndCols(0, cols), Layer.Standard)
         {
         }
 
-        public Viewport(TvPoint point, TvBounds bounds, int zindex)
+        public Viewport(TvPoint point, TvBounds bounds, Layer zindex)
         {
             Position = point;
             Bounds = bounds;
@@ -25,7 +25,7 @@
 
 
 
-        public IViewport ResizeTo(int cols, int rows) => new Viewport(Position, new TvBounds(rows, cols), ZIndex);
+        public IViewport ResizeTo(int cols, int rows) => new Viewport(Position, TvBounds.FromRowsAndCols(rows, cols), ZIndex);
         public IViewport Grow(int ncols, int nrows) => new Viewport(Position, Bounds.Grow(nrows, ncols), ZIndex);
 
         public IViewport MoveTo(TvPoint newPos) => new Viewport(newPos, Bounds, ZIndex);

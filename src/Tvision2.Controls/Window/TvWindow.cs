@@ -69,7 +69,7 @@ namespace Tvision2.Controls.Window
             var pairIdx = CurrentStyle.Standard;
             for (var row = 1; row < context.Viewport.Bounds.Rows - 2; row++)
             {
-                context.DrawChars(' ', context.Viewport.Bounds.Cols - 2, new TvPoint(1, row), pairIdx);
+                context.DrawChars(' ', context.Viewport.Bounds.Cols - 2, TvPoint.FromXY(1, row), pairIdx);
             }
             context.Fill(pairIdx);
 

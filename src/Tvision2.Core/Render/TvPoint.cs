@@ -10,11 +10,13 @@ namespace Tvision2.Core.Render
         public int Left { get; } 
         public int Top { get; }
 
-        public TvPoint(int left, int top)
+        private TvPoint(int left, int top)
         {
             Left = left;
             Top = top;
         }
+
+        public static TvPoint FromXY(int x, int y) => new TvPoint(left: x, top: y);
 
         public static TvPoint operator+ (TvPoint first, TvPoint second)
         {

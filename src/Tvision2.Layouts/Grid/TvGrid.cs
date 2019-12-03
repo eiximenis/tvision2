@@ -96,7 +96,7 @@ namespace Tvision2.Layouts.Grid
             var startCol = ctrCol * cellWidth;
             var startRow = ctrRow * cellHeight;
 
-            return myViewport.InnerViewport(new TvPoint(startCol, startRow), new TvBounds(cellHeight, cellWidth));
+            return myViewport.InnerViewport(TvPoint.FromXY(startCol, startRow), TvBounds.FromRowsAndCols(cellHeight, cellWidth));
 
         }
     }

@@ -7,6 +7,7 @@ using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Controls.Extensions;
 using Tvision2.Core.Components;
+using System.Linq;
 
 namespace Tvision2.Controls.Menu
 {
@@ -50,16 +51,16 @@ namespace Tvision2.Controls.Menu
                 for (var pos = 0; pos < text.Length; pos++)
                 {
                     var pairIdxToUse = pos == option.ShortcutPos ? alternatePairIdx : pairIdx;
-                    context.DrawStringAt($"{option.Text[pos]}", new TvPoint(coordx + pos, 0), pairIdxToUse);
+                    context.DrawStringAt($"{option.Text[pos]}", TvPoint.FromXY(coordx + pos, 0), pairIdxToUse);
                 }
 
                 coordx += option.Text.Length;
-                context.DrawChars(' ', _options.SpaceBetweenItems, new TvPoint(coordx, 0), pairIdx);
+                context.DrawChars(' ', _options.SpaceBetweenItems, TvPoint.FromXY(coordx, 0), pairIdx);
                 coordx += _options.SpaceBetweenItems;
                 optidx++;
             }
 
-            context.DrawChars(' ', context.Viewport.Bounds.Cols - coordx, new TvPoint(coordx, 0), CurrentStyle.Standard);
+            context.DrawChars(' ', context.Viewport.Bounds.Cols - coordx, TvPoint.FromXY(coordx, 0), CurrentStyle.Standard);
         }
 
         protected override IEnumerable<ITvBehavior<MenuState>> GetEventedBehaviors()
@@ -89,9 +90,12 @@ namespace Tvision2.Controls.Menu
 
         internal void EnableMenu(MenuState state)
         {
-            var menu = new TvMenu(TvMenu.CreationParametersBuilder(new[] { "patata", "patata2" })
-                .UseViewport(new Viewport(new TvPoint(10, 10), new TvBounds(10, 20), Int32.MaxValue))
-                .UseSkin(_creationParameters.Skin));
+            var entry = state.SelectedEntry;
+            if (!entry.ChildEntries.Any()) return;
+
+            var menu = new TvMenu(TvMenu.CreationParametersBuilder(entry.ChildEntries.Select(e => e.Text))
+                .UseViewport(new Viewport(TvPoint.FromXY(10, 10), TvBounds.FromRowsAndCols(10, 20), Layer.Top))
+                .UseSkin(_creationParameters.Skin));;
             _engine.UI.Add(menu);
 
         }

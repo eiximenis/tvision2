@@ -18,7 +18,7 @@ namespace Tvision2.Core.Render
             {
                 text = text.Substring(0, boxModel.Bounds.Cols);
             }
-            console.DrawAt(text, consoleLocation, zindex, attr);
+            console.DrawAt(text, consoleLocation, (int)zindex, attr);
         }
 
         internal static void DrawChars(char value, int count, TvPoint location, CharacterAttribute attribute, IViewport boxModel, VirtualConsole console)
@@ -26,7 +26,7 @@ namespace Tvision2.Core.Render
 
             var chars = new ConsoleCharacter[count];
             var zindex = boxModel.ZIndex;
-            var cc = new ConsoleCharacter() { Character = value,  Attributes = attribute, ZIndex = zindex };
+            var cc = new ConsoleCharacter() { Character = value,  Attributes = attribute, ZIndex = (int)zindex };
             var pos = ViewPointToConsolePoint(location, boxModel.Position);
             console.CopyCharacter(pos, cc, count);
         }
@@ -39,17 +39,17 @@ namespace Tvision2.Core.Render
 
         public static void Fill(CharacterAttribute attr, IViewport boxModel, VirtualConsole console)
         {
-            var location = ViewPointToConsolePoint(new TvPoint(0, 0), boxModel.Position);
+            var location = ViewPointToConsolePoint(TvPoint.FromXY(0, 0), boxModel.Position);
             var vpRows = boxModel.Bounds.Rows;
             for (var rows = 0; rows < vpRows; rows++)
             {
-                console.DrawAt(new string(' ', boxModel.Bounds.Cols), location + new TvPoint(0, rows), boxModel.ZIndex, attr);
+                console.DrawAt(new string(' ', boxModel.Bounds.Cols), location +  TvPoint.FromXY(0, rows), (int)boxModel.ZIndex, attr);
             }
         }
 
         public static void Clear(IViewport boxModel, VirtualConsole console)
         {
-            var location = ViewPointToConsolePoint(new TvPoint(0, 0), boxModel.Position);
+            var location = ViewPointToConsolePoint(TvPoint.FromXY(0, 0), boxModel.Position);
             console.DrawAt(new string(' ', boxModel.Bounds.Cols), location, int.MinValue, new CharacterAttribute());
         }
 

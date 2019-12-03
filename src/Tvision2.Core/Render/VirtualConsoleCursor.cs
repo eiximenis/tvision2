@@ -25,7 +25,7 @@
         public VirtualConsoleCursor()
         {
             ActionPending = VirtualConsoleCursorAction.None;
-            Position = new TvPoint(0, 0);
+            Position = TvPoint.Zero;
         }
 
         public void MoveTo(int left, int top)
@@ -37,7 +37,7 @@
 
             if (Position.Left != left || Position.Top != top)
             {
-                Position = new TvPoint(left, top);
+                Position = TvPoint.FromXY(left, top);
                 MovementPending = true;
             }
         }

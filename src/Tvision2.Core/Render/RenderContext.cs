@@ -54,7 +54,7 @@ namespace Tvision2.Core.Render
 
         void ICursorContext.SetCursorAt(int left, int top)
         {
-            var point = ViewportHelper.ViewPointToConsolePoint(new TvPoint(left, top), Viewport.Position);
+            var point = ViewportHelper.ViewPointToConsolePoint(TvPoint.FromXY(left, top), Viewport.Position);
             _console.Cursor.MoveTo(point.Left, point.Top);
         }
 

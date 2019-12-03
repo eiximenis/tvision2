@@ -40,7 +40,7 @@ namespace Tvision2.Controls.Label
             var pairIdx = focused ? CurrentStyle.Focused : CurrentStyle.Standard;
             var value = state.Text.ToString() ?? "";
             context.Fill(pairIdx);
-            context.DrawStringAt(value, new TvPoint(0, 0), pairIdx);
+            context.DrawStringAt(value, TvPoint.Zero, pairIdx);
         }
     }
 }

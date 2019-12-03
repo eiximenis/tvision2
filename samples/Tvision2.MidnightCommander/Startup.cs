@@ -49,7 +49,7 @@ namespace Tvision2.MidnightCommander
             mainStackPanel.At(1).Add(listFilesGrid);
             tui.UI.Add(mainStackPanel);
             var textbox = new TvTextbox(TvTextbox.CreationParametersBuilder().UseSkin(skin).UseViewport(null));
-            var actind = new TvActivityIndicator(TvActivityIndicator.CreationParametersBuilder().UseSkin(skin).UseViewport(new Viewport(new TvPoint(0, 22),new TvBounds(1, 1), 0)));
+            var actind = new TvActivityIndicator(TvActivityIndicator.CreationParametersBuilder().UseSkin(skin).UseViewport(new Viewport(TvPoint.FromXY(0, 22),TvBounds.FromRowsAndCols(1, 1), Layer.Standard)));
             tui.UI.Add(actind);
 
 
@@ -59,14 +59,14 @@ namespace Tvision2.MidnightCommander
                         .AddFixedColumn(fi => fi.IsDirectory ? "*" : " ", width: 2)
                         .AddColumn(fi => fi.Name)
                         .Build())
-                    .UseSkin(skin).UseViewport(new Viewport(new TvPoint(0, 0), new TvBounds(1,10), 0)));
+                    .UseSkin(skin).UseViewport(new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(1,10), Layer.Standard)));
 
             left.StyleProvider
                 .Use(Core.Colors.TvColor.Red)
                 .When(f => (f.FileAttributes & System.IO.FileAttributes.Hidden) == System.IO.FileAttributes.Hidden)
                 .AppliesToColumn(1);
 
-            var right = new TvList<FileItem>(new TvControlCreationParameters<ListState<FileItem>>(skin, new Viewport(new TvPoint(0, 0),new TvBounds(1, 10), 0),
+            var right = new TvList<FileItem>(new TvControlCreationParameters<ListState<FileItem>>(skin, new Viewport(TvPoint.Zero ,TvBounds.FromRowsAndCols(1, 10), Layer.Standard),
                 new ListState<FileItem>(Enumerable.Empty<FileItem>(), new TvListColumnSpec<FileItem>() { Transformer = f => f.Name })));
 
             right.StyleProvider
@@ -85,11 +85,11 @@ namespace Tvision2.MidnightCommander
             menu.State["Left"].AddChild("_Exit");
 
             //var window = new TvWindow(skin, vpf.FullViewport().CreateCentered(20, 10), new WindowState(tui.UI));
-            //var label = new TvLabel(skin, new Viewport(new TvPoint(0, 0), 9, 1, 0), new LabelState() { Text = "In Window" });
+            //var label = new TvLabel(skin, new Viewport(new TvPoint.FromXY(0, 0), 9, 1, 0), new LabelState() { Text = "In Window" });
             //window.State.UI.Add(label);
 
             var label = new TvLabel(TvLabel.CreationParametersBuilder(s => s.Text = "In Window" )
-                .UseSkin(skin).UseViewport(new Viewport(new TvPoint(0, 0), new TvBounds(1,9), 0)));
+                .UseSkin(skin).UseViewport(new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(1,9), Layer.Standard)));
             /*
             var dialog = _dialogManager.CreateDialog(dvpf.Create(vpf => vpf.FullViewport().CreateCentered(20, 10)),
                 d => { d.State.UI.Add(label); });

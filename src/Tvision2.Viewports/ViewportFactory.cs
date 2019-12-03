@@ -13,13 +13,13 @@ namespace Tvision2.Viewports
 
         public IViewport FullViewport()
         {
-            return new Viewport(TvPoint.Zero, _console.ConsoleBounds, zindex: 0);
+            return new Viewport(TvPoint.Zero, _console.ConsoleBounds, Layer.Standard);
         }
 
         public IViewport BottomViewport(int vprows = 1)
         {
             var bounds = _console.ConsoleBounds;
-            return new Viewport(new TvPoint(0, bounds.Rows - vprows), new TvBounds (vprows, bounds.Cols), zindex: 0);
+            return new Viewport(TvPoint.FromXY(0, bounds.Rows - vprows), TvBounds.FromRowsAndCols (vprows, bounds.Cols), Layer.Standard);
         }
     }
 }

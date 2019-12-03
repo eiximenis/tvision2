@@ -41,10 +41,10 @@ namespace Tvision2.Controls.Textbox
         protected override void OnDraw(RenderContext<TextboxState> context)
         {
             var pairIdx = Metadata.IsFocused ? CurrentStyle.Focused : CurrentStyle.Standard;
-            context.DrawChars(' ', context.Viewport.Bounds.Cols, new TvPoint(0, 0), pairIdx);
+            context.DrawChars(' ', context.Viewport.Bounds.Cols, TvPoint.Zero, pairIdx);
             if (!string.IsNullOrEmpty(State.Text))
             {
-                context.DrawStringAt(State.Text, new TvPoint(0, 0), pairIdx);
+                context.DrawStringAt(State.Text, TvPoint.Zero, pairIdx);
             }
         }
     }

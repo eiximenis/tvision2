@@ -26,17 +26,17 @@ namespace Tvision2.Controls.Drawers
             if (rows > 2 && columns > 2)
             {
                 context.DrawChars('\u2554', 1, TvPoint.Zero,colorIdx);
-                context.DrawChars('\u2557', 1, new TvPoint(columns - 1, 0), colorIdx);
-                context.DrawChars('\u2550', columns - 2, new TvPoint(1, 0), colorIdx);
+                context.DrawChars('\u2557', 1, TvPoint.FromXY(columns - 1, 0), colorIdx);
+                context.DrawChars('\u2550', columns - 2, TvPoint.FromXY(1, 0), colorIdx);
                 for (var row = 1; row < rows - 1; row++)
                 {
-                    context.DrawChars('\u2551', 1, new TvPoint(0, row), colorIdx);
-                    context.DrawChars('\u2551', 1, new TvPoint(columns - 1, row), colorIdx);
+                    context.DrawChars('\u2551', 1, TvPoint.FromXY(0, row), colorIdx);
+                    context.DrawChars('\u2551', 1, TvPoint.FromXY(columns - 1, row), colorIdx);
                 }
 
-                context.DrawChars('\u255a', 1, new TvPoint(0, rows - 1), colorIdx);
-                context.DrawChars('\u255d', 1, new TvPoint(columns - 1, rows - 1), colorIdx);
-                context.DrawChars('\u2550', columns - 2, new TvPoint(1, rows - 1), colorIdx);
+                context.DrawChars('\u255a', 1, TvPoint.FromXY(0, rows - 1), colorIdx);
+                context.DrawChars('\u255d', 1, TvPoint.FromXY(columns - 1, rows - 1), colorIdx);
+                context.DrawChars('\u2550', columns - 2, TvPoint.FromXY(1, rows - 1), colorIdx);
             }
         }
     }

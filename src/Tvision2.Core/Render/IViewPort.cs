@@ -7,7 +7,7 @@ namespace Tvision2.Core.Render
     public interface IViewport : IEquatable<IViewport>
     {
         TvPoint Position { get; }
-        int ZIndex { get; }
+        Layer ZIndex { get; }
         TvBounds Bounds { get; }
 
         IViewport ResizeTo(int cols, int rows);

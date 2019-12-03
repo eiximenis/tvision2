@@ -47,7 +47,7 @@ namespace Tvision2.TrueColor
                         ctx.State.Fore = TvColor.FromRGB((byte)((red + 1) % 256), (byte)((green + 1) % 256), (byte)((blue + 1) % 256));
                         return true;
                     });
-                    helloWorld.AddViewport(new Viewport(new TvPoint(10, 10), 30));
+                    helloWorld.AddViewport(new Viewport(TvPoint.FromXY(10, 10), 30));
                     tui.UI.Add(helloWorld);
                     return Task.CompletedTask;
                 });

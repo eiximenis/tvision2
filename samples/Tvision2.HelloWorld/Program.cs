@@ -24,7 +24,7 @@ namespace Tvision2.HelloWorld
                     {
                         ctx.DrawStringAt(ctx.State, TvPoint.Zero, new TvColorPair(TvColor.Blue, TvColor.Yellow)) ;
                     });
-                    helloWorld.AddViewport(new Viewport(new TvPoint(10, 10), 30));
+                    helloWorld.AddViewport(new Viewport(TvPoint.FromXY(10, 10), 30));
                     tui.UI.Add(helloWorld);
                     return Task.CompletedTask;
                 });

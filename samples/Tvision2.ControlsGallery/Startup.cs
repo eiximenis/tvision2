@@ -37,10 +37,10 @@ namespace Tvision2.ControlsGallery
                 state.AddValue(new DropDownValue("2", "Two"));
                 state.AddValue(new DropDownValue("3", "Three"));
             })
-            .UseSkin(_skinManager.CurrentSkin).UseViewport(new Viewport(new TvPoint(10, 10), new TvBounds(5,10), 0)));
+            .UseSkin(_skinManager.CurrentSkin).UseViewport(new Viewport(TvPoint.FromXY(10, 10), TvBounds.FromRowsAndCols(5,10), Layer.Standard)));
             var button = new TvButton(
                 TvButton.CreationParametersBuilder(s => s.Text = "Click Me!")
-                .UseSkin(_skinManager.CurrentSkin).UseViewport(new Viewport(new TvPoint(22, 10), 15)));
+                .UseSkin(_skinManager.CurrentSkin).UseViewport(new Viewport(TvPoint.FromXY(22, 10), 15)));
 
             button.OnClick.Add(state =>
             {

@@ -32,7 +32,7 @@ namespace Tvision2.Viewports
             return new DynamicViewport(_factory, _creator);
         }
 
-        public int ZIndex => _viewport.ZIndex;
+        public Layer ZIndex => _viewport.ZIndex;
 
         public TvBounds Bounds => _viewport.Bounds;
 

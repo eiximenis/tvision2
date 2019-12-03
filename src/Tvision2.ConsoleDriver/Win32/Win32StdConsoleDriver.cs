@@ -28,7 +28,7 @@ namespace Tvision2.ConsoleDriver
             ConsoleNative.GetConsoleScreenBufferInfo(_hstdout, out csbi);
             var columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
             var rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-            return new TvBounds(rows, columns);
+            return TvBounds.FromRowsAndCols(rows, columns);
         }
 
         public Win32StdConsoleDriver(WindowsConsoleDriverOptions options)

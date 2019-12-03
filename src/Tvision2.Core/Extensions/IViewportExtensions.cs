@@ -23,8 +23,8 @@ namespace Tvision2.Core.Render
             return (x2o >= x1 && x1o <= x2) && (y2o >= y1 && y1o <= y2);
         }
 
-        public static IViewport Layer(this IViewport viewport, ViewportLayer layer, int zIndexDisplacement = 0) 
-            => new Viewport(viewport.Position, viewport.Bounds, (int)layer + zIndexDisplacement);
+        public static IViewport Layer(this IViewport viewport, Layer layer, int zIndexDisplacement = 0) 
+            => new Viewport(viewport.Position, viewport.Bounds, layer.Move(zIndexDisplacement));
         public static IViewport InnerViewport(this IViewport containerViewport, TvPoint pos, TvBounds bounds)
         {
             var vppos = pos + containerViewport.Position;
@@ -34,7 +34,7 @@ namespace Tvision2.Core.Render
             var availableRows = containerViewport.Bounds.Rows - displacement.Top;
             var vpCols = bounds.Cols < availableCols ? bounds.Cols : availableCols;
             var vpRows = bounds.Rows < availableRows ? bounds.Rows : availableRows;
-            var vp = new Viewport(vppos, new TvBounds(vpRows, vpCols), containerViewport.ZIndex);
+            var vp = new Viewport(vppos, TvBounds.FromRowsAndCols(vpRows, vpCols), containerViewport.ZIndex);
             return vp;
         }
 

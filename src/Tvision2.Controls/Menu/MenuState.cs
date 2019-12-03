@@ -20,6 +20,8 @@ namespace Tvision2.Controls.Menu
 
         public MenuEntry this[string value] => _options.FirstOrDefault(o => o.Text == value);
 
-        public int SelectedIndex = 1;
+        public int SelectedIndex = 0;
+
+        public MenuEntry SelectedEntry => _options[SelectedIndex];
     }
 }
