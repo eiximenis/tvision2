@@ -10,7 +10,7 @@ namespace Tvision2.Dialogs.Hooks
 
         public DialogEscapeKeyHook(IDialogManager dialogManager) => _dialogManager = dialogManager;
 
-        public void ProcessEvents(TvConsoleEvents events, HookContext context)
+        public void ProcessEvents(ITvConsoleEvents events, HookContext context)
         {
             var esc = events.AcquireFirstKeyboard(ke => ke.IsKeyDown && ke.AsConsoleKeyInfo().Key == ConsoleKey.Escape);
             if (esc != null && _dialogManager.DialogShown != null)

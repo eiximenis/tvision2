@@ -78,7 +78,7 @@ namespace Tvision2.ConsoleDriver
             ConsoleBounds = GetConsoleWindowSize();
         }
 
-        public TvConsoleEvents ReadEvents()
+        public ITvConsoleEvents ReadEvents()
         {
             ConsoleNative.GetNumberOfConsoleInputEvents(_hstdin, out var numEvents);
 

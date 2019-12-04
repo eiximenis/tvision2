@@ -14,13 +14,13 @@ namespace Tvision2.Core.Components.Behaviors
 
         public IViewport Viewport { get; private set; }
 
-        public BehaviorContext(TvConsoleEvents events, IViewport viewport)
+        public BehaviorContext(ITvConsoleEvents events, IViewport viewport)
         {
             Events = events;
             Viewport = viewport;
             ViewportUpdated = false;
         }
-        public TvConsoleEvents Events { get; }
+        public ITvConsoleEvents Events { get; }
 
         public void UpdateViewport(IViewport newViewport)
         {
@@ -38,7 +38,7 @@ namespace Tvision2.Core.Components.Behaviors
         public T State { get; }
 
 
-        public BehaviorContext(T state, TvConsoleEvents events, IViewport viewport) : base(events, viewport)
+        public BehaviorContext(T state, ITvConsoleEvents events, IViewport viewport) : base(events, viewport)
         {
             State = state;
         }

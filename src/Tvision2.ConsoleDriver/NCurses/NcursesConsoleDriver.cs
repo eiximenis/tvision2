@@ -45,7 +45,7 @@ namespace Tvision2.ConsoleDriver
             Curses.keypad(stdscr.Handle, bf: true);
         }
 
-        public TvConsoleEvents ReadEvents()
+        public ITvConsoleEvents ReadEvents()
         {
             var code = Curses.get_wch(out int wch);
             TvConsoleEvents events = null;

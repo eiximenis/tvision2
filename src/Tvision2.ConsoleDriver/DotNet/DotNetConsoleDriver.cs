@@ -28,7 +28,7 @@ namespace Tvision2.ConsoleDriver
         {
             ConsoleBounds = TvBounds.FromRowsAndCols(Console.WindowHeight, Console.WindowWidth);
         }
-        public TvConsoleEvents ReadEvents()
+        public ITvConsoleEvents ReadEvents()
         {
             if (Console.KeyAvailable)
             {

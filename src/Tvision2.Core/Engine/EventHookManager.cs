@@ -25,7 +25,7 @@ namespace Tvision2.Core.Engine
             _postUpdateActions = afterUpdates.ToList();
         }
 
-        public void ProcessEvents(TvConsoleEvents evts)
+        public void ProcessEvents(ITvConsoleEvents evts)
         {
             if (evts.HasEvents)
             {

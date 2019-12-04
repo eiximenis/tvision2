@@ -7,6 +7,6 @@ namespace Tvision2.Core.Hooks
 {
     public interface IEventHook
     {
-        void ProcessEvents(TvConsoleEvents events, HookContext context);
+        void ProcessEvents(ITvConsoleEvents events, HookContext context);
     }
 }

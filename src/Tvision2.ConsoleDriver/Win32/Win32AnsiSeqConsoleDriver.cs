@@ -73,7 +73,7 @@ namespace Tvision2.ConsoleDriver
             Console.Write("\x1b[2J");
         }
 
-        public TvConsoleEvents ReadEvents()
+        public ITvConsoleEvents ReadEvents()
         {
             ConsoleNative.GetNumberOfConsoleInputEvents(_hstdin, out var numEvents);
 

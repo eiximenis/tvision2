@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Components.Draw;
@@ -93,7 +94,7 @@ namespace Tvision2.Core.Components
             _drawers.Insert(0, drawer);
         }
 
-        protected internal abstract void Update(TvConsoleEvents evts);
+        protected internal abstract void Update(ITvConsoleEvents evts);
 
         protected abstract void DoDraw(VirtualConsole console);
 
@@ -153,14 +154,14 @@ namespace Tvision2.Core.Components
             return this;
         }
 
-        protected internal override void Update(TvConsoleEvents evts)
+        protected internal override void Update(ITvConsoleEvents evts)
         {
             var updated = NeedToRedraw != RedrawNeededAction.None;
             foreach (var mdata in _behaviorsMetadata)
             {
                 var ctx = new BehaviorContext<T>(State, evts, Viewport);
                 if (mdata.Schedule == BehaviorSchedule.OncePerFrame
-                    || (mdata.Schedule == BehaviorSchedule.OnEvents && evts != null))
+                    || (mdata.Schedule == BehaviorSchedule.OnEvents && evts != TvConsoleEvents.Empty))
                 {
                     updated = mdata.Behavior.Update(ctx) || updated;
                     if (ctx.ViewportUpdated)

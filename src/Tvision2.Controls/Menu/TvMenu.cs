@@ -48,7 +48,14 @@ namespace Tvision2.Controls.Menu
             builder.UseViewport(viewport);
             //builder.UseTopLeftPosition(viewport.Position);
             _list = new TvList<MenuEntry>(builder);
+            _list.AsComponent()
+               .Metadata.OnComponentMounted
+               .AddOnce(ctx =>
+               {
+                   _list.Metadata.Focus(force: true);
+               });
         }
+
 
         protected override void OnControlMounted(ITuiEngine engine)
         {

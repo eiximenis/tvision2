@@ -77,7 +77,7 @@ namespace Tvision2.ConsoleDriver
             //throw new NotImplementedException();
         }
 
-        public TvConsoleEvents ReadEvents()
+        public ITvConsoleEvents ReadEvents()
         {
             //throw new NotImplementedException();
             return TvConsoleEvents.Empty;

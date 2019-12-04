@@ -150,7 +150,7 @@ namespace Tvision2.Core.Engine
             }
         }
 
-        internal void Update(TvConsoleEvents evts)
+        internal void Update(ITvConsoleEvents evts)
         {
             DoPendingRemovalsPhase1();
             DoPendingAdds();

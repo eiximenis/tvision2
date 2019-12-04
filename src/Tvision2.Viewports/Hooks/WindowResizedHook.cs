@@ -13,7 +13,7 @@ namespace Tvision2.Viewports.Hooks
             _driver = driver;
         }
 
-        public void ProcessEvents(TvConsoleEvents events, HookContext context)
+        public void ProcessEvents(ITvConsoleEvents events, HookContext context)
         {
             var evt = events.WindowEvent;
             if (evt != null)

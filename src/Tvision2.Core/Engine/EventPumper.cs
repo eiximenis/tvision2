@@ -9,7 +9,7 @@ namespace Tvision2.Core.Engine
         private readonly IConsoleDriver _console;
         public EventPumper(IConsoleDriver console) => _console = console;
 
-        public TvConsoleEvents ReadEvents()
+        public ITvConsoleEvents ReadEvents()
         {
             var events = _console.ReadEvents();
             return events;

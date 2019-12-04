@@ -10,7 +10,7 @@ namespace Tvision2.Controls.Hooks
 
         public ChangeFocusEventHook(IControlsTree ctree) => _ctree = ctree;
 
-        public void ProcessEvents(TvConsoleEvents events, HookContext context)
+        public void ProcessEvents(ITvConsoleEvents events, HookContext context)
         {
             var tab = events.AcquireFirstKeyboard(ke => ke.IsKeyDown && ke.AsConsoleKeyInfo().Key == ConsoleKey.Tab);
             if (tab != null)
