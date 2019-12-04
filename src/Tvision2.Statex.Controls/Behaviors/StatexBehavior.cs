@@ -72,6 +72,7 @@ namespace Tvision2.Statex.Controls.Behaviors
             }
             var needsUpdate = _options.UpdateControlState(updateContext.State, _currentStatex);
             _currentStatex = null;
+            System.Diagnostics.Debug.WriteLine($"Control needs update: {needsUpdate}");
             return needsUpdate;
         }
 

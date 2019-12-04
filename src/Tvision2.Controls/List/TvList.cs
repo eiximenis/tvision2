@@ -7,6 +7,7 @@ using Tvision2.Core.Components;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Render;
 using Tvision2.Controls.Extensions;
+using System.Diagnostics;
 
 namespace Tvision2.Controls.List
 {

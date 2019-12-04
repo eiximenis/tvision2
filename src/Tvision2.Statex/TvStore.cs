@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Tvision2.Statex
 {
@@ -44,7 +45,6 @@ namespace Tvision2.Statex
             {
                 var result = DoDispatchAction(action);
                 // TODO: Handle result if errors!
-
             }
 
             _pendingActions.Clear();

@@ -1,6 +1,7 @@
 ﻿using System;
 using Tvision2.Controls;
 using Tvision2.Core.Components;
+using Tvision2.Core.Components.Behaviors;
 using Tvision2.Statex.Controls.Behaviors;
 
 namespace Tvision2.Statex.Controls
@@ -41,6 +42,7 @@ namespace Tvision2.Statex.Controls
             {
                 component.AddBehavior<StatexBehavior<TControl, TControlState, TStatex>>(data =>
                 {
+                    data.UseScheduler(BehaviorSchedule.OncePerFrame);
                     data.OnCreate(behavior =>
                     {
                         behavior.SetOptions(_options);
