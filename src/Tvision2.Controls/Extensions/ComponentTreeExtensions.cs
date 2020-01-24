@@ -14,6 +14,11 @@ namespace Tvision2.Core.Engine
             componentTree.Add(control.AsComponent(), afterAdd);
         }
 
+        public static void AddAfter(this IComponentTree componentTree, ITvControl control, ITvControl controlBefore, Action<ITuiEngine> afterAddAction = null)
+        {
+            componentTree.AddAfter(control.AsComponent(), controlBefore.AsComponent(), afterAddAction);
+        }
+
         public static bool Remove(this IComponentTree componentTree, ITvControl control)
         {
             return componentTree.Remove(control.AsComponent());

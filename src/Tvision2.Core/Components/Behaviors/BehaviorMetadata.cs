@@ -6,7 +6,7 @@ namespace Tvision2.Core.Components.Behaviors
 {
     public class BehaviorMetadata<T> : IBehaviorMetadata<T>
     {
-        public ITvBehavior Behavior { get; private set; }
+        public ITvBehavior<T> Behavior { get; private set; }
         public BehaviorSchedule Schedule { get; private set; }
 
         public bool Created => true;

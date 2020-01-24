@@ -7,41 +7,21 @@ using Tvision2.Events;
 
 namespace Tvision2.Core.Components.Behaviors
 {
-    public class BehaviorContext
+    public readonly ref struct BehaviorContext<T>
     {
+        public IViewport Viewport { get;  }
 
-        public bool ViewportUpdated { get; private set; }
+        public ITvConsoleEvents Events { get; }
+        public T State { get; }
 
-        public IViewport Viewport { get; private set; }
-
-        public BehaviorContext(ITvConsoleEvents events, IViewport viewport)
+        public BehaviorContext(T state, ITvConsoleEvents events, IViewport viewport)
         {
             Events = events;
             Viewport = viewport;
-            ViewportUpdated = false;
-        }
-        public ITvConsoleEvents Events { get; }
-
-        public void UpdateViewport(IViewport newViewport)
-        {
-            if (!Viewport.Equals(newViewport))
-            {
-                Viewport = newViewport;
-                ViewportUpdated = true;
-            }
-        }
-
-    }
-
-    public class BehaviorContext<T> : BehaviorContext
-    {
-        public T State { get; }
-
-
-        public BehaviorContext(T state, ITvConsoleEvents events, IViewport viewport) : base(events, viewport)
-        {
             State = state;
         }
+
     }
+
 
 }

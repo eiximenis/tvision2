@@ -124,6 +124,11 @@ namespace Tvision2.Core.Components
             State = initialState;
         }
 
+        public void AddBehavior(Func<T, bool> action)
+        {
+            AddBehavior(new StateActionBehavior<T>(action));
+        }
+
         public void AddBehavior(ITvBehavior<T> behavior, Action<IBehaviorMetadata<T>> metadataAction = null)
         {
             var metadata = new BehaviorMetadata<T>(behavior);
@@ -131,7 +136,6 @@ namespace Tvision2.Core.Components
             _behaviorsMetadata.Add(metadata);
         }
 
-        public void AddBehavior(Func<BehaviorContext<T>, bool> behaviorFunc, Action<IBehaviorMetadata<T>> metadataAction = null) => AddBehavior(new ActionBehavior<T>(behaviorFunc), metadataAction);
 
         public void AddBehavior<TB>(Action<IFactoryBehaviorMetadata<TB, T>> metadataAction = null)
             where TB : ITvBehavior<T>
@@ -163,11 +167,7 @@ namespace Tvision2.Core.Components
                 if (mdata.Schedule == BehaviorSchedule.OncePerFrame
                     || (mdata.Schedule == BehaviorSchedule.OnEvents && evts != TvConsoleEvents.Empty))
                 {
-                    updated = mdata.Behavior.Update(ctx) || updated;
-                    if (ctx.ViewportUpdated)
-                    {
-                        UpdateViewport(ctx.Viewport);
-                    }
+                    updated =  ((IBehaviorMetadata<T>)mdata).Behavior.Update(ctx) || updated;
                 }
             }
             NeedToRedraw = updated ? RedrawNeededAction.Standard : RedrawNeededAction.None;

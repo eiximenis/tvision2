@@ -40,13 +40,15 @@ namespace Tvision2.TrueColor
                     {
                         ctx.DrawStringAt(ctx.State.Text, TvPoint.Zero, new TvColorPair(ctx.State.Fore, TvColor.FromRGB(0, 0, 0)));
                     });
-                    helloWorld.AddBehavior(ctx =>
+
+                    helloWorld.AddBehavior(state =>
                     {
                         var r = new Random();
-                        var (red, green, blue) = ctx.State.Fore.Rgb;
-                        ctx.State.Fore = TvColor.FromRGB((byte)((red + 1) % 256), (byte)((green + 1) % 256), (byte)((blue + 1) % 256));
+                        var (red, green, blue) = state.Fore.Rgb;
+                        state.Fore = TvColor.FromRGB((byte)((red + 1) % 256), (byte)((green + 1) % 256), (byte)((blue + 1) % 256));
                         return true;
                     });
+
                     helloWorld.AddViewport(new Viewport(TvPoint.FromXY(10, 10), 30));
                     tui.UI.Add(helloWorld);
                     return Task.CompletedTask;

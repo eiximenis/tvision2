@@ -34,6 +34,15 @@ namespace Tvision2.Core.Render
             InitData();
         }
 
+        public Span<ConsoleCharacter> GetViewportRow(IViewport viewport, int row)
+        {
+            var origin = viewport.Position;
+            var bounds = viewport.Bounds;
+            var consolerow = row + origin.Top;;
+            var startidx = origin.Left + (Width * consolerow);
+            return _buffer.AsSpan(startidx, bounds.Cols);
+        }
+
         public void Resize(int height, int width)
         {
             if (Height != height || Width != width)
@@ -41,7 +50,7 @@ namespace Tvision2.Core.Render
                 Height = height;
                 Width = width;
                 InitData();
-                for (var idx = 0; idx<_dirtyMap.Length; idx++)
+                for (var idx = 0; idx < _dirtyMap.Length; idx++)
                 {
                     _dirtyMap[idx] = DirtyStatus.CharAndAttr;
                 }
@@ -131,15 +140,18 @@ namespace Tvision2.Core.Render
             }
             IsDirty = false;
         }
-
         public void DrawAt(string text, TvPoint location, int zIndex, CharacterAttribute attr)
+        {
+            DrawAt(text.AsSpan(), location, zIndex, attr);
+        }
+
+        public void DrawAt(ReadOnlySpan<char> text, TvPoint location, int zIndex, CharacterAttribute attr)
         {
             var start = location.Left + (Width * location.Top);
             var end = start + Math.Min(text.Length, Width - location.Left);
             var textIdx = 0;
             var dirty = IsDirty;
             var charCol = location.Left;
-            var charRow = location.Top;
             for (var idx = start; idx < end; idx++)
             {
                 var cchar = _buffer[idx];
@@ -188,9 +200,8 @@ namespace Tvision2.Core.Render
         {
             var start = location.Left + (Width * location.Top);
             var zindex = charToCopy.ZIndex;
-            var end = start + Math.Min(count, Width - location.Left);           
+            var end = start + Math.Min(count, Width - location.Left);
             var charCol = location.Left;
-            var charRow = location.Top;
             var dirty = IsDirty;
             for (var idx = start; idx < end; idx++)
             {

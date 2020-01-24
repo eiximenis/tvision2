@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using Tvision2.Core.Components;
@@ -8,10 +9,12 @@ using Tvision2.Events;
 
 namespace Tvision2.Core.Engine
 {
+
     public class ComponentTree : IComponentTree
     {
-        private readonly Dictionary<string, TvComponentMetadata> _components;
-        private readonly Dictionary<string, (TvComponentMetadata Metadata, Action<ITuiEngine> AfterAdd)> _pendingAdds;
+        private readonly Dictionary<string, TvComponentMetadata> _componentsDict;
+        private readonly LinkedList<TvComponentMetadata> _components;
+        private readonly Dictionary<string, (TvComponentMetadata Metadata, TvComponentMetadata before, Action<ITuiEngine> AfterAdd)> _pendingAdds;
         private readonly Dictionary<string, TvComponentMetadata> _pendingRemovalsPhase1;
         private readonly Dictionary<string, TvComponentMetadata> _pendingRemovalsPhase2;
         private readonly List<IViewport> _viewportsToClear;
@@ -21,9 +24,9 @@ namespace Tvision2.Core.Engine
         public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
         public event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
 
-        public IEnumerable<TvComponent> Components => _components.Values.Select(cm => cm.Component);
+        public IEnumerable<TvComponent> Components => _components.Select(cm => cm.Component);
 
-        public TvComponent GetComponent(string name) => _components.TryGetValue(name, out var metadata) ? metadata.Component : null;
+        public TvComponent GetComponent(string name) => _componentsDict.TryGetValue(name, out var metadata) ? metadata.Component : null;
 
         public T GetInstanceOf<T>() => (T)_engine.ServiceProvider.GetService(typeof(T));
 
@@ -31,7 +34,7 @@ namespace Tvision2.Core.Engine
         public bool Remove(TvComponent component)
         {
             var name = component.Name;
-            var found = _components.ContainsKey(name);
+            var found = _componentsDict.ContainsKey(name);
             if (found)
             {
                 _pendingRemovalsPhase1.Add(name, component.Metadata as TvComponentMetadata);
@@ -54,7 +57,7 @@ namespace Tvision2.Core.Engine
                 {
                     _pendingRemovalsPhase2.Add(kvp.Key, kvp.Value);
                     _viewportsToClear.AddRange(kvp.Value.Component.Viewports.Select(x => x.Value));
-                    _components.Remove(kvp.Key);
+                    _componentsDict.Remove(kvp.Key);
                 }
             }
         }
@@ -77,8 +80,9 @@ namespace Tvision2.Core.Engine
 
         public ComponentTree(ITuiEngine engine, IServiceProvider serviceProvider)
         {
-            _components = new Dictionary<string, TvComponentMetadata>();
-            _pendingAdds = new Dictionary<string, (TvComponentMetadata Metadata, Action<ITuiEngine> AfterAdd)>();
+            _componentsDict = new Dictionary<string, TvComponentMetadata>();
+            _components = new LinkedList<TvComponentMetadata>();
+            _pendingAdds = new Dictionary<string, (TvComponentMetadata Metadata, TvComponentMetadata before, Action< ITuiEngine> AfterAdd)>();
             _pendingRemovalsPhase1 = new Dictionary<string, TvComponentMetadata>();
             _pendingRemovalsPhase2 = new Dictionary<string, TvComponentMetadata>();
             _viewportsToClear = new List<IViewport>();
@@ -88,9 +92,16 @@ namespace Tvision2.Core.Engine
 
         public IComponentMetadata Add(TvComponent component, Action<ITuiEngine> afterAddAction = null)
         {
-            _pendingAdds.Add(component.Name, (component.Metadata as TvComponentMetadata, afterAddAction));
+            _pendingAdds.Add(component.Name, (component.Metadata as TvComponentMetadata, null, afterAddAction));
             return component.Metadata;
         }
+
+        public IComponentMetadata AddAfter(TvComponent componentToAdd, TvComponent componentBefore, Action<ITuiEngine> afterAddAction = null)
+        {
+            _pendingAdds.Add(componentToAdd.Name, (componentToAdd.Metadata as TvComponentMetadata, componentBefore.Metadata as TvComponentMetadata, afterAddAction));
+            return componentToAdd.Metadata;
+        }
+
 
         private void DoPendingAdds()
         {
@@ -104,9 +115,29 @@ namespace Tvision2.Core.Engine
 
             foreach (var kvp in toAdd)
             {
-                var metadata = kvp.Value.Metadata;
-                var afterAdd = kvp.Value.AfterAdd;
-                _components.Add(kvp.Key, metadata);
+                (var metadata, var componentBefore, var afterAdd) = kvp.Value;
+                _componentsDict.Add(kvp.Key, metadata);
+
+                var cnode = _components.First;
+
+                if (componentBefore != null)
+                {
+                    while (cnode != null)
+                    {
+                        if (cnode.Value == componentBefore)
+                        {
+                            _components.AddAfter(cnode, metadata);
+                            break;
+                        }
+                        cnode = cnode.Next;
+                    }
+                }
+                else
+                {
+                    _components.AddLast(metadata);
+                }
+
+
                 CreateNeededBehaviors(metadata.Component);
                 metadata.MountedTo(_engine);
                 metadata.Component.Invalidate();
@@ -154,7 +185,7 @@ namespace Tvision2.Core.Engine
         {
             DoPendingRemovalsPhase1();
             DoPendingAdds();
-            foreach (var cdata in _components.Values)
+            foreach (var cdata in _components)
             {
                 cdata.Component.Update(evts);
             }
@@ -167,7 +198,7 @@ namespace Tvision2.Core.Engine
                 console.Clear(viewport);
             }
 
-            foreach (var cdata in _components.Values
+            foreach (var cdata in _components
                 .Where(c => force || c.Component.NeedToRedraw != RedrawNeededAction.None))
             {
                 cdata.Component.Draw(console);

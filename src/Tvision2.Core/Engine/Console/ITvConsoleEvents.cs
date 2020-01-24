@@ -12,7 +12,7 @@ namespace Tvision2.Events
         IEnumerable<TvConsoleMouseEvent> MouseEvents { get; }
         TvWindowEvent WindowEvent { get; }
 
-        TvConsoleKeyboardEvent AcquireFirstKeyboard(Func<TvConsoleKeyboardEvent, bool> filter);
+        TvConsoleKeyboardEvent AcquireFirstKeyboard(Func<TvConsoleKeyboardEvent, bool> filter, bool autoHandle);
         void Add(TvConsoleKeyboardEvent @event);
         void Add(TvConsoleMouseEvent @event);
         void SetWindowEvent(TvWindowEvent @event);

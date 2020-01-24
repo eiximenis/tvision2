@@ -12,17 +12,18 @@ namespace Tvision2.Controls.Checkbox
         protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<CheckboxState> updateContext)
         {
             var info = evt.AsConsoleKeyInfo();
+            var state = updateContext.State;
             if (info.Key == ConsoleKey.Spacebar)
             {
-                var checkState = updateContext.State.Checked;
+                var checkState = state.Checked;
                 switch (checkState)
                 {
                     case TvCheckboxState.Checked:
                     case TvCheckboxState.Partial:
-                        updateContext.State.Checked = TvCheckboxState.Unchecked;
+                        state.Checked = TvCheckboxState.Unchecked;
                         break;
                     default:
-                        updateContext.State.Checked = TvCheckboxState.Checked;
+                        state.Checked = TvCheckboxState.Checked;
                         break;
                 }
             }

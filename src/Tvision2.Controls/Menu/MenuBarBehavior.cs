@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Tvision2.Controls.Styles;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Engine;
@@ -21,17 +22,21 @@ namespace Tvision2.Controls.Menu
         protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<MenuState> updateContext)
         {
 
+            Debug.WriteLine("Some keydown event on MenUBar");
+
             var info = evt.AsConsoleKeyInfo();
 
             if (info.Key == _options.SelectKey)
             {
                 _owner.EnableMenu(updateContext.State);
+                evt.Handle();
                 return true;
             }
 
             if (info.Key == _options.Hotkey)
             {
                 _owner.Metadata.OwnerTree.ReturnFocusToPrevious();
+                evt.Handle();
                 return false;
             }
 
@@ -41,6 +46,7 @@ namespace Tvision2.Controls.Menu
                 if (info.KeyChar == option.Shortcut)
                 {
                     updateContext.State.SelectedIndex = optidx;
+                    evt.Handle();
                     return true;
                 }
                 optidx++;

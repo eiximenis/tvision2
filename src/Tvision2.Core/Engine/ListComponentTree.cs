@@ -23,6 +23,15 @@ namespace Tvision2.Core.Engine
             _parent = root;
         }
 
+
+        public IComponentMetadata AddAfter(TvComponent componentToAdd, TvComponent componentBefore, Action<ITuiEngine> afterAddAction = null)
+        {
+            var metadata = _parent.AddAfter(componentToAdd, componentBefore,afterAddAction);
+            _myComponents.Add(componentToAdd);
+            OnComponentAdded(componentToAdd.Metadata);
+            return metadata;
+        }
+
         public IComponentMetadata Add(TvComponent component, Action<ITuiEngine> afterAddAction)
         {
             var metadata = _parent.Add(component, afterAddAction);
@@ -70,6 +79,5 @@ namespace Tvision2.Core.Engine
                 Remove(component);
             }
         }
-
     }
 }

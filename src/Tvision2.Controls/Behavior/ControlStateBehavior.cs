@@ -15,15 +15,12 @@ namespace Tvision2.Controls.Behavior
             _metadata = metadata;
         }
 
-        bool ITvBehavior.Update(BehaviorContext updateContext) => Update((BehaviorContext<TState>)updateContext);
-
         public bool Update(BehaviorContext<TState> updateContext) 
         {
             var isDirty = updateContext.State.IsDirty || _metadata.IsDirty;
 
             if (isDirty)
             {
-                isDirty = false;
                 _metadata.Validate();
                 updateContext.State.Validate();
                 return true;

@@ -31,6 +31,7 @@ namespace Tvision2.Controls.Window
             {
                 switch (keyInfo.Key)
                 {
+                    /* TODO: UpdateViewport is not supported right now, as context is ref readonly struct
                     case ConsoleKey.RightArrow:
                         updateContext.UpdateViewport(updateContext.Viewport.Translate(TvPoint.FromXY(1, 0)));
                         return true;
@@ -46,6 +47,7 @@ namespace Tvision2.Controls.Window
                     case ConsoleKey.Escape:
                         _moving = false;
                         return false;
+                    */ 
                 }
             }
             else

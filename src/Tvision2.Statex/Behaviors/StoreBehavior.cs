@@ -12,7 +12,6 @@ namespace Tvision2.Statex.Behaviors
         public StoreBehavior(ITvStoreSelector storeSelector) => _storeSelector = storeSelector;
         public bool Update(BehaviorContext<T> updateContext) => Update(updateContext, _storeSelector);
         protected abstract bool Update(BehaviorContext<T> updateContext, ITvStoreSelector storeSelector);
-        bool ITvBehavior.Update(BehaviorContext updateContext) => Update((BehaviorContext<T>)updateContext);
     }
 
     public abstract class StoreBehavior<T, T2> : ITvBehavior<T>
@@ -26,7 +25,6 @@ namespace Tvision2.Statex.Behaviors
             _storeSelector = storeSelector;
         }
 
-        bool ITvBehavior.Update(BehaviorContext updateContext) => Update((BehaviorContext<T>)updateContext);
         public bool Update(BehaviorContext<T> updateContext)
         {
             _store = _store ?? _storeSelector.GetStore<T2>();

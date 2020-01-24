@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Tvision2.Core.Render
 {
-    public struct TvPoint
+    public readonly struct TvPoint
     {
         public static TvPoint Zero { get; } = new TvPoint(0, 0);
         public int Left { get; } 

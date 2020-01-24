@@ -6,13 +6,13 @@ namespace Tvision2.Core.Components.Behaviors
     {
         bool Created { get; }
         BehaviorSchedule Schedule { get; }
-        ITvBehavior Behavior { get; }
 
         void CreateBehavior(IServiceProvider sp);
     }
 
     public interface IBehaviorMetadata<T> : IBehaviorMetadata
     {
+        ITvBehavior<T> Behavior { get; }
         IBehaviorMetadata<T> UseScheduler(BehaviorSchedule schedule);
     }
 }

@@ -48,7 +48,6 @@ namespace Tvision2.Statex.Behaviors
             return updated;
         }
 
-        bool ITvBehavior.Update(BehaviorContext updateContext) => Update(updateContext as BehaviorContext<TControlState>);
     }
 
 

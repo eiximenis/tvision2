@@ -9,25 +9,23 @@ namespace Tvision2.Core.Render
         public static TvPoint ViewPointToConsolePoint(TvPoint viewPoint, TvPoint viewportPosition) => viewPoint + viewportPosition;
         public static TvPoint ConsolePointToViewport(TvPoint consolePoint, TvPoint viewportPosition) => consolePoint - viewportPosition;
 
-        public static void DrawStringAt(string text, TvPoint location, CharacterAttribute attr, IViewport boxModel, VirtualConsole console)
+        public static void DrawStringAt(string text, TvPoint location, CharacterAttribute attr, IViewport viewport, VirtualConsole console)
         {
-            var consoleLocation = ViewPointToConsolePoint(location, boxModel.Position);
-            var zindex = boxModel.ZIndex;
-
-            if (boxModel.Bounds.Cols < text.Length)
-            {
-                text = text.Substring(0, boxModel.Bounds.Cols);
-            }
-            console.DrawAt(text, consoleLocation, (int)zindex, attr);
+            var consoleLocation = ViewPointToConsolePoint(location, viewport.Position);
+            var zindex = viewport.ZIndex;
+            var textSpan = viewport.Bounds.Cols < text.Length ?
+                    text.AsSpan(0, viewport.Bounds.Cols) :
+                    text.AsSpan();
+            console.DrawAt(textSpan, consoleLocation, (int)zindex, attr);
         }
 
-        internal static void DrawChars(char value, int count, TvPoint location, CharacterAttribute attribute, IViewport boxModel, VirtualConsole console)
+        internal static void DrawChars(char value, int count, TvPoint location, CharacterAttribute attribute, IViewport viewport, VirtualConsole console)
         {
 
             var chars = new ConsoleCharacter[count];
-            var zindex = boxModel.ZIndex;
+            var zindex = viewport.ZIndex;
             var cc = new ConsoleCharacter() { Character = value,  Attributes = attribute, ZIndex = (int)zindex };
-            var pos = ViewPointToConsolePoint(location, boxModel.Position);
+            var pos = ViewPointToConsolePoint(location, viewport.Position);
             console.CopyCharacter(pos, cc, count);
         }
 

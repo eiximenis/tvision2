@@ -33,10 +33,13 @@ namespace Tvision2.Events
             WindowEvent = null;
         }
 
-        public TvConsoleKeyboardEvent AcquireFirstKeyboard(Func<TvConsoleKeyboardEvent, bool> filter)
+        public TvConsoleKeyboardEvent AcquireFirstKeyboard(Func<TvConsoleKeyboardEvent, bool> filter, bool autoHandle)
         {
             var evt = _keyboardEvents.Where(x => !x.IsHandled).FirstOrDefault(filter);
-            evt?.Handle();
+            if (autoHandle)
+            {
+                evt?.Handle();
+            }
             return evt;
         }
 
@@ -60,7 +63,7 @@ namespace Tvision2.Events
 
         public TvWindowEvent WindowEvent => null;
 
-        public TvConsoleKeyboardEvent AcquireFirstKeyboard(Func<TvConsoleKeyboardEvent, bool> filter) => null;
+        public TvConsoleKeyboardEvent AcquireFirstKeyboard(Func<TvConsoleKeyboardEvent, bool> filter, bool autoHandle) => null;
 
         public void Add(TvConsoleKeyboardEvent @event)
         {

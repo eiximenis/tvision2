@@ -15,10 +15,10 @@ namespace Tvision2.Core.Render
     }
 
 
-    public struct Layer
+    public readonly struct Layer
     {
 
-        private int _value;
+        private readonly int _value;
         private Layer(int value) => _value = value;
 
         public static Layer FromRaw(short value) => new Layer((int)value);

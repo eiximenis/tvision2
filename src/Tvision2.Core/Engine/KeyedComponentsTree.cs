@@ -36,22 +36,33 @@ namespace Tvision2.Core.Engine
             _parent = root;
         }
 
-        IComponentMetadata IComponentTree.Add(TvComponent component, Action<ITuiEngine> afterAddAction)
+        public IComponentMetadata AddAfter(TvComponent componentToAdd, TvComponent componentBefore, Action<ITuiEngine> afterAddAction = null)
         {
             if (_myComponents.ContainsKey(_currentKey))
             {
-                _myComponents[_currentKey].Add(component, afterAddAction);
+                _myComponents[_currentKey].Add(componentToAdd, afterAddAction);
             }
             else
             {
                 var child = new ListComponentTree(_parent);
                 _myComponents.Add(_currentKey, child);
-                child.Add(component, afterAddAction);
+                if (componentBefore == null)
+                {
+                    child.Add(componentToAdd, afterAddAction);
+                }
+                else
+                {
+                    child.AddAfter(componentToAdd, componentBefore, afterAddAction);
+
+                }
+   
             }
 
-            OnComponentAdded(component.Metadata);
-            return component.Metadata;
+            OnComponentAdded(componentToAdd.Metadata);
+            return componentToAdd.Metadata;
         }
+
+        IComponentMetadata IComponentTree.Add(TvComponent component, Action<ITuiEngine> afterAddAction) => AddAfter(component, null, afterAddAction);
 
         IEnumerable<TvComponent> IComponentTree.Components => _myComponents.Values.SelectMany(c => c.Components);
 
@@ -97,5 +108,6 @@ namespace Tvision2.Core.Engine
                 child.Clear();
             }
         }
+
     }
 }

@@ -39,6 +39,14 @@ namespace Tvision2.Layouts.Grid
             return component.Metadata;
         }
 
+        public IComponentMetadata AddAfter(TvComponent componentToAdd, TvComponent componentBefore, Action<ITuiEngine> afterAddAction = null)
+        {
+            _childs.Add((CurrentRow, CurrentColumn), componentToAdd);
+            _root.AddAfter(componentToAdd, componentBefore, afterAddAction);
+            OnComponentAdded(componentToAdd.Metadata);
+            return componentToAdd.Metadata;
+        }
+
         private void OnComponentAdded(IComponentMetadata metadata)
         {
             var handler = ComponentAdded;
@@ -84,5 +92,7 @@ namespace Tvision2.Layouts.Grid
                 Remove(child);
             }
         }
+
+
     }
 }

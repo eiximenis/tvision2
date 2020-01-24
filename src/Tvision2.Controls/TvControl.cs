@@ -135,7 +135,6 @@ namespace Tvision2.Controls
             AddCustomElements(_component);
         }
 
-
         protected virtual IEnumerable<ITvBehavior<TState>> GetEventedBehaviors()
         {
             return Enumerable.Empty<ITvBehavior<TState>>();

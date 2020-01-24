@@ -11,7 +11,7 @@ namespace Tvision2.Core.Components.Behaviors
         where TB : ITvBehavior<T>
     {
         private Action<TB> _afterCreate;
-        public ITvBehavior Behavior { get; private set; }
+        public ITvBehavior<T> Behavior { get; private set; }
 
         public bool Created => Behavior != null;
 
@@ -33,7 +33,7 @@ namespace Tvision2.Core.Components.Behaviors
                 {
                     parameters.Add(sp.GetService(param.ParameterType));
                 }
-                var behavior =  ctor.Invoke(parameters.ToArray()) as ITvBehavior;
+                var behavior = ctor.Invoke(parameters.ToArray()) as ITvBehavior<T>;
                 _afterCreate?.Invoke((TB)behavior);
                 Behavior = behavior;
             }

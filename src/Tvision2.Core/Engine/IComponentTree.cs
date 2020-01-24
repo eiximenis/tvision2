@@ -10,6 +10,9 @@ namespace Tvision2.Core.Engine
     {
         event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
         event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
+
+        IComponentMetadata AddAfter(TvComponent componentToAdd, TvComponent componentBefore, Action<ITuiEngine> afterAddAction = null);
+
         IComponentMetadata Add(TvComponent component, Action<ITuiEngine> afterAddAction = null);
         bool Remove(TvComponent component);
         TvComponent GetComponent(string name);

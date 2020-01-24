@@ -11,6 +11,8 @@ namespace Tvision2.Core.Render
         public IViewport Viewport { get; private set; }
         ICursorContext CursorContext => this;
 
+
+
         public RenderContext(IViewport viewport, VirtualConsole console)
         {
             _console = console;
