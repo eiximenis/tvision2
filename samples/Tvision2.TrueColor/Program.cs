@@ -43,9 +43,14 @@ namespace Tvision2.TrueColor
 
                     helloWorld.AddBehavior(state =>
                     {
-                        var r = new Random();
                         var (red, green, blue) = state.Fore.Rgb;
-                        state.Fore = TvColor.FromRGB((byte)((red + 1) % 256), (byte)((green + 1) % 256), (byte)((blue + 1) % 256));
+                        if (red < 255) red++;
+                        else if (green < 255) green++;
+                        else if (blue < 255) blue++;
+                        else red = green = blue = 0;
+                        state.Fore = TvColor.FromRGB((byte)red, (byte)green, (byte)blue);
+
+                        state.Text = $"Hello World with ({red}, {green},{blue})        ";
                         return true;
                     });
 

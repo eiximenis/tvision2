@@ -21,8 +21,6 @@ namespace Tvision2.Core.Render
 
         internal static void DrawChars(char value, int count, TvPoint location, CharacterAttribute attribute, IViewport viewport, VirtualConsole console)
         {
-
-            var chars = new ConsoleCharacter[count];
             var zindex = viewport.ZIndex;
             var cc = new ConsoleCharacter() { Character = value,  Attributes = attribute, ZIndex = (int)zindex };
             var pos = ViewPointToConsolePoint(location, viewport.Position);
@@ -31,7 +29,6 @@ namespace Tvision2.Core.Render
 
         public static bool IsConsolePointInside(TvPoint consolePoint, TvPoint viewportPosition)
         {
-            var viewPoint = ConsolePointToViewport(consolePoint, viewportPosition);
             return consolePoint.Top >= viewportPosition.Top && consolePoint.Left >= viewportPosition.Left;
         }
 

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Tvision2.Core.Colors
 {
-    public struct TvColorPair
+    public readonly ref struct TvColorPair
     {
         public TvColor ForeGround { get;  }
         public TvColor Background { get; }
