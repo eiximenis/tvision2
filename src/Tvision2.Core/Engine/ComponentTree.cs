@@ -189,6 +189,7 @@ namespace Tvision2.Core.Engine
             {
                 cdata.Component.Update(evts);
             }
+        
         }
 
         internal void Draw(VirtualConsole console, bool force)

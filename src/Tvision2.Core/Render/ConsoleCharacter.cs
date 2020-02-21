@@ -2,16 +2,33 @@
 
 namespace Tvision2.Core.Render
 {
-    public class ConsoleCharacter
+    public readonly struct ConsoleCharacter
     {
 
-        public char Character { get; set; }
-        public CharacterAttribute Attributes { get; set; }
-        public int ZIndex { get; set; }
+        private static ConsoleCharacter _none = new ConsoleCharacter();
+        public static ConsoleCharacter None => _none;
 
-        public bool Equals(ConsoleCharacter other)
+        public char Character { get; }
+        public CharacterAttribute Attributes { get; }
+        public int ZIndex { get; }
+
+        public ConsoleCharacter(char value, CharacterAttribute attribute, int zindex)
         {
-            return other != null && Character == other.Character && Attributes == other.Attributes && ZIndex == other.ZIndex;
+            Character = value;
+            Attributes = attribute;
+            ZIndex = zindex;
+        }
+
+        public ConsoleCharacter(char value, CharacterAttribute attribute, Layer zindex)
+        {
+            Character = value;
+            Attributes = attribute;
+            ZIndex = (int)zindex;
+        }
+
+        public bool Equals(in ConsoleCharacter other)
+        {
+            return Character == other.Character && Attributes == other.Attributes && ZIndex == other.ZIndex;
         }
 
 

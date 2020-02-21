@@ -12,9 +12,7 @@ namespace Tvision2.Core.Render
         enum DirtyStatus
         {
             Clean = 0,
-            OnlyChar = 1,
-            OnlyAttributes = 2,
-            CharAndAttr = 3
+            Dirty = 1
         }
 
         private ConsoleCharacter[] _buffer;
@@ -38,7 +36,7 @@ namespace Tvision2.Core.Render
         {
             var origin = viewport.Position;
             var bounds = viewport.Bounds;
-            var consolerow = row + origin.Top;;
+            var consolerow = row + origin.Top; ;
             var startidx = origin.Left + (Width * consolerow);
             return _buffer.AsSpan(startidx, bounds.Cols);
         }
@@ -52,7 +50,7 @@ namespace Tvision2.Core.Render
                 InitData();
                 for (var idx = 0; idx < _dirtyMap.Length; idx++)
                 {
-                    _dirtyMap[idx] = DirtyStatus.CharAndAttr;
+                    _dirtyMap[idx] = DirtyStatus.Dirty;
                 }
             }
         }
@@ -76,11 +74,11 @@ namespace Tvision2.Core.Render
                 var spanCol = 0;
                 for (var col = 0; col < Width; col++)
                 {
-                    var next = col < Width - 1 ? _buffer[idx + 1] : null;
-                    var cc = _buffer[idx];
+                    ref var cc = ref _buffer[idx];
                     if (spanning || _dirtyMap[idx] != DirtyStatus.Clean)
                     {
-                        if (cc.Equals(next))
+                        var compareWithNext = col < Width - 1;
+                        if (compareWithNext && cc.Equals(in _buffer[idx + 1]))
                         {
                             span++;
                             spanning = true;
@@ -131,12 +129,7 @@ namespace Tvision2.Core.Render
         {
             for (var idx = 0; idx < _buffer.Length; idx++)
             {
-                _buffer[idx] = new ConsoleCharacter()
-                {
-                    Character = ' ',
-                    Attributes = new CharacterAttribute(),
-                    ZIndex = int.MinValue
-                };
+                _buffer[idx] = new ConsoleCharacter(' ', new CharacterAttribute(), Layer.Min);
             }
             IsDirty = false;
         }
@@ -154,20 +147,14 @@ namespace Tvision2.Core.Render
             var charCol = location.Left;
             for (var idx = start; idx < end; idx++)
             {
-                var cchar = _buffer[idx];
-                var newchar = text[textIdx];
-                if (cchar.ZIndex <= zIndex)
+                ref var cchar = ref _buffer[idx];
+                var newchar = new ConsoleCharacter(text[textIdx], attr, zIndex);
+
+                if (cchar.ZIndex <= zIndex && !(cchar.Equals(in newchar)))
                 {
-                    var comparison = cchar.CompareContents(newchar, attr);
-                    if (comparison != ConsoleCharacterComparison.Equals)
-                    {
-                        cchar.Character = newchar;
-                        cchar.Attributes = attr;
-                        cchar.ZIndex = zIndex;
-                        dirty = true;
-                        _dirtyMap[idx] = (DirtyStatus)comparison;
-                    }
-                    cchar.ZIndex = zIndex;
+                    _buffer[idx] = newchar;
+                    dirty = true;
+                    _dirtyMap[idx] = DirtyStatus.Dirty;
                 }
                 textIdx++;
                 charCol++;
@@ -188,9 +175,9 @@ namespace Tvision2.Core.Render
                 for (var col = initcol; col <= maxcol; col++)
                 {
                     var idx = col + (Width * row);
-                    _buffer[idx].Character = ' ';
-                    _buffer[idx].Attributes = new CharacterAttribute();
-                    _dirtyMap[idx] = DirtyStatus.CharAndAttr;
+                    var zindex = _buffer[idx].ZIndex;
+                    _buffer[idx] = new ConsoleCharacter(' ', new CharacterAttribute(), zindex);
+                    _dirtyMap[idx] = DirtyStatus.Dirty;
                 }
             }
             IsDirty = true;
@@ -206,19 +193,11 @@ namespace Tvision2.Core.Render
             for (var idx = start; idx < end; idx++)
             {
                 var cchar = _buffer[idx];
-                if (cchar.ZIndex <= zindex)
-
+                if (cchar.ZIndex <= zindex && !(cchar.Equals(in charToCopy)))
                 {
-                    var comparison = cchar.CompareContents(charToCopy.Character, charToCopy.Attributes);
-                    if (comparison != ConsoleCharacterComparison.Equals)
-                    {
-                        cchar.Character = charToCopy.Character;
-                        cchar.Attributes = charToCopy.Attributes;
-                        cchar.ZIndex = charToCopy.ZIndex;
-                        dirty = true;
-                        _dirtyMap[idx] = (DirtyStatus)comparison;
-                    }
-                    cchar.ZIndex = zindex;
+                    _buffer[idx] = charToCopy;
+                    dirty = true;
+                    _dirtyMap[idx] = DirtyStatus.Dirty;
                 }
                 charCol++;
             }

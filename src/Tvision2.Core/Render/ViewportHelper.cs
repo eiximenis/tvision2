@@ -22,7 +22,7 @@ namespace Tvision2.Core.Render
         internal static void DrawChars(char value, int count, TvPoint location, CharacterAttribute attribute, IViewport viewport, VirtualConsole console)
         {
             var zindex = viewport.ZIndex;
-            var cc = new ConsoleCharacter() { Character = value,  Attributes = attribute, ZIndex = (int)zindex };
+            var cc = new ConsoleCharacter(value, attribute, zindex);
             var pos = ViewPointToConsolePoint(location, viewport.Position);
             console.CopyCharacter(pos, cc, count);
         }

@@ -9,6 +9,7 @@ namespace Tvision2.Core.Render
 
     public enum LayerValues
     {
+        Min = int.MinValue,
         Bottom = 0,
         Standard = 1024,
         Top = int.MaxValue,
@@ -24,6 +25,7 @@ namespace Tvision2.Core.Render
         public static Layer FromRaw(short value) => new Layer((int)value);
         public static Layer Standard => new Layer((int)LayerValues.Standard);
         public static Layer Top => new Layer((int)LayerValues.Top);
+        public static Layer Min => new Layer((int)LayerValues.Min);
         public static Layer Bottom => new Layer((int)LayerValues.Bottom);
 
         public Layer MoveToTop(int steps)
