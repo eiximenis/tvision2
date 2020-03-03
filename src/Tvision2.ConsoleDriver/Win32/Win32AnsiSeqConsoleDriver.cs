@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Text;
 using Tvision2.ConsoleDriver.Win32;
 using Tvision2.Core.Colors;
 using Tvision2.Core.Render;
@@ -97,13 +98,11 @@ namespace Tvision2.ConsoleDriver
 
         public void WriteCharactersAt(int x, int y, int count, char character, CharacterAttribute attribute)
         {
-            Console.Write(_seqManager.GetCursorSequence(x, y));
-            var ansiSeq = _seqManager.GetAttributeSequence(attribute);
-            Console.Write(ansiSeq);
-            for (var rep = 0; rep < count; rep++)
-            {
-                Console.Write(character);
-            }
+            var sb = new StringBuilder();
+            sb.Append(_seqManager.GetCursorSequence(x, y));
+            sb.Append(_seqManager.GetAttributeSequence(attribute));
+            sb.Append(character, count);
+            Console.Write(sb.ToString());
         }
 
 
