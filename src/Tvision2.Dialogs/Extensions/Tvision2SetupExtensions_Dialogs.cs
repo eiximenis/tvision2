@@ -15,7 +15,7 @@ namespace Tvision2.DependencyInjection
         {
             setup.Builder.ConfigureServices(sc =>
             {
-                sc.AddSingleton<IDialogManager, DialogManager>();
+                sc.AddScoped<IDialogManager, DialogManager>();
             });
 
             setup.AddHook<DialogEscapeKeyHook>();

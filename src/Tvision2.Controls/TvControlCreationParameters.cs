@@ -12,47 +12,32 @@ namespace Tvision2.Controls
 
         public string Name { get; }
 
-        public ITvControl Owner { get; }
-
         public TvPoint Position { get; }
 
         public IViewport Viewport { get; }
 
-        public TvControlCreationParameters(ISkin skin, IViewport viewport)
+        public Guid ParentId {get; }
+
+        public TvControlCreationParameters(ISkin skin, IViewport viewport, string name = null, Guid? parentId = null)
         {
             Skin = skin;
             Position = viewport?.Position ?? TvPoint.Zero;
             Viewport = viewport;
             AutoCreateViewport = false;
-        }
-
-        public TvControlCreationParameters(ISkin skin, IViewport viewport, string name) : this(skin, viewport)
-        {
+            ParentId = parentId.HasValue ? parentId.Value : Guid.Empty;
             Name = name;
         }
 
-        public TvControlCreationParameters(ISkin skin, IViewport viewport, string name, ITvControl owner) : this(skin, viewport, name)
-        {
-            Owner = owner;
-        }
-
-        public TvControlCreationParameters(ISkin skin, TvPoint position)
+        public TvControlCreationParameters(ISkin skin, TvPoint position, string name = null, Guid? parentId = null)
         {
             Skin = skin;
             AutoCreateViewport = true;
             Position = position;
             Viewport = null;
-        }
-
-        public TvControlCreationParameters(ISkin skin, TvPoint position, string name) : this(skin, position)
-        {
             Name = name;
+            ParentId = parentId.HasValue ? parentId.Value : Guid.Empty;
         }
 
-        public TvControlCreationParameters(ISkin skin, TvPoint position, string name, ITvControl owner) : this(skin, position, name)
-        {
-            Owner = owner;
-        }
     }
 
     public class TvControlCreationParameters<TState> : TvControlCreationParameters
@@ -61,33 +46,14 @@ namespace Tvision2.Controls
 
         public TState InitialState { get; }
 
-        public TvControlCreationParameters(ISkin skin, IViewport viewport, TState initialState) : base(skin, viewport)
+        public TvControlCreationParameters(ISkin skin, IViewport viewport, TState initialState, string name = null,
+            Guid? parentId = null) : base(skin, viewport, name, parentId)
         {
             InitialState = initialState;
         }
 
-        public TvControlCreationParameters(ISkin skin, IViewport viewport, TState initialState, string name) : base(skin, viewport, name)
-        {
-            InitialState = initialState;
-        }
-
-        public TvControlCreationParameters(ISkin skin, IViewport viewport, TState initialState, string name, ITvControl owner) : base(skin, viewport, name, owner)
-        {
-            InitialState = initialState;
-        }
-
-        public TvControlCreationParameters(ISkin skin, TvPoint position, TState initialState) : base(skin, position)
-        {
-        
-            InitialState = initialState;
-        }
-
-        public TvControlCreationParameters(ISkin skin, TvPoint position, TState initialState, string name) : base(skin, position, name)
-        {
-            InitialState = initialState;
-        }
-
-        public TvControlCreationParameters(ISkin skin, TvPoint position, TState initialState, string name, ITvControl owner) : base(skin, position, name, owner)
+        public TvControlCreationParameters(ISkin skin, TvPoint position, TState initialState, string name = null,
+            Guid? parentId = null) : base(skin, position, name, parentId)
         {
             InitialState = initialState;
         }

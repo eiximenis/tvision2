@@ -18,7 +18,7 @@ namespace Tvision2.Core.Engine
             {
                 sc.AddTransient<IViewportFactory, ViewportFactory>();
                 sc.AddTransient<IDynamicViewportFactory, DynamicViewportFactory>();
-                sc.AddSingleton<IViewportManager, ViewportManager>();
+                sc.AddScoped<IViewportManager, ViewportManager>();
             });
             
 

@@ -14,7 +14,7 @@ namespace Tvision2.Core.Engine
             setup.Builder.ConfigureServices((hc, sc) =>
             {
  
-                sc.AddSingleton<ILayoutManager, LayoutManager>();
+                sc.AddScoped<ILayoutManager, LayoutManager>();
             });
             return setup;
         }

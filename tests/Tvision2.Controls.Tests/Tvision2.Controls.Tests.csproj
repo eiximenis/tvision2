@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>$(NetCoreTargetVersion)</TargetFramework>
+
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -14,8 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Tvision2.Core\Tvision2.Core.csproj" />
+    <ProjectReference Include="..\..\src\Tvision2.Controls\Tvision2.Controls.csproj" />
     <ProjectReference Include="..\..\src\Tvision2.Xunit\Tvision2.Xunit.csproj" />
   </ItemGroup>
 
 </Project>
+  

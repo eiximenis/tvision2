@@ -15,13 +15,10 @@ namespace Tvision2.DependencyInjection
         public static Tvision2Setup AddTvControls(this Tvision2Setup setup, Action<ISkinManagerBuilder> skinOptions = null)
         {
 
-            var tree = new ControlsTree();
-
             setup.Builder.ConfigureServices(sc =>
             {
-                sc.AddSingleton<ControlsTree>(tree);
-                sc.AddSingleton<IControlsTree>(tree);
-                sc.AddSingleton<ISkinManager, SkinManager>();
+                sc.AddScoped<IControlsTree, ControlsTree>();
+                sc.AddScoped<ISkinManager, SkinManager>();
             });
 
             setup.AddHook<ChangeFocusEventHook>();
@@ -41,7 +38,6 @@ namespace Tvision2.DependencyInjection
 
 
                 var ctree = sp.GetRequiredService<IControlsTree>() as ControlsTree;
-                tree.AttachTo(engine.UI);
             });
 
             return setup;

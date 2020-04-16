@@ -17,7 +17,7 @@ namespace Tvision2.Controls
         where TState : IDirtyObject
     {
         private readonly Lazy<TvControlMetadata> _metadata;
-        private readonly ITvControl _owner;
+        private readonly Guid _parentId;
         public string ControlType { get; }
         public IStyle CurrentStyle { get; }
         private TvComponent<TState> _component;
@@ -39,14 +39,14 @@ namespace Tvision2.Controls
                     cfg.WhenComponentUnmounted(ctx => OnComponentUnmounted(ctx));
                 });
 
-            _metadata = new Lazy<TvControlMetadata>(() => new TvControlMetadata(this, creationParams, ConfigureStandardMetadataOptions));
+            _metadata = new Lazy<TvControlMetadata>(() => new TvControlMetadata(this, creationParams, ConfigureMetadataOptions));
             var typename = GetType().Name.ToLowerInvariant();
             var genericIdx = typename.IndexOf('`');
             ControlType = genericIdx != -1 ? typename.Substring(0, genericIdx) : typename;
             CurrentStyle = creationParams.Skin.GetControlStyle(this);
             State = initialState;
 
-            
+
             if (creationParams.AutoCreateViewport)
             {
                 Metadata.ViewportAutoCreated = true;
@@ -56,18 +56,7 @@ namespace Tvision2.Controls
                 _component.AddViewport(creationParams.Viewport);
                 Metadata.ViewportAutoCreated = false;
             }
-
-            _owner = creationParams.Owner;
-        }
-
-
-        private void ConfigureStandardMetadataOptions(TvControlMetadataOptions options)
-        {
-            if (_owner != null)
-            {
-                options.UseOwner(_owner);
-            }
-            ConfigureMetadataOptions(options);
+            _parentId = creationParams.ParentId;
         }
 
         protected virtual void ConfigureMetadataOptions(TvControlMetadataOptions options) { }
@@ -97,7 +86,16 @@ namespace Tvision2.Controls
             OnViewportCreated(AsComponent().Viewport);
 
             var ctree = ctx.OwnerEngine.GetControlsTree() as ControlsTree;
-            ctree.Add(Metadata);
+            if (Metadata.HasParent)
+            {
+                // TODO Assert == TRUE!!!!
+                ctree.AddAsChild(Metadata, Metadata.ParentId);
+            }
+            else
+            {
+                ctree.Add(Metadata);
+            }
+
             AddElements();
             OnControlMounted(ctx.OwnerEngine);
             return Task.FromResult(true);

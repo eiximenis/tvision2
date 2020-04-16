@@ -11,12 +11,16 @@ namespace Tvision2.Controls
         {
             return new TvControlCreationParametersBuilder<TState>(stateCreator).ConfigureState(stateCfg);
         }
+        public static ITvControlCreationParametersBuilder<TState> ForState<TState>(TState state, Action<TState> stateCfg = null)
+            where TState : IDirtyObject
+        {
+            return new TvControlCreationParametersBuilder<TState>(state).ConfigureState(stateCfg);
+        }
         public static ITvControlCreationParametersBuilder<TState> ForDefaultState<TState>(Action<TState> stateCfg = null)
             where TState : IDirtyObject, new()
         {
             return new TvControlCreationParametersBuilder<TState>(() => new TState()).ConfigureState(stateCfg);
         }
-
     }
     class TvControlCreationParametersBuilder<TState> : ITvControlCreationParametersBuilder<TState>
         where TState : IDirtyObject
@@ -28,14 +32,24 @@ namespace Tvision2.Controls
         public IViewport Viewport { get; private set; }
         private readonly Func<TState> _stateCreator;
         private string _name;
+        private Guid _parentId;
+        private readonly TState _initialState;
 
         public TvPoint Position { get; private set; }
-
+        public TvControlCreationParametersBuilder(TState initialState)
+        {
+            _stateCreator = null;
+            _positionSet = false;
+            _parentId = Guid.Empty;
+            _initialState = initialState;
+        }
 
         public TvControlCreationParametersBuilder(Func<TState> stateCreator)
         {
             _stateCreator = stateCreator;
             _positionSet = false;
+            _parentId = Guid.Empty;
+            _initialState = default(TState);
         }
 
         public ITvControlCreationParametersBuilder<TState> UseSkin(ISkin skin)
@@ -78,13 +92,19 @@ namespace Tvision2.Controls
             return this;
         }
 
+        public ITvControlCreationParametersBuilder<TState> ChildOf(Guid parentId)
+        {
+            _parentId = parentId;
+            return this;
+        }
+
         public TvControlCreationParameters<TState> Build()
         {
-            var state = _stateCreator();
+            var state = _stateCreator != null ? _stateCreator() : _initialState;
             StateConfigurator?.Invoke(state);
             return _positionSet
-                ? new TvControlCreationParameters<TState>(SkinToUse, Position, state, _name)
-                : new TvControlCreationParameters<TState>(SkinToUse, Viewport, state, _name);
+                ? new TvControlCreationParameters<TState>(SkinToUse, Position, state, name: _name, parentId: _parentId)
+                : new TvControlCreationParameters<TState>(SkinToUse, Viewport, state, name: _name, parentId: _parentId);
         }
 
     }

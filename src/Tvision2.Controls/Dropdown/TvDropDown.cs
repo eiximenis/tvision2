@@ -46,19 +46,23 @@ namespace Tvision2.Controls.Dropdown
         {
             if (_list == null)
             {
-                var listParameters = new TvControlCreationParameters<ListState<DropDownValue>>(_skin, viewport,
-                    new ListState<DropDownValue>(State.Values, new TvListColumnSpec<DropDownValue>() { Transformer = x => x.Text }), "_list", this);
-                _list = new TvList<DropDownValue>(listParameters, opt =>
+                var initialState = new ListState<DropDownValue>(State.Values, new TvListColumnSpec<DropDownValue>()
                 {
-
+                    Transformer = x => x.Text
                 });
+
+                var listParams = TvControlCreationParametersBuilder.ForState(initialState)
+                    .UseViewport(viewport).UseSkin(_skin)
+                    .UseControlName("_list").ChildOf(Metadata.ControlId);
+                _list = new TvList<DropDownValue>(listParams, opt => { });
                 _list.Metadata.OnFocusLost.Add(ListLostFocus);
             }
 
             if (_label == null)
             {
-                var labelViewport = new Viewport(viewport.Position,viewport.Bounds.SingleRow(), viewport.ZIndex);
-                var labelParameters = new TvControlCreationParameters<LabelState>(_skin, labelViewport, new LabelState() { Text = "value" }, Name + "_label", this);
+                var labelViewport = new Viewport(viewport.Position, viewport.Bounds.SingleRow(), viewport.ZIndex);
+                var labelParameters = new TvControlCreationParameters<LabelState>(_skin, labelViewport,
+                    new LabelState() { Text = "value" }, Name + "_label", Metadata.ControlId);
                 _label = new TvLabel(labelParameters);
                 _label.Metadata.CanFocus = true;
             }

@@ -66,7 +66,7 @@ namespace Tvision2.Controls.List
             var selectedAttr = Metadata.IsFocused ? CurrentStyle.AlternateFocused : CurrentStyle.Alternate;
             var viewport = context.Viewport;
             var numitems = State.Count;
-            State.ItemsView.Adjust(viewport.Bounds.Rows - 2);
+                State.ItemsView.Adjust(viewport.Bounds.Rows - 2);
             for (var idx = 0; idx < viewport.Bounds.Rows - 2; idx++)
             {
                 if (idx < State.ItemsView.NumItems)

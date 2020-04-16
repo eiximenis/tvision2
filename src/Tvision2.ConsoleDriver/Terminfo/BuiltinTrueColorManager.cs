@@ -1,7 +1,6 @@
 using System;
 using System.Net;
 using System.Runtime.InteropServices.ComTypes;
-using Microsoft.Extensions.Logging.Internal;
 using Tvision2.ConsoleDriver.Common;
 using Tvision2.Core.Colors;
 

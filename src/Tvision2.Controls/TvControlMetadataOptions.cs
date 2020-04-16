@@ -11,13 +11,10 @@ namespace Tvision2.Controls
         internal Action OnFocusAction { get; private set; }
 
         internal Func<TvControlMetadata, bool> AcceptFocusPredicate { get; private set; }
-        internal Guid OwnerId { get; private set; }
-
         internal bool IsDrawable { get; private set; }
 
         public TvControlMetadataOptions()
         {
-            OwnerId = Guid.Empty;
             IsDrawable = true;
         }
 
@@ -46,15 +43,5 @@ namespace Tvision2.Controls
             IsDrawable = false;
         }
 
-
-        internal void UseOwner(ITvControl owner)
-        {
-            var newOwnerId = owner.AsComponent().ComponentId;
-            if (OwnerId != Guid.Empty && OwnerId != newOwnerId)
-            {
-                throw new InvalidOperationException("Can't set OwnerId twice.");
-            }
-            OwnerId = newOwnerId;
-        }
     }
 }

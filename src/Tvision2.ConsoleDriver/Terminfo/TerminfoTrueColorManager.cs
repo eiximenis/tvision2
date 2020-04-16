@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging.Internal;
 using Tvision2.ConsoleDriver.Common;
 using Tvision2.Core.Colors;
 

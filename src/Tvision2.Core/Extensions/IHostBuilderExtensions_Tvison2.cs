@@ -24,8 +24,8 @@ namespace Microsoft.Extensions.Hosting
             builder.ConfigureServices((hc, sc) =>
             {
                 sc.AddSingleton<Tvision2Options>(setup.Options as Tvision2Options);
-                sc.AddSingleton<ITuiEngine, TuiEngine>();
-                sc.AddSingleton<IComponentTree, ComponentTree>();
+                sc.AddScoped<ITuiEngine, TuiEngine>();
+                sc.AddScoped<IComponentTree, ComponentTree>();
 
             });
 

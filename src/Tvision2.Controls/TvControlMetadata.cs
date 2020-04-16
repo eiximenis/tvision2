@@ -49,7 +49,12 @@ namespace Tvision2.Controls
         public bool CanFocus { get; set; }
         public IControlsTree OwnerTree { get; internal set; }
         public ITvControl Control { get; }
-        public Guid OwnerId { get; private set; }
+        public Guid ParentId { get; private set; }
+
+        public bool HasParent
+        {
+            get => ParentId != Guid.Empty;
+        }
 
         public TvControlCreationParameters CreationParameters { get; }
 
@@ -75,9 +80,9 @@ namespace Tvision2.Controls
             CanFocus = true;
             ControlId = control.AsComponent().ComponentId;
             OwnerTree = null;
+            ParentId = creationParameters.ParentId;
             _options = new TvControlMetadataOptions();
             optionsAction?.Invoke(_options);
-            OwnerId = _options.OwnerId;
         }
 
         public void DisableFocusability()

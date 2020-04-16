@@ -1,14 +1,18 @@
 <Project>
   <PropertyGroup Label="SDK Versions">
-    <NetStandardTargetVersion>netstandard2.0</NetStandardTargetVersion>
-    <NetCoreTargetVersion>netcoreapp2.1</NetCoreTargetVersion>
-    <MicrosoftNETTestSdkPackageVersion>15.8.0</MicrosoftNETTestSdkPackageVersion>
+    <NetStandardTargetVersion>netstandard2.1</NetStandardTargetVersion>
+    <NetCoreTargetVersion>netcoreapp3.1</NetCoreTargetVersion>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="Package Versions">
-    <MicrosoftExtensionsDependencyInjectionAbstractionsVersion>2.1.1</MicrosoftExtensionsDependencyInjectionAbstractionsVersion>
-    <MicrosoftExtensionsHostingVersion>2.1.1</MicrosoftExtensionsHostingVersion>
+    <MicrosoftExtensionsDependencyInjectionAbstractionsVersion>3.1.3</MicrosoftExtensionsDependencyInjectionAbstractionsVersion>
+    <MicrosoftExtensionsHostingVersion>3.1.3</MicrosoftExtensionsHostingVersion>
+    <FluentAssertionsVersion>5.10.3</FluentAssertionsVersion>
+    <MicrosoftNETTestSdkVersion>16.5.0</MicrosoftNETTestSdkVersion>
+    <XunitVersion>2.4.1</XunitVersion>
+    <XunitRunnerVisualStudioVersion>2.4.1</XunitRunnerVisualStudioVersion>
+    <CoverletCollectorVersion>1.2.1</CoverletCollectorVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="CLI Tools Versions">
