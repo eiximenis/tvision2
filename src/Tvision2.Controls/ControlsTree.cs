@@ -32,7 +32,7 @@ namespace Tvision2.Controls
             ChildDeleted = 2
         }
 
-        private readonly ControlTreeNode _parent;
+        public ControlTreeNode Parent { get; private set; }
         private Dictionary<Guid, ControlTreeNode> _childs;
 
         public TvControlMetadata Control { get; }
@@ -54,7 +54,7 @@ namespace Tvision2.Controls
 
         public ControlTreeNode(TvControlMetadata control, ControlTreeNode parent = null)
         {
-            _parent = parent;
+            Parent = parent;
             _childs = new Dictionary<Guid, ControlTreeNode>();
             Control = control;
         }
@@ -83,7 +83,7 @@ namespace Tvision2.Controls
             var child = Descendants().FirstOrDefault(c => c.Control == toRemove);
             if (child != null)
             {
-                var nearParent = child._parent;
+                var nearParent = child.Parent;
                 var deletedNodes = child.Delete();
                 return new RemoveResult(RemoveStatus.ChildDeleted, nearParent, deletedNodes);
             }
@@ -99,13 +99,30 @@ namespace Tvision2.Controls
             {
                 deleted.AddRange(child.Value.Delete());
             }
-            if (_parent != null)
+            if (Parent != null)
             {
-                _parent._childs.Remove(Control.ControlId);
+                Parent._childs.Remove(Control.ControlId);
             }
             Control.OwnerTree = null;
             deleted.Add(this);
             return deleted;
+        }
+
+        public bool DismissChild(ControlTreeNode child)
+        {
+            var key = child.Control.ControlId;
+            if (_childs.ContainsKey(key)) {
+                _childs.Remove(child.Control.ControlId);
+                child.Parent = null;
+                return true;
+            }
+            return false;
+        }
+
+        public void Adopt(ControlTreeNode nodeToAdopt)
+        {
+            nodeToAdopt.Parent = this;
+            _childs.Add(nodeToAdopt.Control.ControlId, nodeToAdopt);
         }
     }
 
@@ -113,14 +130,13 @@ namespace Tvision2.Controls
     {
 
         private readonly List<ControlTreeNode> _roots;
-
-
-
         private readonly LinkedList<TvControlMetadata> _flattenedTree;
         private TvControlMetadata _focused;
         private TvControlMetadata _previousFocused;
         public event EventHandler<FocusChangedEventArgs> FocusChanged;
         public IEnumerable<TvControlMetadata> ControlsMetadata => _flattenedTree;
+
+        private TvControlMetadata _controlWithFocusCaptured;
 
         public ControlsTree()
         {
@@ -128,6 +144,15 @@ namespace Tvision2.Controls
             _flattenedTree = new LinkedList<TvControlMetadata>();
             _focused = null;
             _previousFocused = null;
+            _controlWithFocusCaptured = null;
+        }
+
+        public TvControlMetadata this[Guid id]
+        {
+            get
+            {
+                return _flattenedTree.FirstOrDefault(c => c.ControlId == id);
+            }
         }
 
         public void Add(TvControlMetadata cdata)
@@ -143,13 +168,24 @@ namespace Tvision2.Controls
                 TryToSetInitialFocus();
             }
 
-            FlattenTree();
+            FlattenTree(_controlWithFocusCaptured);
         }
 
-        private void FlattenTree()
+        private void FlattenTree(TvControlMetadata root = null)
         {
             _flattenedTree.Clear();
-            var flattened = _roots.SelectMany(r => r.SubTree().Select(n => n.Control));
+
+            IEnumerable<TvControlMetadata> flattened = null;
+            if (root == null)
+            {
+                flattened = _roots.SelectMany(r => r.SubTree().Select(n => n.Control));
+            }
+            else
+            {
+                var rootNode = FindNodeById(root.ControlId);
+                flattened = rootNode.SubTree().Select(n => n.Control);
+            }
+
             foreach (var item in flattened)
             {
                 _flattenedTree.AddLast(item);
@@ -176,6 +212,17 @@ namespace Tvision2.Controls
 
         }
 
+        public void Adopt(TvControlMetadata newParent, TvControlMetadata toAdopt)
+        {
+            var nodeToAdopt = FindNodeById(toAdopt.ControlId);
+            var nodeParent = FindNodeById(newParent.ControlId);
+            var oldParent = nodeToAdopt.Parent;
+            var dismissed = oldParent.DismissChild(nodeToAdopt);
+            // TODO: Assert dismissed is TRUE
+            nodeParent.Adopt(nodeToAdopt);
+            FlattenTree(_controlWithFocusCaptured);
+        }
+
 
         private ControlTreeNode FindNodeById(Guid id)
         {
@@ -198,7 +245,7 @@ namespace Tvision2.Controls
             if (node != null)
             {
                 node.Add(cdata);
-                FlattenTree();
+                FlattenTree(_controlWithFocusCaptured);
             }
             cdata.OwnerTree = this;
             return node != null;
@@ -213,7 +260,7 @@ namespace Tvision2.Controls
                 if (removeResult.Status == ControlTreeNode.RemoveStatus.ChildDeleted ||
                     removeResult.Status == ControlTreeNode.RemoveStatus.RootDeleted)
                 {
-                    FlattenTree();
+                    FlattenTree(_controlWithFocusCaptured);
                     var allDeletedNodes = removeResult.AllDeletedNodes;
                     if (allDeletedNodes.Any(x => x.Control == _focused))
                     {
@@ -228,9 +275,6 @@ namespace Tvision2.Controls
 
         public TvControlMetadata NextControl(TvControlMetadata current)
         {
-
-
-
             var next = current != null ? _flattenedTree.Find(current)?.Next : null;
             return next != null ? next.Value : _flattenedTree.First.Value;
         }
@@ -253,6 +297,18 @@ namespace Tvision2.Controls
         }
 
         public TvControlMetadata First() => _flattenedTree.First?.Value;
+
+        public void CaptureFocus(TvControlMetadata control)
+        {
+            _controlWithFocusCaptured = control;
+            FlattenTree(_controlWithFocusCaptured);
+        }
+
+        public void FreeFocus()
+        {
+            _controlWithFocusCaptured = null;
+            FlattenTree();
+        }
 
 
         public bool MoveFocusToNext()

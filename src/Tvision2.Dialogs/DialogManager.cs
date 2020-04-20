@@ -12,17 +12,13 @@ namespace Tvision2.Dialogs
     {
         private readonly ISkinManager _skinManager;
         private readonly IComponentTree _ui;
-        private readonly List<TvControlMetadata> _outsideDialogControls;
-        private readonly IControlsTree _rootControls;
 
         public TvDialog DialogShown { get; private set; }
 
-        public DialogManager(ISkinManager skinManager, ITuiEngine engine, IControlsTree rootControls)
+        public DialogManager(ISkinManager skinManager, ITuiEngine engine)
         { 
             _skinManager = skinManager;
             _ui = engine.UI;
-            _outsideDialogControls = new List<TvControlMetadata>();
-            _rootControls = rootControls;
         }
 
         public TvDialog CreateDialog(IViewport viewport, Action<TvDialog> dialogSetup, string name = null)
@@ -43,11 +39,6 @@ namespace Tvision2.Dialogs
             if (DialogShown != null)
             {
                 DialogShown.Close();
-                foreach (var metadata in _outsideDialogControls)
-                {
-                    metadata.RestoreFocusability();
-                }
-                _outsideDialogControls.Clear();
             }
         }
 
@@ -55,6 +46,7 @@ namespace Tvision2.Dialogs
         {
             _ui.Add(dialog, _ =>
             {
+                /*
                 var insideControls = dialog.State.UI.OwnedControls(_rootControls).Union(dialog.State.Buttons.Select(b => b.Metadata));
 
                 foreach (var controlMetadata in _rootControls.ControlsMetadata)
@@ -65,6 +57,7 @@ namespace Tvision2.Dialogs
                         _outsideDialogControls.Add(controlMetadata);
                     }
                 }
+                */
             });
             DialogShown = dialog;
         }

@@ -9,6 +9,12 @@ namespace Tvision2.Core.Engine
     internal class TvComponentMetadata : IComponentMetadata, IConfigurableComponentMetadata
     {
         public TvComponent Component { get; }
+
+        public Guid Id
+        {
+            get => Component.ComponentId;
+        }
+
         public event EventHandler<ViewportUpdatedEventArgs> ViewportChanged;
         private readonly ActionChain<ComponentMoutingContext> _onComponentMounted;
         private readonly ActionChain<ComponentMoutingContext> _onComponentUnmounted;

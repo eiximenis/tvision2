@@ -36,6 +36,12 @@ namespace Tvision2.Core.Engine
             _parent = root;
         }
 
+
+        public IComponentMetadata AddAsChild(TvComponent componentToAdd, TvComponent parent, Action<ITuiEngine> afterAddAction = null)
+        {
+            throw new NotSupportedException();
+        }
+
         public IComponentMetadata AddAfter(TvComponent componentToAdd, TvComponent componentBefore, Action<ITuiEngine> afterAddAction = null)
         {
             if (_myComponents.ContainsKey(_currentKey))
@@ -64,9 +70,9 @@ namespace Tvision2.Core.Engine
 
         IComponentMetadata IComponentTree.Add(TvComponent component, Action<ITuiEngine> afterAddAction) => AddAfter(component, null, afterAddAction);
 
-        IEnumerable<TvComponent> IComponentTree.Components => _myComponents.Values.SelectMany(c => c.Components);
+        IEnumerable<TvComponent> IReadonlyComponentTree.Components => _myComponents.Values.SelectMany(c => c.Components);
 
-        TvComponent IComponentTree.GetComponent(string name)
+        TvComponent IReadonlyComponentTree.GetComponent(string name)
         {
             return ((IComponentTree)this).Components.FirstOrDefault(c => c.Name == name);
         }

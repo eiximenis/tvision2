@@ -80,13 +80,13 @@ namespace Tvision2.Controls.Dropdown
             _ownerUi.Add(_label);
         }
 
-        protected override void OnControlUnmounted(ITuiEngine engine)
+        protected override ControlCanBeUnmounted OnControlWillbeUnmounted(ITuiEngine ownerEngine)
         {
-            _ownerUi.Remove(_label);
-            _ownerUi.Remove(_list);
             _list.OnItemClicked.Remove(_idClickedSubs);
             _ownerUi = null;
+            return ControlCanBeUnmounted.Yes;
         }
+
 
         protected override void ConfigureMetadataOptions(TvControlMetadataOptions options)
         {

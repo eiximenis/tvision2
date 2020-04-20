@@ -40,6 +40,14 @@ namespace Tvision2.Core.Engine
             return metadata;
         }
 
+        public IComponentMetadata AddAsChild(TvComponent componentToAdd, TvComponent parent, Action<ITuiEngine> afterAddAction = null)
+        {
+            var metadata = _parent.AddAsChild(componentToAdd, parent, afterAddAction);
+            _myComponents.Add(componentToAdd);
+            OnComponentAdded(componentToAdd.Metadata);
+            return metadata;
+        }
+
 
         public TvComponent GetComponent(string name)
         {

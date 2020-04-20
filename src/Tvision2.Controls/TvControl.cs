@@ -17,7 +17,6 @@ namespace Tvision2.Controls
         where TState : IDirtyObject
     {
         private readonly Lazy<TvControlMetadata> _metadata;
-        private readonly Guid _parentId;
         public string ControlType { get; }
         public IStyle CurrentStyle { get; }
         private TvComponent<TState> _component;
@@ -25,6 +24,11 @@ namespace Tvision2.Controls
         public TState State { get; }
         public string Name => AsComponent().Name;
 
+        public enum ControlCanBeUnmounted
+        {
+            Yes = 0,
+            No = 1
+        }
 
 
         public TvControl(TvControlCreationParameters<TState> creationParams)
@@ -37,6 +41,7 @@ namespace Tvision2.Controls
                 {
                     cfg.WhenComponentMounted(ctx => OnComponentMounted(ctx));
                     cfg.WhenComponentUnmounted(ctx => OnComponentUnmounted(ctx));
+                    cfg.WhenComponentWillbeUnmounted(ctx => OnComponentWillbeUnmounted(ctx));
                 });
 
             _metadata = new Lazy<TvControlMetadata>(() => new TvControlMetadata(this, creationParams, ConfigureMetadataOptions));
@@ -56,7 +61,7 @@ namespace Tvision2.Controls
                 _component.AddViewport(creationParams.Viewport);
                 Metadata.ViewportAutoCreated = false;
             }
-            _parentId = creationParams.ParentId;
+
         }
 
         protected virtual void ConfigureMetadataOptions(TvControlMetadataOptions options) { }
@@ -105,7 +110,16 @@ namespace Tvision2.Controls
         {
         }
 
+        private void OnComponentWillbeUnmounted(ComponentMountingCancellableContext ctx)
+        {
+            var cancel = OnControlWillbeUnmounted(ctx.OwnerEngine);
+            if (cancel == ControlCanBeUnmounted.No)
+            {
+                ctx.Cancel();
+            }
+        }
 
+        protected virtual ControlCanBeUnmounted OnControlWillbeUnmounted(ITuiEngine ownerEngine) => ControlCanBeUnmounted.Yes;
         private void CreateAndSetViewport()
         {
             _component.AddViewport(CalculateViewport());

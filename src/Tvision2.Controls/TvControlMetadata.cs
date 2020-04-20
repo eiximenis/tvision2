@@ -22,7 +22,6 @@ namespace Tvision2.Controls
 
     public class TvControlMetadata : IDirtyObject
     {
-        private bool _oldCanFocus;
         public bool FocusTransferred { get; private set; }
         private readonly TvControlMetadataOptions _options;
         public Guid ControlId { get; }
@@ -48,6 +47,7 @@ namespace Tvision2.Controls
         public bool IsDirty { get; private set; }
         public bool CanFocus { get; set; }
         public IControlsTree OwnerTree { get; internal set; }
+        public bool IsAttached { get => OwnerTree != null; }
         public ITvControl Control { get; }
         public Guid ParentId { get; private set; }
 
@@ -85,33 +85,12 @@ namespace Tvision2.Controls
             optionsAction?.Invoke(_options);
         }
 
-        public void DisableFocusability()
-        {
-            _oldCanFocus = CanFocus;
-            CanFocus = false;
-        }
-
-        public void RestoreFocusability()
-        {
-            CanFocus = _oldCanFocus;
-        }
-
-
         public void Focus(bool force = false)
         {
             if (force || CanFocus)
             {
                 OwnerTree?.Focus(this);
             }
-        }
-
-        public void AddCreatedControl<TState>(TvControl<TState> control)
-            where TState : IDirtyObject
-        {
-            if (OwnerTree == null) return;
-
-            
-
         }
 
         internal void DoFocus()
@@ -129,7 +108,19 @@ namespace Tvision2.Controls
             _options.OnLostFocusAction?.Invoke();
             _onFocusLost.Invoke(new TvFocusEventData(OwnerTree, ControlId, focusGained: false));
         }
-
         public void Validate() => IsDirty = false;
+
+
+        public void CaptureControl(TvControlMetadata control)
+        { 
+            if (!control.IsAttached)
+            {
+                control.ParentId = this.ControlId;
+                return;
+            }
+            // TODO: Need a better way. Do we need to expose full ControlsTree as IControlsTree? Drawbacks?
+            ((ControlsTree)OwnerTree).Adopt(this, control);
+            control.ParentId = this.ControlId;
+        }
     }
 }

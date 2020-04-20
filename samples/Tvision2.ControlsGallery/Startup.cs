@@ -45,6 +45,7 @@ namespace Tvision2.ControlsGallery
             button.OnClick.Add(state =>
             {
                 ShowDialog(state, combo.State);
+                tui.UI.Remove(combo);
             });
             tui.UI.Add(combo);
             tui.UI.Add(button);
@@ -59,7 +60,7 @@ namespace Tvision2.ControlsGallery
                         .CreationParametersBuilder(s => s.Text = "Hello " + comboState.SelectedValue)
                         .UseSkin(_skinManager.CurrentSkin)
                         .UseViewport(new Viewport(TvPoint.Zero, 18)));
-                    dlg.State.UI.Add(label);
+                    dlg.Add(label);
                 });
 
             _dialogManager.ShowDialog(dialog);

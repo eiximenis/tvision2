@@ -22,6 +22,8 @@ namespace Tvision2.Controls
         IEnumerable<TvControlMetadata> Descendants(TvControlMetadata cdata);
         IEnumerable<TvControlMetadata> Childs(TvControlMetadata cdata);
 
+        TvControlMetadata this[Guid id] { get; }
+
         bool ReturnFocusToPrevious();
 
 
