@@ -35,7 +35,7 @@ namespace Tvision2.Controls.Window
 
         private void MyViewportChanged(object sender, ViewportUpdatedEventArgs e)
         {
-            var childs = State.UI.Components.ToList();
+            var childs = State.UI.ToList();
             var diff = e.Current.Position - e.Previous.Position;
             foreach (var child in childs)
             {
@@ -45,7 +45,7 @@ namespace Tvision2.Controls.Window
 
         internal void Close()
         {
-            var childs = State.UI.Components.ToList();
+            var childs = State.UI.ToList();
             foreach (var child in childs)
             {
                 State.UI.Remove(child);

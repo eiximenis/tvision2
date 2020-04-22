@@ -7,10 +7,10 @@ using Tvision2.Core.Engine;
 
 namespace Tvision2.Layouts
 {
-    public interface ITvContainer
+
+    public interface ITvContainer  
     {
         TvComponent AsComponent();
         string Name { get; }
-        void Clear();
     }
 }

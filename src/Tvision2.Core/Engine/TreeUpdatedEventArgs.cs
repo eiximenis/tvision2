@@ -7,11 +7,13 @@ namespace Tvision2.Core.Engine
 {
     public class TreeUpdatedEventArgs : EventArgs
     {
-        public IComponentMetadata ComponentMetadata { get; }
+        public TvComponentMetadata ComponentMetadata { get; }
+        public ComponentTreeNode Node { get; }
 
-        public TreeUpdatedEventArgs(IComponentMetadata metadata)
+        public TreeUpdatedEventArgs(TvComponentMetadata metadata, ComponentTreeNode node)
         {
             ComponentMetadata = metadata;
+            Node = node;
         }
 
     }

@@ -1,46 +1,33 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 
 namespace Tvision2.Layouts.Canvas
 {
-    public class TvCanvas : ITvContainer
+    public class TvCanvas : ITvContainer, IComponentsCollection
     {
 
         private readonly TvComponent<object> _thisComponent;
-        private readonly ListComponentTree _childs;
-        private readonly IComponentTree _root;
+        private readonly ListComponentCollection _childs;
         public string Name { get; }
 
         public TvComponent AsComponent() => _thisComponent;
 
-        public IComponentTree Children => _childs;
+        public IComponentsCollection Children => this;
+
+        public int Count => throw new NotImplementedException();
+
+        int IComponentsCollection.Count => throw new NotImplementedException();
 
         public TvCanvas(IComponentTree root, string name = null)
         {
-            _root = root;
-            _childs = new ListComponentTree(root);
+            _childs = new ListComponentCollection();
             _thisComponent = new TvComponent<object>(new Object(), name ?? $"TvCanvas_{Guid.NewGuid()}");
             Name = _thisComponent.Name;
             _thisComponent.Metadata.ViewportChanged += OnViewportChange;
-            _childs.ComponentAdded += OnChildAdded;
-            _childs.ComponentRemoved += OnChildRemoved;
-            root.ComponentRemoved += OnRootRemoved;
-        }
-
-        private void OnRootRemoved(object sender, TreeUpdatedEventArgs e)
-        {
-            if (e.ComponentMetadata == _thisComponent.Metadata)
-            {
-                Clear();
-                _root.ComponentAdded -= OnRootRemoved;
-            }
-        }
-
-        public void Clear()
-        {
-            _childs.Clear();
         }
 
         private void OnChildRemoved(object sender, TreeUpdatedEventArgs e)
@@ -93,5 +80,11 @@ namespace Tvision2.Layouts.Canvas
             }
         }
 
+        void IComponentsCollection.Add(TvComponent child) => _childs.Add(child);
+        bool IComponentsCollection.Remove(TvComponent component) => _childs.Remove(component);
+        void IComponentsCollection.Clear() => _childs.Clear();
+
+        IEnumerator<TvComponent> IEnumerable<TvComponent>.GetEnumerator() => _childs.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => _childs.GetEnumerator();
     }
 }

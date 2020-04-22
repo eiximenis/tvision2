@@ -6,11 +6,6 @@ namespace Tvision2.Controls
 {
     public interface IControlsTree
     {
-        public enum ChildRelationship
-        {
-            Direct,
-            All
-        }
         TvControlMetadata NextControl(TvControlMetadata current);
         TvControlMetadata PreviousControl(TvControlMetadata current);
         TvControlMetadata CurrentFocused();
@@ -18,9 +13,6 @@ namespace Tvision2.Controls
         TvControlMetadata First();
         bool MoveFocusToNext();
         IEnumerable<TvControlMetadata> ControlsMetadata { get; }
-
-        IEnumerable<TvControlMetadata> Descendants(TvControlMetadata cdata);
-        IEnumerable<TvControlMetadata> Childs(TvControlMetadata cdata);
 
         TvControlMetadata this[Guid id] { get; }
 

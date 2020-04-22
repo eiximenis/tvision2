@@ -12,17 +12,19 @@ namespace Tvision2.Core.Engine
         TvComponent GetComponent(string name);
         IEnumerable<TvComponent> Components { get; }
 
+        IEnumerable<ComponentTreeNode> NodesList { get; }
+
     }
 
     public interface IComponentTree : IReadonlyComponentTree
     {
         event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
         event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
+        event EventHandler TreeUpdated;
 
-        IComponentMetadata AddAfter(TvComponent componentToAdd, TvComponent componentBefore, Action<ITuiEngine> afterAddAction = null);
-        IComponentMetadata Add(TvComponent component, Action<ITuiEngine> afterAddAction = null);
-        IComponentMetadata AddAsChild(TvComponent componentToAdd, TvComponent parent, Action<ITuiEngine> afterAddAction = null);
-
+        TvComponentMetadata Add(TvComponent component, Action<AddComponentOptions> addOptions = null);
+        TvComponentMetadata AddAfter(TvComponent componentToAdd, TvComponent componentBefore);
+        TvComponentMetadata AddAsChild(TvComponent componentToAdd, TvComponent parent, Action<IAddChildComponentOptions> options = null);
         bool Remove(TvComponent component);
 
         void Clear();

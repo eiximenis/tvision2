@@ -12,7 +12,9 @@ namespace Tvision2.Core.Engine
 
         public static void Add(this IComponentTree tree, ITvContainer container)
         {
-            tree.Add(container.AsComponent(), engine => ((LayoutManager)engine.GetLayoutManager()).Add(container));
+            tree.Add(container.AsComponent(), opt =>
+                opt.ExecuteAfterAdding(engine => 
+                    ((LayoutManager)engine.GetLayoutManager()).Add(container)));
         }
 
         public static bool Remove(this IComponentTree tree, ITvContainer container)

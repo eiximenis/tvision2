@@ -10,7 +10,7 @@ using Tvision2.Events;
 namespace Tvision2.Core.Engine
 {
 
-    internal class ComponentTreeNode
+    public class ComponentTreeNode
     {
 
         public struct RemoveResult
@@ -27,6 +27,8 @@ namespace Tvision2.Core.Engine
                 NearestParent = nearestParent;
                 _allDeletedNodes = deletedNodes;
             }
+
+            public static RemoveResult NotFound() => new RemoveResult(RemoveStatus.NotFound, null, null);
         }
 
         public enum RemoveStatus
@@ -36,10 +38,20 @@ namespace Tvision2.Core.Engine
             ChildDeleted = 2
         }
 
-        public ComponentTreeNode Parent { get; private set; }
-        private Dictionary<Guid, ComponentTreeNode> _childs;
 
-        public TvComponentMetadata Data { get; }
+        public bool HasParent
+        {
+            get => Parent != null;
+        }
+        public ComponentTreeNode Parent { get; private set; }
+
+        private Dictionary<Guid, ComponentTreeNode> _childs;
+        private readonly Dictionary<Type, object> _tags;
+        public bool IsDismissed { get; private set; }
+
+        public TvComponentMetadata Data { get; private set; }
+
+        public int Level { get; private set; }
 
         public IEnumerable<ComponentTreeNode> Childs
         {
@@ -61,12 +73,49 @@ namespace Tvision2.Core.Engine
             Parent = parent;
             _childs = new Dictionary<Guid, ComponentTreeNode>();
             Data = cmp;
+            Level = parent != null ? parent.Level + 1 : 0;
+            _tags = new Dictionary<Type, object>();
+            IsDismissed = false;
         }
 
-        public void Add(TvComponentMetadata cdata)
+        public TTag GetTag<TTag>()
+        {
+            return _tags.TryGetValue(typeof(TTag), out object value) ? (TTag)value : default;
+        }
+
+        public void SetTag<TTag>(TTag value)
+        {
+            var key = typeof(TTag);
+            if (_tags.ContainsKey(key))
+            {
+                _tags[key] = value;
+            }
+            else
+            {
+                _tags.Add(key, value);
+            }
+        }
+
+        public bool HasTag<TTag>()
+        {
+            return _tags.ContainsKey(typeof(TTag));
+        }
+
+        public ComponentTreeNode Root()
+        {
+            var current = this;
+            while (current.Parent != null)
+            {
+                current = current.Parent;
+            }
+            return current;
+        }
+
+        public ComponentTreeNode Add(TvComponentMetadata cdata)
         {
             var node = new ComponentTreeNode(cdata, this);
             _childs.Add(cdata.Id, node);
+            return node;
         }
 
         public ComponentTreeNode Find(Guid id)
@@ -78,7 +127,6 @@ namespace Tvision2.Core.Engine
 
         public RemoveResult Remove(TvComponentMetadata toRemove)
         {
-
             if (toRemove == Data)
             {
                 var deletedNodes = Delete();
@@ -118,64 +166,44 @@ namespace Tvision2.Core.Engine
             {
                 _childs.Remove(child.Data.Id);
                 child.Parent = null;
+                child.Level = 0;
                 return true;
             }
             return false;
         }
 
-        public void Adopt(ComponentTreeNode nodeToAdopt)
+        internal void Clear()
         {
-            nodeToAdopt.Parent = this;
-            _childs.Add(nodeToAdopt.Data.Id, nodeToAdopt);
+            Parent = null;
+            _childs.Clear();
+            _tags.Clear();
+            Data = null;
+            Level = 0;
+            IsDismissed = true;
         }
     }
 
     public class ComponentTree : IComponentTree
     {
-
-        struct PendingAddData
-        {
-            public TvComponentMetadata Metadata { get; }
-            public TvComponentMetadata Parent { get; }
-            public TvComponentMetadata Before { get; }
-            public Action<ITuiEngine> AfterAdd { get; }
-
-            public PendingAddData(TvComponentMetadata metadata, TvComponentMetadata before, TvComponentMetadata parent, Action<ITuiEngine> afterAdd)
-            {
-                Metadata = metadata;
-                Before = before;
-                Parent = parent;
-                AfterAdd = afterAdd;
-            }
-
-            public static PendingAddData AddLast(TvComponentMetadata metadata, Action<ITuiEngine> afterAdd) =>
-                new PendingAddData(metadata, null, null, afterAdd);
-            public static PendingAddData AddAfter(TvComponentMetadata metadata, TvComponentMetadata before, Action<ITuiEngine> afterAdd) =>
-                new PendingAddData(metadata, before, null, afterAdd);
-            public static PendingAddData AddAsChild(TvComponentMetadata metadata, TvComponentMetadata parent, Action<ITuiEngine> afterAdd) =>
-                new PendingAddData(metadata, null, parent, afterAdd);
-        }
-
-
         private readonly LinkedList<ComponentTreeNode> _roots;
-        private readonly Dictionary<string, PendingAddData> _pendingAdds;
-        private readonly Dictionary<string, TvComponentMetadata> _pendingRemovalsPhase1;
-        private readonly Dictionary<string, TvComponentMetadata> _pendingRemovalsPhase2;
+        private readonly Dictionary<string, AddComponentOptions> _pendingAdds;
+        private readonly Dictionary<string, ComponentTreeNode> _pendingRemovalsPhase1;
+        private readonly Dictionary<string, ComponentTreeNode> _pendingRemovalsPhase2;
         private readonly List<IViewport> _viewportsToClear;
         private readonly IServiceProvider _serviceProvider;
         private readonly ITuiEngine _engine;
 
-        private readonly List<TvComponentMetadata> _flattened;
+        private readonly List<ComponentTreeNode> _flattened;
 
         public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
         public event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
+        public event EventHandler TreeUpdated;
 
-        public IEnumerable<TvComponent> Components => _flattened.Select(cm => cm.Component);
+        public IEnumerable<TvComponent> Components => _flattened.Select(node => node.Data.Component);
 
-        public TvComponent GetComponent(string name) => _flattened.FirstOrDefault(c => c.Component.Name == name)?.Component;
+        public IEnumerable<ComponentTreeNode> NodesList => _flattened;
 
-        public T GetInstanceOf<T>() => (T)_engine.ServiceProvider.GetService(typeof(T));
-
+        public TvComponent GetComponent(string name) => _flattened.FirstOrDefault(node => node.Data.Component.Name == name)?.Data.Component;
 
         public bool Remove(TvComponent component)
         {
@@ -183,7 +211,7 @@ namespace Tvision2.Core.Engine
             var node = FindNodeById(component.ComponentId);
             if (node != null)
             {
-                _pendingRemovalsPhase1.Add(name, component.Metadata as TvComponentMetadata);
+                _pendingRemovalsPhase1.Add(name, node);
                 return true;
             }
 
@@ -201,17 +229,14 @@ namespace Tvision2.Core.Engine
             foreach (var kvp in toDelete)
             {
                 var subtree = GetFlattenedTree(kvp.Value);
-                var canBeUnmounted = subtree.Any(c => c.CanBeUnmountedFrom(_engine));
+                var canBeUnmounted = subtree.Any(c => c.Data.CanBeUnmountedFrom(_engine));
                 if (canBeUnmounted)
                 {
                     _pendingRemovalsPhase2.Add(kvp.Key, kvp.Value);
-                    _viewportsToClear.AddRange(subtree.SelectMany(c => c.Component.Viewports.Select(v => v.Value)));
+                    _viewportsToClear.AddRange(subtree.SelectMany(c => c.Data.Component.Viewports.Select(v => v.Value)));
                 }
             }
         }
-
-
-
 
         private void DoPendingRemovalsPhase2()
         {
@@ -221,13 +246,23 @@ namespace Tvision2.Core.Engine
             }
             foreach (var kvp in _pendingRemovalsPhase2)
             {
-                DeleteComponent(kvp.Value);
-                var subtree = GetFlattenedTree(kvp.Value);
-                foreach (var cmp in subtree)
+                var deleteResult = DeleteComponent(kvp.Value.Data);
+                var subtree = deleteResult.AllDeletedNodes;
+                foreach (var node in subtree)
                 {
-                    cmp.UnmountedFrom(_engine);
-                    OnComponentRemoved(cmp);
+                    var cmp = node.Data;
+                    cmp.UnmountedFrom(_engine, this);
+                    OnComponentRemoved(cmp, node);
+                    if (node.HasParent)
+                    {
+                        node.Parent.Data.OnChildRemoved(cmp, node);
+                    }
                 }
+                foreach (var node in subtree)
+                {
+                    node.Clear();
+                }
+
             }
 
             _pendingRemovalsPhase2.Clear();
@@ -235,7 +270,7 @@ namespace Tvision2.Core.Engine
 
         }
 
-        private bool DeleteComponent(TvComponentMetadata cdata)
+        private ComponentTreeNode.RemoveResult DeleteComponent(TvComponentMetadata cdata)
         {
             foreach (var root in _roots)
             {
@@ -244,11 +279,11 @@ namespace Tvision2.Core.Engine
                 if (removeResult.Status == ComponentTreeNode.RemoveStatus.ChildDeleted ||
                     removeResult.Status == ComponentTreeNode.RemoveStatus.RootDeleted)
                 {
-                    return true;
+                    return removeResult;
                 }
             }
 
-            return false;
+            return ComponentTreeNode.RemoveResult.NotFound();
         }
 
         private void FlattenTree()
@@ -259,20 +294,20 @@ namespace Tvision2.Core.Engine
                 _flattened.Add(item);
             }
 
+            OnTreeUpdated();
         }
 
-        private IEnumerable<TvComponentMetadata> GetFlattenedTree(TvComponentMetadata root)
+        private IEnumerable<ComponentTreeNode> GetFlattenedTree(ComponentTreeNode root)
         {
 
-            IEnumerable<TvComponentMetadata> flattened = null;
+            IEnumerable<ComponentTreeNode> flattened = null;
             if (root == null)
             {
-                flattened = _roots.SelectMany(r => r.SubTree().Select(n => n.Data));
+                flattened = _roots.SelectMany(r => r.SubTree());
             }
             else
             {
-                var rootNode = FindNodeById(root.Id);
-                flattened = rootNode.SubTree().Select(n => n.Data);
+                flattened = root.SubTree();
             }
 
             return flattened;
@@ -295,33 +330,36 @@ namespace Tvision2.Core.Engine
         public ComponentTree(ITuiEngine engine, IServiceProvider serviceProvider)
         {
             _roots = new LinkedList<ComponentTreeNode>();
-            _flattened = new List<TvComponentMetadata>();
-            _pendingAdds = new Dictionary<string, PendingAddData>();
-            _pendingRemovalsPhase1 = new Dictionary<string, TvComponentMetadata>();
-            _pendingRemovalsPhase2 = new Dictionary<string, TvComponentMetadata>();
+            _flattened = new List<ComponentTreeNode>();
+            _pendingAdds = new Dictionary<string, AddComponentOptions>();
+            _pendingRemovalsPhase1 = new Dictionary<string, ComponentTreeNode>();
+            _pendingRemovalsPhase2 = new Dictionary<string, ComponentTreeNode>();
             _viewportsToClear = new List<IViewport>();
             _engine = engine;
             _serviceProvider = serviceProvider;
         }
 
-        public IComponentMetadata Add(TvComponent component, Action<ITuiEngine> afterAddAction = null)
+        public TvComponentMetadata AddAfter(TvComponent componentToAdd, TvComponent componentBefore)
         {
-            _pendingAdds.Add(component.Name, PendingAddData.AddLast(component.Metadata as TvComponentMetadata, afterAddAction));
-            return component.Metadata;
-        }
-
-        public IComponentMetadata AddAfter(TvComponent componentToAdd, TvComponent componentBefore, Action<ITuiEngine> afterAddAction = null)
-        {
-            _pendingAdds.Add(componentToAdd.Name, PendingAddData.AddAfter(componentToAdd.Metadata as TvComponentMetadata, componentBefore.Metadata as TvComponentMetadata, afterAddAction));
+            _pendingAdds.Add(componentToAdd.Name, AddComponentOptions.AddAfter(componentToAdd.Metadata, componentBefore.Metadata));
             return componentToAdd.Metadata;
         }
 
-        public IComponentMetadata AddAsChild(TvComponent componentToAdd, TvComponent parent, Action<ITuiEngine> afterAddAction = null)
+        public TvComponentMetadata AddAsChild(TvComponent componentToAdd, TvComponent parent, Action<IAddChildComponentOptions> options = null)
         {
-            _pendingAdds.Add(componentToAdd.Name, PendingAddData.AddAsChild(componentToAdd.Metadata as TvComponentMetadata, parent.Metadata as TvComponentMetadata, afterAddAction));
+            var addOptions = AddComponentOptions.AddAsChild(componentToAdd.Metadata, parent.Metadata);
+            options?.Invoke(addOptions);
+            _pendingAdds.Add(componentToAdd.Name, addOptions);
             return componentToAdd.Metadata;
         }
 
+        public TvComponentMetadata Add(TvComponent componentToAdd, Action<AddComponentOptions> addOptions = null)
+        {
+            var options = new AddComponentOptions(componentToAdd.Metadata);
+            addOptions?.Invoke(options);
+            _pendingAdds.Add(componentToAdd.Name, options);
+            return componentToAdd.Metadata;
+        }
 
         private void DoPendingAdds()
         {
@@ -335,22 +373,24 @@ namespace Tvision2.Core.Engine
 
             foreach (var kvp in toAdd)
             {
-                var pendingAddData = kvp.Value;
+                var addOptions = kvp.Value;
+                ComponentTreeNode nodeAdded;
 
-                if (pendingAddData.Parent != null)
+                if (addOptions.Parent != null)
                 {
-                    var parent = FindNodeById(pendingAddData.Parent.Id);
+                    var parent = FindNodeById(addOptions.Parent.Id);
                     Debug.Assert(parent != null);
-                    parent.Add(pendingAddData.Metadata);
+                    nodeAdded = parent.Add(addOptions.ComponentMetadata);
                 }
-                else if (pendingAddData.Before != null)
+                else if (addOptions.Before != null)
                 {
                     var cnode = _roots.First;
+                    nodeAdded = new ComponentTreeNode(addOptions.ComponentMetadata);
                     while (cnode != null)
                     {
-                        if (cnode.Value.Data == pendingAddData.Before)
+                        if (cnode.Value.Data == addOptions.Before)
                         {
-                            _roots.AddAfter(cnode, new ComponentTreeNode(pendingAddData.Metadata));            // TODO: Parent add is here!!!
+                            _roots.AddAfter(cnode, nodeAdded);
                             break;
                         }
                         cnode = cnode.Next;
@@ -358,14 +398,20 @@ namespace Tvision2.Core.Engine
                 }
                 else
                 {
-                    _roots.AddLast(new ComponentTreeNode(pendingAddData.Metadata));
+                    nodeAdded = new ComponentTreeNode(addOptions.ComponentMetadata);
+                    _roots.AddLast(nodeAdded);
                 }
 
-                CreateNeededBehaviors(pendingAddData.Metadata.Component);
-                pendingAddData.Metadata.MountedTo(_engine);
-                pendingAddData.Metadata.Component.Invalidate();
-                pendingAddData.AfterAdd?.Invoke(_engine);
-                OnComponentAdded(pendingAddData.Metadata);
+                CreateNeededBehaviors(addOptions.ComponentMetadata.Component);
+                addOptions.ComponentMetadata.MountedTo(_engine, this, nodeAdded, addOptions);
+                addOptions.ComponentMetadata.Component.Invalidate();
+                OnComponentAdded(addOptions.ComponentMetadata, nodeAdded);
+                if (nodeAdded.HasParent && addOptions.NotifyParentOnAdd)
+                {
+                    nodeAdded.Parent.Data.OnChildAdded(addOptions.ComponentMetadata, nodeAdded, addOptions);
+                }
+
+                addOptions.AfterAddAction?.Invoke(_engine);
             }
 
             FlattenTree();
@@ -380,14 +426,19 @@ namespace Tvision2.Core.Engine
             }
         }
 
-        private void OnComponentAdded(IComponentMetadata metadata)
+        private void OnTreeUpdated()
         {
-            ComponentAdded?.Invoke(this, new TreeUpdatedEventArgs(metadata));
+            TreeUpdated?.Invoke(this, EventArgs.Empty);
         }
 
-        private void OnComponentRemoved(IComponentMetadata metadata)
+        private void OnComponentAdded(TvComponentMetadata metadata, ComponentTreeNode node)
         {
-            ComponentRemoved?.Invoke(this, new TreeUpdatedEventArgs(metadata));
+            ComponentAdded?.Invoke(this, new TreeUpdatedEventArgs(metadata, node));
+        }
+
+        private void OnComponentRemoved(TvComponentMetadata metadata, ComponentTreeNode node)
+        {
+            ComponentRemoved?.Invoke(this, new TreeUpdatedEventArgs(metadata, node));
         }
 
         public void ClearViewport(IViewport viewportToClear)
@@ -410,9 +461,23 @@ namespace Tvision2.Core.Engine
         {
             DoPendingRemovalsPhase1();
             DoPendingAdds();
-            foreach (var cdata in _flattened)
+            foreach (var node in _flattened)
             {
-                cdata.Component.Update(evts);
+                
+                var component = node.Data.Component;
+                var metadata = node.Data;
+                component.Update(new UpdateContext(evts, node.Parent));
+                if (metadata.PropagateStatusToChildren && component.NeedToRedraw != RedrawNeededAction.None)
+                {
+                    var childs = metadata.TreeNode.Descendants();
+                    foreach (var childnode in childs)
+                    {
+                        if (childnode.Data.AdmitStatusPropagation)
+                        {
+                            childnode.Data.Component.Invalidate();
+                        }
+                    }
+                }
             }
 
         }
@@ -425,9 +490,9 @@ namespace Tvision2.Core.Engine
             }
 
             foreach (var cdata in _flattened
-                .Where(c => force || c.Component.NeedToRedraw != RedrawNeededAction.None))
+                .Where(c => force || c.Data.Component.NeedToRedraw != RedrawNeededAction.None))
             {
-                cdata.Component.Draw(console);
+                cdata.Data.Component.Draw(console, cdata.Parent);
             }
             _viewportsToClear.Clear();
             DoPendingRemovalsPhase2();

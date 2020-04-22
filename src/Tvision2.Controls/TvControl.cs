@@ -68,12 +68,10 @@ namespace Tvision2.Controls
 
         private Task<bool> OnComponentUnmounted(ComponentMoutingContext ctx)
         {
-            var ctree = _metadata.Value.OwnerTree as ControlsTree;
+            var ctree = Metadata.OwnerTree as ControlsTree;
             AsComponent().RemoveAllBehaviors();
             AsComponent().RemoveAllDrawers();
-            ctree.Remove(Metadata);
             OnControlUnmounted(ctx.OwnerEngine);
-            _metadata.Value.OwnerTree = null;
             return Task.FromResult(true);
         }
 
@@ -87,20 +85,10 @@ namespace Tvision2.Controls
             {
                 CreateAndSetViewport();
             }
-
             OnViewportCreated(AsComponent().Viewport);
 
             var ctree = ctx.OwnerEngine.GetControlsTree() as ControlsTree;
-            if (Metadata.HasParent)
-            {
-                // TODO Assert == TRUE!!!!
-                ctree.AddAsChild(Metadata, Metadata.ParentId);
-            }
-            else
-            {
-                ctree.Add(Metadata);
-            }
-
+            ctx.Node.SetTag<TvControlMetadata>(Metadata);
             AddElements();
             OnControlMounted(ctx.OwnerEngine);
             return Task.FromResult(true);
@@ -112,8 +100,8 @@ namespace Tvision2.Controls
 
         private void OnComponentWillbeUnmounted(ComponentMountingCancellableContext ctx)
         {
-            var cancel = OnControlWillbeUnmounted(ctx.OwnerEngine);
-            if (cancel == ControlCanBeUnmounted.No)
+            var canBeCancelled = OnControlWillbeUnmounted(ctx.OwnerEngine);
+            if (canBeCancelled == ControlCanBeUnmounted.No)
             {
                 ctx.Cancel();
             }

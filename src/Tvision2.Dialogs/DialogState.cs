@@ -2,6 +2,7 @@
 using Tvision2.Controls;
 using Tvision2.Controls.Button;
 using Tvision2.Controls.Styles;
+using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Layouts.Canvas;
@@ -22,7 +23,7 @@ namespace Tvision2.Dialogs
         private TvCanvas _mainCanvas;
         private DialogButtons _buttons;
 
-        public IComponentTree UI => _mainCanvas.Children;
+        public IComponentsCollection UI => _mainCanvas.Children;
 
         public IEnumerable<TvButton> Buttons => _buttons;
 
@@ -42,10 +43,10 @@ namespace Tvision2.Dialogs
             _buttons.AddOkButton();
             _buttons.AddCancelButton();
             var viewport = _myDialog.AsComponent().Viewport.Layer(Layer.Top);
-            _mainPanel = new TvStackPanel(owner, $"{_prefixNames}_MainPanel");
+            _mainPanel = new TvStackPanel($"{_prefixNames}_MainPanel");
             _mainPanel.Layout.Add("1", "*");
             _mainPanel.AsComponent().AddViewport(new Viewport(viewport.Position + TvPoint.FromXY(1, 1), TvBounds.FromRowsAndCols(viewport.Bounds.Rows -2, viewport.Bounds.Cols - 2), viewport.ZIndex));
-            _bottomGrid = new TvGrid(owner, new GridState(1, 2), $"{_prefixNames}_BottomGrid");
+            _bottomGrid = new TvGrid (new GridState(1, 2), $"{_prefixNames}_BottomGrid");
             _bottomGrid.At(0, 0).Add(_buttons.OkButton);
             _bottomGrid.At(0, 1).Add(_buttons.CancelButton);
             _mainCanvas = new TvCanvas(owner, $"{_prefixNames}_BodyCanvas");

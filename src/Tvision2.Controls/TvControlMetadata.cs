@@ -51,10 +51,7 @@ namespace Tvision2.Controls
         public ITvControl Control { get; }
         public Guid ParentId { get; private set; }
 
-        public bool HasParent
-        {
-            get => ParentId != Guid.Empty;
-        }
+
 
         public TvControlCreationParameters CreationParameters { get; }
 
@@ -119,7 +116,7 @@ namespace Tvision2.Controls
                 return;
             }
             // TODO: Need a better way. Do we need to expose full ControlsTree as IControlsTree? Drawbacks?
-            ((ControlsTree)OwnerTree).Adopt(this, control);
+            //((ControlsTree)OwnerTree).Adopt(this, control);
             control.ParentId = this.ControlId;
         }
     }

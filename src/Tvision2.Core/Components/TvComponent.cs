@@ -28,7 +28,7 @@ namespace Tvision2.Core.Components
         {
             NeedToRedraw = RedrawNeededAction.Standard;
         }
-        public IComponentMetadata Metadata => _metadata;
+        public TvComponentMetadata Metadata => _metadata;
 
         public Guid ComponentId { get; }
 
@@ -94,13 +94,13 @@ namespace Tvision2.Core.Components
             _drawers.Insert(0, drawer);
         }
 
-        protected internal abstract void Update(ITvConsoleEvents evts);
+        protected internal abstract void Update(UpdateContext ctx);
 
-        protected abstract void DoDraw(VirtualConsole console);
+        protected abstract void DoDraw(VirtualConsole console, ComponentTreeNode parent);
 
-        protected internal void Draw(VirtualConsole console)
+        protected internal void Draw(VirtualConsole console, ComponentTreeNode parent)
         {
-            DoDraw(console);
+            DoDraw(console, parent);
             NeedToRedraw = RedrawNeededAction.None;
         }
 
@@ -158,27 +158,28 @@ namespace Tvision2.Core.Components
             return this;
         }
 
-        protected internal override void Update(ITvConsoleEvents evts)
+        protected internal override void Update(UpdateContext ctx)
         {
             var updated = NeedToRedraw != RedrawNeededAction.None;
             foreach (var mdata in _behaviorsMetadata)
             {
-                var ctx = new BehaviorContext<T>(State, evts, Viewport);
+                var evts = ctx.Events;
+                var behaviorCtx = new BehaviorContext<T>(State, evts, Viewport, ctx.Parent);
                 if (mdata.Schedule == BehaviorSchedule.OncePerFrame
                     || (mdata.Schedule == BehaviorSchedule.OnEvents && evts != TvConsoleEvents.Empty))
                 {
-                    updated =  ((IBehaviorMetadata<T>)mdata).Behavior.Update(ctx) || updated;
+                    updated =  ((IBehaviorMetadata<T>)mdata).Behavior.Update(behaviorCtx) || updated;
                 }
             }
             NeedToRedraw = updated ? RedrawNeededAction.Standard : RedrawNeededAction.None;
         }
 
 
-        protected override void DoDraw(VirtualConsole console)
+        protected override void DoDraw(VirtualConsole console, ComponentTreeNode parent)
         {
             foreach (var vpnk in _viewports)
             {
-                var context = new RenderContext<T>(vpnk.Value, console,  State);
+                var context = new RenderContext<T>(vpnk.Value, console,  parent, State);
                 foreach (var drawer in _drawers)
                 {
                     drawer?.Draw(context);

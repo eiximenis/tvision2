@@ -32,10 +32,13 @@ namespace Tvision2.HelloWorld
                     tui.UI.Add(helloWorld);
                     for (var x = 0; x<10; x++)
                     {
-                        var c = new TvComponent<String>($"child: {x}");
-                        c.AddDrawer(ctx => ctx.DrawStringAt(ctx.State, TvPoint.Zero, new TvColorPair(TvColor.Blue, TvColor.Yellow)));
+                        var c = new TvComponent<String>($"{x}");
+                        c.AddDrawer(ctx => ctx.DrawStringAt(ctx.GetParentState<string>() + " " + ctx.State, TvPoint.Zero, new TvColorPair(TvColor.Blue, TvColor.Yellow)));
                         c.AddViewport(new Viewport(TvPoint.FromXY(10, 11 + x), 30));
-                        tui.UI.AddAsChild(c, helloWorld);
+                        tui.UI.AddAsChild(c, helloWorld,  opt =>
+                        {
+                            opt.RetrieveParentStatusChanges();
+                        });
                     }
                     return;// Task.CompletedTask;
                 });
@@ -43,9 +46,10 @@ namespace Tvision2.HelloWorld
 
             Task.Run(async () =>
             {
-                await Task.Delay(10000);
-                engine.UI.Remove(helloWorld);
+                await Task.Delay(5000);
+                helloWorld.SetState("Again!");
             });
+
             await builder.RunTvisionConsoleApp();
         }
     }

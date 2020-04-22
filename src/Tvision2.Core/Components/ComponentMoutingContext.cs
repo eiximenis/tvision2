@@ -10,10 +10,28 @@ namespace Tvision2.Core.Components
         public ITuiEngine OwnerEngine { get; }
         public TvComponent Component { get; }
 
-        public ComponentMoutingContext(ITuiEngine ownerEngine, TvComponent component)
+        public ComponentTreeNode Node { get; }
+
+        public ComponentTree ComponentTree { get; }
+
+        public ComponentMoutingContext(ITuiEngine ownerEngine, ComponentTree ctree, TvComponent component, ComponentTreeNode node)
         {
             OwnerEngine = ownerEngine;
             Component = component;
+            Node = node;
+            ComponentTree = ctree;
+        }
+    }
+
+    public struct ChildComponentMoutingContext
+    {
+        public TvComponent Child { get; }
+        public ComponentTreeNode ChildNode { get; }
+
+        public ChildComponentMoutingContext(TvComponent child, ComponentTreeNode childNode)
+        {
+            Child = child;
+            ChildNode = childNode;
         }
     }
 

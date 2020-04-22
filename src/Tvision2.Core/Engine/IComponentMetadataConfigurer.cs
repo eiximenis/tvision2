@@ -11,5 +11,7 @@ namespace Tvision2.Core.Engine
         void WhenComponentMounted(Action<ComponentMoutingContext> mountAction);
         void WhenComponentUnmounted(Action<ComponentMoutingContext> unmountAction);
         void WhenComponentWillbeUnmounted(Action<ComponentMountingCancellableContext> unmountAction);
+        void WhenChildMounted(Action<ChildComponentMoutingContext> childMountAction);
+        void WhenChildUnmounted(Action<ChildComponentMoutingContext> childUndmountAction);
     }
 }

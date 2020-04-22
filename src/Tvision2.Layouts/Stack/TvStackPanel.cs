@@ -1,61 +1,83 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 
 namespace Tvision2.Layouts.Stack
 {
-    public class TvStackPanel : ITvContainer
+    public class TvStackPanel : ITvContainer, IComponentsCollection
     {
         private readonly TvComponent<StackLayout> _thisComponent;
-        private readonly KeyedComponentsTree<int> _childs;
+        private readonly KeyedComponentsCollection<int> _childs;
+
+        private readonly List<TvComponent> _pendingAdds;
+        private bool _isMounted;
+
+        private IComponentTree _tree;
         public string Name { get; }
 
         public StackLayout Layout => _thisComponent.State;
 
-        public TvStackPanel(IComponentTree root, string name = null)
+        int IComponentsCollection.Count => throw new NotImplementedException();
+
+        public TvStackPanel(string name = null)
         {
-            _childs = new KeyedComponentsTree<int>(root);
-            _thisComponent = new TvComponent<StackLayout>(new StackLayout(), name ?? $"TvStackPanel_{Guid.NewGuid()}");
+            _childs = new KeyedComponentsCollection<int>();
+            _pendingAdds = new List<TvComponent>();
+            _isMounted = false;
+            _thisComponent = new TvComponent<StackLayout>(new StackLayout(), name ?? $"TvStackPanel_{Guid.NewGuid()}",
+                cfg =>
+                {
+                    cfg.WhenChildMounted(ctx => OnChildMounted(ctx));
+                    cfg.WhenChildUnmounted(ctx => OnChildUnmounted(ctx));
+                    cfg.WhenComponentMounted(ctx => OnComponentMounted(ctx));
+                });
             Name = _thisComponent.Name;
-            _thisComponent.Metadata.ViewportChanged += OnViewportChange;
-            _childs.ComponentAdded += OnChildAdded;
-            _childs.ComponentRemoved += OnChildRemoved;
+          
         }
 
-        public void Clear()
+        private void OnComponentMounted(ComponentMoutingContext ctx)
         {
-            var layout = _thisComponent.State;
-            for (var idx = 0; idx < layout.ItemsCount; idx++)
+            _tree = ctx.ComponentTree;
+            _isMounted = true;
+
+            if (_pendingAdds.Any())
             {
-                At(idx).Clear();
+                foreach (var cmpToAdd in _pendingAdds)
+                {
+                    DoPendingAdd(cmpToAdd);
+                }
+                _pendingAdds.Clear();
+                RepositionChildren(TvPoint.Zero);
             }
         }
 
-        private void OnChildRemoved(object sender, TreeUpdatedEventArgs e)
+        private void OnChildUnmounted(ChildComponentMoutingContext ctx)
         {
             RepositionChildren(TvPoint.Zero);
         }
 
-        public IComponentTree At(int idx)
+        private void OnChildMounted(ChildComponentMoutingContext ctx)
+        {
+            RepositionChildren(TvPoint.Zero);
+        }
+
+        public IComponentsCollection At(int idx)
         {
             var layout = _thisComponent.State;
             if (layout.ItemsCount > idx)
             {
                 _childs.SetKey(idx);
-                return _childs;
+                return this;
             }
             else
             {
                 throw new ArgumentOutOfRangeException(nameof(idx), idx, $"Value {idx} out of range 0..{layout.ItemsCount - 1 }");
             }
 
-        }
-
-        private void OnChildAdded(object sender, TreeUpdatedEventArgs e)
-        {
-            var child = e.ComponentMetadata.Component;
-            RepositionChildren(TvPoint.Zero);
         }
 
 
@@ -99,5 +121,32 @@ namespace Tvision2.Layouts.Stack
 
 
         public TvComponent AsComponent() => _thisComponent;
+
+        public void Clear() => _childs.Clear();
+
+
+        private void DoPendingAdd(TvComponent cmpToAdd)
+        {
+            _tree.AddAsChild(cmpToAdd, AsComponent(), cfg => cfg.DoNotNotifyParentOnAdd());
+        }
+
+        void IComponentsCollection.Add(TvComponent child)
+        {
+            _childs.Add(child);
+            if (_isMounted)
+            {
+                _tree.AddAsChild(child, AsComponent());
+            }
+            else
+            {
+                _pendingAdds.Add(child);
+            }
+        }
+
+        bool IComponentsCollection.Remove(TvComponent component) => _childs.Remove(component);
+
+        IEnumerator<TvComponent> IEnumerable<TvComponent>.GetEnumerator() => _childs.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => _childs.GetEnumerator();
     }
 }

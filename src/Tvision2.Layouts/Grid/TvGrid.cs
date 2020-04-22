@@ -1,59 +1,61 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 
 namespace Tvision2.Layouts.Grid
 {
-    public class TvGrid : ITvContainer
+    public class TvGrid : ITvContainer, IComponentsCollection
     {
         private readonly TvComponent<GridState> _component;
-        private readonly IComponentTree _root;
         private readonly TvGridComponentTree _ui;
-
         private readonly GridState _state;
         public string Name { get; }
+
+        private bool _isMounted;
+        private readonly List<TvComponent> _pendingAdds;
+        private ComponentTree _tree;
+
         public TvComponent AsComponent() => _component;
 
-        public TvGrid(IComponentTree root) : this(root, new GridState(1, 1), null)
+        public TvGrid() : this(new GridState(1, 1), null)
         {
         }
-        public TvGrid(IComponentTree root, GridState state, string name = null)
+        public TvGrid(GridState state, string name = null)
         {
+            _pendingAdds = new List<TvComponent>();
+            _isMounted = false;
             _state = state;
-            _component = new TvComponent<GridState>(_state, name ?? $"TvGrid_{Guid.NewGuid()}");
+            _component = new TvComponent<GridState>(_state, name ?? $"TvGrid_{Guid.NewGuid()}",
+                cfg =>
+                {
+                    cfg.WhenChildMounted(ctx => ResizeRowsAndCols());
+                    cfg.WhenChildUnmounted(ctx => ResizeRowsAndCols());
+                    cfg.WhenComponentMounted(ctx => OnComponentMounted(ctx));
+                });
             Name = _component.Name;
             _component.Metadata.ViewportChanged += OnViewportChanged;
-            _root = root;
-            _ui = new TvGridComponentTree(_root);
-            _ui.ComponentAdded += OnComponentAdded;
-            _ui.ComponentRemoved += OnComponentRemoved;
-            _root.ComponentRemoved += OnRootRemoved;
+            _ui = new TvGridComponentTree();
         }
 
-        private void OnRootRemoved(object sender, TreeUpdatedEventArgs e)
+        private void OnComponentMounted(ComponentMoutingContext ctx)
         {
-            if (e.ComponentMetadata == _component.Metadata)
+            _tree = ctx.ComponentTree;
+            _isMounted = true;
+
+            if (_pendingAdds.Any())
             {
-                _root.ComponentRemoved -= OnRootRemoved;
-                Clear();
+                foreach (var cmpToAdd in _pendingAdds)
+                {
+                    DoPendingAdd(cmpToAdd);
+                }
+                _pendingAdds.Clear();
+                ResizeRowsAndCols();
             }
-        }
-
-        public void Clear()
-        {
-            _ui.Clear();
-        }
-
-        private void OnComponentRemoved(object sender, TreeUpdatedEventArgs e)
-        {
-            ResizeRowsAndCols();
-        }
-
-        private void OnComponentAdded(object sender, TreeUpdatedEventArgs e)
-        {
-            ResizeRowsAndCols();
         }
 
         private void OnViewportChanged(object sender, ViewportUpdatedEventArgs e)
@@ -62,11 +64,11 @@ namespace Tvision2.Layouts.Grid
         }
 
 
-        public IComponentTree At(int row, int col)
+        public IComponentsCollection At(int row, int col)
         {
             _ui.CurrentRow = row;
             _ui.CurrentColumn = col;
-            return _ui;
+            return this;
         }
 
         private void ResizeRowsAndCols()
@@ -99,5 +101,35 @@ namespace Tvision2.Layouts.Grid
             return myViewport.InnerViewport(TvPoint.FromXY(startCol, startRow), TvBounds.FromRowsAndCols(cellHeight, cellWidth));
 
         }
+
+
+        private void DoPendingAdd(TvComponent cmpToAdd)
+        {
+            _tree.AddAsChild(cmpToAdd, AsComponent(), cfg => cfg.DoNotNotifyParentOnAdd());
+        }
+
+        void IComponentsCollection.Add(TvComponent child)
+        {
+            _ui.Add(child);
+            if (_isMounted)
+            {
+                _tree.AddAsChild(child, AsComponent());
+            }
+            else
+            {
+                _pendingAdds.Add(child);
+            }
+        }
+
+        bool IComponentsCollection.Remove(TvComponent component) => _ui.Remove(component);
+
+        void IComponentsCollection.Clear() => _ui.Clear();
+
+        int IComponentsCollection.Count => _ui.Count;
+
+        IEnumerator<TvComponent> IEnumerable<TvComponent>.GetEnumerator() => _ui.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => _ui.GetEnumerator();
+
     }
 }

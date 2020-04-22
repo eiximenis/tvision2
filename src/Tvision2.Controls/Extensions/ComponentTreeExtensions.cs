@@ -9,19 +9,19 @@ namespace Tvision2.Core.Engine
 {
     public static class ComponentTreeExtensions_Controls
     {
-        public static void Add(this IComponentTree componentTree, ITvControl control, Action<ITuiEngine> afterAdd = null)
+        public static void Add(this IComponentTree componentTree, ITvControl control)
         {
-            componentTree.Add(control.AsComponent(), afterAdd);
+            componentTree.Add(control.AsComponent());
         }
 
-        public static void AddAfter(this IComponentTree componentTree, ITvControl control, ITvControl controlBefore, Action<ITuiEngine> afterAddAction = null)
+        public static void AddAfter(this IComponentTree componentTree, ITvControl control, ITvControl controlBefore)
         {
-            componentTree.AddAfter(control.AsComponent(), controlBefore.AsComponent(), afterAddAction);
+            componentTree.AddAfter(control.AsComponent(), controlBefore.AsComponent());
         }
 
-        public static void AddAsChild(this IComponentTree componentTree, ITvControl control, ITvControl parent, Action<ITuiEngine> afterAddAction = null)
+        public static void AddAsChild(this IComponentTree componentTree, ITvControl control, ITvControl parent)
         {
-            componentTree.AddAsChild(control.AsComponent(), parent.AsComponent(), afterAddAction);
+            componentTree.AddAsChild(control.AsComponent(), parent.AsComponent());
         }
 
         public static bool Remove(this IComponentTree componentTree, ITvControl control)
@@ -43,5 +43,7 @@ namespace Tvision2.Core.Engine
         }
 
         public static IControlsTree GetControlsTree(this ITuiEngine engine) => engine.ServiceProvider.GetService<IControlsTree>();
+
+        public static TvControlMetadata ControlMetadata(this ComponentTreeNode node) => node.GetTag<TvControlMetadata>();
     }
 }

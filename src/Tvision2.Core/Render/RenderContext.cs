@@ -1,6 +1,7 @@
 ﻿using System;
 using Tvision2.Core.Colors;
 using Tvision2.Core.Components;
+using Tvision2.Core.Engine;
 
 namespace Tvision2.Core.Render
 {
@@ -10,13 +11,14 @@ namespace Tvision2.Core.Render
         protected readonly VirtualConsole _console;
         public IViewport Viewport { get; private set; }
         ICursorContext CursorContext => this;
+        private readonly ComponentTreeNode _parent;
 
 
-
-        public RenderContext(IViewport viewport, VirtualConsole console)
+        public RenderContext(IViewport viewport, VirtualConsole console, ComponentTreeNode parent)
         {
             _console = console;
             Viewport = viewport;
+            _parent = parent;
         }
 
         public void DrawStringAt(string value, TvPoint location, TvColorPair colors)
@@ -65,13 +67,22 @@ namespace Tvision2.Core.Render
             _console.Cursor.Hide();
         }
 
+        public TRootState GetRootState<TRootState>() =>
+            ((TvComponent<TRootState>)_parent.Root().Data.Component).State;
+
+        public TParentState GetParentState<TParentState>() =>
+            ((TvComponent<TParentState>)_parent.Data.Component).State;
+
+        public bool ComponentHasParent => _parent != null;
+
     }
 
     public class RenderContext<T> : RenderContext
     {       
         public T State { get; }
 
-        public RenderContext(IViewport viewport, VirtualConsole console, T state) : base(viewport, console)
+        public RenderContext(IViewport viewport, VirtualConsole console, ComponentTreeNode parent, T state) : 
+            base(viewport, console, parent)
         {
             State = state;
         }

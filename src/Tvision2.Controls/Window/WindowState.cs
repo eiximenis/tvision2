@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Tvision2.Core.Components;
@@ -7,21 +8,24 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Controls.Window
 {
-    public class WindowState : IDirtyObject
+    public class WindowState : IDirtyObject, IComponentsCollection
     {
         private TvWindow _myWindow;
-        private readonly ListComponentTree _children;
+        private readonly ListComponentCollection _children;
 
         public bool IsDirty { get; private set; }
         public void Validate() => IsDirty = false;
 
-        public IComponentTree UI => _children;
+        public IComponentsCollection UI => this;
 
-        public WindowState(IComponentTree ownerTree)
+
+        public WindowState()
         {
-            _children = new ListComponentTree(ownerTree);
+            _children = new ListComponentCollection();
         }
-        
+
+       
+
         internal void SetOwnerWindow(TvWindow ownerWindow)
         {
             _myWindow = ownerWindow;
@@ -37,5 +41,16 @@ namespace Tvision2.Controls.Window
             _myWindow?.Close();
         }
 
+        int IComponentsCollection.Count => _children.Count;
+
+        void IComponentsCollection.Clear() => _children.Clear();
+
+        void IComponentsCollection.Add(TvComponent child) => _children.Add(child);
+
+        bool IComponentsCollection.Remove(TvComponent component) => _children.Remove(component);
+
+        IEnumerator<TvComponent> IEnumerable<TvComponent>.GetEnumerator() => _children.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => _children.GetEnumerator();
     }
 }

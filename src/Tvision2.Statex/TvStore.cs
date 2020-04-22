@@ -82,6 +82,7 @@ namespace Tvision2.Statex
         public void Subscribe(Action<TState> action)
         {
             _subscribers.Add(action);
+            action.Invoke(_currentState);
         }
     }
 }

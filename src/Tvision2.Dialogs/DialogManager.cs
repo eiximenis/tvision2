@@ -27,10 +27,13 @@ namespace Tvision2.Dialogs
             var dialogName = name ?? $"TvDialog_{Guid.NewGuid()}";
             var dialog = new TvDialog(_skinManager.CurrentSkin, dialogViewport, _ui, dialogName);
             dialogSetup.Invoke(dialog); 
+
+            /*
             foreach (var cmp in dialog.State.UI.Components)
             {
                 cmp.UpdateViewport(cmp.Viewport.Layer(Layer.Top));
             }
+            */
             return dialog;
         }
 
@@ -44,9 +47,10 @@ namespace Tvision2.Dialogs
 
         public void ShowDialog(TvDialog dialog)
         {
+            /*
             _ui.Add(dialog, _ =>
-            {
-                /*
+            {   
+       
                 var insideControls = dialog.State.UI.OwnedControls(_rootControls).Union(dialog.State.Buttons.Select(b => b.Metadata));
 
                 foreach (var controlMetadata in _rootControls.ControlsMetadata)
@@ -57,8 +61,10 @@ namespace Tvision2.Dialogs
                         _outsideDialogControls.Add(controlMetadata);
                     }
                 }
-                */
+   
             });
+            */
+            _ui.Add(dialog);
             DialogShown = dialog;
         }
     }

@@ -77,7 +77,7 @@ namespace Tvision2.Controls.Dropdown
                 _label.State.Text = el.Text;
             });
             _ownerUi = engine.UI;
-            _ownerUi.Add(_label);
+            _ownerUi.AddAsChild(_label, this);
         }
 
         protected override ControlCanBeUnmounted OnControlWillbeUnmounted(ITuiEngine ownerEngine)
@@ -96,7 +96,7 @@ namespace Tvision2.Controls.Dropdown
 
         internal void DisplayList()
         {
-            _ownerUi.Add(_list);
+            _ownerUi.AddAsChild(_list, this);
             _list.AsComponent()
                 .Metadata.OnComponentMounted
                 .AddOnce(ctx =>
@@ -126,7 +126,7 @@ namespace Tvision2.Controls.Dropdown
                     });
             }
 
-            _ownerUi.Add(_label);
+            _ownerUi.AddAsChild(_label, this);
             _ownerUi.Remove(_list);
             HasListDisplayed = false;
         }

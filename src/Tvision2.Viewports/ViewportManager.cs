@@ -52,7 +52,7 @@ namespace Tvision2.Viewports
 
         private void OnViewportChanged(object sender, ViewportUpdatedEventArgs e)
         {
-            var data = sender as IComponentMetadata;
+            var data = sender as TvComponentMetadata;
             _attachedComponentTree.ClearViewport(e.Previous);
             data.Component.Invalidate();
             InvalidateViewport(e.Previous);

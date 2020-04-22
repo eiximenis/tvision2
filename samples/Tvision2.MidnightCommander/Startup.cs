@@ -9,6 +9,7 @@ using Tvision2.Controls.Menu;
 using Tvision2.Controls.Styles;
 using Tvision2.Controls.Textbox;
 using Tvision2.Core;
+using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Dialogs;
@@ -42,12 +43,12 @@ namespace Tvision2.MidnightCommander
             var skin = _skinManager.CurrentSkin;
             var dvpf = _layoutManager.DynamicViewportFactory;
 
-            var mainStackPanel = new TvStackPanel(tui.UI, "mainStackPanel");
+            var mainStackPanel = new TvStackPanel("mainStackPanel");
             mainStackPanel.AsComponent().AddViewport(dvpf.Create(vpf => vpf.FullViewport()));
-            mainStackPanel.Layout.Add("1", "*", "3");
-            var listFilesGrid = new TvGrid(tui.UI, new GridState(1, 2));
-            mainStackPanel.At(1).Add(listFilesGrid);
             tui.UI.Add(mainStackPanel);
+            mainStackPanel.Layout.Add("1", "*", "3");
+            var listFilesGrid = new TvGrid(new GridState(1, 2));
+            mainStackPanel.At(1).Add(listFilesGrid);
             var textbox = new TvTextbox(TvTextbox.CreationParametersBuilder().UseSkin(skin).UseViewport(null));
             var actind = new TvActivityIndicator(TvActivityIndicator.CreationParametersBuilder().UseSkin(skin).UseViewport(new Viewport(TvPoint.FromXY(0, 22), TvBounds.FromRowsAndCols(1, 1), Layer.Standard)));
             tui.UI.Add(actind);
@@ -133,9 +134,10 @@ namespace Tvision2.MidnightCommander
 
             listFilesGrid.At(0, 0).Add(left);
             listFilesGrid.At(0, 1).Add(right);
-            var bottom = new TvStackPanel(tui.UI, "BottomContainer");
+            var bottom = new TvStackPanel("BottomContainer");
             bottom.Layout.Add(new LayoutSize());
             bottom.At(0).Add(textbox);
+
             mainStackPanel.At(2).Add(bottom);
 
             //tui.UI.Add(window);
