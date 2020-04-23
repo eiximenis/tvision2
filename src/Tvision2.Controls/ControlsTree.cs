@@ -16,19 +16,42 @@ namespace Tvision2.Controls
         private TvControlMetadata _controlWithFocusCaptured;
         private readonly IComponentTree _componentsTree;
         private readonly LinkedList<TvControlMetadata> _controls;
+        private bool _needToMoveFocusWhenTreeUpdated;
 
-        public ControlsTree(IComponentTree componentTree)
+        public ControlsTree(ITuiEngine engine)
         {
+            _needToMoveFocusWhenTreeUpdated = false;
             _controls = new LinkedList<TvControlMetadata>();
-            _componentsTree = componentTree;
+            _componentsTree = engine.UI;
             _focused = null;
             _previousFocused = null;
             _controlWithFocusCaptured = null;
             _componentsTree.ComponentAdded += OnComponentAdded;
             _componentsTree.ComponentRemoved += OnComponentRemoved;
+            _componentsTree.TreeUpdated += OnComponentsTreeUpdated;
         }
 
+        private void OnComponentsTreeUpdated(object sender, EventArgs e)
+        {
+            _controls.Clear();
+            var controls = _componentsTree.NodesList.Where(n => n.HasTag<TvControlMetadata>()).Select(n => n.GetTag<TvControlMetadata>())       ;
+            foreach (var control in controls)
+            {
+                _controls.AddLast(control);
+            }
 
+            if (_focused == null)
+            {
+                TryToSetInitialFocus();
+            }
+            else if (_needToMoveFocusWhenTreeUpdated)
+            {
+                MoveFocusToNext();
+                _needToMoveFocusWhenTreeUpdated = false;
+            }
+
+
+        }
 
         private void OnComponentAdded(object sender, TreeUpdatedEventArgs e)
         {
@@ -38,10 +61,6 @@ namespace Tvision2.Controls
                 return;
             }
             cdata.OwnerTree = this;
-            if (_focused == null)
-            {
-                TryToSetInitialFocus();
-            }
         }
 
         private void OnComponentRemoved(object sender, TreeUpdatedEventArgs e)
@@ -54,7 +73,7 @@ namespace Tvision2.Controls
             cdata.OwnerTree = null;
             if (cdata == _focused)
             {
-                MoveFocusToNext();
+                _needToMoveFocusWhenTreeUpdated = true;
             }
         }
 

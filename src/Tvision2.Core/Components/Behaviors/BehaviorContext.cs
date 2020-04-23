@@ -25,7 +25,7 @@ namespace Tvision2.Core.Components.Behaviors
         }
 
         public TRootState GetRootState<TRootState>() =>
-            ((TvComponent<TRootState>)_parent.Root().Data.Component).State;
+            ((TvComponent<TRootState>)_parent.Root.Data.Component).State;
 
         public TParentState GetParentState<TParentState>() =>
             ((TvComponent<TParentState>)_parent.Data.Component).State;

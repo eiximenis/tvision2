@@ -6,6 +6,7 @@ using System.Linq;
 using Tvision2.Core.Components;
 using Tvision2.Core.Render;
 using Tvision2.Events;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Tvision2.Core.Engine
 {
@@ -68,9 +69,12 @@ namespace Tvision2.Core.Engine
             return _childs.SelectMany(c => c.Value.SubTree()).Union(new[] { this });
         }
 
+        public ComponentTreeNode Root { get; private set; }
+
         public ComponentTreeNode(TvComponentMetadata cmp, ComponentTreeNode parent = null)
         {
             Parent = parent;
+            Root = parent?.Root ?? this;
             _childs = new Dictionary<Guid, ComponentTreeNode>();
             Data = cmp;
             Level = parent != null ? parent.Level + 1 : 0;
@@ -101,15 +105,6 @@ namespace Tvision2.Core.Engine
             return _tags.ContainsKey(typeof(TTag));
         }
 
-        public ComponentTreeNode Root()
-        {
-            var current = this;
-            while (current.Parent != null)
-            {
-                current = current.Parent;
-            }
-            return current;
-        }
 
         public ComponentTreeNode Add(TvComponentMetadata cdata)
         {
@@ -166,6 +161,7 @@ namespace Tvision2.Core.Engine
             {
                 _childs.Remove(child.Data.Id);
                 child.Parent = null;
+                child.Root = null;
                 child.Level = 0;
                 return true;
             }
@@ -175,6 +171,7 @@ namespace Tvision2.Core.Engine
         internal void Clear()
         {
             Parent = null;
+            Root = null;
             _childs.Clear();
             _tags.Clear();
             Data = null;
@@ -185,25 +182,44 @@ namespace Tvision2.Core.Engine
 
     public class ComponentTree : IComponentTree
     {
-        private readonly LinkedList<ComponentTreeNode> _roots;
+
+        class ComponentTreeItem
+        {
+            public ComponentTreeNode TreeNode { get; set; }
+            public IEnumerable<ComponentTreeNode> FlattenedSubTree { get; set; }
+
+            public ComponentTreeItem(ComponentTreeNode node)
+            {
+                TreeNode = node;
+                FlattenedSubTree = Enumerable.Empty<ComponentTreeNode>();
+            }
+        }
+
+        private readonly LinkedList<ComponentTreeItem> _roots;
         private readonly Dictionary<string, AddComponentOptions> _pendingAdds;
         private readonly Dictionary<string, ComponentTreeNode> _pendingRemovalsPhase1;
         private readonly Dictionary<string, ComponentTreeNode> _pendingRemovalsPhase2;
         private readonly List<IViewport> _viewportsToClear;
         private readonly IServiceProvider _serviceProvider;
         private readonly ITuiEngine _engine;
-
-        private readonly List<ComponentTreeNode> _flattened;
-
         public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
         public event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
         public event EventHandler TreeUpdated;
 
-        public IEnumerable<TvComponent> Components => _flattened.Select(node => node.Data.Component);
+        public IEnumerable<TvComponent> Components => NodesList.Select(node => node.Data.Component);
 
-        public IEnumerable<ComponentTreeNode> NodesList => _flattened;
+        public IEnumerable<ComponentTreeNode> NodesList
+        {
+            get
+            {
+                foreach (var roottree in _roots)
+                {
+                    foreach (var node in roottree.FlattenedSubTree) yield return node;
+                }
+            }
+        }
 
-        public TvComponent GetComponent(string name) => _flattened.FirstOrDefault(node => node.Data.Component.Name == name)?.Data.Component;
+        public TvComponent GetComponent(string name) => NodesList.FirstOrDefault(node => node.Data.Component.Name == name)?.Data.Component;
 
         public bool Remove(TvComponent component)
         {
@@ -228,7 +244,7 @@ namespace Tvision2.Core.Engine
             _pendingRemovalsPhase1.Clear();
             foreach (var kvp in toDelete)
             {
-                var subtree = GetFlattenedTree(kvp.Value);
+                var subtree = kvp.Value.SubTree();
                 var canBeUnmounted = subtree.Any(c => c.Data.CanBeUnmountedFrom(_engine));
                 if (canBeUnmounted)
                 {
@@ -244,9 +260,16 @@ namespace Tvision2.Core.Engine
             {
                 return;
             }
+            var rootsAffected = new List<ComponentTreeNode>();
             foreach (var kvp in _pendingRemovalsPhase2)
             {
                 var deleteResult = DeleteComponent(kvp.Value.Data);
+
+                if (!rootsAffected.Contains(kvp.Value.Root))
+                {
+                    rootsAffected.Add(kvp.Value.Root);
+                }
+
                 var subtree = deleteResult.AllDeletedNodes;
                 foreach (var node in subtree)
                 {
@@ -266,7 +289,7 @@ namespace Tvision2.Core.Engine
             }
 
             _pendingRemovalsPhase2.Clear();
-            FlattenTree();
+            FlattenTree(rootsAffected);
 
         }
 
@@ -274,7 +297,7 @@ namespace Tvision2.Core.Engine
         {
             foreach (var root in _roots)
             {
-                var removeResult = root.Remove(cdata);
+                var removeResult = root.TreeNode.Remove(cdata);
 
                 if (removeResult.Status == ComponentTreeNode.RemoveStatus.ChildDeleted ||
                     removeResult.Status == ComponentTreeNode.RemoveStatus.RootDeleted)
@@ -286,39 +309,23 @@ namespace Tvision2.Core.Engine
             return ComponentTreeNode.RemoveResult.NotFound();
         }
 
-        private void FlattenTree()
+        private void FlattenTree(IEnumerable<ComponentTreeNode> roots)
         {
-            _flattened.Clear();
-            foreach (var item in GetFlattenedTree(null))
+            foreach (var root in roots)
             {
-                _flattened.Add(item);
+                var currentRoot = _roots.FirstOrDefault(r => r.TreeNode == root);
+                currentRoot.FlattenedSubTree = root.SubTree();
             }
-
             OnTreeUpdated();
         }
 
-        private IEnumerable<ComponentTreeNode> GetFlattenedTree(ComponentTreeNode root)
-        {
-
-            IEnumerable<ComponentTreeNode> flattened = null;
-            if (root == null)
-            {
-                flattened = _roots.SelectMany(r => r.SubTree());
-            }
-            else
-            {
-                flattened = root.SubTree();
-            }
-
-            return flattened;
-        }
 
 
         private ComponentTreeNode FindNodeById(Guid id)
         {
             foreach (var root in _roots)
             {
-                var node = root.Find(id);
+                var node = root.TreeNode.Find(id);
                 if (node != null)
                 {
                     return node;
@@ -329,8 +336,7 @@ namespace Tvision2.Core.Engine
 
         public ComponentTree(ITuiEngine engine, IServiceProvider serviceProvider)
         {
-            _roots = new LinkedList<ComponentTreeNode>();
-            _flattened = new List<ComponentTreeNode>();
+            _roots = new LinkedList<ComponentTreeItem>();
             _pendingAdds = new Dictionary<string, AddComponentOptions>();
             _pendingRemovalsPhase1 = new Dictionary<string, ComponentTreeNode>();
             _pendingRemovalsPhase2 = new Dictionary<string, ComponentTreeNode>();
@@ -371,6 +377,8 @@ namespace Tvision2.Core.Engine
             var toAdd = _pendingAdds.ToArray();
             _pendingAdds.Clear();
 
+            var affectedRoots = new List<ComponentTreeNode>();
+
             foreach (var kvp in toAdd)
             {
                 var addOptions = kvp.Value;
@@ -388,9 +396,9 @@ namespace Tvision2.Core.Engine
                     nodeAdded = new ComponentTreeNode(addOptions.ComponentMetadata);
                     while (cnode != null)
                     {
-                        if (cnode.Value.Data == addOptions.Before)
+                        if (cnode.Value.TreeNode.Data == addOptions.Before)
                         {
-                            _roots.AddAfter(cnode, nodeAdded);
+                            _roots.AddAfter(cnode, new ComponentTreeItem(nodeAdded));
                             break;
                         }
                         cnode = cnode.Next;
@@ -399,9 +407,13 @@ namespace Tvision2.Core.Engine
                 else
                 {
                     nodeAdded = new ComponentTreeNode(addOptions.ComponentMetadata);
-                    _roots.AddLast(nodeAdded);
+                    _roots.AddLast(new ComponentTreeItem(nodeAdded));
                 }
 
+                if (!affectedRoots.Contains(nodeAdded.Root))
+                {
+                    affectedRoots.Add(nodeAdded.Root);
+                }
                 CreateNeededBehaviors(addOptions.ComponentMetadata.Component);
                 addOptions.ComponentMetadata.MountedTo(_engine, this, nodeAdded, addOptions);
                 addOptions.ComponentMetadata.Component.Invalidate();
@@ -414,7 +426,7 @@ namespace Tvision2.Core.Engine
                 addOptions.AfterAddAction?.Invoke(_engine);
             }
 
-            FlattenTree();
+            FlattenTree(affectedRoots);
         }
 
         private void CreateNeededBehaviors(TvComponent component)
@@ -461,9 +473,9 @@ namespace Tvision2.Core.Engine
         {
             DoPendingRemovalsPhase1();
             DoPendingAdds();
-            foreach (var node in _flattened)
+            foreach (var node in NodesList)
             {
-                
+
                 var component = node.Data.Component;
                 var metadata = node.Data;
                 component.Update(new UpdateContext(evts, node.Parent));
@@ -489,7 +501,7 @@ namespace Tvision2.Core.Engine
                 console.Clear(viewport);
             }
 
-            foreach (var cdata in _flattened
+            foreach (var cdata in NodesList
                 .Where(c => force || c.Data.Component.NeedToRedraw != RedrawNeededAction.None))
             {
                 cdata.Data.Component.Draw(console, cdata.Parent);

@@ -13,12 +13,12 @@ namespace Tvision2.Layouts
         private Dictionary<string, ITvContainer> _containers;
         public IViewportFactory ViewportFactory { get; }
         public IDynamicViewportFactory DynamicViewportFactory { get; }
-        public LayoutManager(IViewportFactory viewportFactory, IDynamicViewportFactory dynamicViewportFactory, IComponentTree tree)
+        public LayoutManager(IViewportFactory viewportFactory, IDynamicViewportFactory dynamicViewportFactory, ITuiEngine engine)
         {
             _containers = new Dictionary<string, ITvContainer>();
             ViewportFactory = viewportFactory;
             DynamicViewportFactory = dynamicViewportFactory;
-            tree.ComponentRemoved += Tree_OnComponentRemoved;
+            engine.UI.ComponentRemoved += Tree_OnComponentRemoved;
         }
 
         private void Tree_OnComponentRemoved(object sender, TreeUpdatedEventArgs e)
