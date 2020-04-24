@@ -71,6 +71,7 @@ namespace Tvision2.Controls
             var ctree = Metadata.OwnerTree as ControlsTree;
             AsComponent().RemoveAllBehaviors();
             AsComponent().RemoveAllDrawers();
+            Metadata.Dettach();
             OnControlUnmounted(ctx.OwnerEngine);
             return Task.FromResult(true);
         }
@@ -89,6 +90,7 @@ namespace Tvision2.Controls
 
             var ctree = ctx.OwnerEngine.GetControlsTree() as ControlsTree;
             ctx.Node.SetTag<TvControlMetadata>(Metadata);
+            Metadata.Attach(ctree, ctx.Node);
             AddElements();
             OnControlMounted(ctx.OwnerEngine);
             return Task.FromResult(true);

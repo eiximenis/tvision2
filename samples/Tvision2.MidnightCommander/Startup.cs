@@ -142,7 +142,7 @@ namespace Tvision2.MidnightCommander
 
             //tui.UI.Add(window);
 
-            //_dialogManager.ShowDialog(dialog);
+            _dialogManager.ShowDialog(dialog);
 
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {

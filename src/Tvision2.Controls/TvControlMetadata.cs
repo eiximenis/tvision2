@@ -1,5 +1,6 @@
 ﻿using System;
 using Tvision2.Core;
+using Tvision2.Core.Engine;
 
 namespace Tvision2.Controls
 {
@@ -51,6 +52,10 @@ namespace Tvision2.Controls
         public ITvControl Control { get; }
         public Guid ParentId { get; private set; }
 
+        public ComponentTreeNode ComponentNode { get; private set; }
+
+
+
 
 
         public TvControlCreationParameters CreationParameters { get; }
@@ -69,6 +74,7 @@ namespace Tvision2.Controls
 
         public TvControlMetadata(ITvControl control, TvControlCreationParameters creationParameters, Action<TvControlMetadataOptions> optionsAction = null)
         {
+            ComponentNode = null;
             CreationParameters = creationParameters;
             _onFocusGained = new ActionChain<TvFocusEventData>();
             _onFocusLost = new ActionChain<TvFocusEventData>();
@@ -80,6 +86,18 @@ namespace Tvision2.Controls
             ParentId = creationParameters.ParentId;
             _options = new TvControlMetadataOptions();
             optionsAction?.Invoke(_options);
+        }
+
+        internal void Dettach()
+        {
+            OwnerTree = null;
+            ComponentNode = null;
+        }
+
+        internal void Attach(ControlsTree controlsTree, ComponentTreeNode node)
+        {
+            OwnerTree = controlsTree;
+            ComponentNode = node;
         }
 
         public void Focus(bool force = false)

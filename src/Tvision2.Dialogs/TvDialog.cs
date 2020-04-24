@@ -12,15 +12,13 @@ namespace Tvision2.Dialogs
 {
     public class TvDialog : TvControl<DialogState>
     {
-        private readonly List<TvControlMetadata> _childsToAdd;
-        internal TvDialog(ISkin skin, IViewport viewport, IComponentTree owner, string name = null)
+       internal TvDialog(ISkin skin, IViewport viewport, IComponentTree owner, string name = null)
             : base(new TvControlCreationParameters<DialogState>(
                 skin, viewport.Layer(Layer.Top, -1),
                 new DialogState(skin, name ?? $"TvDialog_{Guid.NewGuid()}")))
         {
             Metadata.CanFocus = false;
             State.Init(this, owner);
-            _childsToAdd = new List<TvControlMetadata>();
         }
 
         protected override void AddCustomElements(TvComponent<DialogState> component)
@@ -40,27 +38,17 @@ namespace Tvision2.Dialogs
 
         public void Add(ITvControl controlToAdd)
         {
-            _childsToAdd.Add(controlToAdd.Metadata);
+            State.UI.Add(controlToAdd);
         }
 
         protected override void OnControlMounted(ITuiEngine owner)
         {
-
-            foreach (var ctl in _childsToAdd)
-            {
-                Metadata.CaptureControl(ctl);
-                if (!ctl.IsAttached)
-
-                {
-                    State.UI.Add(ctl.Control.AsComponent());
-                }
-            }
-            _childsToAdd.Clear();
+            owner.GetControlsTree().CaptureFocus(this.Metadata);
         }
 
         internal void Close()
         {
-            State.MainPanel.Clear();
+            State.Destroy();
 
             // TODO: Review this -> It is easy to solve
             /*

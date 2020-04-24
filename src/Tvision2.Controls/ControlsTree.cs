@@ -18,15 +18,17 @@ namespace Tvision2.Controls
         private readonly LinkedList<TvControlMetadata> _controls;
         private bool _needToMoveFocusWhenTreeUpdated;
 
+        private LinkedList<TvControlMetadata> _responders;
+
         public ControlsTree(ITuiEngine engine)
         {
             _needToMoveFocusWhenTreeUpdated = false;
             _controls = new LinkedList<TvControlMetadata>();
+            _responders = _controls;
             _componentsTree = engine.UI;
             _focused = null;
             _previousFocused = null;
             _controlWithFocusCaptured = null;
-            _componentsTree.ComponentAdded += OnComponentAdded;
             _componentsTree.ComponentRemoved += OnComponentRemoved;
             _componentsTree.TreeUpdated += OnComponentsTreeUpdated;
         }
@@ -38,6 +40,11 @@ namespace Tvision2.Controls
             foreach (var control in controls)
             {
                 _controls.AddLast(control);
+            }
+
+            if (_controlWithFocusCaptured != null)
+            {
+                CaptureFocus(_controlWithFocusCaptured);
             }
 
             if (_focused == null)
@@ -53,15 +60,6 @@ namespace Tvision2.Controls
 
         }
 
-        private void OnComponentAdded(object sender, TreeUpdatedEventArgs e)
-        {
-            var cdata = e.Node.GetTag<TvControlMetadata>();
-            if (cdata == null)
-            {
-                return;
-            }
-            cdata.OwnerTree = this;
-        }
 
         private void OnComponentRemoved(object sender, TreeUpdatedEventArgs e)
         {
@@ -70,7 +68,10 @@ namespace Tvision2.Controls
             {
                 return;
             }
-            cdata.OwnerTree = null;
+            if (_controlWithFocusCaptured == cdata)
+            {
+                FreeFocus();
+            }
             if (cdata == _focused)
             {
                 _needToMoveFocusWhenTreeUpdated = true;
@@ -87,13 +88,13 @@ namespace Tvision2.Controls
 
 
 
-        public TvControlMetadata NextControl(TvControlMetadata current)
+        public TvControlMetadata NextControlForFocus(TvControlMetadata current)
         {
-            var next = current != null ? _controls.Find(current)?.Next : null;
-            return next != null ? next.Value : _controls.First.Value;
+            var next = current != null ? _responders.Find(current)?.Next : null;
+            return next != null ? next.Value : _responders.First.Value;
         }
 
-        public TvControlMetadata PreviousControl(TvControlMetadata current)
+        public TvControlMetadata PreviousControlForFocus(TvControlMetadata current)
         {
             return _controls.Find(current)?.Previous?.Value;
         }
@@ -115,11 +116,18 @@ namespace Tvision2.Controls
         public void CaptureFocus(TvControlMetadata control)
         {
             _controlWithFocusCaptured = control;
+            _responders = new LinkedList<TvControlMetadata>();
+            var ctls =  control.ComponentNode.SubTree().Where(n => n.HasTag<TvControlMetadata>()).Select(n => n.GetTag<TvControlMetadata>());
+            foreach (var ctl in ctls)
+            {
+                _responders.AddLast(ctl);
+            }
         }
 
         public void FreeFocus()
         {
             _controlWithFocusCaptured = null;
+            _responders = _controls;
         }
 
 
@@ -130,10 +138,10 @@ namespace Tvision2.Controls
                 return false;
             }
             var currentFocused = _focused;
-            var next = NextControl(_focused);
+            var next = NextControlForFocus(_focused);
             while (!IsValidTargetForFocus(currentFocused, next) && next != currentFocused)
             {
-                next = NextControl(next);
+                next = NextControlForFocus(next);
             }
             if (next.AcceptFocus(currentFocused) == false)
             {

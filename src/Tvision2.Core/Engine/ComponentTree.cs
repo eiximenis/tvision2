@@ -196,6 +196,7 @@ namespace Tvision2.Core.Engine
         }
 
         private readonly LinkedList<ComponentTreeItem> _roots;
+
         private readonly Dictionary<string, AddComponentOptions> _pendingAdds;
         private readonly Dictionary<string, ComponentTreeNode> _pendingRemovalsPhase1;
         private readonly Dictionary<string, ComponentTreeNode> _pendingRemovalsPhase2;
@@ -265,9 +266,13 @@ namespace Tvision2.Core.Engine
             {
                 var deleteResult = DeleteComponent(kvp.Value.Data);
 
-                if (!rootsAffected.Contains(kvp.Value.Root))
+                if (deleteResult.Status == ComponentTreeNode.RemoveStatus.ChildDeleted && !rootsAffected.Contains(kvp.Value.Root))
                 {
                     rootsAffected.Add(kvp.Value.Root);
+                }
+                else if(deleteResult.Status == ComponentTreeNode.RemoveStatus.RootDeleted)
+                {
+                    DeleteRootNode(kvp.Value);
                 }
 
                 var subtree = deleteResult.AllDeletedNodes;
@@ -291,6 +296,12 @@ namespace Tvision2.Core.Engine
             _pendingRemovalsPhase2.Clear();
             FlattenTree(rootsAffected);
 
+        }
+
+        private void DeleteRootNode(ComponentTreeNode value)
+        {
+            var item = _roots.First(r => r.TreeNode == value);
+            _roots.Remove(item);
         }
 
         private ComponentTreeNode.RemoveResult DeleteComponent(TvComponentMetadata cdata)
@@ -375,20 +386,21 @@ namespace Tvision2.Core.Engine
             }
 
             var toAdd = _pendingAdds.ToArray();
-            _pendingAdds.Clear();
 
             var affectedRoots = new List<ComponentTreeNode>();
 
             foreach (var kvp in toAdd)
             {
                 var addOptions = kvp.Value;
-                ComponentTreeNode nodeAdded;
+                ComponentTreeNode nodeAdded = null;
 
                 if (addOptions.Parent != null)
                 {
                     var parent = FindNodeById(addOptions.Parent.Id);
-                    Debug.Assert(parent != null);
-                    nodeAdded = parent.Add(addOptions.ComponentMetadata);
+                    if (parent != null)
+                    {
+                        nodeAdded = parent.Add(addOptions.ComponentMetadata);
+                    }
                 }
                 else if (addOptions.Before != null)
                 {
@@ -410,20 +422,23 @@ namespace Tvision2.Core.Engine
                     _roots.AddLast(new ComponentTreeItem(nodeAdded));
                 }
 
-                if (!affectedRoots.Contains(nodeAdded.Root))
+                if (nodeAdded != null)
                 {
-                    affectedRoots.Add(nodeAdded.Root);
+                    if (!affectedRoots.Contains(nodeAdded.Root))
+                    {
+                        affectedRoots.Add(nodeAdded.Root);
+                    }
+                    _pendingAdds.Remove(kvp.Key);
+                    CreateNeededBehaviors(addOptions.ComponentMetadata.Component);
+                    addOptions.ComponentMetadata.MountedTo(_engine, this, nodeAdded, addOptions);
+                    addOptions.ComponentMetadata.Component.Invalidate();
+                    OnComponentAdded(addOptions.ComponentMetadata, nodeAdded);
+                    if (nodeAdded.HasParent && addOptions.NotifyParentOnAdd)
+                    {
+                        nodeAdded.Parent.Data.OnChildAdded(addOptions.ComponentMetadata, nodeAdded, addOptions);
+                    }
+                    addOptions.AfterAddAction?.Invoke(_engine);
                 }
-                CreateNeededBehaviors(addOptions.ComponentMetadata.Component);
-                addOptions.ComponentMetadata.MountedTo(_engine, this, nodeAdded, addOptions);
-                addOptions.ComponentMetadata.Component.Invalidate();
-                OnComponentAdded(addOptions.ComponentMetadata, nodeAdded);
-                if (nodeAdded.HasParent && addOptions.NotifyParentOnAdd)
-                {
-                    nodeAdded.Parent.Data.OnChildAdded(addOptions.ComponentMetadata, nodeAdded, addOptions);
-                }
-
-                addOptions.AfterAddAction?.Invoke(_engine);
             }
 
             FlattenTree(affectedRoots);

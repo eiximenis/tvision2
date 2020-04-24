@@ -6,8 +6,8 @@ namespace Tvision2.Controls
 {
     public interface IControlsTree
     {
-        TvControlMetadata NextControl(TvControlMetadata current);
-        TvControlMetadata PreviousControl(TvControlMetadata current);
+        TvControlMetadata NextControlForFocus(TvControlMetadata current);
+        TvControlMetadata PreviousControlForFocus(TvControlMetadata current);
         TvControlMetadata CurrentFocused();
         bool Focus(TvControlMetadata controlToFocus);
         TvControlMetadata First();
@@ -17,6 +17,9 @@ namespace Tvision2.Controls
         TvControlMetadata this[Guid id] { get; }
 
         bool ReturnFocusToPrevious();
+
+        void CaptureFocus(TvControlMetadata control);
+        void FreeFocus();
 
 
         event EventHandler<FocusChangedEventArgs> FocusChanged;

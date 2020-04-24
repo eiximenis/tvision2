@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Tvision2.Controls;
 using Tvision2.Controls.Button;
 using Tvision2.Controls.Styles;
@@ -22,8 +23,9 @@ namespace Tvision2.Dialogs
         private TvGrid _bottomGrid;
         private TvCanvas _mainCanvas;
         private DialogButtons _buttons;
+        private IComponentTree _owner;
 
-        public IComponentsCollection UI => _mainCanvas.Children;
+        public IComponentsCollection UI => _mainCanvas;
 
         public IEnumerable<TvButton> Buttons => _buttons;
 
@@ -40,6 +42,7 @@ namespace Tvision2.Dialogs
         internal void Init(TvDialog dialog, IComponentTree owner)
         {
             _myDialog = dialog;
+            _owner = owner;
             _buttons.AddOkButton();
             _buttons.AddCancelButton();
             var viewport = _myDialog.AsComponent().Viewport.Layer(Layer.Top);
@@ -49,13 +52,18 @@ namespace Tvision2.Dialogs
             _bottomGrid = new TvGrid (new GridState(1, 2), $"{_prefixNames}_BottomGrid");
             _bottomGrid.At(0, 0).Add(_buttons.OkButton);
             _bottomGrid.At(0, 1).Add(_buttons.CancelButton);
-            _mainCanvas = new TvCanvas(owner, $"{_prefixNames}_BodyCanvas");
+            _mainCanvas = new TvCanvas(_owner, $"{_prefixNames}_BodyCanvas");
             _mainCanvas.AsComponent().AddViewport(Viewport.NullViewport);
-
             _mainPanel.At(0).Add(_mainCanvas);
             _mainPanel.At(1).Add(_bottomGrid);
-
+            _owner.AddAsChild(_mainPanel.AsComponent(), dialog.AsComponent());
             IsDirty = true;
+        }
+
+        internal void Destroy()
+        {
+            _owner.Remove(_myDialog);
+            _owner = null;
         }
 
         public bool IsDirty { get; private set; }
