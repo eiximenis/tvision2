@@ -7,8 +7,8 @@ namespace Tvision2.Core.Engine
 {
     public interface IAddChildComponentOptions
     {
-        AddComponentOptions RetrieveParentStatusChanges();
-        AddComponentOptions DoNotNotifyParentOnAdd();
+        IAddChildComponentOptions RetrieveParentStatusChanges();
+        IAddChildComponentOptions DoNotNotifyParentOnAdd();
 
     }
     public class AddComponentOptions : IAddChildComponentOptions
@@ -43,9 +43,10 @@ namespace Tvision2.Core.Engine
             NotifyParentOnAdd = true;
         }
 
-        public IAddChildComponentOptions WithParent(TvComponent parent)
+        public AddComponentOptions WithParent(TvComponent parent, Action<IAddChildComponentOptions> childOptions = null)
         {
             Parent = parent.Metadata;
+            childOptions?.Invoke(this);
             return this;
         }
 
@@ -61,13 +62,13 @@ namespace Tvision2.Core.Engine
             return this;
         }
 
-        AddComponentOptions IAddChildComponentOptions.RetrieveParentStatusChanges()
+        IAddChildComponentOptions IAddChildComponentOptions.RetrieveParentStatusChanges()
         {
             RetrieveParentStatusChanges = true;
             return this;
         }
 
-        AddComponentOptions IAddChildComponentOptions.DoNotNotifyParentOnAdd()
+        IAddChildComponentOptions IAddChildComponentOptions.DoNotNotifyParentOnAdd()
         {
             NotifyParentOnAdd = false;
             return this;
