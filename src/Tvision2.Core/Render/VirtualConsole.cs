@@ -175,8 +175,7 @@ namespace Tvision2.Core.Render
                 for (var col = initcol; col <= maxcol; col++)
                 {
                     var idx = col + (Width * row);
-                    var zindex = _buffer[idx].ZIndex;
-                    _buffer[idx] = new ConsoleCharacter(' ', new CharacterAttribute(), zindex);
+                    _buffer[idx] = new ConsoleCharacter('^', new CharacterAttribute(), Layer.Min);
                     _dirtyMap[idx] = DirtyStatus.Dirty;
                 }
             }

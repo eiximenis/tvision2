@@ -96,9 +96,7 @@ namespace Tvision2.Controls.Menu
             var menu = new TvMenu(TvMenu.CreationParametersBuilder(entry.ChildEntries.Select(e => e.Text))
                 .UseViewport(new Viewport(TvPoint.FromXY(10, 1), TvBounds.FromRowsAndCols(10, 20), Layer.Top))
                 .UseSkin(_creationParameters.Skin));
-            _engine.UI.AddAfter(menu, this);
-
-
+            _engine.UI.Add(menu);
         }
     }
 }

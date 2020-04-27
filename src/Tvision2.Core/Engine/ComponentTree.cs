@@ -270,7 +270,7 @@ namespace Tvision2.Core.Engine
                 {
                     rootsAffected.Add(kvp.Value.Root);
                 }
-                else if(deleteResult.Status == ComponentTreeNode.RemoveStatus.RootDeleted)
+                else if (deleteResult.Status == ComponentTreeNode.RemoveStatus.RootDeleted)
                 {
                     DeleteRootNode(kvp.Value);
                 }
@@ -405,16 +405,17 @@ namespace Tvision2.Core.Engine
                 else if (addOptions.Before != null)
                 {
                     var cnode = _roots.First;
-                    nodeAdded = new ComponentTreeNode(addOptions.ComponentMetadata);
                     while (cnode != null)
                     {
                         if (cnode.Value.TreeNode.Data == addOptions.Before)
                         {
+                            nodeAdded = new ComponentTreeNode(addOptions.ComponentMetadata);
                             _roots.AddAfter(cnode, new ComponentTreeItem(nodeAdded));
                             break;
                         }
                         cnode = cnode.Next;
                     }
+                    Debug.Assert(nodeAdded != null, "AddAfter: Before node not found!! (it is a root?");
                 }
                 else
                 {
@@ -431,7 +432,7 @@ namespace Tvision2.Core.Engine
                     _pendingAdds.Remove(kvp.Key);
                     CreateNeededBehaviors(addOptions.ComponentMetadata.Component);
                     addOptions.ComponentMetadata.MountedTo(_engine, this, nodeAdded, addOptions);
-                    addOptions.ComponentMetadata.Component.Invalidate();
+                    addOptions.ComponentMetadata.Component.Invalidate(InvalidateReason.FullDrawRequired);
                     OnComponentAdded(addOptions.ComponentMetadata, nodeAdded);
                     if (nodeAdded.HasParent && addOptions.NotifyParentOnAdd)
                     {
@@ -501,7 +502,7 @@ namespace Tvision2.Core.Engine
                     {
                         if (childnode.Data.AdmitStatusPropagation)
                         {
-                            childnode.Data.Component.Invalidate();
+                            childnode.Data.Component.Invalidate(InvalidateReason.StateChanged);
                         }
                     }
                 }
@@ -516,12 +517,13 @@ namespace Tvision2.Core.Engine
                 console.Clear(viewport);
             }
 
+            _viewportsToClear.Clear();
+
             foreach (var cdata in NodesList
                 .Where(c => force || c.Data.Component.NeedToRedraw != RedrawNeededAction.None))
             {
                 cdata.Data.Component.Draw(console, cdata.Parent);
             }
-            _viewportsToClear.Clear();
             DoPendingRemovalsPhase2();
         }
 

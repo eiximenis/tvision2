@@ -41,6 +41,7 @@ namespace Tvision2.Dialogs
             if (DialogShown != null)
             {
                 DialogShown.Close();
+                DialogShown = null;
             }
         }
 

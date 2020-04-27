@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 
@@ -10,12 +12,19 @@ namespace Tvision2.Viewports
     {
         private ComponentTree _attachedComponentTree;
 
+        private readonly List<IViewport> _viewportsToInvalidate;
+
+        public ViewportManager()
+        {
+            _viewportsToInvalidate = new List<IViewport>();
+        }
+
         public void InvalidateViewport(IViewport viewportToInvalidate)
         {
             var components = _attachedComponentTree.Components.Where(c => c.Viewports.Any(vp => vp.Value.Intersects(viewportToInvalidate)));
             foreach (var component in components)
             {
-                component.Invalidate();
+                component.Invalidate(InvalidateReason.FullDrawRequired);
             }
         }
 
@@ -25,22 +34,35 @@ namespace Tvision2.Viewports
 
             foreach (var component in componentTree.Components)
             {
-                component.Invalidate();
+                component.Invalidate(InvalidateReason.FullDrawRequired);
                 component.Metadata.ViewportChanged += OnViewportChanged;
             }
 
             componentTree.ComponentAdded += OnComponentAdded;
             componentTree.ComponentRemoved += OnComponentRemoved;
+            componentTree.TreeUpdated += OnTreeUpdated;
         }
+
 
         private void OnComponentRemoved(object sender, TreeUpdatedEventArgs e)
         {
-            var removed = e.ComponentMetadata;
-            var viewport = e.ComponentMetadata.Component.Viewport;
+            e.ComponentMetadata.ViewportChanged -= OnViewportChanged;
+            _viewportsToInvalidate.AddRange(e.ComponentMetadata.Component.Viewports.Select(v => v.Value));
+        }
 
-            if (viewport != null)
+        private void OnTreeUpdated(object sender, EventArgs e)
+        {
+            if (_viewportsToInvalidate.Count != 0)
             {
-                InvalidateViewport(viewport);
+                foreach (var viewport in _viewportsToInvalidate)
+                {
+                    if (viewport != null)
+                    {
+                        InvalidateViewport(viewport);
+                    }
+                }
+
+                _viewportsToInvalidate.Clear();
             }
         }
 
@@ -54,7 +76,7 @@ namespace Tvision2.Viewports
         {
             var data = sender as TvComponentMetadata;
             _attachedComponentTree.ClearViewport(e.Previous);
-            data.Component.Invalidate();
+            data.Component.Invalidate(InvalidateReason.FullDrawRequired);
             InvalidateViewport(e.Previous);
         }
     }

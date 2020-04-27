@@ -13,12 +13,15 @@ namespace Tvision2.Core.Render
         ICursorContext CursorContext => this;
         private readonly ComponentTreeNode _parent;
 
+        public RedrawNeededAction RedrawNeededAction { get; }
 
-        public RenderContext(IViewport viewport, VirtualConsole console, ComponentTreeNode parent)
+
+        public RenderContext(IViewport viewport, VirtualConsole console, ComponentTreeNode parent, RedrawNeededAction redrawAction)
         {
             _console = console;
             Viewport = viewport;
             _parent = parent;
+            RedrawNeededAction = redrawAction;
         }
 
         public void DrawStringAt(string value, TvPoint location, TvColorPair colors)
@@ -51,11 +54,6 @@ namespace Tvision2.Core.Render
             ViewportHelper.Fill(attr, Viewport, _console);
         }
 
-        public void ApplyBoxModel(IViewport newBoxModel)
-        {
-            Viewport = newBoxModel;
-        }
-
         void ICursorContext.SetCursorAt(int left, int top)
         {
             var point = ViewportHelper.ViewPointToConsolePoint(TvPoint.FromXY(left, top), Viewport.Position);
@@ -81,8 +79,8 @@ namespace Tvision2.Core.Render
     {       
         public T State { get; }
 
-        public RenderContext(IViewport viewport, VirtualConsole console, ComponentTreeNode parent, T state) : 
-            base(viewport, console, parent)
+        public RenderContext(IViewport viewport, VirtualConsole console, ComponentTreeNode parent, RedrawNeededAction redrawAction, T state) : 
+            base(viewport, console, parent, redrawAction)
         {
             State = state;
         }

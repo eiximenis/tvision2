@@ -20,16 +20,20 @@ namespace Tvision2.HelloWorld
             builder.UseTvision2(setup =>
             {
                 setup.UseDotNetConsoleDriver();
-                setup.Options.UseStartup(async (sp, tui) =>
+                setup.Options.UseStartup((sp, tui) =>
                 {
                     engine = tui;
                     helloWorld = new TvComponent<string>("Tvision2 rocks!");
                     helloWorld.AddDrawer(ctx =>
                     {
-                        ctx.DrawStringAt(ctx.State, TvPoint.Zero, new TvColorPair(TvColor.Blue, TvColor.Yellow)) ;
+                        ctx.DrawStringAt(ctx.State, TvPoint.Zero, new TvColorPair(TvColor.Blue, TvColor.Yellow));
                     });
+                    helloWorld.AddStateBehavior(s => "Hello world " + new Random().Next(1, 1000) + "    ");
                     helloWorld.AddViewport(new Viewport(TvPoint.FromXY(10, 10), 30));
+                    helloWorld.AddViewport(new Viewport(TvPoint.FromXY(10, 11), 30));
+                    helloWorld.AddViewport(new Viewport(TvPoint.FromXY(20, 13), 30));
                     tui.UI.Add(helloWorld);
+                    /*
                     for (var x = 0; x<10; x++)
                     {
                         var c = new TvComponent<String>($"{x}");
@@ -40,15 +44,19 @@ namespace Tvision2.HelloWorld
                             opt.RetrieveParentStatusChanges();
                         });
                     }
-                    return;// Task.CompletedTask;
+                    return;
+                    */
+                    return Task.CompletedTask;
                 });
             }).UseConsoleLifetime();
 
+            /*
             Task.Run(async () =>
             {
                 await Task.Delay(5000);
                 helloWorld.SetState("Again!");
             });
+            */
 
             await builder.RunTvisionConsoleApp();
         }

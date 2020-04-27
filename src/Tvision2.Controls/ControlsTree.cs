@@ -96,7 +96,7 @@ namespace Tvision2.Controls
 
         public TvControlMetadata PreviousControlForFocus(TvControlMetadata current)
         {
-            return _controls.Find(current)?.Previous?.Value;
+            return _responders.Find(current)?.Previous?.Value;
         }
 
         public TvControlMetadata CurrentFocused() => _focused;
@@ -133,7 +133,7 @@ namespace Tvision2.Controls
 
         public bool MoveFocusToNext()
         {
-            if (!_controls.Any())
+            if (!_responders.Any())
             {
                 return false;
             }

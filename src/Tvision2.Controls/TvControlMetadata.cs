@@ -71,6 +71,14 @@ namespace Tvision2.Controls
             return accept;
         }
 
+        public void CaptureFocus()
+        {
+            if (IsAttached)
+            {
+                OwnerTree.CaptureFocus(this);
+            }
+        }
+
 
         public TvControlMetadata(ITvControl control, TvControlCreationParameters creationParameters, Action<TvControlMetadataOptions> optionsAction = null)
         {

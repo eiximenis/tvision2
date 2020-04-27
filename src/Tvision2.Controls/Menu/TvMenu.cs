@@ -60,7 +60,8 @@ namespace Tvision2.Controls.Menu
         protected override void OnControlMounted(ITuiEngine engine)
         {
             _ownerUi = engine.UI;
-            _ownerUi.Add(_list);
+            _ownerUi.AddAsChild(_list, this);
+            Metadata.CaptureFocus();
         }
 
         protected override void OnControlUnmounted(ITuiEngine engine)

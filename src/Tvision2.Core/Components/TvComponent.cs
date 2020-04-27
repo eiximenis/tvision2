@@ -14,7 +14,14 @@ namespace Tvision2.Core.Components
     public enum RedrawNeededAction
     {
         None,
-        Standard
+        Standard,
+        Full
+    }
+
+    public enum InvalidateReason
+    {
+        StateChanged,
+        FullDrawRequired
     }
 
 
@@ -24,9 +31,9 @@ namespace Tvision2.Core.Components
         protected Dictionary<Guid, IViewport> _viewports;
         public RedrawNeededAction NeedToRedraw { get; protected set; }
         public string Name { get; }
-        public void Invalidate()
+        public void Invalidate(InvalidateReason reasonToInvalidate)
         {
-            NeedToRedraw = RedrawNeededAction.Standard;
+            NeedToRedraw = reasonToInvalidate == InvalidateReason.StateChanged ? RedrawNeededAction.Standard : RedrawNeededAction.Full;
         }
         public TvComponentMetadata Metadata => _metadata;
 
@@ -129,6 +136,12 @@ namespace Tvision2.Core.Components
             AddBehavior(new StateActionBehavior<T>(action));
         }
 
+        public void AddStateBehavior(Func<T,T> newState)
+        {
+            AddBehavior(new ChangeStateBhavior<T>(newState, this));
+        }
+
+
         public void AddBehavior(ITvBehavior<T> behavior, Action<IBehaviorMetadata<T>> metadataAction = null)
         {
             var metadata = new BehaviorMetadata<T>(behavior);
@@ -179,7 +192,7 @@ namespace Tvision2.Core.Components
         {
             foreach (var vpnk in _viewports)
             {
-                var context = new RenderContext<T>(vpnk.Value, console,  parent, State);
+                var context = new RenderContext<T>(vpnk.Value, console,  parent, NeedToRedraw, State);
                 foreach (var drawer in _drawers)
                 {
                     drawer?.Draw(context);
