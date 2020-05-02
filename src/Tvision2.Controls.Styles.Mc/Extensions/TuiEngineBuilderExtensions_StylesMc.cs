@@ -30,11 +30,18 @@ namespace Tvision2.Controls.Styles
                          .UseBackground(TvColor.Blue)
                     );
                     style
-                        .When(p =>  p.ColorMode ==ColorMode.Direct  || p.ColorMode == ColorMode.Palettized)
+                        .When(p =>  p.ColorMode ==ColorMode.Direct)
                         .DesiredStandard(o =>
                             o.UseBackground(() => new VerticalGradientBackgroundProvider(
                                 TvColor.FromRGB(0, 200, 100), TvColor.FromRGB(50, 50, 50)))
                         );
+
+                    style
+                        .When(p => p.ColorMode == ColorMode.Palettized)
+                        .DesiredStandard(o =>
+                            o.UseBackground(() => new VerticalGradientBackgroundProvider(
+                                TvColor.FromRGB(0, 255, 0), TvColor.FromRGB(0, 200, 0)))
+                            );
                     style.Default().DesiredFocused(o =>
                         o.UseForeground(TvColor.White)
                          .UseBackground(TvColor.Blue)
@@ -68,6 +75,14 @@ namespace Tvision2.Controls.Styles
                         o.UseForeground(TvColor.Black)
                          .UseBackground(TvColor.White)
                     );
+                    
+                    style
+                        .When(p =>  p.ColorMode ==ColorMode.Direct ||  p.ColorMode == ColorMode.Palettized )
+                        .DesiredStandard(o =>
+                            o.UseBackground(() => new VerticalGradientBackgroundProvider(
+                                TvColor.FromRGB(255, 128, 128), TvColor.FromRGB(128, 255, 255)))
+                        );
+                    
                     style.Default().DesiredFocused(o =>
                         o.UseForeground(TvColor.White)
                          .UseBackground(TvColor.Black)

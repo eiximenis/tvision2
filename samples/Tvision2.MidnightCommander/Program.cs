@@ -1,4 +1,6 @@
-﻿    using Microsoft.Extensions.Hosting;
+﻿    using System.Reflection;
+    using System.Security.Cryptography.X509Certificates;
+    using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
     using Tvision2.ConsoleDriver.ColorTranslators;
     using Tvision2.Controls.Styles;
@@ -16,9 +18,13 @@ namespace Tvision2.MidnightCommander
         private static async Task Main(string[] args)
         {
             bool useFullColor = false;
+            bool useNCurses = false;
+            bool useBasic = false;
             foreach (var arg in args)
             {
                 if (arg == "--fullcolor") { useFullColor = true; }
+                if (arg == "--ncurses") { useNCurses = true; }
+                if (arg == "--basic")  {  useBasic = true;  }
             }
             var builder = new HostBuilder();
             builder.UseTvision2(setup =>
@@ -28,22 +34,38 @@ namespace Tvision2.MidnightCommander
                         // Linux specific config
                         .OnLinux(lo =>
                         {
-                            // We want to setup our palette
-                            lo.UsePalette(p =>
+                            if (!useNCurses)
                             {
-                                // Will init the palette using our terminal name (currently only xterm-256color is supported)
-                                p.LoadFromTerminalName().UpdateTerminal(ConsoleDriver.Common.UpdateTerminalEntries.AllButAnsi4bit);
+                                // We want to setup our palette
+                                if (useBasic)
+                                {
+                                    lo.UseAnsi().WithPalette(p => p.UseBasicColorMode());
+                                }
 
-                                // We want to be able to use RGB colors, but if we are in palette mode (no full direct color)
-                                // we need to setup a translator that translates any RGB color in a palette color. 
-                                p.TranslateRgbColorsWith(new  InterpolationPaletteTranslator());
-                            });
-                            if (useFullColor)
+                                if (useFullColor)
+                                {
+                                    lo.UseAnsi()
+                                        .EnableTrueColor(tc => tc.WithBuiltInSequences())
+                                        .WithPalette(palette =>
+                                        {
+                                            palette.LoadFromTerminalName("256-grey")
+                                                .UpdateTerminal(ConsoleDriver.Common.UpdateTerminalEntries
+                                                    .AllButAnsi4bit);
+                                        });
+                                }
+                            }
+                            else
                             {
-                                // We want to use full color if possible. We will
-                                // be able to translate between palettized colors and rgb ones because we
-                                // used UsePalette and load a palette.
-                                lo.UseDirectAccess(dop => dop.UseTrueColor());
+                                if (useBasic)
+                                {
+                                    lo.UseNCurses().WithPalette(p => p.UseBasicColorMode());
+                                }
+                                else  lo.UseNCurses().WithPalette(palette =>
+                                {
+                                    palette.LoadFromTerminalName()
+                                        .UpdateTerminal(ConsoleDriver.Common.UpdateTerminalEntries.AllButAnsi4bit);
+                                    palette.TranslateRgbColorsWith(new  InterpolationPaletteTranslator());
+                                });
                             }
                         })
                         // Windows specific config

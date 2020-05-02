@@ -2,9 +2,9 @@
 using System;
 using System.Diagnostics;
 using Tvision2.ConsoleDriver;
+using Tvision2.ConsoleDriver.Ansi;
 using Tvision2.ConsoleDriver.Colors;
 using Tvision2.ConsoleDriver.Common;
-using Tvision2.ConsoleDriver.Terminfo;
 using Tvision2.ConsoleDriver.Win32;
 using Tvision2.Core.Colors;
 using Tvision2.Engine.Console;
@@ -58,24 +58,6 @@ namespace Tvision2.Core
             return tv2;
         }
 
-        private static Tvision2Setup UseTerminfoConsoleDriver(this Tvision2Setup tv2, LinuxConsoleDriverOptions options)
-        {
-
-            // TODO: need to create IndexedColorManager for Terminfo
-            
-            var colorManager = options.DirectAccessOptions.TrueColorEnabled
-                ? options.DirectAccessOptions.TrueColorOptions.GetTerminfoColorManager(options.PaletteOptions)
-                : new TerminfoTrueColorManager(options.PaletteOptions);
-            var driver = new TerminfoConsoleDriver(colorManager);
-            tv2.Options.UseConsoleDriver(driver);
-            tv2.Builder.ConfigureServices((hc, sc) =>
-            {
-                sc.AddSingleton<IConsoleDriver>(driver);
-                sc.AddSingleton<IColorManager>(colorManager);
-            });
-            return tv2;
-        }
-
         public static Tvision2Setup UseDotNetConsoleDriver(this Tvision2Setup tv2, Action<IConsoleDriverOptions> config = null)
         {
             var options = new ConsoleDriverOptions();
@@ -90,6 +72,20 @@ namespace Tvision2.Core
             });
             return tv2;
         }
+        
+        public static Tvision2Setup UseAnsiLinuxConsoleDriver(this Tvision2Setup tv2, LinuxConsoleDriverOptions options)
+        {
+            var colorManager = new AnsiColorManager(options.PaletteOptions);
+            var driver = new AnsiLinuxConsoleDriver(options, colorManager);
+            tv2.Options.UseConsoleDriver(driver);
+            tv2.Builder.ConfigureServices((hc, sc) =>
+            {
+                sc.AddSingleton<IConsoleDriver>(driver);
+                sc.AddSingleton<IColorManager>(colorManager);
+            });
+            return tv2;
+        }
+        
         
 
         public static Tvision2Setup UsePlatformConsoleDriver(this Tvision2Setup tv2, Action<IPlatformConsoleDriverOptions> config = null)
@@ -108,7 +104,7 @@ namespace Tvision2.Core
                 return UseNcursesConsoleDriver(tv2, platformOptions.LinuxOptions);
             }
 
-            return UseTerminfoConsoleDriver(tv2, platformOptions.LinuxOptions);
+            return UseAnsiLinuxConsoleDriver(tv2, platformOptions.LinuxOptions);
         }
     }
 }

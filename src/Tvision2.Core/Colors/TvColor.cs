@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Tvision2.Core.Colors
 {
-
+    
     public static class TvColorNames
     {
         private static readonly string[] _names = new[] { "Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White"};
@@ -32,6 +32,16 @@ namespace Tvision2.Core.Colors
         public static string NameOf(TvColor color) => NameOf(color.Value);
     }
 
+    public enum TvPalettizedComponentValue : short
+    {
+        Zero = 0,
+        One,
+        Two,
+        Three,
+        Four,
+        Five
+    }
+
     public struct TvColor
     {
         public readonly int Value;
@@ -39,6 +49,9 @@ namespace Tvision2.Core.Colors
         private const int PALETTE_MARKER = (1 << 30);
         public const int ANSI3BIT_MAX_VALUE = 7;
         public const int ANSI4BIT_MAX_VALUE = 15;
+        
+        private const short PALETTIZED_GRAY_START_IDX = 232;
+        private const short PALETTIZED_GRAY_RANGE = 24;
 
         public TvColor(int value) => Value = value;
 
@@ -72,6 +85,12 @@ namespace Tvision2.Core.Colors
             var value = red | (green << 8) | (blue << 16) | RGB_MARKER;
             return new TvColor(value);
         }
+
+        public static TvColor FromPaletteValues(TvPalettizedComponentValue red, TvPalettizedComponentValue green,  TvPalettizedComponentValue blue) =>
+            TvColor.FromPaletteIndex((short)(16 + 36 * (short) red + 6 * (short) green + (short) blue));
+
+        public static TvColor FromPaletteGrey(short greyIndex) 
+            => FromPaletteIndex((short)(PALETTIZED_GRAY_START_IDX + (greyIndex > PALETTIZED_GRAY_RANGE ? PALETTIZED_GRAY_RANGE : greyIndex)));
 
         public static TvColor FromPaletteIndex(short index)
         {

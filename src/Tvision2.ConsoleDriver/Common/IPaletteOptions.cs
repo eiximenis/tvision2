@@ -7,6 +7,8 @@ namespace Tvision2.ConsoleDriver.Common
     {
         IPaletteOptionsWithPaletteInitialized LoadFromTerminalName(string name = null);
         IPaletteOptionsWithPaletteInitialized LoadFromDefinition();
+
+        void UseBasicColorMode();
         
         void TranslateRgbColorsWith(IRgbColortranslator translator);
         void TranslateRgbColorsWith(Func<TvColor, IPalette, int> translatorFunc);

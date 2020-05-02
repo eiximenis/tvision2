@@ -14,4 +14,3 @@
 13 Fuchsia  #ff00ff 
 14 Aqua  #00ffff 
 15 White  #ffffff 
-16 Grey0 #000000 

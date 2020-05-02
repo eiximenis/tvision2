@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using Tvision2.ConsoleDriver.Ansi;
 using Tvision2.ConsoleDriver.Win32;
 using Tvision2.Core.Colors;
 using Tvision2.Core.Render;
@@ -17,10 +18,10 @@ namespace Tvision2.ConsoleDriver
         private readonly IntPtr _hstdin;
         private readonly IntPtr _hstdout;
         public bool SupportsAnsi { get; }
-        private readonly Win32AnsiSequencesManager _seqManager;
+        private readonly AnsiColorManager _colorManager;
         private readonly WindowsConsoleDriverOptions _options;
 
-        public IColorManager ColorManager => _seqManager;
+        public IColorManager ColorManager => _colorManager;
 
         public TvBounds ConsoleBounds { get; private set; }
 
@@ -40,7 +41,7 @@ namespace Tvision2.ConsoleDriver
         {
             _hstdin = ConsoleNative.GetStdHandle(STDIN);
             _hstdout = ConsoleNative.GetStdHandle(STDOUT);
-            _seqManager = new Win32AnsiSequencesManager(options.PaletteOptions);
+            _colorManager = new AnsiColorManager(options.PaletteOptions);
             _options = options;
         }
 
@@ -99,8 +100,8 @@ namespace Tvision2.ConsoleDriver
         public void WriteCharactersAt(int x, int y, int count, char character, CharacterAttribute attribute)
         {
             var sb = new StringBuilder();
-            sb.Append(_seqManager.GetCursorSequence(x, y));
-            sb.Append(_seqManager.GetAttributeSequence(attribute));
+            sb.Append(_colorManager.GetCursorSequence(x, y));
+            sb.Append(_colorManager.GetAttributeSequence(attribute));
             sb.Append(character, count);
             Console.Write(sb.ToString());
         }
@@ -108,18 +109,18 @@ namespace Tvision2.ConsoleDriver
 
         public void SetCursorAt(int x, int y)
         {
-            Console.Write(_seqManager.GetCursorSequence(x, y));
+            Console.Write(_colorManager.GetCursorSequence(x, y));
         }
 
         public void SetCursorVisibility(bool isVisible)
         {
             if (isVisible)
             {
-                Console.Write("\x1b[?25h");
+                Console.Write(AnsiEscapeSequences.DECTCEM_VISIBLE);
             }
             else
             {
-                Console.Write("\x1b[?25l");
+                Console.Write(AnsiEscapeSequences.DECTCEM_HIDDEN);
             }
         }
 

@@ -66,7 +66,14 @@ namespace Tvision2.ConsoleDriver.Common
         private int GetColorNumber(TvColor color)
         {
             if (!color.IsRgb) return color.PaletteIndex;
-            return _colorTranslator.GetColorIndexFromRgb(color, _palette);
+
+            if (_colorTranslator != null)
+            {
+                return _colorTranslator.GetColorIndexFromRgb(color, _palette);
+            }
+
+            throw new InvalidOperationException(
+                $"RGB color passed {color.ToString()} and no color translator is set. Do not use RGB colors or use  TranslateRgbColorsWith in the WithPalette setting");
         }
 
         internal void Init()

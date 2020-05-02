@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using Tvision2.ConsoleDriver.ColorDefinitions;
 using Tvision2.ConsoleDriver.Common;
@@ -24,7 +26,7 @@ namespace Tvision2.ConsoleDriver.Common
         {
             IsFreezed = true;
             MaxColors = 0;
-            ColorMode = ColorMode.Palettized;
+            ColorMode =  options.ForceBasicPalette ? ColorMode.Basic : ColorMode.Palettized;
             _options = options;
         }
 
@@ -57,7 +59,7 @@ namespace Tvision2.ConsoleDriver.Common
                     LoadPalette("ansi", DefaultPaletteDefinitionParser.Instance, _options.UpdateTerminalEntries);
                 }
 
-                IsFreezed = !Curses.CanChangeColor();
+                IsFreezed = ColorMode == ColorMode.Basic || !Curses.CanChangeColor();
             }
             else
             {

@@ -5,7 +5,22 @@ namespace Tvision2.ConsoleDriver.Common
 {
     public interface ILinuxConsoleDriverOptions : IConsoleDriverOptions
     {
-        ILinuxConsoleDriverOptions UseDirectAccess(Action<IDirectAccessOptions> directAccessOptionsAction = null);
-        ILinuxConsoleDriverOptions UsePalette(Action<IPaletteOptions> paletteOptionsAction = null);
+        ILinuxAnsiDriverOptions UseAnsi();
+        INCursesDriverOptions UseNCurses();
     }
+
+    
+    
+    public interface INCursesDriverOptions
+    {
+        INCursesDriverOptions WithPalette(Action<IPaletteOptions> paletteOptionsAction = null);
+    }
+
+    public interface ILinuxAnsiDriverOptions
+    {
+        ILinuxAnsiDriverOptions WithPalette(Action<IPaletteOptions> paletteOptionsAction = null);
+        ILinuxAnsiDriverOptions EnableTrueColor(Action<ITrueColorOptions> truecolorOptionsAction = null);
+    }
+    
+
 }

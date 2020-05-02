@@ -31,7 +31,6 @@ namespace Tvision2.ConsoleDriver
 
         public void Init()
         {
-
             ConsoleBounds = TvBounds.FromRowsAndCols(Console.WindowHeight, Console.WindowWidth);
 
             Curses.setlocale(6, "");

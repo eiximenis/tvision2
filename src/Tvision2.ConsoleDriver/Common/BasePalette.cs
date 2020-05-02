@@ -113,9 +113,9 @@ namespace Tvision2.ConsoleDriver.Common
                         AddColor(parsedLine.idx, parsedLine.rgbColor, parsedLine.name);
                         var invoke = (whenInvokeCallback == UpdateTerminalEntries.All) ||
                                      (whenInvokeCallback == UpdateTerminalEntries.AllButAnsi3bit &&
-                                      parsedLine.idx <= TvColor.ANSI3BIT_MAX_VALUE) ||
+                                      parsedLine.idx > TvColor.ANSI3BIT_MAX_VALUE) ||
                                      (whenInvokeCallback == UpdateTerminalEntries.AllButAnsi4bit &&
-                                      parsedLine.idx <= TvColor.ANSI4BIT_MAX_VALUE);
+                                      parsedLine.idx > TvColor.ANSI4BIT_MAX_VALUE);
                         if (invoke)
                         {
                             OnColorAdded(parsedLine.rgbColor, parsedLine.idx);

@@ -16,6 +16,8 @@ namespace Tvision2.ConsoleDriver.Common
         public IRgbColortranslator ColorTranslator { get; private set; }
 
         public IPaletteDefinitionParser PaletteParser { get; private set; }
+
+        public bool ForceBasicPalette { get; private set; }
         
         public PaletteOptions()
         {
@@ -23,7 +25,14 @@ namespace Tvision2.ConsoleDriver.Common
             PaletteToLoad = null;
             PaletteParser = DefaultPaletteDefinitionParser.Instance;
             ColorTranslator = null;
+            ForceBasicPalette = false;
         }
+        
+        void IPaletteOptions.UseBasicColorMode()
+        {
+            ForceBasicPalette = true;
+        }
+
 
         public bool SupportRgbColors => ColorTranslator != null;
         

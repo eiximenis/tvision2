@@ -3,29 +3,49 @@ using Tvision2.ConsoleDriver.Common;
 
 namespace Tvision2.ConsoleDriver.Common
 {
-    public class LinuxConsoleDriverOptions : ConsoleDriverOptions, ILinuxConsoleDriverOptions
+    public class LinuxConsoleDriverOptions : ConsoleDriverOptions, ILinuxConsoleDriverOptions, 
+        ILinuxAnsiDriverOptions, INCursesDriverOptions
     {
         public bool UseNCurses { get; private set; }
-        public DirectAccessOptions DirectAccessOptions { get; }
+        public TrueColorOptions  TrueColorOptions { get; }
         
         public PaletteOptions PaletteOptions { get; }
 
         public LinuxConsoleDriverOptions()
         {
-            UseNCurses = true;
-            DirectAccessOptions = new DirectAccessOptions();
+            UseNCurses = false;
+            TrueColorOptions = new TrueColorOptions();
             PaletteOptions = new PaletteOptions();
         }
 
-        ILinuxConsoleDriverOptions ILinuxConsoleDriverOptions.UseDirectAccess(Action<IDirectAccessOptions> directAccessOptionsAction = null)
+        INCursesDriverOptions ILinuxConsoleDriverOptions.UseNCurses()
+        {
+            UseNCurses = true;
+            return this;
+        }
+        
+
+        ILinuxAnsiDriverOptions ILinuxConsoleDriverOptions.UseAnsi()
         {
             UseNCurses = false;
+            return this;
+        }
+        
+        
 
-            directAccessOptionsAction?.Invoke(DirectAccessOptions);
+        public ILinuxAnsiDriverOptions EnableTrueColor(Action<ITrueColorOptions> truecolorOptionsAction = null)
+        {
+            truecolorOptionsAction?.Invoke(TrueColorOptions);
             return this;
         }
 
-        public ILinuxConsoleDriverOptions UsePalette(Action<IPaletteOptions> paletteOptionsAction = null)
+        INCursesDriverOptions INCursesDriverOptions.WithPalette(Action<IPaletteOptions> paletteOptionsAction = null)
+        {
+            paletteOptionsAction?.Invoke(PaletteOptions);
+            return this;
+        }
+        
+        ILinuxAnsiDriverOptions ILinuxAnsiDriverOptions.WithPalette(Action<IPaletteOptions> paletteOptionsAction = null)
         {
             paletteOptionsAction?.Invoke(PaletteOptions);
             return this;

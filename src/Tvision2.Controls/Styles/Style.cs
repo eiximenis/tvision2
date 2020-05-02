@@ -24,7 +24,7 @@ namespace Tvision2.Controls.Styles
 
         public void Mix(Style styleDelta)
         {
-            Standard.Mix(styleDelta.Standard);
+            Standard?.Mix(styleDelta.Standard);
             Focused.Mix(styleDelta.Focused);
             Alternate.Mix(styleDelta.Alternate);
             AlternateFocused.Mix(styleDelta.Focused);

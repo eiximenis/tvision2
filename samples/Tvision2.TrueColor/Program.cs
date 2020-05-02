@@ -25,7 +25,7 @@ namespace Tvision2.TrueColor
                 setup.UsePlatformConsoleDriver(opt =>
                 {
                     opt.Configure()
-                        .OnLinux(l => l.UseDirectAccess(da => da.UseTrueColor().WithBuiltInSequences()))
+                        .OnLinux(l => l.UseAnsi().EnableTrueColor())
                         .OnWindows(w => w.EnableAnsiSequences());
                 });
                 setup.Options.UseStartup((sp, tui) =>

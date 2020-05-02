@@ -27,9 +27,9 @@ namespace Tvision2.Controls.Styles
         public Style Build()
         {
             _style.Standard = _standard;
-            _style.Focused = _focused;
-            _style.Alternate = _alternate;
-            _style.AlternateFocused = _alternateFocused;
+            _style.Focused = _focused ?? _standard;
+            _style.Alternate = _alternate ?? _standard;
+            _style.AlternateFocused = _alternateFocused ?? _standard;
             foreach (var custom in _customDefinitions)
             {
                 _style.SetupCustomValue(custom.Key, custom.Value);
