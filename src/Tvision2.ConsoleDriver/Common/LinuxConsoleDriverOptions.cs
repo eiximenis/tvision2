@@ -7,6 +7,7 @@ namespace Tvision2.ConsoleDriver.Common
         ILinuxAnsiDriverOptions, INCursesDriverOptions
     {
         public bool UseNCurses { get; private set; }
+        
         public TrueColorOptions  TrueColorOptions { get; }
         
         public PaletteOptions PaletteOptions { get; }
@@ -36,6 +37,7 @@ namespace Tvision2.ConsoleDriver.Common
         public ILinuxAnsiDriverOptions EnableTrueColor(Action<ITrueColorOptions> truecolorOptionsAction = null)
         {
             truecolorOptionsAction?.Invoke(TrueColorOptions);
+            PaletteOptions.TrueColorEnabled = TrueColorOptions.Provider != TrueColorProvider.None;
             return this;
         }
 

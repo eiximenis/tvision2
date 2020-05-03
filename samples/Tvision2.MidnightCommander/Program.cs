@@ -42,15 +42,16 @@ namespace Tvision2.MidnightCommander
                                     lo.UseAnsi().WithPalette(p => p.UseBasicColorMode());
                                 }
 
-                                if (useFullColor)
+                                else 
                                 {
                                     lo.UseAnsi()
-                                        .EnableTrueColor(tc => tc.WithBuiltInSequences())
+                                        //.EnableTrueColor(tc => tc.WithBuiltInSequences())
                                         .WithPalette(palette =>
                                         {
                                             palette.LoadFromTerminalName("256-grey")
                                                 .UpdateTerminal(ConsoleDriver.Common.UpdateTerminalEntries
                                                     .AllButAnsi4bit);
+                                            palette.TranslateRgbColorsWith(new  InterpolationPaletteTranslator());
                                         });
                                 }
                             }

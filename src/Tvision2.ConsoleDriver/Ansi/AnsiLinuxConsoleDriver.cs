@@ -37,6 +37,7 @@ namespace Tvision2.ConsoleDriver.Ansi
             Console.Out.Flush();
             Console.Out.Write(AnsiEscapeSequences.CLEAR);
             Console.Out.Flush();
+            _colorManager.Init();
         }
         
         

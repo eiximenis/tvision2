@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using Tvision2.ConsoleDriver.Ansi;
 using Tvision2.ConsoleDriver.ColorDefinitions;
@@ -24,6 +25,11 @@ namespace Tvision2.ConsoleDriver.Ansi
         {
             _options = options;
             InitSize(size);
+            ColorMode = _options.TrueColorEnabled ? ColorMode.Direct : ColorMode.Palettized;
+        }
+
+        public void Init()
+        {
             if (!string.IsNullOrEmpty(_options.PaletteToLoad))
             {
                 LoadPalette(_options.PaletteToLoad, _options.PaletteParser, _options.UpdateTerminalEntries);
@@ -31,9 +37,7 @@ namespace Tvision2.ConsoleDriver.Ansi
             else
             {
                 LoadPalette("ansi", DefaultPaletteDefinitionParser.Instance, _options.UpdateTerminalEntries);
-            }
-
-            ColorMode = options.ForceBasicPalette ? ColorMode.Basic : ColorMode.Palettized;        // TODO: not true -> CAN BE TRUECOLOR
+            }            
         }
 
         protected override void OnColorAdded(TvColor color, int idx)
@@ -41,6 +45,7 @@ namespace Tvision2.ConsoleDriver.Ansi
             
             var (r, g, b) = color.Rgb;
             Console.Out.Write(string.Format(AnsiEscapeSequences.INITC, idx, r, g, b));
+            Console.Out.Flush();
         }
     }
 }

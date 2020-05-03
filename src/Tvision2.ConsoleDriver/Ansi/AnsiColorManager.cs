@@ -1,7 +1,10 @@
+using System;
 using System.Dynamic;
+using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Tvision2.ConsoleDriver.Colors;
 using Tvision2.ConsoleDriver.Common;
+using Tvision2.Core;
 using Tvision2.Core.Colors;
 
 namespace Tvision2.ConsoleDriver.Ansi
@@ -18,24 +21,28 @@ namespace Tvision2.ConsoleDriver.Ansi
         
         private const string CUP = "\x1b[{0};{1}H";
 
-        private const int MAXPALETTESIZE = 256; 
+        private const int MAXPALETTESIZE = 256;
 
-        public IPalette Palette { get; }
-        
+        private readonly AnsiPalette _palette;
+        private readonly IRgbColortranslator _colorTranslator;
+
+        public IPalette Palette
+        {
+            get => _palette;
+        }
+
         public CharacterAttribute DefaultAttribute { get; }
         
         public AnsiColorManager(PaletteOptions options)
         {
             DefaultAttribute = BuildAttributeFor(TvColor.White, TvColor.Black, CharacterAttributeModifiers.Normal);
-
-            Palette = options.ForceBasicPalette
-                ? new DotNetPalette() as IPalette
-                : new AnsiPalette(MAXPALETTESIZE, options) as IPalette;
+            _colorTranslator = options.ColorTranslator;
+            _palette = new AnsiPalette(MAXPALETTESIZE, options);
         }
 
         public void Init()
         {
-            
+            _palette.Init();
         }
    
         public CharacterAttribute BuildAttributeFor(TvColor fore, TvColor back,
@@ -59,7 +66,21 @@ namespace Tvision2.ConsoleDriver.Ansi
 
             if (fore.IsRgb)
             {
-                var (fr, fg, fb) = fore.Rgb;
+                TvColor finalFore = fore;
+                if (_palette.ColorMode != ColorMode.Direct)
+                {
+                    if (_colorTranslator != null) {
+
+                        finalFore = _palette[_colorTranslator.GetColorIndexFromRgb(fore, _palette)];
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException(
+                            $"RGB Color received: {fore.ToString()} but ColorMode is {_palette.ColorMode} and no ColorTranslator has been provided. Use TranslateRgbColorsWith in the WithPalette setting");
+                    }                    
+                }
+
+                var (fr, fg, fb) = finalFore.Rgb;
                 forestring = string.Format(SGR_RGB_FORE, fr.ToString(), fg.ToString(), fb.ToString());
             }
 
@@ -74,7 +95,22 @@ namespace Tvision2.ConsoleDriver.Ansi
             
             if (back.IsRgb)
             {
-                var (br, bg, bb) = back.Rgb;
+                TvColor finalBack = back;
+                if (_palette.ColorMode != ColorMode.Direct )
+                {
+                    if (_colorTranslator != null)
+                    {
+                        finalBack = _palette[_colorTranslator.GetColorIndexFromRgb(back, _palette)];
+                    }                
+                    else
+                    {
+                        throw new InvalidOperationException(
+                            $"RGB Color received: {back.ToString()} but ColorMode is {_palette.ColorMode} and no ColorTranslator has been provided. Use TranslateRgbColorsWith in the WithPalette setting");
+                    }
+                }
+
+
+                var (br, bg, bb) = finalBack.Rgb;
                 backstring = string.Format(SGR_RGB_BACK, br.ToString(), bg.ToString(), bb.ToString());
             }
 

@@ -19,8 +19,11 @@ namespace Tvision2.ConsoleDriver.Common
 
         public bool ForceBasicPalette { get; private set; }
         
+        public bool TrueColorEnabled { get; set; }
+        
         public PaletteOptions()
         {
+            TrueColorEnabled = false;
             UpdateTerminalEntries = UpdateTerminalEntries.None;
             PaletteToLoad = null;
             PaletteParser = DefaultPaletteDefinitionParser.Instance;

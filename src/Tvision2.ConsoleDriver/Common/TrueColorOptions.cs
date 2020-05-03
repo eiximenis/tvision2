@@ -13,7 +13,7 @@ namespace Tvision2.ConsoleDriver.Common
         
         public TrueColorOptions()
         {
-            Provider = TrueColorProvider.BuiltIn;
+            Provider = TrueColorProvider.None;
         }
     }
 }
