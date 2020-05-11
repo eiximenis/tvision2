@@ -26,7 +26,7 @@ namespace Tvision2.TrueColor
                 {
                     opt.Configure()
                         .OnLinux(l => l.UseAnsi().EnableTrueColor())
-                        .OnWindows(w => w.EnableAnsiSequences());
+                        .OnWindows(w => w.UseAnsi());
                 });
                 setup.Options.UseStartup((sp, tui) =>
                 {

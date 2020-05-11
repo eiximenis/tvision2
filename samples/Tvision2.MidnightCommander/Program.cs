@@ -77,7 +77,7 @@ namespace Tvision2.MidnightCommander
                                 // We want to use ANSI sequences, allowing full color also. This is only
                                 // available in Win10. If running in older windows, application will be in
                                 // basic color mode.
-                                w.EnableAnsiSequences();
+                                w.UseAnsi();
                             }
                         })
                      )
