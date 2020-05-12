@@ -29,5 +29,10 @@ namespace Tvision2.ConsoleDriver.Win32
             return this;
         }
 
+        public IWindowsAnsiDriverOptions EnableTrueColor()
+        {
+            PaletteOptions.TrueColorEnabled = true;
+            return this;
+        }
     }
 }

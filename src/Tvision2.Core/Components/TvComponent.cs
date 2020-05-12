@@ -141,7 +141,6 @@ namespace Tvision2.Core.Components
             AddBehavior(new ChangeStateBhavior<T>(newState, this));
         }
 
-
         public void AddBehavior(ITvBehavior<T> behavior, Action<IBehaviorMetadata<T>> metadataAction = null)
         {
             var metadata = new BehaviorMetadata<T>(behavior);
@@ -177,7 +176,7 @@ namespace Tvision2.Core.Components
             foreach (var mdata in _behaviorsMetadata)
             {
                 var evts = ctx.Events;
-                var behaviorCtx = new BehaviorContext<T>(State, evts, Viewport, ctx.Parent);
+                var behaviorCtx = new BehaviorContext<T>(State, evts, Viewport, ctx.ComponentLocator);
                 if (mdata.Schedule == BehaviorSchedule.OncePerFrame
                     || (mdata.Schedule == BehaviorSchedule.OnEvents && evts != TvConsoleEvents.Empty))
                 {

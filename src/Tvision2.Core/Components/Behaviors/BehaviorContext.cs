@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
@@ -14,24 +15,15 @@ namespace Tvision2.Core.Components.Behaviors
         public ITvConsoleEvents Events { get; }
         public T State { get; }
 
-        private readonly ComponentTreeNode _parent;
 
-        public BehaviorContext(T state, ITvConsoleEvents events, IViewport viewport, ComponentTreeNode parent)
+        public ComponentLocator ComponentLocator { get; }
+
+        public BehaviorContext(T state, ITvConsoleEvents events, IViewport viewport, in ComponentLocator locator)
         {
             Events = events;
             Viewport = viewport;
             State = state;
-            _parent = parent;
+            ComponentLocator = locator;
         }
-
-        public TRootState GetRootState<TRootState>() =>
-            ((TvComponent<TRootState>)_parent.Root.Data.Component).State;
-
-        public TParentState GetParentState<TParentState>() =>
-            ((TvComponent<TParentState>)_parent.Data.Component).State;
-
-        public bool ComponentHasParent => _parent != null;
-
-
     }
 }

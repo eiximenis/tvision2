@@ -13,6 +13,8 @@ namespace Tvision2.Core.Components.Behaviors
         private Action<TB> _afterCreate;
         public ITvBehavior<T> Behavior { get; private set; }
 
+        ITvBehavior IBehaviorMetadata.Behavior { get => Behavior; }
+
         public bool Created => Behavior != null;
 
         public BehaviorSchedule Schedule { get; private set; }

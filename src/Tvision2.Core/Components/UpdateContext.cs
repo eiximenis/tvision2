@@ -9,12 +9,12 @@ namespace Tvision2.Core.Components
     public ref struct UpdateContext
     {
         public ITvConsoleEvents Events { get; }
-        public ComponentTreeNode Parent { get;}
+        public ComponentLocator ComponentLocator { get; }
 
-        public UpdateContext(ITvConsoleEvents events, ComponentTreeNode parent)
+        public UpdateContext(ITvConsoleEvents events, in ComponentLocator locator)
         {
             Events = events;
-            Parent = parent;
+            ComponentLocator = locator;
         }
 
 

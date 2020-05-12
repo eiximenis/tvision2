@@ -6,7 +6,9 @@ using Tvision2.Core.Engine;
 namespace Tvision2.Core.Components.Behaviors
 {
 
-    public interface ITvBehavior<T>
+    public interface ITvBehavior { }
+
+    public interface ITvBehavior<T> : ITvBehavior
     {
         bool Update(BehaviorContext<T> updateContext);
     }

@@ -7,6 +7,9 @@ using Tvision2.Core.Components;
 using Tvision2.Core.Render;
 using Tvision2.Events;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using System.Security.Cryptography;
+using Tvision2.Core.Components.Behaviors;
 
 namespace Tvision2.Core.Engine
 {
@@ -195,6 +198,20 @@ namespace Tvision2.Core.Engine
             }
         }
 
+        class ComponentDependencyDescriptor
+        {
+            public ITvBehavior Owner { get; }
+            public TvComponentDependencyAttribute Attribute { get; }
+            public PropertyInfo Property { get; }
+            public ComponentDependencyDescriptor(ITvBehavior behavior, TvComponentDependencyAttribute attr, PropertyInfo property)
+            {
+                Owner = behavior;
+                Attribute = attr;
+                Property = property;
+            }
+        }
+
+
         private readonly LinkedList<ComponentTreeItem> _roots;
 
         private readonly Dictionary<string, AddComponentOptions> _pendingAdds;
@@ -206,6 +223,8 @@ namespace Tvision2.Core.Engine
         public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
         public event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
         public event EventHandler TreeUpdated;
+
+        private List<ComponentDependencyDescriptor> _pendingComponentDependencies;
 
         public IEnumerable<TvComponent> Components => NodesList.Select(node => node.Data.Component);
 
@@ -354,6 +373,7 @@ namespace Tvision2.Core.Engine
             _viewportsToClear = new List<IViewport>();
             _engine = engine;
             _serviceProvider = serviceProvider;
+            _pendingComponentDependencies = new List<ComponentDependencyDescriptor>();
         }
 
         public TvComponentMetadata AddAfter(TvComponent componentToAdd, TvComponent componentBefore)
@@ -388,6 +408,7 @@ namespace Tvision2.Core.Engine
             var toAdd = _pendingAdds.ToArray();
 
             var affectedRoots = new List<ComponentTreeNode>();
+            var addedNodesOptions = new List<(AddComponentOptions Options, ComponentTreeNode Node)>();
 
             foreach (var kvp in toAdd)
             {
@@ -431,18 +452,82 @@ namespace Tvision2.Core.Engine
                     }
                     _pendingAdds.Remove(kvp.Key);
                     CreateNeededBehaviors(addOptions.ComponentMetadata.Component);
-                    addOptions.ComponentMetadata.MountedTo(_engine, this, nodeAdded, addOptions);
-                    addOptions.ComponentMetadata.Component.Invalidate(InvalidateReason.FullDrawRequired);
-                    OnComponentAdded(addOptions.ComponentMetadata, nodeAdded);
-                    if (nodeAdded.HasParent && addOptions.NotifyParentOnAdd)
-                    {
-                        nodeAdded.Parent.Data.OnChildAdded(addOptions.ComponentMetadata, nodeAdded, addOptions);
-                    }
-                    addOptions.AfterAddAction?.Invoke(_engine);
+                    addedNodesOptions.Add((Options: addOptions, Node: nodeAdded));
                 }
             }
 
             FlattenTree(affectedRoots);
+
+            foreach (var optionsNodeAdded in addedNodesOptions)
+            {
+                var addOptions = optionsNodeAdded.Options;
+                var nodeAdded = optionsNodeAdded.Node;
+                TryResolveCurrentPendingDependencies(addOptions.ComponentMetadata.Component);
+                TryResolveComponentAddedDependencies(addOptions.ComponentMetadata);
+                addOptions.ComponentMetadata.MountedTo(_engine, this, nodeAdded, addOptions);
+                addOptions.ComponentMetadata.Component.Invalidate(InvalidateReason.FullDrawRequired);
+                OnComponentAdded(addOptions.ComponentMetadata, nodeAdded);
+                if (nodeAdded.HasParent && addOptions.NotifyParentOnAdd)
+                {
+                    nodeAdded.Parent.Data.OnChildAdded(addOptions.ComponentMetadata, nodeAdded, addOptions);
+                }
+                addOptions.AfterAddAction?.Invoke(_engine);
+
+            }
+        }
+
+        private void TryResolveCurrentPendingDependencies(TvComponent newComponentAdded)
+        {
+            var pendings = _pendingComponentDependencies.Where(desc => desc.Attribute.Name == newComponentAdded.Name);
+            if (!pendings.Any()) { return; }
+            var toDelete = pendings.ToList();
+            foreach (var desc in pendings) { ResolveDependency(desc, newComponentAdded); }
+            foreach (var descriptorToDelete in toDelete)
+            {
+                _pendingComponentDependencies.Remove(descriptorToDelete);
+            }
+        }
+
+        private void TryResolveComponentAddedDependencies(TvComponentMetadata metadata)
+        {
+            foreach (var behaviorMetadata in metadata.Component.BehaviorsMetadatas)
+            {
+                var type = behaviorMetadata.Behavior.GetType();
+                var descriptors = type.GetProperties()
+                    .Where(p => p.CanWrite)
+                    .Select(p => new ComponentDependencyDescriptor(behaviorMetadata.Behavior, p.GetCustomAttribute<TvComponentDependencyAttribute>(), p))
+                    .Where(desc => desc.Attribute != null);
+
+                foreach (var descriptor in descriptors)
+                {
+                    switch (descriptor.Attribute.Binding)
+                    {
+                        case DependencyBinding.IfAlreadyCreated:
+                            TryResolveInmediateDependency(descriptor);
+                            break;
+                        case DependencyBinding.WhenCreate:
+                            var resolved = TryResolveInmediateDependency(descriptor);
+                            if (!resolved)
+                            {
+                                _pendingComponentDependencies.Add(descriptor);
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+
+
+        private void ResolveDependency(ComponentDependencyDescriptor descriptor, TvComponent solver)
+        {
+            descriptor.Property.SetValue(descriptor.Owner, solver);
+        }
+
+        private bool TryResolveInmediateDependency(ComponentDependencyDescriptor descriptor)
+        {
+            var componentFound = GetComponent(descriptor.Attribute.Name);
+            descriptor.Property.SetValue(descriptor.Owner, componentFound);
+            return componentFound != null;
         }
 
         private void CreateNeededBehaviors(TvComponent component)
@@ -494,7 +579,7 @@ namespace Tvision2.Core.Engine
 
                 var component = node.Data.Component;
                 var metadata = node.Data;
-                component.Update(new UpdateContext(evts, node.Parent));
+                component.Update(new UpdateContext(evts, new ComponentLocator(this, node.Parent)));
                 if (metadata.PropagateStatusToChildren && component.NeedToRedraw != RedrawNeededAction.None)
                 {
                     var childs = metadata.TreeNode.Descendants();

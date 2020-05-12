@@ -11,5 +11,6 @@ namespace Tvision2.ConsoleDriver.Win32
     public interface IWindowsAnsiDriverOptions
     {
         IWindowsConsoleDriverOptions WithPalette(Action<IPaletteOptions> paletteOptionsAction = null);
+        IWindowsAnsiDriverOptions EnableTrueColor();
     }
 }
