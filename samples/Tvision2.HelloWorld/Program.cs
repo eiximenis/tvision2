@@ -66,6 +66,7 @@ namespace Tvision2.HelloWorld
                     {
                         ctx.DrawStringAt(ctx.State.Value, TvPoint.Zero, new TvColorPair(TvColor.Red, TvColor.White));
                     });
+
                     label2.AddViewport(new Viewport(TvPoint.FromXY(20, 15), 30));
                     tui.UI.Add(helloWorld);
                     tui.UI.Add(label2);

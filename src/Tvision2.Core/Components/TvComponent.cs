@@ -178,7 +178,7 @@ namespace Tvision2.Core.Components
             foreach (var mdata in _behaviorsMetadata)
             {
                 var evts = ctx.Events;
-                var behaviorCtx = new BehaviorContext<T>(State, evts, Viewport, ctx.ComponentLocator);
+                var behaviorCtx = new BehaviorContext<T>(State, evts, ctx.ComponentLocator);
                 if (mdata.Schedule == BehaviorSchedule.OncePerFrame
                     || (mdata.Schedule == BehaviorSchedule.OnEvents && evts != TvConsoleEvents.Empty))
                 {
