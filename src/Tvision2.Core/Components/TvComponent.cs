@@ -25,8 +25,23 @@ namespace Tvision2.Core.Components
     }
 
 
-    public abstract class TvComponent
+    public abstract class TvComponent : IAdaptativeDrawingTarget
     {
+
+        readonly struct AdaptativeDrawerDefinition
+        {
+            public Func<IViewport, bool> Selector { get; }
+            public List<ITvDrawer> Drawers { get; }
+
+            public AdaptativeDrawerDefinition(Func<IViewport, bool> selector)
+            {
+                Selector = selector;
+                Drawers = new List<ITvDrawer>();
+            }
+        }
+
+        private readonly Dictionary<Guid, List<ITvDrawer>> _adaptativeDrawers;
+        private readonly List<AdaptativeDrawerDefinition> _adaptativeDrawersDefinitions;
         private readonly TvComponentMetadata _metadata;
         protected Dictionary<Guid, IViewport> _viewports;
         public RedrawNeededAction NeedToRedraw { get; protected set; }
@@ -39,7 +54,10 @@ namespace Tvision2.Core.Components
 
         public Guid ComponentId { get; }
 
-        protected readonly List<ITvDrawer> _drawers;
+        protected readonly List<ITvDrawer> _defaultDrawers;
+
+        
+
         protected readonly List<IBehaviorMetadata> _behaviorsMetadata;
 
         public TvComponent(string name, Action<IConfigurableComponentMetadata> configAction = null)
@@ -47,10 +65,12 @@ namespace Tvision2.Core.Components
             ComponentId = Guid.NewGuid();
             _metadata = new TvComponentMetadata(this);
             configAction?.Invoke(_metadata);
-            _drawers = new List<ITvDrawer>();
+            _defaultDrawers = new List<ITvDrawer>();
             _behaviorsMetadata = new List<IBehaviorMetadata>();
             _viewports = new Dictionary<Guid, IViewport>();
             Name = string.IsNullOrEmpty(name) ? $"TvComponent-{ComponentId}" : name.Replace("<$>", ComponentId.ToString());
+            _adaptativeDrawers = new Dictionary<Guid, List<ITvDrawer>>();
+            _adaptativeDrawersDefinitions = new List<AdaptativeDrawerDefinition>();
         }
 
 
@@ -61,13 +81,16 @@ namespace Tvision2.Core.Components
 
         public void RemoveAllDrawers()
         {
-            _drawers.Clear();
+            _defaultDrawers.Clear();
+            _adaptativeDrawers.Clear();
+            _adaptativeDrawersDefinitions.Clear();
         }
 
         public Guid AddViewport(IViewport viewport)
         {
             var key = _viewports.Any() ? Guid.NewGuid() : Guid.Empty;
             _viewports.Add(key, viewport);
+            UpdateAdaptativeDrawersForUpdatedViewport(key, viewport);
             _metadata?.OnViewportChanged(key, null, viewport);
             return key;
         }
@@ -84,21 +107,38 @@ namespace Tvision2.Core.Components
             if (_viewports.TryGetValue(guid, out IViewport oldvp))
             {
                 _viewports[guid] = newViewport;
+                UpdateAdaptativeDrawersForUpdatedViewport(guid, newViewport);
                 _metadata?.OnViewportChanged(guid, oldvp, newViewport);
             }
             else if (addIfNotExists)
             {
                 _viewports.Add(guid, newViewport);
+                UpdateAdaptativeDrawersForUpdatedViewport(guid, newViewport);
                 _metadata?.OnViewportChanged(guid, null, newViewport);
             }
         }
 
 
-        public void AddDrawer(ITvDrawer drawer) => _drawers.Add(drawer);
+
+        public IAdaptativeDrawingTarget IfViewport(Func<IViewport, bool> condition)
+        {
+            AddDrawerDefinition(condition);
+            return this;
+        }
+
+        IAdaptativeDrawingTarget IAdaptativeDrawingTarget.AddDrawer(ITvDrawer drawer)
+        {
+            AddDrawerToCurrentAdaptativeDrawerDefinition(drawer);
+            UpdateAdaptativeDrawersForNewDrawerInCurrentDefinition(drawer);
+            return this;
+        }
+
+
+        public void AddDrawer(ITvDrawer drawer) => _defaultDrawers.Add(drawer);
 
         public void InsertDrawerAt(ITvDrawer drawer, int index)
         {
-            _drawers.Insert(0, drawer);
+            _defaultDrawers.Insert(0, drawer);
         }
 
         protected internal abstract void Update(UpdateContext ctx);
@@ -111,9 +151,62 @@ namespace Tvision2.Core.Components
             NeedToRedraw = RedrawNeededAction.None;
         }
 
+        protected void AddDrawerDefinition(Func<IViewport, bool> selector)
+        {
+            _adaptativeDrawersDefinitions.Add(new AdaptativeDrawerDefinition(selector));
+        }
+
+        protected void AddDrawerToCurrentAdaptativeDrawerDefinition(ITvDrawer drawer)
+        {
+            _adaptativeDrawersDefinitions[_adaptativeDrawersDefinitions.Count - 1].Drawers.Add(drawer);
+        }
+
+        protected IEnumerable<ITvDrawer> GetAdaptativeDrawersForViewport(Guid id)
+        {
+            return _adaptativeDrawers.TryGetValue(id, out var drawers) ? drawers : Enumerable.Empty<ITvDrawer>();
+        }
+
+
+        private void UpdateAdaptativeDrawersForUpdatedViewport(Guid guid, IViewport newViewport)
+        {
+            var drawers = new List<ITvDrawer>();
+            foreach (var definition in _adaptativeDrawersDefinitions)
+            {
+                if (definition.Selector(newViewport))
+                {
+                    drawers.AddRange(definition.Drawers);
+                }
+            }
+
+            if (_adaptativeDrawers.ContainsKey(guid))
+            {
+                _adaptativeDrawers[guid] = drawers;
+            }
+            else
+            {
+                _adaptativeDrawers.Add(guid, drawers);
+            }
+        }
+
+        protected void UpdateAdaptativeDrawersForNewDrawerInCurrentDefinition(ITvDrawer drawer)
+        {
+            var currentDefinition = _adaptativeDrawersDefinitions[_adaptativeDrawersDefinitions.Count - 1];
+            foreach (var (key, viewport) in _viewports)
+            {
+                if (currentDefinition.Selector(viewport))
+                {
+                    if (!_adaptativeDrawers.ContainsKey(key))
+                    {
+                        _adaptativeDrawers.Add(key, new List<ITvDrawer>());
+                    }
+                    _adaptativeDrawers[key].Add(drawer);
+                }
+            }
+        }
+
     }
 
-    public sealed class TvComponent<T> : TvComponent
+    public sealed class TvComponent<T> : TvComponent, IAdaptativeDrawingTarget<T>
     {
         public T State { get; private set; }
 
@@ -164,13 +257,34 @@ namespace Tvision2.Core.Components
             return _behaviorsMetadata.Any(bm => bm is IBehaviorMetadata<TBehaviorMetadata>);
         }
 
+
+        public new IAdaptativeDrawingTarget<T> IfViewport(Func<IViewport, bool> condition)
+        {
+            AddDrawerDefinition(condition);
+            return this;
+        }
+
+        IAdaptativeDrawingTarget<T> IAdaptativeDrawingTarget<T>.AddDrawer(ITvDrawer<T> drawer)
+        {
+            AddDrawerToCurrentAdaptativeDrawerDefinition(drawer);
+            UpdateAdaptativeDrawersForNewDrawerInCurrentDefinition(drawer);
+            return this;
+        }
+
+        IAdaptativeDrawingTarget<T> IAdaptativeDrawingTarget<T>.AddDrawer(Action<RenderContext<T>> action)
+        {
+            return ((IAdaptativeDrawingTarget<T>)this).AddDrawer(new ActionDrawer<T>(action));
+        }
+
+
         public TvComponent<T> AddDrawer(Action<RenderContext<T>> action) => AddDrawer(new ActionDrawer<T>(action));
 
         public TvComponent<T> AddDrawer(ITvDrawer<T> drawer)
         {
-            _drawers.Add(drawer);
+            _defaultDrawers.Add(drawer);
             return this;
         }
+
 
         protected internal override void Update(UpdateContext ctx)
         {
@@ -194,9 +308,19 @@ namespace Tvision2.Core.Components
             foreach (var vpnk in _viewports)
             {
                 var context = new RenderContext<T>(vpnk.Value, console,  parent, NeedToRedraw, State);
-                foreach (var drawer in _drawers)
+                var adaptativeDrawers = GetAdaptativeDrawersForViewport(vpnk.Key);
+                var viewportDrawed = false;
+                foreach (var drawer in adaptativeDrawers)
                 {
                     drawer?.Draw(context);
+                    viewportDrawed = true;
+                }
+                if (!viewportDrawed)
+                {
+                    foreach (var drawer in _defaultDrawers)
+                    {
+                        drawer?.Draw(context);
+                    }
                 }
             }
         }

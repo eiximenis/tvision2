@@ -22,6 +22,7 @@ namespace Tvision2.Core.Components.Behaviors
         public FactoryBehaviorMetadata()
         {
             _creator = DefaultCreator;
+            _dependencies = new List<ComponentDependencyDescriptor>();
         }
 
         ITvBehavior<T> IBehaviorMetadata<T>.Behavior { get => _behavior; }

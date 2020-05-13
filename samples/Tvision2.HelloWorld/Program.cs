@@ -21,7 +21,7 @@ namespace Tvision2.HelloWorld
     }
     class Ufo : ITvBehavior<StringHolder>
     {
-     
+
         public TvComponent<string> Label { get; set; }
 
         public bool Update(BehaviorContext<StringHolder> updateContext)
@@ -42,7 +42,7 @@ namespace Tvision2.HelloWorld
         {
             var builder = new HostBuilder();
             Core.Engine.ITuiEngine engine = null;
-            TvComponent<string> helloWorld = null;
+            TvComponent<int> helloWorld = null;
 
             builder.UseTvision2(setup =>
             {
@@ -50,38 +50,35 @@ namespace Tvision2.HelloWorld
                 setup.Options.UseStartup((sp, tui) =>
                 {
                     engine = tui;
-                    helloWorld = new TvComponent<string>("Tvision2 rocks!", "label");
+                    helloWorld = new TvComponent<int>(0, "label");
                     helloWorld.AddDrawer(ctx =>
                     {
-                        ctx.DrawStringAt(ctx.State, TvPoint.Zero, new TvColorPair(TvColor.Blue, TvColor.Yellow));
+                        ctx.DrawStringAt($"Current value: {ctx.State}".PadRight(ctx.Viewport.Bounds.Cols), TvPoint.Zero, new TvColorPair(TvColor.Blue, TvColor.Yellow));
                     });
-                    helloWorld.AddStateBehavior(s => "Hello world " + new Random().Next(1, 1000) + "    ");
-                    helloWorld.AddViewport(new Viewport(TvPoint.FromXY(10, 10), 30));
-                    helloWorld.AddViewport(new Viewport(TvPoint.FromXY(10, 11), 30));
+
+                    helloWorld
+                        .IfViewport(v => v.Bounds.Cols < 2)
+                        .AddDrawer(ctx =>
+                        {
+                            ctx.DrawStringAt("*", TvPoint.Zero, new TvColorPair(TvColor.Red, TvColor.Green));
+                        });
+
+                    helloWorld
+                        .IfViewport(v => v.Bounds.Cols >= 2 && v.Bounds.Cols <= 5)
+                        .AddDrawer(ctx =>
+                        {
+                            ctx.DrawStringAt(ctx.State.ToString().PadRight(ctx.Viewport.Bounds.Cols), TvPoint.Zero, new TvColorPair(TvColor.Blue, TvColor.Yellow));
+                        });
+
+                    helloWorld.AddStateBehavior(s => new Random().Next(1, 1000));
+                    helloWorld.AddViewport(new Viewport(TvPoint.FromXY(10, 10), 1));
+                    helloWorld.AddViewport(new Viewport(TvPoint.FromXY(10, 11), 5));
                     helloWorld.AddViewport(new Viewport(TvPoint.FromXY(20, 13), 30));
 
-                    var label2 = new TvComponent<StringHolder>(new StringHolder("****"), "label2");
-                    label2.AddBehavior(new Ufo(), m => m.AddDependency(u => u.Label, "label"));
-                    label2.AddDrawer(ctx =>
-                    {
-                        ctx.DrawStringAt(ctx.State.Value, TvPoint.Zero, new TvColorPair(TvColor.Red, TvColor.White));
-                    });
-
-                    label2.AddViewport(new Viewport(TvPoint.FromXY(20, 15), 30));
                     tui.UI.Add(helloWorld);
-                    tui.UI.Add(label2);
                     return Task.CompletedTask;
                 });
             }).UseConsoleLifetime();
-
-            /*
-            Task.Run(async () =>
-            {
-                await Task.Delay(5000);
-                helloWorld.SetState("Again!");
-            });
-            */
-
             await builder.RunTvisionConsoleApp();
         }
     }
