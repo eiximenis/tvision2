@@ -7,6 +7,7 @@ using Tvision2.Core.Colors;
 using Tvision2.Core.Components;
 using Tvision2.Core.Render;
 using Tvision2.Core.Components.Behaviors;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Tvision2.HelloWorld
 {
@@ -20,7 +21,7 @@ namespace Tvision2.HelloWorld
     }
     class Ufo : ITvBehavior<StringHolder>
     {
-        [TvComponentDependency(Name="label")]
+     
         public TvComponent<string> Label { get; set; }
 
         public bool Update(BehaviorContext<StringHolder> updateContext)
@@ -60,7 +61,7 @@ namespace Tvision2.HelloWorld
                     helloWorld.AddViewport(new Viewport(TvPoint.FromXY(20, 13), 30));
 
                     var label2 = new TvComponent<StringHolder>(new StringHolder("****"), "label2");
-                    label2.AddBehavior(new Ufo());
+                    label2.AddBehavior(new Ufo(), m => m.AddDependency(u => u.Label, "label"));
                     label2.AddDrawer(ctx =>
                     {
                         ctx.DrawStringAt(ctx.State.Value, TvPoint.Zero, new TvColorPair(TvColor.Red, TvColor.White));

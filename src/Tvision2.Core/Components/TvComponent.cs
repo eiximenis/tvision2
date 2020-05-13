@@ -141,15 +141,17 @@ namespace Tvision2.Core.Components
             AddBehavior(new ChangeStateBhavior<T>(newState, this));
         }
 
-        public void AddBehavior(ITvBehavior<T> behavior, Action<IBehaviorMetadata<T>> metadataAction = null)
+
+        public void AddBehavior<TB>(TB behavior, Action<BehaviorMetadata<T, TB>> metadataAction = null)
+            where TB: ITvBehavior<T>
         {
-            var metadata = new BehaviorMetadata<T>(behavior);
+            var metadata = new BehaviorMetadata<T, TB>(behavior);
             metadataAction?.Invoke(metadata);
             _behaviorsMetadata.Add(metadata);
         }
 
 
-        public void AddBehavior<TB>(Action<IFactoryBehaviorMetadata<TB, T>> metadataAction = null)
+        public void AddBehavior<TB>(Action<FactoryBehaviorMetadata<TB, T>> metadataAction = null)
             where TB : ITvBehavior<T>
         {
             var metadata = new FactoryBehaviorMetadata<TB, T>();

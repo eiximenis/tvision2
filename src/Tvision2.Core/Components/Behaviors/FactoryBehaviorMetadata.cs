@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using static Tvision2.Core.Engine.ComponentTree;
 
 namespace Tvision2.Core.Components.Behaviors
 {
@@ -11,39 +14,49 @@ namespace Tvision2.Core.Components.Behaviors
         where TB : ITvBehavior<T>
     {
         private Action<TB> _afterCreate;
-        public ITvBehavior<T> Behavior { get; private set; }
+        private BehaviorSchedule _schedule;
+        private ITvBehavior<T> _behavior;
+        private List<ComponentDependencyDescriptor> _dependencies;
+        private Func<IServiceProvider, TB> _creator;
 
-        ITvBehavior IBehaviorMetadata.Behavior { get => Behavior; }
+        public FactoryBehaviorMetadata()
+        {
+            _creator = DefaultCreator;
+        }
 
-        public bool Created => Behavior != null;
+        ITvBehavior<T> IBehaviorMetadata<T>.Behavior { get => _behavior; }
 
-        public BehaviorSchedule Schedule { get; private set; }
+        ITvBehavior IBehaviorMetadata.Behavior { get => _behavior; }
+
+        bool IBehaviorMetadata.Created { get => _behavior != null; }
+
+        BehaviorSchedule IBehaviorMetadata.Schedule { get => _schedule; }
 
         void IBehaviorMetadata.CreateBehavior(IServiceProvider sp)
         {
-            if (!Created)
+            if (_behavior is null)
             {
-                var type = typeof(TB);
-                var ctors = type.GetConstructors();
-                if (ctors.Length != 1)
-                {
-                    throw new InvalidOperationException($"Behavior {typeof(TB).Name} must have ONE and only one <ctor>.");
-                }
-                var ctor = ctors.Single();
-                var parameters = new ArrayList();
-                foreach (var param in ctor.GetParameters())
-                {
-                    parameters.Add(sp.GetService(param.ParameterType));
-                }
-                var behavior = ctor.Invoke(parameters.ToArray()) as ITvBehavior<T>;
+                var behavior = _creator(sp);
                 _afterCreate?.Invoke((TB)behavior);
-                Behavior = behavior;
+                _behavior = behavior;
             }
         }
 
+        IEnumerable<OwnedComponentDependencyDescriptor> IBehaviorMetadata.Dependencies
+        {
+            get
+            {
+                foreach (var dep in _dependencies)
+                {
+                    yield return new OwnedComponentDependencyDescriptor(_behavior, dep.Attribute, dep.Property);
+                }
+            }
+        }
+
+
         public IBehaviorMetadata<T> UseScheduler(BehaviorSchedule schedule)
         {
-            Schedule = schedule;
+            _schedule = schedule;
             return this;
         }
 
@@ -51,5 +64,52 @@ namespace Tvision2.Core.Components.Behaviors
         {
             _afterCreate = afterCreate;
         }
+
+        public void CreateUsing(Func<IServiceProvider, TB> creator)
+        {
+            _creator = creator;
+        }
+
+        public void AddDependency<TR>(Expression<Func<TB, TR>> propertyExp, string name)
+        {
+            var member = propertyExp.Body as MemberExpression;
+            if (member == null)
+            {
+                throw new ArgumentException("property expression must be a property");
+            }
+
+            var property = member.Member as PropertyInfo;
+            if (property == null)
+            {
+                throw new ArgumentException("property expression must be a property");
+            }
+
+            var attr = new TvComponentDependencyAttribute()
+            {
+                Name = name
+            };
+
+            _dependencies.Add(new ComponentDependencyDescriptor(attr, property));
+        }
+
+        private static TB DefaultCreator(IServiceProvider sp)
+        {
+            var type = typeof(TB);
+            var ctors = type.GetConstructors();
+            if (ctors.Length != 1)
+            {
+                throw new InvalidOperationException($"Behavior {typeof(TB).Name} must have ONE and only one <ctor>.");
+            }
+            var ctor = ctors.Single();
+            var parameters = new ArrayList();
+            foreach (var param in ctor.GetParameters())
+            {
+                parameters.Add(sp.GetService(param.ParameterType));
+            }
+            var behavior = (TB)ctor.Invoke(parameters.ToArray());
+            return behavior;
+
+        }
+
     }
 }

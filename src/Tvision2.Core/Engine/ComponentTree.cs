@@ -198,16 +198,26 @@ namespace Tvision2.Core.Engine
             }
         }
 
-        class ComponentDependencyDescriptor
+        public class ComponentDependencyDescriptor
         {
-            public ITvBehavior Owner { get; }
             public TvComponentDependencyAttribute Attribute { get; }
             public PropertyInfo Property { get; }
-            public ComponentDependencyDescriptor(ITvBehavior behavior, TvComponentDependencyAttribute attr, PropertyInfo property)
+
+            public ComponentDependencyDescriptor(TvComponentDependencyAttribute attr, PropertyInfo property)
             {
-                Owner = behavior;
                 Attribute = attr;
                 Property = property;
+            }
+        }
+
+        public class OwnedComponentDependencyDescriptor : ComponentDependencyDescriptor
+        {
+            public ITvBehavior Owner { get; }
+
+            public OwnedComponentDependencyDescriptor(ITvBehavior behavior, TvComponentDependencyAttribute attr, PropertyInfo property)
+                : base (attr, property)
+            {
+                Owner = behavior;
             }
         }
 
@@ -224,7 +234,7 @@ namespace Tvision2.Core.Engine
         public event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
         public event EventHandler TreeUpdated;
 
-        private List<ComponentDependencyDescriptor> _pendingComponentDependencies;
+        private List<OwnedComponentDependencyDescriptor> _pendingComponentDependencies;
 
         public IEnumerable<TvComponent> Components => NodesList.Select(node => node.Data.Component);
 
@@ -373,7 +383,7 @@ namespace Tvision2.Core.Engine
             _viewportsToClear = new List<IViewport>();
             _engine = engine;
             _serviceProvider = serviceProvider;
-            _pendingComponentDependencies = new List<ComponentDependencyDescriptor>();
+            _pendingComponentDependencies = new List<OwnedComponentDependencyDescriptor>();
         }
 
         public TvComponentMetadata AddAfter(TvComponent componentToAdd, TvComponent componentBefore)
@@ -463,7 +473,7 @@ namespace Tvision2.Core.Engine
                 var addOptions = optionsNodeAdded.Options;
                 var nodeAdded = optionsNodeAdded.Node;
                 TryResolveCurrentPendingDependencies(addOptions.ComponentMetadata.Component);
-                TryResolveComponentAddedDependencies(addOptions.ComponentMetadata);
+                TryResolveNewComponentAddedDependencies(addOptions.ComponentMetadata);
                 addOptions.ComponentMetadata.MountedTo(_engine, this, nodeAdded, addOptions);
                 addOptions.ComponentMetadata.Component.Invalidate(InvalidateReason.FullDrawRequired);
                 OnComponentAdded(addOptions.ComponentMetadata, nodeAdded);
@@ -488,15 +498,16 @@ namespace Tvision2.Core.Engine
             }
         }
 
-        private void TryResolveComponentAddedDependencies(TvComponentMetadata metadata)
+        private void TryResolveNewComponentAddedDependencies(TvComponentMetadata metadata)
         {
             foreach (var behaviorMetadata in metadata.Component.BehaviorsMetadatas)
             {
                 var type = behaviorMetadata.Behavior.GetType();
                 var descriptors = type.GetProperties()
                     .Where(p => p.CanWrite)
-                    .Select(p => new ComponentDependencyDescriptor(behaviorMetadata.Behavior, p.GetCustomAttribute<TvComponentDependencyAttribute>(), p))
-                    .Where(desc => desc.Attribute != null);
+                    .Select(p => new OwnedComponentDependencyDescriptor(behaviorMetadata.Behavior, p.GetCustomAttribute<TvComponentDependencyAttribute>(), p))
+                    .Where(desc => desc.Attribute != null)
+                    .Union(behaviorMetadata.Dependencies);
 
                 foreach (var descriptor in descriptors)
                 {
@@ -518,12 +529,12 @@ namespace Tvision2.Core.Engine
         }
 
 
-        private void ResolveDependency(ComponentDependencyDescriptor descriptor, TvComponent solver)
+        private void ResolveDependency(OwnedComponentDependencyDescriptor descriptor, TvComponent solver)
         {
             descriptor.Property.SetValue(descriptor.Owner, solver);
         }
 
-        private bool TryResolveInmediateDependency(ComponentDependencyDescriptor descriptor)
+        private bool TryResolveInmediateDependency(OwnedComponentDependencyDescriptor descriptor)
         {
             var componentFound = GetComponent(descriptor.Attribute.Name);
             descriptor.Property.SetValue(descriptor.Owner, componentFound);
