@@ -1,0 +1,19 @@
+name: TVision2 CI
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  build:
+    env:
+      BUILD_CONFIG: Release
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use .NET Core SDK 
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.201
+    - name: dotnet build
+      run: dotnet build tvision2.sln -c $BUILD_CONFIG 

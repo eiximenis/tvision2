@@ -1,0 +1,42 @@
+name: TVision2 CD on new release
+on:
+  push:
+    tags:       
+      - release-*  
+jobs:
+  build:
+    env:
+      BUILD_CONFIG: Release
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use .NET Core SDK 
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.201
+    - name: dotnet build
+      run: dotnet build tvision2.sln -c $BUILD_CONFIG 
+    - name: dotnet pack [Tvision2 Console Driver]
+      run: dotnet pack ./src/Tvision2.ConsoleDriver/Tvision2.ConsoleDriver.csproj -o ./artifacts -c $BUILD_CONFIG  --no-build --include-source --include-symbols
+    - name: dotnet pack [TVision2 Core]
+      run: dotnet pack ./src/Tvision2.Core/Tvision2.Core.csproj -o ./artifacts -c $BUILD_CONFIG  --no-build --include-source --include-symbols
+    - name: dotnet pack [TvControls]
+      run: dotnet pack ./src/Tvision2.Controls/Tvision2.Controls.csproj -o ./artifacts -c $BUILD_CONFIG  --no-build --include-source --include-symbols
+    - name: dotnet pack [TvDialogs]
+      run: dotnet pack ./src/Tvision2.Dialogs/Tvision2.Dialogs.csproj -o ./artifacts -c $BUILD_CONFIG  --no-build --include-source --include-symbols
+    - name: dotnet pack [TvLayouts]
+      run: dotnet pack ./src/Tvision2.Layouts/Tvision2.Layouts.csproj -o ./artifacts -c $BUILD_CONFIG  --no-build --include-source --include-symbols
+    - name: dotnet pack [TvStatex]
+      run: dotnet pack ./src/Tvision2.Statex/Tvision2.Statex.csproj -o ./artifacts -c $BUILD_CONFIG  --no-build --include-source --include-symbols
+    - name: dotnet pack [TvStatex Controls]
+      run: dotnet pack ./src/Tvision2.Statex.Controls/Tvision2.Statex.Controls.csproj -o ./artifacts -c $BUILD_CONFIG  --no-build --include-source --include-symbols
+    - name: dotnet pack [TvStatex Controls]
+      run: dotnet pack ./src/Tvision2.Viewports/Tvision2.Viewports.csproj -o ./artifacts -c $BUILD_CONFIG  --no-build --include-source --include-symbols
+    - name: setup nuget
+      uses: NuGet/setup-nuget@v1.0.2
+      with:
+        nuget-version: latest      
+    - name: Publish Nuget Packages
+      run: dotnet nuget push  *.nupkg  --skip-duplicate -k ${{secrets.NUGET_APIKEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate
+      working-directory: artifacts
