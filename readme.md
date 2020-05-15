@@ -4,6 +4,10 @@ Welcome to TVision2, the netstandard TUI Library. TVision2 is a library that hel
 
 * Please read the docs at: https://tvision2.eiximenis.dev
 
+## Build status
+
+![TVision2 CI](https://github.com/eiximenis/tvision2/workflows/TVision2%20CI/badge.svg?event=project_card)
+
 ## How to contribute
 
 You can [contribute on docs], open an issue or even better: submit a PR
