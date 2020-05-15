@@ -6,11 +6,11 @@ Welcome to TVision2, the netstandard TUI Library. TVision2 is a library that hel
 
 ## Build status
 
-![TVision2 CI](https://github.com/eiximenis/tvision2/workflows/TVision2%20CI/badge.svg?event=project_card)
+![TVision2 CI]![TVision2 CI](https://github.com/eiximenis/tvision2/workflows/TVision2%20CI/badge.svg)
 
 ## How to contribute
 
-You can [contribute on docs], open an issue or even better: submit a PR
+You can [contribute on docs](https://github.com/eiximenis/tvision2docs/), open an issue or even better: submit a PR
 
 ## Default branch is 'Dev'
 
