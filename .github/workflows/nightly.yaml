@@ -37,5 +37,5 @@ jobs:
     - name: dotnet pack [TvStatex Controls]
       run: dotnet pack ./src/Tvision2.Viewports/Tvision2.Viewports.csproj -o ./artifacts -c $BUILD_CONFIG --version-suffix $VERSION_SUFFIX --no-build --include-source --include-symbols
     - name: Publish on Github Packages
-      run: dotnet nuget push  *.nupkg  --skip-duplicate 
+      run: dotnet nuget push  '*.nupkg'  --skip-duplicate 
       working-directory: artifacts
