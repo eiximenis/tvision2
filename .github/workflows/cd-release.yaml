@@ -40,3 +40,12 @@ jobs:
     - name: Publish Nuget Packages
       run: dotnet nuget push  *.nupkg  --skip-duplicate -k ${{secrets.NUGET_APIKEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate
       working-directory: artifacts
+    - name: run docfx to generate doc
+      uses: nikeee/docfx-action@master
+      with:
+        args: docs/docfx.json
+    - name: publish doc
+      uses: maxheld83/ghpages@master
+      env:
+        BUILD_DIR: _site
+        GH_PAT: ${{ secrets.GH_PAT }}

@@ -6,7 +6,9 @@ Welcome to TVision2, the netstandard TUI Library. TVision2 is a library that hel
 
 ## Build status
 
-![TVision2 CI]![TVision2 CI](https://github.com/eiximenis/tvision2/workflows/TVision2%20CI/badge.svg)
+![TVision2 CI](https://github.com/eiximenis/tvision2/workflows/TVision2%20CI/badge.svg)
+
+![TVision2 Nightly build](https://github.com/eiximenis/tvision2/workflows/TVision2%20Nightly%20build/badge.svg)
 
 ## How to contribute
 
