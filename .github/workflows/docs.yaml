@@ -1,0 +1,26 @@
+name: TVision2 docs
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  build:
+    env:
+      BUILD_CONFIG: Release
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use .NET Core SDK 
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.201
+    - name: run docfx to generate doc
+      uses: nikeee/docfx-action@master
+      with:
+        args: docs/docfx.json
+    - name: publish doc
+      uses: maxheld83/ghpages@master
+      env:
+        BUILD_DIR: _site
+        GH_PAT: ${{ secrets.GH_PAT }}
