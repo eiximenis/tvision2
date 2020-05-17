@@ -1,4 +1,4 @@
-name: TVision2 docs
+name: TVision2 docs generation
 on:
   push:
     branches:
