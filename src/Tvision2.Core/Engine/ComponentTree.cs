@@ -324,6 +324,7 @@ namespace Tvision2.Core.Engine
 
             _pendingRemovalsPhase2.Clear();
             FlattenTree(rootsAffected);
+            OnTreeUpdated();
 
         }
 
@@ -356,7 +357,6 @@ namespace Tvision2.Core.Engine
                 var currentRoot = _roots.FirstOrDefault(r => r.TreeNode == root);
                 currentRoot.FlattenedSubTree = root.SubTree();
             }
-            OnTreeUpdated();
         }
 
 
@@ -482,8 +482,8 @@ namespace Tvision2.Core.Engine
                     nodeAdded.Parent.Data.OnChildAdded(addOptions.ComponentMetadata, nodeAdded, addOptions);
                 }
                 addOptions.AfterAddAction?.Invoke(_engine);
-
             }
+            OnTreeUpdated();
         }
 
         private void TryResolveCurrentPendingDependencies(TvComponent newComponentAdded)
