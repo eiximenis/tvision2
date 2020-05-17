@@ -18,6 +18,7 @@ namespace Tvision2.Controls.Button
 
             if (properties.IsPressed)
             {
+                evt.Handle();
                 _onClickAction?.Invoke();
                 properties.IsPressed = false;
                 return true;
@@ -32,7 +33,7 @@ namespace Tvision2.Controls.Button
             {
                 return false;
             }
-
+            evt.Handle();
 
             var properties = updateContext.State;
             if (properties.IsPressed)

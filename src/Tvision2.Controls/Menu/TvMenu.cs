@@ -6,6 +6,7 @@ using Tvision2.Controls.Styles;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Controls.Extensions;
+using Tvision2.Core.Components.Behaviors;
 
 namespace Tvision2.Controls.Menu
 {
@@ -28,6 +29,11 @@ namespace Tvision2.Controls.Menu
         public static ITvControlCreationParametersBuilder<MenuState> CreationParametersBuilder(IEnumerable<string> options)
         {
             return TvControlCreationParametersBuilder.ForState<MenuState>(() => new MenuState(options));
+        }
+
+        protected override IEnumerable<ITvBehavior<MenuState>> GetEventedBehaviors()
+        {
+            yield return new MenuBehavior(this);
         }
 
 

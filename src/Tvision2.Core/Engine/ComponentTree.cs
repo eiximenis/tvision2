@@ -590,7 +590,7 @@ namespace Tvision2.Core.Engine
 
                 var component = node.Data.Component;
                 var metadata = node.Data;
-                component.Update(new UpdateContext(evts, new ComponentLocator(this, node.Parent)));
+                component.Update(new UpdateContext(evts, new ComponentLocator(this, node)));
                 if (metadata.PropagateStatusToChildren && component.NeedToRedraw != RedrawNeededAction.None)
                 {
                     var childs = metadata.TreeNode.Descendants();

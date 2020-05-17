@@ -294,7 +294,7 @@ namespace Tvision2.Core.Components
                 var evts = ctx.Events;
                 var behaviorCtx = new BehaviorContext<T>(State, evts, ctx.ComponentLocator);
                 if (mdata.Schedule == BehaviorSchedule.OncePerFrame
-                    || (mdata.Schedule == BehaviorSchedule.OnEvents && evts != TvConsoleEvents.Empty))
+                    || (mdata.Schedule == BehaviorSchedule.OnEvents && evts.HasEvents))
                 {
                     updated =  ((IBehaviorMetadata<T>)mdata).Behavior.Update(behaviorCtx) || updated;
                 }

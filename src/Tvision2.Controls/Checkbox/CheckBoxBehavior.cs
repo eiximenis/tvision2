@@ -15,6 +15,7 @@ namespace Tvision2.Controls.Checkbox
             var state = updateContext.State;
             if (info.Key == ConsoleKey.Spacebar)
             {
+                evt.Handle();
                 var checkState = state.Checked;
                 switch (checkState)
                 {

@@ -20,6 +20,8 @@ namespace Tvision2.Controls.Menu
         private ITuiEngine _engine;
 
         public TvMenuBar(ITvControlCreationParametersBuilder<MenuState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : this(parameters.Build(), optionsAction) { }
+
+
         public TvMenuBar(TvControlCreationParameters<MenuState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : base(parameters)
         {
             _creationParameters = parameters;
@@ -96,7 +98,12 @@ namespace Tvision2.Controls.Menu
             var menu = new TvMenu(TvMenu.CreationParametersBuilder(entry.ChildEntries.Select(e => e.Text))
                 .UseViewport(new Viewport(TvPoint.FromXY(10, 1), TvBounds.FromRowsAndCols(10, 20), Layer.Top))
                 .UseSkin(_creationParameters.Skin));
-            _engine.UI.Add(menu);
+            _engine.UI.AddAsChild(menu, this);
+        }
+
+        internal void Close(TvMenu owner)
+        {
+            _engine.UI.Remove(owner);
         }
     }
 }

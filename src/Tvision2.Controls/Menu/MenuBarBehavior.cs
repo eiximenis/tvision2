@@ -22,8 +22,6 @@ namespace Tvision2.Controls.Menu
         protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<MenuState> updateContext)
         {
 
-            Debug.WriteLine("Some keydown event on MenUBar");
-
             var info = evt.AsConsoleKeyInfo();
 
             if (info.Key == _options.SelectKey)

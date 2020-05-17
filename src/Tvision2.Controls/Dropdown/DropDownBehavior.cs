@@ -20,6 +20,7 @@ namespace Tvision2.Controls.Dropdown
             var info = evt.AsConsoleKeyInfo();
             if (info.Key == ConsoleKey.Enter)
             {
+                evt.Handle();
                 if (_owner.HasListDisplayed)
                 {
                     _owner.HideList(focusToLabel: true);
