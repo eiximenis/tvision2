@@ -61,7 +61,7 @@ namespace Tvision2.Controls
 
         public TvControlCreationParameters CreationParameters { get; }
 
-        public bool AcceptFocus(TvControlMetadata currentFocused)
+        internal bool AcceptFocus(TvControlMetadata currentFocused)
         {
             var accept = CanFocus;
             if (accept && _options.AcceptFocusPredicate != null)
