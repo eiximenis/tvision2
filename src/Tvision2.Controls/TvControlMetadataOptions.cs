@@ -1,11 +1,35 @@
 ﻿using System;
+using System.Linq;
+using Tvision2.Core.Engine;
 
 namespace Tvision2.Controls
 {
-    public class TvControlMetadataOptions 
+    public interface ITvControlMetadataWhenFocusedOptions
     {
-        private Func<bool> _hasFocus;
-        internal bool? HasFocus => _hasFocus?.Invoke();
+        void OnlyWhenAnyChildHasFocus();
+        void WhenItselfOrAnyChildHasFocus();
+        void OnlyWhen(Func<bool> hasFocusPredicate);
+        void WhenItselfOr(Func<bool> hasFocusPredicate);
+        void Never();
+    }
+
+    public class TvControlMetadataOptions : ITvControlMetadataWhenFocusedOptions
+    {
+        private Func<bool> _hasFocusCustomPredicate;
+        private bool _focusedIfDescendant;
+
+        internal bool HasVirtualFocus(ComponentTreeNode node) => (_focusedIfDescendant && DescendantFocused(node)) || (_hasFocusCustomPredicate?.Invoke() ?? false);
+
+        private bool DescendantFocused(ComponentTreeNode node)
+        {
+            return node.Descendants()
+                .Where(n => n.HasTag<TvControlMetadata>()).Select(n => n.GetTag<TvControlMetadata>())
+                .Any(ctl => ctl.IsFocused);
+        }
+
+        internal bool CanHaveFocus { get; private set; }
+
+        
 
         internal Action OnLostFocusAction { get; private set; }
         internal Action OnFocusAction { get; private set; }
@@ -15,12 +39,46 @@ namespace Tvision2.Controls
 
         public TvControlMetadataOptions()
         {
+            CanHaveFocus = true;
             IsDrawable = true;
+            _focusedIfDescendant = false;
+            _hasFocusCustomPredicate = null;
         }
 
-        public void WhenControlIsAskedIfItHasFocus(Func<bool> hasFocus)
+        public ITvControlMetadataWhenFocusedOptions IsFocused() => this;
+
+        void ITvControlMetadataWhenFocusedOptions.OnlyWhenAnyChildHasFocus()
         {
-            _hasFocus = hasFocus;
+            CanHaveFocus = false;
+            _focusedIfDescendant = true;
+        }
+
+        void ITvControlMetadataWhenFocusedOptions.WhenItselfOrAnyChildHasFocus()
+        {
+            CanHaveFocus = true;
+            _focusedIfDescendant = true;
+        }
+
+        void ITvControlMetadataWhenFocusedOptions.OnlyWhen(Func<bool> hasFocusPredicate)
+        {
+            CanHaveFocus = false;
+            _hasFocusCustomPredicate = hasFocusPredicate;
+            _focusedIfDescendant = false;
+        }
+
+
+        void ITvControlMetadataWhenFocusedOptions.WhenItselfOr(Func<bool> hasFocusPredicate)
+        {
+            CanHaveFocus = true;
+            _hasFocusCustomPredicate = hasFocusPredicate;
+            _focusedIfDescendant = false;
+        }
+
+
+        void ITvControlMetadataWhenFocusedOptions.Never()
+        {
+            _hasFocusCustomPredicate = null;
+            CanHaveFocus = false;
         }
 
         public void WhenControlLosesFocus(Action losesFocusAction)

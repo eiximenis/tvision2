@@ -33,9 +33,16 @@ namespace Tvision2.Controls.Menu
 
             if (info.Key == _options.Hotkey)
             {
-                _owner.Metadata.OwnerTree.ReturnFocusToPrevious();
+                _owner.Metadata.ReturnFocusToPrevious();
                 evt.Handle();
                 return false;
+            }
+
+            if (info.Key == ConsoleKey.RightArrow)
+            {
+                updateContext.State.SelectedIndex++;
+                evt.Handle();
+                return true;
             }
 
             var optidx = 0;

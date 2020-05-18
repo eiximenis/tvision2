@@ -28,7 +28,6 @@ namespace Tvision2.Controls.Menu
             _hookGuid = Guid.Empty;
             _options = new TvMenuBarOptions();
             optionsAction?.Invoke(_options);
-            Metadata.CanFocus = false;
             _engine = null;
         }
         public static ITvControlCreationParametersBuilder<MenuState> CreationParametersBuilder(IEnumerable<string> options)
@@ -36,6 +35,11 @@ namespace Tvision2.Controls.Menu
             return TvControlCreationParametersBuilder.ForState<MenuState>(() => new MenuState(options));
         }
 
+
+        protected override void ConfigureMetadataOptions(TvControlMetadataOptions options)
+        {
+            options.IsFocused().WhenItselfOrAnyChildHasFocus();
+        }
 
         protected override void OnDraw(RenderContext<MenuState> context)
         {

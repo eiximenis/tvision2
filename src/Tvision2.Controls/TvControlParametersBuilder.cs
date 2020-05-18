@@ -103,8 +103,8 @@ namespace Tvision2.Controls
             var state = _stateCreator != null ? _stateCreator() : _initialState;
             StateConfigurator?.Invoke(state);
             return _positionSet
-                ? new TvControlCreationParameters<TState>(SkinToUse, Position, state, name: _name, parentId: _parentId)
-                : new TvControlCreationParameters<TState>(SkinToUse, Viewport, state, name: _name, parentId: _parentId);
+                ? new TvControlCreationParameters<TState>(SkinToUse, Position, state, name: _name)
+                : new TvControlCreationParameters<TState>(SkinToUse, Viewport, state, name: _name);
         }
 
     }

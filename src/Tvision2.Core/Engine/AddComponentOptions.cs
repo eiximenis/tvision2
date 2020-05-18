@@ -14,13 +14,13 @@ namespace Tvision2.Core.Engine
     public class AddComponentOptions : IAddChildComponentOptions
     {
         internal TvComponentMetadata ComponentMetadata { get; private set; }
-        internal TvComponentMetadata Parent { get; private set; }
+        internal Guid ParentId { get; private set; }
         internal TvComponentMetadata Before { get; private set; }
         internal Action<ITuiEngine> AfterAddAction { get; private set; }
 
         internal bool NotifyParentOnAdd { get; private set; }
 
-        internal bool AddedAsChild { get => Parent != null; }
+        internal bool AddedAsChild { get => ParentId != Guid.Empty; }
 
         internal bool RetrieveParentStatusChanges { get; private set; }
 
@@ -30,10 +30,16 @@ namespace Tvision2.Core.Engine
                 Before = before
             };
 
+        internal static AddComponentOptions AddAsChild(TvComponentMetadata metadata, Guid parentId) =>
+            new AddComponentOptions(metadata)
+            {
+                ParentId = parentId
+            };
+
         internal static AddComponentOptions AddAsChild(TvComponentMetadata metadata, TvComponentMetadata parent) =>
             new AddComponentOptions(metadata)
             {
-                Parent = parent
+                ParentId = parent.Id
             };
 
         internal AddComponentOptions(TvComponentMetadata component)
@@ -41,14 +47,19 @@ namespace Tvision2.Core.Engine
             ComponentMetadata = component;
             RetrieveParentStatusChanges = false;
             NotifyParentOnAdd = true;
+            ParentId = Guid.Empty;
         }
 
-        public AddComponentOptions WithParent(TvComponent parent, Action<IAddChildComponentOptions> childOptions = null)
+
+        public AddComponentOptions WithParent(Guid parentId, Action<IAddChildComponentOptions> childOptions = null)
         {
-            Parent = parent.Metadata;
+            ParentId = parentId;
             childOptions?.Invoke(this);
             return this;
         }
+
+        public AddComponentOptions WithParent(TvComponent parent, Action<IAddChildComponentOptions> childOptions = null) =>
+            WithParent(parent.ComponentId, childOptions);
 
         public AddComponentOptions After(TvComponent before)
         {

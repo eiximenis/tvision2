@@ -68,7 +68,6 @@ namespace Tvision2.Controls
 
         private Task<bool> OnComponentUnmounted(ComponentMoutingContext ctx)
         {
-            var ctree = Metadata.OwnerTree as ControlsTree;
             AsComponent().RemoveAllBehaviors();
             AsComponent().RemoveAllDrawers();
             Metadata.Dettach();

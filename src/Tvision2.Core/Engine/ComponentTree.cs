@@ -425,9 +425,9 @@ namespace Tvision2.Core.Engine
                 var addOptions = kvp.Value;
                 ComponentTreeNode nodeAdded = null;
 
-                if (addOptions.Parent != null)
+                if (addOptions.ParentId != Guid.Empty)
                 {
-                    var parent = FindNodeById(addOptions.Parent.Id);
+                    var parent = FindNodeById(addOptions.ParentId);
                     if (parent != null)
                     {
                         nodeAdded = parent.Add(addOptions.ComponentMetadata);

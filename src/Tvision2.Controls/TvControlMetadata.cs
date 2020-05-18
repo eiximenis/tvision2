@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Tvision2.Core;
 using Tvision2.Core.Engine;
 
@@ -25,6 +26,7 @@ namespace Tvision2.Controls
     {
         public bool FocusTransferred { get; private set; }
         private readonly TvControlMetadataOptions _options;
+        private IControlsTree _ownerTree;
         public Guid ControlId { get; }
 
         private readonly ActionChain<TvFocusEventData> _onFocusGained;
@@ -33,11 +35,16 @@ namespace Tvision2.Controls
         public IActionChain<TvFocusEventData> OnFocusGained => _onFocusGained;
         public IActionChain<TvFocusEventData> OnFocusLost => _onFocusLost;
 
+        public void ReturnFocusToPrevious()
+        {
+            _ownerTree.ReturnFocusToPrevious();
+        }
+
         public bool IsFocused
         {
             get
             {
-                return _options.HasFocus ?? FocusTransferred;
+                return _options.HasVirtualFocus(ComponentNode) || FocusTransferred;
             }
         }
 
@@ -46,17 +53,11 @@ namespace Tvision2.Controls
         public bool IsDrawable => _options.IsDrawable;
 
         public bool IsDirty { get; private set; }
-        public bool CanFocus { get; set; }
-        public IControlsTree OwnerTree { get; internal set; }
-        public bool IsAttached { get => OwnerTree != null; }
+        public bool CanFocus { get; private set; }
+        public bool IsAttached { get => _ownerTree != null; }
         public ITvControl Control { get; }
-        public Guid ParentId { get; private set; }
 
         public ComponentTreeNode ComponentNode { get; private set; }
-
-
-
-
 
         public TvControlCreationParameters CreationParameters { get; }
 
@@ -75,7 +76,7 @@ namespace Tvision2.Controls
         {
             if (IsAttached)
             {
-                OwnerTree.CaptureFocus(this);
+                _ownerTree.CaptureFocus(this);
             }
         }
 
@@ -88,31 +89,32 @@ namespace Tvision2.Controls
             _onFocusLost = new ActionChain<TvFocusEventData>();
             Control = control;
             FocusTransferred = false;
-            CanFocus = true;
+            CanFocus = false;
             ControlId = control.AsComponent().ComponentId;
-            OwnerTree = null;
-            ParentId = creationParameters.ParentId;
+            _ownerTree = null;
             _options = new TvControlMetadataOptions();
             optionsAction?.Invoke(_options);
         }
 
         internal void Dettach()
         {
-            OwnerTree = null;
+            CanFocus = false;
+            _ownerTree = null;
             ComponentNode = null;
         }
 
         internal void Attach(ControlsTree controlsTree, ComponentTreeNode node)
         {
-            OwnerTree = controlsTree;
+            CanFocus = _options.CanHaveFocus;
+            _ownerTree = controlsTree;
             ComponentNode = node;
         }
 
         public void Focus(bool force = false)
         {
-            if (force || CanFocus)
+            if (IsAttached && (force || CanFocus))
             {
-                OwnerTree?.Focus(this);
+                _ownerTree.Focus(this);
             }
         }
 
@@ -121,7 +123,7 @@ namespace Tvision2.Controls
             FocusTransferred = true;
             IsDirty = true;
             _options.OnFocusAction?.Invoke();
-            _onFocusGained.Invoke(new TvFocusEventData(OwnerTree, ControlId, focusGained: true));
+            _onFocusGained.Invoke(new TvFocusEventData(_ownerTree, ControlId, focusGained: true));
         }
 
         internal void Unfocus()
@@ -129,21 +131,8 @@ namespace Tvision2.Controls
             IsDirty = true;
             FocusTransferred = false;
             _options.OnLostFocusAction?.Invoke();
-            _onFocusLost.Invoke(new TvFocusEventData(OwnerTree, ControlId, focusGained: false));
+            _onFocusLost.Invoke(new TvFocusEventData(_ownerTree, ControlId, focusGained: false));
         }
         public void Validate() => IsDirty = false;
-
-
-        public void CaptureControl(TvControlMetadata control)
-        { 
-            if (!control.IsAttached)
-            {
-                control.ParentId = this.ControlId;
-                return;
-            }
-            // TODO: Need a better way. Do we need to expose full ControlsTree as IControlsTree? Drawbacks?
-            //((ControlsTree)OwnerTree).Adopt(this, control);
-            control.ParentId = this.ControlId;
-        }
     }
 }

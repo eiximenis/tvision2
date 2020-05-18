@@ -22,9 +22,9 @@ namespace Tvision2.Controls.Menu
         {
             _options = new TvMenuBarOptions();
             optionsAction?.Invoke(_options);
-            Metadata.CanFocus = false;
             _skin = parameters.Skin;
         }
+
 
         public static ITvControlCreationParametersBuilder<MenuState> CreationParametersBuilder(IEnumerable<string> options)
         {
@@ -40,6 +40,7 @@ namespace Tvision2.Controls.Menu
         protected override void ConfigureMetadataOptions(TvControlMetadataOptions options)
         {
             options.AvoidDrawControl();
+            options.IsFocused().Never();
         }
 
         protected override void OnViewportCreated(IViewport viewport)

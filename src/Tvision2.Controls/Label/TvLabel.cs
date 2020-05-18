@@ -29,7 +29,11 @@ namespace Tvision2.Controls.Label
         public TvLabel(ITvControlCreationParametersBuilder<LabelState> parameters) : this(parameters.Build()) { }
         public TvLabel(TvControlCreationParameters<LabelState> parameters) : base(parameters)
         {
-            Metadata.CanFocus = false;
+        }
+
+        protected override void ConfigureMetadataOptions(TvControlMetadataOptions options)
+        {
+            options.IsFocused().Never();
         }
 
         protected override void OnDraw(RenderContext<LabelState> context)

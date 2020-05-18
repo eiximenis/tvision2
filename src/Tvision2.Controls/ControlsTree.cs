@@ -36,7 +36,7 @@ namespace Tvision2.Controls
         private void OnComponentsTreeUpdated(object sender, EventArgs e)
         {
             _controls.Clear();
-            var controls = _componentsTree.NodesList.Where(n => n.HasTag<TvControlMetadata>()).Select(n => n.GetTag<TvControlMetadata>())       ;
+            var controls = _componentsTree.NodesList.Where(n => n.HasTag<TvControlMetadata>()).Select(n => n.GetTag<TvControlMetadata>());
             foreach (var control in controls)
             {
                 _controls.AddLast(control);
@@ -117,7 +117,7 @@ namespace Tvision2.Controls
         {
             _controlWithFocusCaptured = control;
             _responders = new LinkedList<TvControlMetadata>();
-            var ctls =  control.ComponentNode.SubTree().Where(n => n.HasTag<TvControlMetadata>()).Select(n => n.GetTag<TvControlMetadata>());
+            var ctls = control.ComponentNode.SubTree().Where(n => n.HasTag<TvControlMetadata>()).Select(n => n.GetTag<TvControlMetadata>());
             foreach (var ctl in ctls)
             {
                 _responders.AddLast(ctl);
@@ -154,7 +154,6 @@ namespace Tvision2.Controls
 
         private bool IsValidTargetForFocus(TvControlMetadata currentFocused, TvControlMetadata nextWanted)
         {
-            if (currentFocused != null && currentFocused.ParentId == nextWanted.ControlId) return false;
             return nextWanted.AcceptFocus(currentFocused);
         }
         private void TryToSetInitialFocus()

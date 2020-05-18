@@ -31,7 +31,6 @@ namespace Tvision2.Controls.Dropdown
         {
             _hidingList = false;
             _skin = parameters.Skin;
-            Metadata.CanFocus = false;
             HasListDisplayed = false;
         }
 
@@ -62,9 +61,8 @@ namespace Tvision2.Controls.Dropdown
             {
                 var labelViewport = new Viewport(viewport.Position, viewport.Bounds.SingleRow(), viewport.ZIndex);
                 var labelParameters = new TvControlCreationParameters<LabelState>(_skin, labelViewport,
-                    new LabelState() { Text = "value" }, Name + "_label", Metadata.ControlId);
+                    new LabelState() { Text = "value" }, Name + "_label");
                 _label = new TvLabel(labelParameters);
-                _label.Metadata.CanFocus = true;
             }
 
         }
@@ -91,7 +89,7 @@ namespace Tvision2.Controls.Dropdown
         protected override void ConfigureMetadataOptions(TvControlMetadataOptions options)
         {
             options.AvoidDrawControl();
-            options.WhenControlIsAskedIfItHasFocus(() => Metadata.FocusTransferred || _label.Metadata.IsFocused || _list.Metadata.IsFocused);
+            options.IsFocused().OnlyWhen(() => Metadata.FocusTransferred || _label.Metadata.IsFocused || _list.Metadata.IsFocused);
         }
 
         internal void DisplayList()

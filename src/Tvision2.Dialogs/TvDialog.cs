@@ -17,7 +17,6 @@ namespace Tvision2.Dialogs
                 skin, viewport.Layer(Layer.Top, -1),
                 new DialogState(skin, name ?? $"TvDialog_{Guid.NewGuid()}")))
         {
-            Metadata.CanFocus = false;
             State.Init(this, owner);
         }
 
@@ -39,6 +38,11 @@ namespace Tvision2.Dialogs
         public void Add(ITvControl controlToAdd)
         {
             State.UI.Add(controlToAdd);
+        }
+
+        protected override void ConfigureMetadataOptions(TvControlMetadataOptions options)
+        {
+            options.IsFocused().Never();
         }
 
         protected override void OnControlMounted(ITuiEngine owner)
