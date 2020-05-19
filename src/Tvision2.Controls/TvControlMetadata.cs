@@ -80,6 +80,14 @@ namespace Tvision2.Controls
             }
         }
 
+        public void ReleaseFocus()
+        {
+            if (IsAttached)
+            {
+                _ownerTree.ReleaseFocus();
+            }
+        }
+
 
         public TvControlMetadata(ITvControl control, TvControlCreationParameters creationParameters, Action<TvControlMetadataOptions> optionsAction = null)
         {

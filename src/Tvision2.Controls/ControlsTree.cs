@@ -70,7 +70,7 @@ namespace Tvision2.Controls
             }
             if (_controlWithFocusCaptured == cdata)
             {
-                FreeFocus();
+                ReleaseFocus();
             }
             if (cdata == _focused)
             {
@@ -124,7 +124,7 @@ namespace Tvision2.Controls
             }
         }
 
-        public void FreeFocus()
+        public void ReleaseFocus()
         {
             _controlWithFocusCaptured = null;
             _responders = _controls;

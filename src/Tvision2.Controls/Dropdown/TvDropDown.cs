@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Tvision2.Controls.Label;
 using Tvision2.Controls.List;
 using Tvision2.Controls.Styles;
+using Tvision2.Core.Components;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
@@ -52,7 +53,7 @@ namespace Tvision2.Controls.Dropdown
 
                 var listParams = TvControlCreationParametersBuilder.ForState(initialState)
                     .UseViewport(viewport).UseSkin(_skin)
-                    .UseControlName("_list").ChildOf(Metadata.ControlId);
+                    .UseControlName("_list");
                 _list = new TvList<DropDownValue>(listParams, opt => { });
                 _list.Metadata.OnFocusLost.Add(ListLostFocus);
             }

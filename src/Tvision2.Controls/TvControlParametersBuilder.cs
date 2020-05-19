@@ -32,7 +32,6 @@ namespace Tvision2.Controls
         public IViewport Viewport { get; private set; }
         private readonly Func<TState> _stateCreator;
         private string _name;
-        private Guid _parentId;
         private readonly TState _initialState;
 
         public TvPoint Position { get; private set; }
@@ -40,7 +39,6 @@ namespace Tvision2.Controls
         {
             _stateCreator = null;
             _positionSet = false;
-            _parentId = Guid.Empty;
             _initialState = initialState;
         }
 
@@ -48,7 +46,6 @@ namespace Tvision2.Controls
         {
             _stateCreator = stateCreator;
             _positionSet = false;
-            _parentId = Guid.Empty;
             _initialState = default(TState);
         }
 
@@ -89,12 +86,6 @@ namespace Tvision2.Controls
         public ITvControlCreationParametersBuilder<TState> UseControlName(string name)
         {
             _name = name;
-            return this;
-        }
-
-        public ITvControlCreationParametersBuilder<TState> ChildOf(Guid parentId)
-        {
-            _parentId = parentId;
             return this;
         }
 

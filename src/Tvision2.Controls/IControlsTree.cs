@@ -19,7 +19,7 @@ namespace Tvision2.Controls
         bool ReturnFocusToPrevious();
 
         void CaptureFocus(TvControlMetadata control);
-        void FreeFocus();
+        void ReleaseFocus();
 
 
         event EventHandler<FocusChangedEventArgs> FocusChanged;

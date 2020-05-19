@@ -47,7 +47,7 @@ namespace Tvision2.Dialogs
 
         protected override void OnControlMounted(ITuiEngine owner)
         {
-            owner.GetControlsTree().CaptureFocus(this.Metadata);
+            Metadata.CaptureFocus();
         }
 
         internal void Close()
