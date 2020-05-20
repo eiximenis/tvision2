@@ -18,6 +18,7 @@ namespace Tvision2.Controls.Menu
         private Guid _hookGuid;
         protected readonly TvControlCreationParameters _creationParameters;
         private ITuiEngine _engine;
+        private TvMenu _currentMenu;
 
         public TvMenuBar(ITvControlCreationParametersBuilder<MenuState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : this(parameters.Build(), optionsAction) { }
 
@@ -29,16 +30,16 @@ namespace Tvision2.Controls.Menu
             _options = new TvMenuBarOptions();
             optionsAction?.Invoke(_options);
             _engine = null;
+            _currentMenu = null;
         }
         public static ITvControlCreationParametersBuilder<MenuState> CreationParametersBuilder(IEnumerable<string> options)
         {
             return TvControlCreationParametersBuilder.ForState<MenuState>(() => new MenuState(options));
         }
 
-
         protected override void ConfigureMetadataOptions(TvControlMetadataOptions options)
         {
-            options.IsFocused().WhenItselfOrAnyChildHasFocus();
+            options.IsFocused().OnlyWhenAnyChildHasFocus();
         }
 
         protected override void OnDraw(RenderContext<MenuState> context)
@@ -99,15 +100,27 @@ namespace Tvision2.Controls.Menu
             var entry = state.SelectedEntry;
             if (!entry.ChildEntries.Any()) return;
 
-            var menu = new TvMenu(TvMenu.CreationParametersBuilder(entry.ChildEntries.Select(e => e.Text))
+            _currentMenu = new TvMenu(TvMenu.CreationParametersBuilder(entry.ChildEntries.Select(e => e.Text))
                 .UseViewport(new Viewport(TvPoint.FromXY(10, 1), TvBounds.FromRowsAndCols(10, 20), Layer.Top))
                 .UseSkin(_creationParameters.Skin));
-            _engine.UI.AddAsChild(menu, this);
+            _engine.UI.AddAsChild(_currentMenu, this);
         }
 
-        internal void Close(TvMenu owner)
+
+        internal void CloseCurrentMenu()
         {
-            _engine.UI.Remove(owner);
+            if (_currentMenu != null)
+            {
+                _engine.UI.Remove(_currentMenu);
+                Metadata.Focus(force: true);
+                _currentMenu = null;
+            }
+            else
+            {
+                Metadata.ReturnFocusToPrevious();
+            }
         }
+
+
     }
 }

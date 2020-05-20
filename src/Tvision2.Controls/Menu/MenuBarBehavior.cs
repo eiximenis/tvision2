@@ -61,9 +61,18 @@ namespace Tvision2.Controls.Menu
 
         }
 
+        protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<MenuState> updateContext)
+        {
+            var info = evt.AsConsoleKeyInfo();
+            if (info.Key == ConsoleKey.Escape)
+            {
+                _owner.CloseCurrentMenu();
+                evt.Handle();
+                return true;
+            }
 
-
-        protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<MenuState> updateContext) => false;
+            return false;
+        }
 
     }
 }

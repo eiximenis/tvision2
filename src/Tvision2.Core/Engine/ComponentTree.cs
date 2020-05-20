@@ -257,6 +257,12 @@ namespace Tvision2.Core.Engine
             var node = FindNodeById(component.ComponentId);
             if (node != null)
             {
+                
+                node.Data.Status = TvComponentStatus.Removing;
+                foreach (var child in node.SubTree())
+                {
+                    child.Data.Status = TvComponentStatus.Removing;
+                }
                 _pendingRemovalsPhase1.Add(name, node);
                 return true;
             }
@@ -317,6 +323,7 @@ namespace Tvision2.Core.Engine
                 }
                 foreach (var node in subtree)
                 {
+                    node.Data.Status = TvComponentStatus.Dettached;
                     node.Clear();
                 }
 
@@ -359,8 +366,6 @@ namespace Tvision2.Core.Engine
             }
         }
 
-
-
         private ComponentTreeNode FindNodeById(Guid id)
         {
             foreach (var root in _roots)
@@ -389,6 +394,7 @@ namespace Tvision2.Core.Engine
         public TvComponentMetadata AddAfter(TvComponent componentToAdd, TvComponent componentBefore)
         {
             _pendingAdds.Add(componentToAdd.Name, AddComponentOptions.AddAfter(componentToAdd.Metadata, componentBefore.Metadata));
+            componentToAdd.Metadata.Status = TvComponentStatus.Adding;
             return componentToAdd.Metadata;
         }
 
@@ -397,6 +403,7 @@ namespace Tvision2.Core.Engine
             var addOptions = AddComponentOptions.AddAsChild(componentToAdd.Metadata, parent.Metadata);
             options?.Invoke(addOptions);
             _pendingAdds.Add(componentToAdd.Name, addOptions);
+            componentToAdd.Metadata.Status = TvComponentStatus.Adding;
             return componentToAdd.Metadata;
         }
 
@@ -405,6 +412,7 @@ namespace Tvision2.Core.Engine
             var options = new AddComponentOptions(componentToAdd.Metadata);
             addOptions?.Invoke(options);
             _pendingAdds.Add(componentToAdd.Name, options);
+            componentToAdd.Metadata.Status = TvComponentStatus.Adding;
             return componentToAdd.Metadata;
         }
 
@@ -482,6 +490,7 @@ namespace Tvision2.Core.Engine
                     nodeAdded.Parent.Data.OnChildAdded(addOptions.ComponentMetadata, nodeAdded, addOptions);
                 }
                 addOptions.AfterAddAction?.Invoke(_engine);
+                nodeAdded.Data.Status = TvComponentStatus.Running;
             }
             OnTreeUpdated();
         }
@@ -590,15 +599,18 @@ namespace Tvision2.Core.Engine
 
                 var component = node.Data.Component;
                 var metadata = node.Data;
-                component.Update(new UpdateContext(evts, new ComponentLocator(this, node)));
-                if (metadata.PropagateStatusToChildren && component.NeedToRedraw != RedrawNeededAction.None)
+                if (metadata.Status == TvComponentStatus.Running)
                 {
-                    var childs = metadata.TreeNode.Descendants();
-                    foreach (var childnode in childs)
+                    component.Update(new UpdateContext(evts, new ComponentLocator(this, node)));
+                    if (metadata.PropagateStatusToChildren && component.NeedToRedraw != RedrawNeededAction.None)
                     {
-                        if (childnode.Data.AdmitStatusPropagation)
+                        var childs = metadata.TreeNode.Descendants();
+                        foreach (var childnode in childs)
                         {
-                            childnode.Data.Component.Invalidate(InvalidateReason.StateChanged);
+                            if (childnode.Data.AdmitStatusPropagation)
+                            {
+                                childnode.Data.Component.Invalidate(InvalidateReason.StateChanged);
+                            }
                         }
                     }
                 }
@@ -618,7 +630,10 @@ namespace Tvision2.Core.Engine
             foreach (var cdata in NodesList
                 .Where(c => force || c.Data.Component.NeedToRedraw != RedrawNeededAction.None))
             {
-                cdata.Data.Component.Draw(console, cdata.Parent);
+                if (cdata.Data.Status == TvComponentStatus.Running)
+                {
+                    cdata.Data.Component.Draw(console, cdata.Parent);
+                }
             }
             DoPendingRemovalsPhase2();
         }

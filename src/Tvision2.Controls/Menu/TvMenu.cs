@@ -14,7 +14,6 @@ namespace Tvision2.Controls.Menu
     {
         private readonly TvMenuBarOptions _options;
         private TvList<MenuEntry> _list;
-        private IComponentTree _ownerUi;
         private readonly ISkin _skin;
 
         public TvMenu(ITvControlCreationParametersBuilder<MenuState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : this(parameters.Build(), optionsAction) { }
@@ -65,16 +64,9 @@ namespace Tvision2.Controls.Menu
 
 
         protected override void OnControlMounted(ITuiEngine engine)
-        {
-            _ownerUi = engine.UI;
-            _ownerUi.AddAsChild(_list, this);
+        { 
+            engine.UI.AddAsChild(_list, this);
             Metadata.CaptureFocus();
-        }
-
-        protected override void OnControlUnmounted(ITuiEngine engine)
-        {
-            _ownerUi.Remove(_list);
-            _ownerUi = null;
         }
     }
 }

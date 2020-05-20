@@ -12,6 +12,11 @@ namespace Tvision2.Core.Render
         public CharacterAttribute Attributes { get; }
         public int ZIndex { get; }
 
+        public ConsoleCharacter ToLayer(Layer zindex)
+        {
+            return new ConsoleCharacter(Character, Attributes, zindex);
+        }
+
         public ConsoleCharacter(char value, CharacterAttribute attribute, int zindex)
         {
             Character = value;

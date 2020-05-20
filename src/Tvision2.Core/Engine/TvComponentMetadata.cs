@@ -6,6 +6,14 @@ using Tvision2.Engine.Console;
 
 namespace Tvision2.Core.Engine
 {
+
+    public enum TvComponentStatus
+    {
+        Dettached,
+        Adding,
+        Running,
+        Removing
+    }
     public class TvComponentMetadata : IConfigurableComponentMetadata
     {
         public TvComponent Component { get; }
@@ -18,6 +26,8 @@ namespace Tvision2.Core.Engine
         public bool IsMounted { get; private set; }
         public bool PropagateStatusToChildren { get; private set; }
         public bool AdmitStatusPropagation { get; private set; }
+
+        public TvComponentStatus Status { get; internal set; }
 
         public event EventHandler<ViewportUpdatedEventArgs> ViewportChanged;
         private readonly ActionChain<ComponentMoutingContext> _onComponentMounted;
@@ -41,6 +51,7 @@ namespace Tvision2.Core.Engine
             _onComponentWillBeUnmounted = new ActionChain<ComponentMountingCancellableContext>();
             _onChildMounted = new ActionChain<ChildComponentMoutingContext>();
             _onChildUnmounted = new ActionChain<ChildComponentMoutingContext>();
+            Status = TvComponentStatus.Dettached;
         }
 
         internal ComponentTreeNode TreeNode { get; private set; }
