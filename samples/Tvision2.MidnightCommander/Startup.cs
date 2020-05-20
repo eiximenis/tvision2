@@ -84,6 +84,9 @@ namespace Tvision2.MidnightCommander
             mainStackPanel.At(0).Add(menu);
 
             menu.State["Left"].AddChild("_Exit");
+            menu.State["Edit"].AddChild("Delete");
+            menu.State["Edit"].AddChild("Move");
+
 
             //var window = new TvWindow(skin, vpf.FullViewport().CreateCentered(20, 10), new WindowState(tui.UI));
             //var label = new TvLabel(skin, new Viewport(new TvPoint.FromXY(0, 0), 9, 1, 0), new LabelState() { Text = "In Window" });

@@ -90,7 +90,7 @@ namespace Tvision2.Controls.Dropdown
         protected override void ConfigureMetadataOptions(TvControlMetadataOptions options)
         {
             options.AvoidDrawControl();
-            options.IsFocused().OnlyWhen(() => Metadata.FocusTransferred || _label.Metadata.IsFocused || _list.Metadata.IsFocused);
+            options.IsFocused().WhenItselfOrAnyChildHasFocus();
         }
 
         internal void DisplayList()

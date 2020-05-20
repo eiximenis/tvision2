@@ -8,31 +8,34 @@
 
         public Layer ZIndex { get; }
 
+        public FlowModel Flow { get; }
+
 
         public static IViewport NullViewport => _nullViewport;
 
-        public Viewport(TvPoint point, int cols) : this(point, TvBounds.FromRowsAndCols(0, cols), Layer.Standard)
+        public Viewport(TvPoint point, int cols) : this(point, TvBounds.FromRowsAndCols(0, cols), Layer.Standard, FlowModel.None)
         {
         }
 
-        public Viewport(TvPoint point, TvBounds bounds, Layer zindex)
+        public Viewport(TvPoint point, TvBounds bounds, Layer zindex, FlowModel flow = FlowModel.None)
         {
             Position = point;
             Bounds = bounds;
             ZIndex = zindex;
+            Flow = flow;
         }
 
 
 
 
-        public IViewport ResizeTo(int cols, int rows) => new Viewport(Position, TvBounds.FromRowsAndCols(rows, cols), ZIndex);
-        public IViewport Grow(int ncols, int nrows) => new Viewport(Position, Bounds.Grow(nrows, ncols), ZIndex);
+        public IViewport ResizeTo(int cols, int rows) => new Viewport(Position, TvBounds.FromRowsAndCols(rows, cols), ZIndex, Flow);
+        public IViewport Grow(int ncols, int nrows) => new Viewport(Position, Bounds.Grow(nrows, ncols), ZIndex, Flow);
 
-        public IViewport MoveTo(TvPoint newPos) => new Viewport(newPos, Bounds, ZIndex);
+        public IViewport MoveTo(TvPoint newPos) => new Viewport(newPos, Bounds, ZIndex, Flow);
 
-        public IViewport Translate(TvPoint translation) => new Viewport(Position + translation, Bounds, ZIndex);
+        public IViewport Translate(TvPoint translation) => new Viewport(Position + translation, Bounds, ZIndex, Flow);
 
-        public IViewport Clone() => new Viewport(Position, Bounds, ZIndex);
+        public IViewport Clone() => new Viewport(Position, Bounds, ZIndex, Flow);
 
 
 
@@ -52,7 +55,8 @@
         {
             return Position == other.Position
                 && Bounds == other.Bounds
-                && ZIndex == other.ZIndex;
+                && ZIndex == other.ZIndex
+                && Flow == other.Flow;
         }
     }
 }

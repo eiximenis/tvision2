@@ -72,7 +72,7 @@ namespace Tvision2.Controls.Menu
 
         protected override IEnumerable<ITvBehavior<MenuState>> GetEventedBehaviors()
         {
-            yield return new MenuBarBehavior(this, _options);
+            yield return new MenuBarBehavior(_options);
         }
 
         protected override void OnControlMounted(ITuiEngine engine)

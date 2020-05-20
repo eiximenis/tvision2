@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Tvision2.Controls.Behavior;
 using Tvision2.Controls.Drawers;
@@ -132,8 +133,29 @@ namespace Tvision2.Controls
             foreach (var behavior in GetEventedBehaviors())
             {
                 _component.AddBehavior(new FocusControlBeheavior<TState>(Metadata, behavior), opt => opt.UseScheduler(BehaviorSchedule.OnEvents));
+                AddOwnerIfRequested(behavior);
             }
+
             AddCustomElements(_component);
+        }
+
+        private void AddOwnerIfRequested(ITvBehavior<TState> behavior)
+        {
+            var behaviorType = behavior.GetType();
+            var property = behaviorType.GetProperties().SingleOrDefault(p => p.GetCustomAttribute<OwnerControlAttribute>() != null);
+            if (property != null && property.CanWrite)
+            {
+                var propType = property.PropertyType;
+                var myType = this.GetType();
+                if (propType.IsAssignableFrom(myType))
+                {
+                    property.SetValue(behavior, this);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Property {behaviorType.Name}.{property.Name} of type {propType.Name} can't hold a control of type {myType.Name}");
+                }
+            }
         }
 
         protected virtual IEnumerable<ITvBehavior<TState>> GetEventedBehaviors()

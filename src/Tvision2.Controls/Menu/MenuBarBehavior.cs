@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Tvision2.Controls.Behavior;
 using Tvision2.Controls.Styles;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Engine;
@@ -11,12 +12,14 @@ namespace Tvision2.Controls.Menu
     public class MenuBarBehavior : KeyboardBehavior<MenuState>
     {
 
-        private readonly TvMenuBar _owner;
+        
         private readonly TvMenuBarOptions _options;
 
-        public MenuBarBehavior(TvMenuBar owner, TvMenuBarOptions options)
+        [OwnerControl]
+        public TvMenuBar Owner { get; set; }
+
+        public MenuBarBehavior(TvMenuBarOptions options)
         {
-            _owner = owner;
             _options = options;
         }
         protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<MenuState> updateContext)
@@ -26,14 +29,14 @@ namespace Tvision2.Controls.Menu
 
             if (info.Key == _options.SelectKey)
             {
-                _owner.EnableMenu(updateContext.State);
+                Owner.EnableMenu(updateContext.State);
                 evt.Handle();
                 return true;
             }
 
             if (info.Key == _options.Hotkey)
             {
-                _owner.Metadata.ReturnFocusToPrevious();
+                Owner.Metadata.ReturnFocusToPrevious();
                 evt.Handle();
                 return false;
             }
@@ -66,7 +69,7 @@ namespace Tvision2.Controls.Menu
             var info = evt.AsConsoleKeyInfo();
             if (info.Key == ConsoleKey.Escape)
             {
-                _owner.CloseCurrentMenu();
+                Owner.CloseCurrentMenu();
                 evt.Handle();
                 return true;
             }

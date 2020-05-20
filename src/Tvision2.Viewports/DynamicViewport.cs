@@ -36,6 +36,8 @@ namespace Tvision2.Viewports
 
         public TvBounds Bounds => _viewport.Bounds;
 
+        public FlowModel Flow => _viewport.Flow;
+
 
         public IViewport Clone()
         {

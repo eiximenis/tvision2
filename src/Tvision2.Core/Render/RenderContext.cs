@@ -26,22 +26,50 @@ namespace Tvision2.Core.Render
 
         public void DrawStringAt(string value, TvPoint location, TvColorPair colors)
         {
-            ViewportHelper.DrawStringAt(value, location, new CharacterAttribute(colors), Viewport, _console);
+            if (Viewport.Flow == FlowModel.None)
+            {
+                ViewportHelperNoneFlow.DrawStringAt(value, location, new CharacterAttribute(colors), Viewport, _console);
+            }
+            else
+            {
+                ViewportHelperLineBreakFlow.DrawStringAt(value, location, new CharacterAttribute(colors), Viewport, _console);
+            }
         }
 
         public void DrawStringAt(string value, TvPoint location, CharacterAttribute attr)
         {
-            ViewportHelper.DrawStringAt(value, location, attr, Viewport, _console);
+            if (Viewport.Flow == FlowModel.None)
+            {
+                ViewportHelperNoneFlow.DrawStringAt(value, location, attr, Viewport, _console);
+            }
+            else
+            {
+                ViewportHelperLineBreakFlow.DrawStringAt(value, location, attr, Viewport, _console);
+            }
         }
 
         public void DrawChars(char value, int count, TvPoint location, TvColorPair colors)
         {
-            ViewportHelper.DrawChars(value, count, location, new CharacterAttribute(colors), Viewport, _console);
+            if (Viewport.Flow == FlowModel.None)
+            {
+                ViewportHelperNoneFlow.DrawChars(value, count, location, new CharacterAttribute(colors), Viewport, _console);
+            }
+            else
+            {
+                ViewportHelperLineBreakFlow.DrawChars(value, count, location, new CharacterAttribute(colors), Viewport, _console);
+            }
         }
 
         public void DrawChars(char value, int count, TvPoint location, CharacterAttribute attribute)
         {
-            ViewportHelper.DrawChars(value, count, location, attribute, Viewport, _console);
+            if (Viewport.Flow == FlowModel.None)
+            {
+                ViewportHelperNoneFlow.DrawChars(value, count, location, attribute, Viewport, _console);
+            }
+            else
+            {
+                ViewportHelperLineBreakFlow.DrawChars(value, count, location, attribute, Viewport, _console);
+            }
         }
 
         public void Clear()
@@ -56,7 +84,7 @@ namespace Tvision2.Core.Render
 
         void ICursorContext.SetCursorAt(int left, int top)
         {
-            var point = ViewportHelper.ViewPointToConsolePoint(TvPoint.FromXY(left, top), Viewport.Position);
+            var point = ViewportHelperNoneFlow.ViewPointToConsolePoint(TvPoint.FromXY(left, top), Viewport.Position);
             _console.Cursor.MoveTo(point.Left, point.Top);
         }
 
