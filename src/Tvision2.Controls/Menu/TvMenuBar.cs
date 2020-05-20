@@ -106,6 +106,15 @@ namespace Tvision2.Controls.Menu
             _engine.UI.AddAsChild(_currentMenu, this);
         }
 
+        internal void UpdateCurrentMenu()
+        {
+            if (_currentMenu == null) return;
+            _engine.UI.Remove(_currentMenu);
+            Metadata.Focus(force: true);
+            EnableMenu(State);
+        }
+
+
 
         internal void CloseCurrentMenu()
         {

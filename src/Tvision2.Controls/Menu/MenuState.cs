@@ -27,7 +27,9 @@ namespace Tvision2.Controls.Menu
             get => _selectedIndex;
             set
             {
-                _selectedIndex = value >= _options.Count ? 0 : value;
+                if (value < 0) _selectedIndex = _options.Count - 1;
+                if (value >= _options.Count) _selectedIndex = 0;
+                else _selectedIndex = value;
             }
         }
 

@@ -139,6 +139,7 @@ namespace Tvision2.Controls
             AddCustomElements(_component);
         }
 
+
         private void AddOwnerIfRequested(ITvBehavior<TState> behavior)
         {
             var behaviorType = behavior.GetType();

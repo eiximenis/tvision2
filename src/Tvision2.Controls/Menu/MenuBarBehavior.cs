@@ -33,17 +33,23 @@ namespace Tvision2.Controls.Menu
                 evt.Handle();
                 return true;
             }
-
-            if (info.Key == _options.Hotkey)
+            else if (info.Key == _options.Hotkey)
             {
                 Owner.Metadata.ReturnFocusToPrevious();
                 evt.Handle();
                 return false;
             }
-
-            if (info.Key == ConsoleKey.RightArrow)
+            else if (info.Key == ConsoleKey.RightArrow)
             {
                 updateContext.State.SelectedIndex++;
+                Owner.UpdateCurrentMenu();
+                evt.Handle();
+                return true;
+            }
+            else if (info.Key == ConsoleKey.LeftArrow)
+            {
+                updateContext.State.SelectedIndex--;
+                Owner.UpdateCurrentMenu();
                 evt.Handle();
                 return true;
             }
