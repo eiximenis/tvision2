@@ -16,7 +16,7 @@ jobs:
     - name: Use .NET Core SDK 
       uses: actions/setup-dotnet@v1 
       with:
-        dotnet-version: 3.1.201
+        dotnet-version: 3.1.300
     - name: run docfx to generate doc
       uses: nikeee/docfx-action@dotnet-sdk
       with:

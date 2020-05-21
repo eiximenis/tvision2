@@ -17,6 +17,6 @@ jobs:
     - name: Use .NET Core SDK 
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.201
+        dotnet-version: 3.1.300
     - name: dotnet build
       run: dotnet build tvision2.sln -c $BUILD_CONFIG 
