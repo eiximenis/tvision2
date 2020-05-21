@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/Tvision2.Sample/Tvision2.Sample.csproj"
+                "${workspaceFolder}/Samples/Tvision2.MidnightCommander/Tvision2.MidnightCommander.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

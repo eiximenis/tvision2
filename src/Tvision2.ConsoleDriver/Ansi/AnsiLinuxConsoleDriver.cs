@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using Tvision2.ConsoleDriver.Ansi.Interop;
 using Tvision2.ConsoleDriver.Common;
 using Tvision2.Core.Colors;
 using Tvision2.Core.Render;
@@ -37,6 +38,13 @@ namespace Tvision2.ConsoleDriver.Ansi
             Console.Out.Flush();
             Console.Out.Write(AnsiEscapeSequences.CLEAR);
             Console.Out.Flush();
+            // Set RAW mode
+            var t = new Termios();
+            t.c_iflag  = 32;
+            var x = Libc.tcgetattr(1, ref t);
+
+
+
             _colorManager.Init();
         }
         
