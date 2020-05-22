@@ -1,11 +1,17 @@
 using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using Tvision2.ConsoleDriver.Ansi.Input;
 using Tvision2.ConsoleDriver.Ansi.Interop;
 using Tvision2.ConsoleDriver.Common;
 using Tvision2.Core.Colors;
 using Tvision2.Core.Render;
 using Tvision2.Engine.Console;
 using Tvision2.Events;
+
+using static Tvision2.ConsoleDriver.Ansi.Interop.Types;
 
 namespace Tvision2.ConsoleDriver.Ansi
 {
@@ -14,6 +20,11 @@ namespace Tvision2.ConsoleDriver.Ansi
 
         private readonly LinuxConsoleDriverOptions _options;
         private readonly AnsiColorManager _colorManager;
+        private readonly EscapeSequenceReader _secuenceReader;
+        private readonly IInputSequences _inputSequences;
+
+
+        private const int ESC = 27;
         
         public TvBounds ConsoleBounds { get; private set; }
 
@@ -27,25 +38,33 @@ namespace Tvision2.ConsoleDriver.Ansi
         {
             _options = options;
             _colorManager = colorManager;
+            _inputSequences = new XtermSequences();
+            _secuenceReader = new EscapeSequenceReader();
+            _secuenceReader.AddSequences(_inputSequences.GetSequences());
         }
-        
-        
+
         public void Init()
         {
             ConsoleBounds = TvBounds.FromRowsAndCols(Console.WindowHeight, Console.WindowWidth);
+            
             
             Console.Out.Write(AnsiEscapeSequences.SMCUP);
             Console.Out.Flush();
             Console.Out.Write(AnsiEscapeSequences.CLEAR);
             Console.Out.Flush();
             // Set RAW mode
-            var t = new Termios();
-            t.c_iflag  = 32;
-            var x = Libc.tcgetattr(1, ref t);
+            var termios = new termios();
+            var retval = Libc.tcgetattr(1, ref termios);
+            if (retval != 0)
+            {
+                throw new InvalidOperationException("tcgetattr returned error. Ensure app terminal is not redirected");
+            }
 
-
+            Libc.cfmakeraw(ref termios);
+            retval = Libc.tcsetattr(1, Constants.TCSANOW, ref termios);
 
             _colorManager.Init();
+
         }
         
         
@@ -71,8 +90,37 @@ namespace Tvision2.ConsoleDriver.Ansi
 
         public ITvConsoleEvents ReadEvents()
         {
+
+            var data = Libc.read();
+            if (data == -1)
+            {
+                return TvConsoleEvents.Empty;
+            }
+            
+            
+            Debug.WriteLine($"RE --> {data} '{(char)data}'");
+            
+            if (data == ESC)
+            {
+                _secuenceReader.Start();
+                var nextkey = Libc.read();
+                while (nextkey != -1)
+                {
+                    _secuenceReader.Push(nextkey);
+                    nextkey = Libc.read();
+                }
+
+                _secuenceReader.CheckSequence();
+            }
+
             return TvConsoleEvents.Empty;
         }
+
+        private void TryReadEscapeSequence()
+        {
+            
+        }
+        
         
         public void SetCursorVisibility(bool isVisible)
         {

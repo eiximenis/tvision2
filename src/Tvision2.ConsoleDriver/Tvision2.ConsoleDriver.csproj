@@ -8,7 +8,7 @@
     <PackageTags>Tvision2;Controls;TUI;Console</PackageTags>
     <Version>$(Tvision2ConsoleDriverVersion)</Version>
     <RepositoryUrl>$(RepositoryUrl)</RepositoryUrl>
-    <Authors>$(Authors)</Authors>     
+    <Authors>$(Authors)</Authors>
   </PropertyGroup>
 
   <ItemGroup>
