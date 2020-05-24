@@ -40,7 +40,7 @@ namespace Tvision2.Events.NCurses
 
         }
 
-        public NCursesConsoleKeyboardEvent(int wch, bool alt, bool isDown) : base(isDown, 1, (char) wch)
+        public NCursesConsoleKeyboardEvent(int wch, bool alt, bool isDown) : base(isDown, 1)
         {
             
             _wch = wch;
@@ -50,7 +50,7 @@ namespace Tvision2.Events.NCurses
         public override ConsoleKeyInfo AsConsoleKeyInfo()
         {
             var ctrl = (_wch & 0x1f) != 0;            
-            return new ConsoleKeyInfo(Character, NCursesToConsoleKey(), false, _alt, ctrl);
+            return new ConsoleKeyInfo((char)_wch, NCursesToConsoleKey(), false, _alt, ctrl);
         }
     }
 }

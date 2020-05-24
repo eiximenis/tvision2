@@ -10,7 +10,7 @@ namespace Tvision2.ConsoleDriver.DotNet
 
         private readonly ConsoleKeyInfo _consoleKey;
         public DotNetConsoleKeyboardEvent(ConsoleKeyInfo consoleKey, bool isDown) 
-            : base(isKeyDown: isDown, repeatCount: 1, character: consoleKey.KeyChar)
+            : base(isKeyDown: isDown, repeatCount: 1)
             => _consoleKey = consoleKey;
 
         public override ConsoleKeyInfo AsConsoleKeyInfo() => _consoleKey;

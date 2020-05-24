@@ -1,7 +1,9 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Tvision2.ConsoleDriver.Ansi.Input;
 using Tvision2.ConsoleDriver.Ansi.Interop;
@@ -97,29 +99,43 @@ namespace Tvision2.ConsoleDriver.Ansi
                 return TvConsoleEvents.Empty;
             }
             
-            
-            Debug.WriteLine($"RE --> {data} '{(char)data}'");
-            
+            var events = new TvConsoleEvents();
+
             if (data == ESC)
             {
+                var sequenceStarted = false;
+                Debug.WriteLine($"RE --> {data} '{(char)data}'");
                 _secuenceReader.Start();
                 var nextkey = Libc.read();
                 while (nextkey != -1)
                 {
                     _secuenceReader.Push(nextkey);
+                    sequenceStarted = true;
                     nextkey = Libc.read();
                 }
 
-                _secuenceReader.CheckSequence();
+                if (sequenceStarted)
+                {
+                    var sequences = _secuenceReader.CheckSequences();
+                    foreach (var seq in sequences)
+                    {
+                        if (seq != null) events.Add(new AnsiConsoleKeyboardEvent(seq.KeyInfo));
+                        else Debug.WriteLine("Unknown ESC sequence");
+                    }
+                }
+                else
+                {
+                    events.Add(new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo((char)data, ConsoleKey.Escape, false, false, false)));
+                }
+            }
+            else
+            {
+                events.Add(new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo((char)data, (ConsoleKey)data, false, false, false)));
             }
 
-            return TvConsoleEvents.Empty;
+            return events;
         }
 
-        private void TryReadEscapeSequence()
-        {
-            
-        }
         
         
         public void SetCursorVisibility(bool isVisible)

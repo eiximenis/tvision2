@@ -5,12 +5,12 @@ namespace Tvision2.ConsoleDriver.Ansi.Input
     public class InputSequence
     {
         public string Sequence { get; }
-        public ConsoleKey Key { get; }
+        public ConsoleKeyInfo KeyInfo { get; }
 
-        public InputSequence(string seq, ConsoleKey key)
+        public InputSequence(string seq, ConsoleKeyInfo keyInfo)
         {
             Sequence = seq;
-            Key = key;
+            KeyInfo = keyInfo;
         }
     }
 }

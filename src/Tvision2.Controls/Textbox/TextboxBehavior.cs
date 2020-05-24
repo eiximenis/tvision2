@@ -11,7 +11,6 @@ namespace Tvision2.Controls.Textbox
         protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<TextboxState> updateContext)
         {
             evt.Handle();
-            var character = evt.Character;
             updateContext.State.ProcessKey(evt.AsConsoleKeyInfo());
             return true;
         }

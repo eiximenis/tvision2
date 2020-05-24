@@ -6,19 +6,22 @@ namespace Tvision2.ConsoleDriver.Ansi.Input
 {
     public sealed class XtermSequences : IInputSequences
     {
-        private readonly  Dictionary<string, InputSequence> _sequences;
+        private readonly  List<InputSequence> _sequences;
 
         public XtermSequences()
         {
-            _sequences = new Dictionary<string, InputSequence>( );
+            _sequences = new List<InputSequence>( );
             
-            _sequences.Add("OA", new InputSequence("OA", ConsoleKey.UpArrow));
-            _sequences.Add("OB", new InputSequence("OB", ConsoleKey.DownArrow));
-            _sequences.Add("OD", new InputSequence("OD", ConsoleKey.LeftArrow));
-            _sequences.Add("OC", new InputSequence("OC", ConsoleKey.RightArrow));
+            _sequences.Add(new InputSequence("OA", KeyInfoFromKey(ConsoleKey.UpArrow)));
+            _sequences.Add(new InputSequence("OB", KeyInfoFromKey(ConsoleKey.DownArrow)));
+            _sequences.Add(new InputSequence("OD", KeyInfoFromKey(ConsoleKey.LeftArrow)));
+            _sequences.Add(new InputSequence("OC", KeyInfoFromKey(ConsoleKey.RightArrow)));
         }
 
 
-        public IEnumerable<string> GetSequences() => _sequences.Keys;
+        public IEnumerable<InputSequence> GetSequences() => _sequences;
+        
+        
+        private  ConsoleKeyInfo KeyInfoFromKey(ConsoleKey key) => new ConsoleKeyInfo((char)key, key, false, false, false);
     }
 }

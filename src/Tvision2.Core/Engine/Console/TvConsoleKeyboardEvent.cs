@@ -6,16 +6,13 @@ namespace Tvision2.Events
         public bool IsKeyDown { get; }
 
         public int RepeatCount { get; }
-
-        public char Character { get; }
-
+        
         public bool IsHandled { get; private set; }
 
-        protected TvConsoleKeyboardEvent(bool isKeyDown, int repeatCount, char character)
+        protected TvConsoleKeyboardEvent(bool isKeyDown, int repeatCount)
         {
             IsKeyDown = isKeyDown;
             RepeatCount = repeatCount;
-            Character = character;
             IsHandled = false;
         }
 
