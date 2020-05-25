@@ -48,7 +48,8 @@ namespace Tvision2.MidnightCommander
                                         //.EnableTrueColor(tc => tc.WithBuiltInSequences())
                                         .WithPalette(palette =>
                                         {
-                                            palette.LoadFromTerminalName("256-grey")
+                                            // palette.LoadFromTerminalName("256-grey")
+                                                palette.LoadFromTerminalName()
                                                 .UpdateTerminal(ConsoleDriver.Common.UpdateTerminalEntries
                                                     .AllButAnsi4bit);
                                             palette.TranslateRgbColorsWith(new  InterpolationPaletteTranslator());

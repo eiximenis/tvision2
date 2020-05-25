@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -109,6 +110,7 @@ namespace Tvision2.ConsoleDriver.Ansi
                 var nextkey = Libc.read();
                 while (nextkey != -1)
                 {
+                    Debug.WriteLine(nextkey + "" + (char)nextkey);
                     _secuenceReader.Push(nextkey);
                     sequenceStarted = true;
                     nextkey = Libc.read();
@@ -130,7 +132,30 @@ namespace Tvision2.ConsoleDriver.Ansi
             }
             else
             {
-                events.Add(new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo((char)data, (ConsoleKey)data, false, false, false)));
+                Debug.WriteLine("Data " + data);
+                switch (data)
+                {
+                    case 9:
+                        events.Add(new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo('\t', ConsoleKey.Tab, false, false, false)));
+                        break;
+                    case 13:
+                        events.Add(new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false)));
+                        break;
+                    case 127:
+                        events.Add(new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo((char) data, ConsoleKey.Backspace, false, false, false)));
+                        break;
+                    default:
+                        if (data < 26)        // 1 is ^A ... 26 is ^Z. Note that 9 is also ^I and ^M is 13 both already handled before
+                        {
+                            events.Add(new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo((char)(data -1 + 'A'), ConsoleKey.A + data-1, false, false, true)));
+                        }
+                        else
+                        {
+                            events.Add(new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo((char) data, (ConsoleKey) data, false, false, false)));
+                        }
+                        break;
+                }
+
             }
 
             return events;
