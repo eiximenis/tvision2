@@ -8,16 +8,12 @@ namespace Tvision2.Controls.Textbox
 {
     public class TextboxBehavior : KeyboardBehavior<TextboxState>
     {
-        protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<TextboxState> updateContext)
+        protected override bool OnKeyPress(TvConsoleKeyboardEvent evt, BehaviorContext<TextboxState> updateContext)
         {
             evt.Handle();
             updateContext.State.ProcessKey(evt.AsConsoleKeyInfo());
             return true;
         }
-
-        protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<TextboxState> updateContext)
-        {
-            return true;
-        }
+        
     }
 }

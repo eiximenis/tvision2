@@ -8,8 +8,7 @@ namespace Tvision2.Controls.Checkbox
 {
     public class CheckBoxBehavior : KeyboardBehavior<CheckboxState>
     {
-        protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<CheckboxState> updateContext) => true;
-        protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<CheckboxState> updateContext)
+        protected override bool OnKeyPress(TvConsoleKeyboardEvent evt, BehaviorContext<CheckboxState> updateContext)
         {
             var info = evt.AsConsoleKeyInfo();
             var state = updateContext.State;

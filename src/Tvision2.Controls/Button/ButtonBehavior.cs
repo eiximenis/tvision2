@@ -12,36 +12,17 @@ namespace Tvision2.Controls.Button
         private readonly Action _onClickAction;
         public ButtonBehavior(Action onClickAction) => _onClickAction = onClickAction;
 
-        protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<ButtonState> updateContext)
-        {
-            var properties = updateContext.State;
-
-            if (properties.IsPressed)
-            {
-                evt.Handle();
-                _onClickAction?.Invoke();
-                properties.IsPressed = false;
-                return true;
-            }
-
-            return false;
-        }
-
-        protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<ButtonState> updateContext)
+        protected override bool OnKeyPress(TvConsoleKeyboardEvent evt, BehaviorContext<ButtonState> updateContext)
         {
             if (evt.AsConsoleKeyInfo().Key != ConsoleKey.Spacebar)
             {
                 return false;
             }
-            evt.Handle();
 
-            var properties = updateContext.State;
-            if (properties.IsPressed)
-            {
-                return false;
-            }
-            properties.IsPressed = true;
+            evt.Handle();
+            _onClickAction?.Invoke();
             return true;
+
         }
 
     }

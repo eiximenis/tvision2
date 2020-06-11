@@ -40,7 +40,7 @@ namespace Tvision2.Events.NCurses
 
         }
 
-        public NCursesConsoleKeyboardEvent(int wch, bool alt, bool isDown) : base(isDown, 1)
+        public NCursesConsoleKeyboardEvent(int wch, bool alt) 
         {
             
             _wch = wch;

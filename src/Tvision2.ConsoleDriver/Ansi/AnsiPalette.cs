@@ -25,7 +25,14 @@ namespace Tvision2.ConsoleDriver.Ansi
         {
             _options = options;
             InitSize(size);
-            ColorMode = _options.TrueColorEnabled ? ColorMode.Direct : ColorMode.Palettized;
+            if (_options.ForceBasicPalette)
+            {
+                ColorMode = ColorMode.Basic;
+            }
+            else
+            {
+                ColorMode = _options.TrueColorEnabled ? ColorMode.Direct : ColorMode.Palettized;
+            }
         }
 
         public void Init()

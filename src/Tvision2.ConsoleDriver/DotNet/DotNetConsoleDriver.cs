@@ -34,8 +34,7 @@ namespace Tvision2.ConsoleDriver
             {
                 var key = Console.ReadKey(intercept: true);
                 var events = new TvConsoleEvents();
-                events.Add(new DotNetConsoleKeyboardEvent(key, isDown: true));
-                events.Add(new DotNetConsoleKeyboardEvent(key, isDown: false));
+                events.Add(new DotNetConsoleKeyboardEvent(key));
                 return events;
             }
             else

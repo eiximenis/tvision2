@@ -8,7 +8,7 @@ namespace Tvision2.ConsoleDriver.Ansi
 
         private readonly ConsoleKeyInfo _keyinfo;
         
-        public AnsiConsoleKeyboardEvent(ConsoleKeyInfo info) : base(true, 1)
+        public AnsiConsoleKeyboardEvent(ConsoleKeyInfo info)
         {
             _keyinfo = info;
         }

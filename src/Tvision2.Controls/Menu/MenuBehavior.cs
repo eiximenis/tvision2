@@ -14,9 +14,8 @@ namespace Tvision2.Controls.Menu
             _owner = owner;
         }
 
-        protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<MenuState> updateContext) => false;
 
-        protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<MenuState> updateContext) => false;
+        protected override bool OnKeyPress(TvConsoleKeyboardEvent evt, BehaviorContext<MenuState> updateContext) => false;
 
     }
 }

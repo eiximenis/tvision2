@@ -22,12 +22,19 @@ namespace Tvision2.Controls.Menu
         {
             _options = options;
         }
-        protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<MenuState> updateContext)
+        protected override bool OnKeyPress(TvConsoleKeyboardEvent evt, BehaviorContext<MenuState> updateContext)
         {
 
             var info = evt.AsConsoleKeyInfo();
-
-            if (info.Key == _options.SelectKey)
+            
+            if (info.Key == ConsoleKey.Escape)
+            {
+                Owner.CloseCurrentMenu();
+                evt.Handle();
+                return true;
+            }
+            
+            else if (info.Key == _options.SelectKey)
             {
                 Owner.EnableMenu(updateContext.State);
                 evt.Handle();
@@ -69,19 +76,7 @@ namespace Tvision2.Controls.Menu
             return false;
 
         }
-
-        protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<MenuState> updateContext)
-        {
-            var info = evt.AsConsoleKeyInfo();
-            if (info.Key == ConsoleKey.Escape)
-            {
-                Owner.CloseCurrentMenu();
-                evt.Handle();
-                return true;
-            }
-
-            return false;
-        }
+        
 
     }
 }

@@ -26,8 +26,8 @@ namespace Tvision2.Statex.Behaviors
         public bool Update(BehaviorContext<TControlState> updateContext)
         {
             if (!updateContext.Events.HasKeyboardEvents || !_metadata.IsFocused) return false;
-            
-            var keyEvents = updateContext.Events.KeyboardEvents.Where(e => e.IsKeyDown);
+
+            var keyEvents = updateContext.Events.KeyboardEvents;
             bool updated = false;
 
             foreach (var evt in keyEvents)

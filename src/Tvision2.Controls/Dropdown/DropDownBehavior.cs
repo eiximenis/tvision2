@@ -13,9 +13,8 @@ namespace Tvision2.Controls.Dropdown
             _owner = owner;
         }
 
-        protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<DropdownState> updateContext) => true;
 
-        protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<DropdownState> updateContext)
+        protected override bool OnKeyPress(TvConsoleKeyboardEvent evt, BehaviorContext<DropdownState> updateContext)
         {
             var info = evt.AsConsoleKeyInfo();
             if (info.Key == ConsoleKey.Enter)

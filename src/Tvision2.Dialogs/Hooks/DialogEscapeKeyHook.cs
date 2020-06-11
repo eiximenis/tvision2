@@ -12,7 +12,7 @@ namespace Tvision2.Dialogs.Hooks
 
         public void ProcessEvents(ITvConsoleEvents events, HookContext context)
         {
-            var esc = events.AcquireFirstKeyboard(ke => ke.IsKeyDown && ke.AsConsoleKeyInfo().Key == ConsoleKey.Escape, autoHandle: true);
+            var esc = events.AcquireFirstKeyboard(ke => ke.AsConsoleKeyInfo().Key == ConsoleKey.Escape, autoHandle: true);
             if (esc != null && _dialogManager.DialogShown != null)
             {
                 _dialogManager.CloseDialog();

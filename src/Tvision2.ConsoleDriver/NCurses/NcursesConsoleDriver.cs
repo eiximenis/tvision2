@@ -65,8 +65,8 @@ namespace Tvision2.ConsoleDriver
                     }
                 }
 
-                events.Add(new NCursesConsoleKeyboardEvent(wch, alt: alt, isDown: true));
-                events.Add(new NCursesConsoleKeyboardEvent(wch, alt: alt, isDown: false));
+                events.Add(new NCursesConsoleKeyboardEvent(wch, alt: alt));
+                events.Add(new NCursesConsoleKeyboardEvent(wch, alt: alt));
 
                 return events;
             }
@@ -82,8 +82,8 @@ namespace Tvision2.ConsoleDriver
 
                 else
                 {
-                    events.Add(new NCursesConsoleKeyboardEvent(wch, alt: false, isDown: true));
-                    events.Add(new NCursesConsoleKeyboardEvent(wch, alt: false, isDown: false));
+                    events.Add(new NCursesConsoleKeyboardEvent(wch, alt: false));
+                    events.Add(new NCursesConsoleKeyboardEvent(wch, alt: false));
                     return events;
                 }
 

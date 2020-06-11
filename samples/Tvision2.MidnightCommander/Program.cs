@@ -45,7 +45,7 @@ namespace Tvision2.MidnightCommander
                                 else 
                                 {
                                     lo.UseAnsi()
-                                        //.EnableTrueColor(tc => tc.WithBuiltInSequences())
+                                        .EnableTrueColor(tc => tc.WithBuiltInSequences())
                                         .WithPalette(palette =>
                                         {
                                             // palette.LoadFromTerminalName("256-grey")
@@ -62,11 +62,9 @@ namespace Tvision2.MidnightCommander
                                 {
                                     lo.UseNCurses().WithPalette(p => p.UseBasicColorMode());
                                 }
-                                else  lo.UseNCurses().WithPalette(palette =>
+                                else  lo.UseAnsi().WithPalette(palette =>
                                 {
-                                    palette.LoadFromTerminalName()
-                                        .UpdateTerminal(ConsoleDriver.Common.UpdateTerminalEntries.AllButAnsi4bit);
-                                    palette.TranslateRgbColorsWith(new  InterpolationPaletteTranslator());
+                                    palette.UseBasicColorMode();
                                 });
                             }
                         })

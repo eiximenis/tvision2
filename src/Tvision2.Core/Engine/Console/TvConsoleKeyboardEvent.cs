@@ -3,16 +3,11 @@ namespace Tvision2.Events
 {
     public abstract class TvConsoleKeyboardEvent
     {
-        public bool IsKeyDown { get; }
 
-        public int RepeatCount { get; }
-        
         public bool IsHandled { get; private set; }
 
-        protected TvConsoleKeyboardEvent(bool isKeyDown, int repeatCount)
+        protected TvConsoleKeyboardEvent()
         {
-            IsKeyDown = isKeyDown;
-            RepeatCount = repeatCount;
             IsHandled = false;
         }
 

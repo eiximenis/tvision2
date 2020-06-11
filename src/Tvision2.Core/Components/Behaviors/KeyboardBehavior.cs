@@ -15,22 +15,13 @@ namespace Tvision2.Core.Components.Behaviors
             var updated = false;
 
             foreach (var evt in events)
-            {
-                if (evt.IsKeyDown)
-                {
-                    updated = OnKeyDown(evt, updateContext) || updated;
-                }
-                else
-                {
-                    updated = OnKeyUp(evt, updateContext) || updated;
-                }
-
+            { 
+                updated = OnKeyPress(evt, updateContext) || updated;
             }
 
             return updated;
         }
 
-        protected abstract bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<T> updateContext);
-        protected abstract bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<T> updateContext);
+        protected abstract bool OnKeyPress(TvConsoleKeyboardEvent evt, BehaviorContext<T> updateContext);
     }
 }

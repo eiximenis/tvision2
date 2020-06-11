@@ -15,8 +15,7 @@ namespace Tvision2.Controls.List
             _itemClickedAction = itemClickedAction;
         }
 
-        protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<ListState<T>> updateContext) => true;
-        protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<ListState<T>> updateContext)
+        protected override bool OnKeyPress(TvConsoleKeyboardEvent evt, BehaviorContext<ListState<T>> updateContext)
         {
             var info = evt.AsConsoleKeyInfo();
             if (info.Key == ConsoleKey.DownArrow && updateContext.State.CanScrollDown)

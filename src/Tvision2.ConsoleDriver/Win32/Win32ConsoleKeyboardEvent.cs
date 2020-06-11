@@ -9,7 +9,7 @@ namespace Tvision2.Events.Win32
     {
         private readonly KEY_EVENT_RECORD _record;
 
-        public Win32ConsoleKeyboardEvent(KEY_EVENT_RECORD record) : base(record.bKeyDown, record.wRepeatCount)
+        public Win32ConsoleKeyboardEvent(KEY_EVENT_RECORD record)
         {
             _record = record;
         }

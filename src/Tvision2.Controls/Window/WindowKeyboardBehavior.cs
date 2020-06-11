@@ -17,8 +17,7 @@ namespace Tvision2.Controls.Window
             _moving = false;
         }
 
-        protected override bool OnKeyUp(TvConsoleKeyboardEvent evt, BehaviorContext<WindowState> updateContext) => true;
-        protected override bool OnKeyDown(TvConsoleKeyboardEvent evt, BehaviorContext<WindowState> updateContext)
+        protected override bool OnKeyPress(TvConsoleKeyboardEvent evt, BehaviorContext<WindowState> updateContext)
         {
             var keyInfo = evt.AsConsoleKeyInfo();
             if (keyInfo.Modifiers == ConsoleModifiers.Control && keyInfo.Key == ConsoleKey.Spacebar)

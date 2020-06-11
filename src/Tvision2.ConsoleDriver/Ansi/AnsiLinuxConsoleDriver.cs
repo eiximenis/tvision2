@@ -101,11 +101,11 @@ namespace Tvision2.ConsoleDriver.Ansi
             }
             
             var events = new TvConsoleEvents();
+            Debug.WriteLine($"RE --> {data} '{(char)data}'");
 
             if (data == ESC)
             {
                 var sequenceStarted = false;
-                Debug.WriteLine($"RE --> {data} '{(char)data}'");
                 _secuenceReader.Start();
                 var nextkey = Libc.read();
                 while (nextkey != -1)
@@ -168,11 +168,13 @@ namespace Tvision2.ConsoleDriver.Ansi
            
             if (isVisible)
             {
-                Console.Write(AnsiEscapeSequences.DECTCEM_VISIBLE);
+                Console.Out.Write(AnsiEscapeSequences.DECTCEM_VISIBLE);
+                Console.Out.Flush();
             }
             else
             {
-                Console.Write(AnsiEscapeSequences.DECTCEM_HIDDEN);
+                Console.Out.Write(AnsiEscapeSequences.DECTCEM_HIDDEN);
+                Console.Out.Flush();
             }
         }
 
