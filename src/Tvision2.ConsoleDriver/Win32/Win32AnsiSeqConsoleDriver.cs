@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Runtime.InteropServices;
 using System.Text;
 using Tvision2.ConsoleDriver.Ansi;
@@ -81,8 +82,14 @@ namespace Tvision2.ConsoleDriver
 
             if (numEvents > 0)
             {
-                var buffer = new INPUT_RECORD[numEvents];
-                ConsoleNative.ReadConsoleInput(_hstdin, buffer, (uint)buffer.Length, out var eventsRead);
+                Span<INPUT_RECORD> buffer = stackalloc INPUT_RECORD[(int)numEvents];
+                unsafe
+                {
+                    fixed (INPUT_RECORD* pBuf = &MemoryMarshal.GetReference(buffer))
+                    {
+                        ConsoleNative.ReadConsoleInput(_hstdin,  (IntPtr)pBuf, (uint)buffer.Length, out var eventsRead);
+                    }
+                }
                 return new TvConsoleEvents().Add(buffer);
             }
             else
