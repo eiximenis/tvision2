@@ -644,8 +644,9 @@ namespace Tvision2.ConsoleDriver.Win32
 
     internal static class ConsoleNative
     {
+
         [DllImport("kernel32.dll", EntryPoint = "ReadConsoleInputW", CharSet = CharSet.Unicode)]
-        public static extern unsafe bool ReadConsoleInput(IntPtr hConsoleInput, IntPtr lpBuffer, uint nLength, out uint lpNumberOfEventsRead);
+        public static extern unsafe bool ReadConsoleInput(IntPtr hConsoleInput, ref byte lpBuffer, uint nLength, out uint lpNumberOfEventsRead);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool GetNumberOfConsoleInputEvents(

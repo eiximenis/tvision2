@@ -83,13 +83,8 @@ namespace Tvision2.ConsoleDriver
             if (numEvents > 0)
             {
                 Span<INPUT_RECORD> buffer = stackalloc INPUT_RECORD[(int)numEvents];
-                unsafe
-                {
-                    fixed (INPUT_RECORD* pBuf = &MemoryMarshal.GetReference(buffer))
-                    {
-                        ConsoleNative.ReadConsoleInput(_hstdin,  (IntPtr)pBuf, (uint)buffer.Length, out var eventsRead);
-                    }
-                }
+                var byteBuf = MemoryMarshal.AsBytes(buffer);
+                ConsoleNative.ReadConsoleInput(_hstdin, ref MemoryMarshal.GetReference(byteBuf), numEvents, out var eventsRead);
                 return new TvConsoleEvents().Add(buffer);
             }
             else
