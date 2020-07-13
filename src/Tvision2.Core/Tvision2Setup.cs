@@ -1,26 +1,29 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Runtime.CompilerServices;
 using Tvision2.Core.Hooks;
 
 namespace Tvision2.Core
 {
-    public class Tvision2Setup 
+    public abstract class Tvision2Setup
     {
         private readonly Tvision2Options _options;
         public ITvision2Options Options => _options;
 
-        public IHostBuilder Builder { get; }
-        public Tvision2Setup(IHostBuilder builder)
+        
+        public Tvision2Setup()
         {
-            Builder = builder ?? throw new ArgumentNullException(nameof(builder));
             _options = new Tvision2Options();
         }
+
+        public abstract void ConfigureServices(Action<IServiceCollection> configureDelegate);
 
         public Tvision2Setup AddHook<THook>()
             where THook : class, IEventHook
         {
-            Builder.ConfigureServices(sc =>
+
+            ConfigureServices(sc =>
             {
                 sc.AddTransient<THook>();
             });
@@ -31,4 +34,5 @@ namespace Tvision2.Core
         }
 
     }
+
 }

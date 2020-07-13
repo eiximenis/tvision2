@@ -13,7 +13,7 @@ namespace Tvision2.DependencyInjection
     {
         public static Tvision2Setup AddTvDialogs(this Tvision2Setup setup)
         {
-            setup.Builder.ConfigureServices(sc =>
+            setup.ConfigureServices(sc =>
             {
                 sc.AddScoped<IDialogManager, DialogManager>();
             });

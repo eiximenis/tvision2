@@ -65,6 +65,7 @@ namespace Tvision2.Core.Render
 
         public void Flush(IConsoleDriver consoleDriver)
         {
+            Debug.WriteLine("+++ Begin VC Flush");
             consoleDriver.SetCursorVisibility(isVisible: false);
             var idx = 0;
             for (var row = 0; row < Height; row++)
@@ -85,6 +86,7 @@ namespace Tvision2.Core.Render
                         }
                         else
                         {
+                            Debug.WriteLine($"Flushing VC with char { cc.Character}");
                             consoleDriver.WriteCharactersAt(spanCol, row, span, cc.Character, cc.Attributes);
                             span = 1;
                             spanning = false;

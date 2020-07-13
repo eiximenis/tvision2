@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.Hosting
     {
         public static IHostBuilder UseTvision2(this IHostBuilder builder, Action<Tvision2Setup> optionsSetup = null)
         {
-            var setup = new Tvision2Setup(builder);
+            var setup = new Tvision2SetupForConsoleApp(builder);
             builder.Properties.Add(Tvision2Options.PropertyKey, setup.Options);
             optionsSetup?.Invoke(setup);
             builder.ConfigureServices(sc =>
@@ -32,7 +32,7 @@ namespace Microsoft.Extensions.Hosting
 
         public static Tvision2Setup AddTvision2Startup<TStartup>(this Tvision2Setup tv2setup) where TStartup : class, ITvisionAppStartup
         {
-            tv2setup.Builder.ConfigureServices(sc =>
+            tv2setup.ConfigureServices(sc =>
             {
                 sc.AddTransient<ITvisionAppStartup, TStartup>();
             });

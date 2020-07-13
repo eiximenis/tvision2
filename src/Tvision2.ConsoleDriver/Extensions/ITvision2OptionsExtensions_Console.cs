@@ -29,7 +29,7 @@ namespace Tvision2.Core
 
 
             tv2.Options.UseConsoleDriver(driver);
-            tv2.Builder.ConfigureServices((hc, sc) =>
+            tv2.ConfigureServices( sc =>
             {
                 sc.AddSingleton<IConsoleDriver>(driver);
                 sc.AddSingleton<IColorManager>(driver.ColorManager);
@@ -50,7 +50,7 @@ namespace Tvision2.Core
             var colorManager = new NcursesColorManager(options.PaletteOptions);
             var driver = new NcursesConsoleDriver(options, colorManager);
             tv2.Options.UseConsoleDriver(driver);
-            tv2.Builder.ConfigureServices((hc, sc) =>
+            tv2.ConfigureServices(sc  =>
             {
                 sc.AddSingleton<IConsoleDriver>(driver);
                 sc.AddSingleton<IColorManager>(colorManager);
@@ -65,7 +65,7 @@ namespace Tvision2.Core
             var colorManager = new DotNetColorManager();
             var driver = new DotNetConsoleDriver(options, colorManager);
             tv2.Options.UseConsoleDriver(driver);
-            tv2.Builder.ConfigureServices((hc, sc) =>
+            tv2.ConfigureServices(sc  =>
             {
                 sc.AddSingleton<IConsoleDriver>(driver);
                 sc.AddSingleton<IColorManager>(colorManager);
@@ -78,7 +78,7 @@ namespace Tvision2.Core
             var colorManager = new AnsiColorManager(options.PaletteOptions);
             var driver = new AnsiLinuxConsoleDriver(options, colorManager);
             tv2.Options.UseConsoleDriver(driver);
-            tv2.Builder.ConfigureServices((hc, sc) =>
+            tv2.ConfigureServices(sc =>
             {
                 sc.AddSingleton<IConsoleDriver>(driver);
                 sc.AddSingleton<IColorManager>(colorManager);

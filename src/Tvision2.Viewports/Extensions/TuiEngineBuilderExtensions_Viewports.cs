@@ -14,7 +14,7 @@ namespace Tvision2.Core.Engine
 
             setup.AddHook<WindowResizedHook>();
 
-            setup.Builder.ConfigureServices(sc =>
+            setup.ConfigureServices(sc =>
             {
                 sc.AddTransient<IViewportFactory, ViewportFactory>();
                 sc.AddTransient<IDynamicViewportFactory, DynamicViewportFactory>();

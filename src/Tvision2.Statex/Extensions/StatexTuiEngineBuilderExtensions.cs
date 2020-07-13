@@ -12,7 +12,7 @@ namespace Tvision2.DependencyInjection
         {
             var manager = new TvStateManager();
             configAction?.Invoke(manager);
-            setup.Builder.ConfigureServices(sc =>
+            setup.ConfigureServices(sc =>
             {
                 sc.AddSingleton<TvStateManager>(manager);
                 sc.AddSingleton<ITvStoreSelector>(manager);

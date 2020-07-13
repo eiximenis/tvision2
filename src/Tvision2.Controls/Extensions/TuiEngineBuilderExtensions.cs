@@ -15,7 +15,7 @@ namespace Tvision2.DependencyInjection
         public static Tvision2Setup AddTvControls(this Tvision2Setup setup, Action<ISkinManagerBuilder> skinOptions = null)
         {
 
-            setup.Builder.ConfigureServices(sc =>
+            setup.ConfigureServices(sc =>
             {
                 sc.AddScoped<IControlsTree, ControlsTree>();
                 sc.AddScoped<ISkinManager, SkinManager>();

@@ -40,6 +40,9 @@ namespace Tvision2.Core.Engine
 
         public async Task Start(CancellationToken cancellationToken)
         {
+
+            Debug.WriteLine("++++ STARTING OPERATION +++++");
+
             ConsoleDriver.Init();
             var bounds = ConsoleDriver.ConsoleBounds;
             _currentConsole = new VirtualConsole(bounds.Rows, bounds.Cols);
@@ -87,7 +90,12 @@ namespace Tvision2.Core.Engine
                 {
                     await Task.Delay(TimeSpan.FromTicks(TIME_PER_FRAME - ellapsed), cancellationToken);
                 }
-                _watcher.Reset();
+                else
+                {
+                    await Task.Delay(10);
+                }
+                
+                // _watcher.Reset();
             }
         }
 
@@ -101,7 +109,6 @@ namespace Tvision2.Core.Engine
         private bool FlushToRealConsole()
         {
             var flushed = false;
-
             if (_currentConsole.IsDirty)
             {
                 flushed = true;

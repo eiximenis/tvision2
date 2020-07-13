@@ -11,7 +11,7 @@ namespace Tvision2.Core.Engine
     {
         public static Tvision2Setup UseLayoutManager(this Tvision2Setup setup)
         {
-            setup.Builder.ConfigureServices((hc, sc) =>
+            setup.ConfigureServices(sc =>
             {
  
                 sc.AddScoped<ILayoutManager, LayoutManager>();
