@@ -1,6 +1,9 @@
-﻿using BlazorTerm;
+﻿
+using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Security.Principal;
 using System.Text;
@@ -13,10 +16,9 @@ namespace Tvision2.ConsoleDriver.BlazorTerm
 {
     public class BtermConsoleDriver : IConsoleDriver
     {
-
-        private BTermComponent _terminal;
-
         private readonly BlazorTermColorManager _colorManager;
+        private IJSRuntime _jsRuntime;
+        private bool _bound;
 
         public IColorManager ColorManager => _colorManager;
 
@@ -25,17 +27,11 @@ namespace Tvision2.ConsoleDriver.BlazorTerm
         public BtermConsoleDriver()
         {
             _colorManager = new BlazorTermColorManager();
+            _bound = false;
         }
 
-        public void BoundToBterm(BTermComponent terminal)
-        {
-            _terminal = terminal;
-        }
 
-        public void Init()
-        {
-            
-        }
+        public void Init() { }
 
         public void ProcessWindowEvent(TvWindowEvent windowEvent)
         {
@@ -48,29 +44,45 @@ namespace Tvision2.ConsoleDriver.BlazorTerm
 
         public void SetCursorAt(int x, int y)
         {
-            
+            var seq = XtermSequences.CursorAt(x, y);
+            ((IJSInProcessRuntime)_jsRuntime).InvokeVoid("tv$.write", seq);
+        }
+
+        public void BindToTerminal(string id, IJSRuntime jsRuntime)
+        {
+            _jsRuntime = jsRuntime;
+            ((IJSInProcessRuntime)_jsRuntime).InvokeVoid("tv$.bindTerminal", id);
+            _bound = true;
+
         }
 
         public void SetCursorVisibility(bool isVisible)
         {
-            
+
         }
 
         public void WriteCharacterAt(int x, int y, char character, CharacterAttribute attribute)
         {
-            Debug.WriteLine($"WriteCharacterAt {character} @ ({x},{y})");
-            _terminal?.WriteAt(x, y, character);
+            var seq = XtermSequences.CursorAt(x, y);
+            seq = seq + _colorManager.GetAttributeSequence(attribute);
+            seq = seq + character.ToString();
+            ((IJSInProcessRuntime)_jsRuntime).InvokeVoid("tv$.write", seq);
+
         }
 
         public void WriteCharactersAt(int x, int y, int count, char character, CharacterAttribute attribute)
         {
-            Debug.WriteLine($"WriteCharactersAt {character} x {count} @ ({x},{y})");
-            if (_terminal != null)
+            for (int rep = 0; rep < count; rep++)
             {
-                for (int rep = 0; rep < count; rep++)
-                {
-                    _terminal.WriteAt(x + rep, y, character);
-                }
+                WriteCharacterAt(x + rep, y, character, attribute);
+            }
+        }
+
+        static class XtermSequences
+        {
+            internal static string CursorAt(int x, int y)
+            {
+                return string.Format("\x1b[{0};{1}H", y, x);
             }
         }
     }

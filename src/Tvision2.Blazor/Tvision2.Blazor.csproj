@@ -14,8 +14,14 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\BlazorTerm\BlazorTerm.csproj" />
     <ProjectReference Include="..\Tvision2.Core\Tvision2.Core.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Update="wwwroot\ts\tvision-blazor.ts">
+      <SubType>Code</SubType>
+    </Content>
   </ItemGroup>
 
 </Project>

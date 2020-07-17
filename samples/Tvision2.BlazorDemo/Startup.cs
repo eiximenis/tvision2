@@ -17,7 +17,16 @@ namespace Tvision2.BlazorDemo
             var helloWorld = new TvComponent<string>("Hello Blazor! :)");
             helloWorld.AddDrawer(ctx =>
             {
-                ctx.DrawStringAt(ctx.State.PadRight(ctx.Viewport.Bounds.Cols), TvPoint.Zero, new TvColorPair(TvColor.Blue, TvColor.Yellow));
+                var rnd = new Random();
+                var red = (byte)rnd.Next(0, 256);
+                var blue = (byte)rnd.Next(0, 256);
+                var green = (byte)rnd.Next(0, 256);
+                var red2 = (byte)rnd.Next(0, 256);
+                var blue2 = (byte)rnd.Next(0, 256);
+                var green2 = (byte)rnd.Next(0, 256);
+
+
+                ctx.DrawStringAt(ctx.State.PadRight(ctx.Viewport.Bounds.Cols), TvPoint.Zero, new TvColorPair(TvColor.FromRGB(red, green, blue), TvColor.FromRGB(red2, green2, blue2)));
             });
 
             helloWorld.AddStateBehavior(s => "Hello Blazor! :) " + Guid.NewGuid().ToString());

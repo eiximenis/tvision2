@@ -4,13 +4,11 @@
     "noEmitOnError": true,
     "removeComments": false,
     "sourceMap": true,
-    "target": "ES2020",
-    "outDir": "wwwroot/js",
-    "module": "ES2020"
+    "target": "es5",
+    "lib": [ "esnext", "dom" ]
   },
-  "include": [ "wwwroot/ts/**/*" ],
   "exclude": [
     "node_modules",
-    "wwwroot/js"
+    "wwwroot"
   ]
 }

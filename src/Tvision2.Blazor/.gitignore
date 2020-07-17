@@ -1,0 +1,3 @@
+﻿wwwroot/dist/**/*.js
+wwwroot/dist/**/*.js.map
+wwwroot/.cache/

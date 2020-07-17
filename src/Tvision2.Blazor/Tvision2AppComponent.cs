@@ -1,5 +1,5 @@
-﻿using BlazorTerm;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,31 +20,31 @@ namespace Tvision2.Blazor
         [Inject]
         public Tvision2Options TvOptions { get; set; }
 
+        protected string Id { get; }
 
-        protected BTermComponent terminal;
+        [Inject]
+        protected IJSRuntime JsRuntime { get; set; }
+
+        protected ElementReference _terminal;
+
 
         protected override bool ShouldRender() => false;
 
 
         public Tvision2AppComponent()
         {
-            
+            Id = $"tv_{Guid.NewGuid()}";
         }
 
         protected override Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                terminal.CanvasReady += OnTerminalReady;
+                ((BtermConsoleDriver)TuiEngine.ServiceProvider.GetService(typeof(IConsoleDriver))).BindToTerminal(Id, JsRuntime);
+                TuiEngine.Start(CancellationToken.None);
             }
 
             return Task.CompletedTask;
-        }
-
-        private void OnTerminalReady(object sender, EventArgs e)
-        {
-            ((BtermConsoleDriver)TuiEngine.ServiceProvider.GetService(typeof(IConsoleDriver))).BoundToBterm(terminal);
-            TuiEngine.Start(CancellationToken.None);
         }
 
     }

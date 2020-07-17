@@ -13,8 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-
-    <ProjectReference Include="..\..\src\BlazorTerm\BlazorTerm.csproj" />
     <ProjectReference Include="..\..\src\Tvision2.Blazor\Tvision2.Blazor.csproj" />
   </ItemGroup>
 
