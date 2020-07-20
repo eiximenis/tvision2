@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using Microsoft.Extensions.FileSystemGlobbing.Internal.PathSegments;
-using Tvision2.ConsoleDriver.Win32;
 using Unix.Terminal;
 
 namespace Tvision2.Events.NCurses

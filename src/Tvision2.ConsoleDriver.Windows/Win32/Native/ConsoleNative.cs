@@ -646,7 +646,7 @@ namespace Tvision2.ConsoleDriver.Win32
     {
 
         [DllImport("kernel32.dll", EntryPoint = "ReadConsoleInputW", CharSet = CharSet.Unicode)]
-        public static extern unsafe bool ReadConsoleInput(IntPtr hConsoleInput, ref byte lpBuffer, uint nLength, out uint lpNumberOfEventsRead);
+        public static extern bool ReadConsoleInput(IntPtr hConsoleInput, ref byte lpBuffer, uint nLength, out uint lpNumberOfEventsRead);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool GetNumberOfConsoleInputEvents(

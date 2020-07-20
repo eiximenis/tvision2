@@ -14,6 +14,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Tvision2.Blazor\Tvision2.Blazor.csproj" />
+    <ProjectReference Include="..\..\src\Tvision2.Controls.Styles.Mc\Tvision2.Controls.Styles.Mc.csproj" />
+    <ProjectReference Include="..\..\src\Tvision2.Controls\Tvision2.Controls.csproj" />
+    <ProjectReference Include="..\..\src\Tvision2.Debug\Tvision2.Debug.csproj" />
+    <ProjectReference Include="..\..\src\Tvision2.Dialogs\Tvision2.Dialogs.csproj" />
+    <ProjectReference Include="..\..\src\Tvision2.Layouts\Tvision2.Layouts.csproj" />
+    <ProjectReference Include="..\..\src\Tvision2.Viewports\Tvision2.Viewports.csproj" />    
   </ItemGroup>
 
 </Project>

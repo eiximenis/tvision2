@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace Tvision2.Events
 {
@@ -30,6 +31,14 @@ namespace Tvision2.Events
         {
             _keyboardEvents = new List<TvConsoleKeyboardEvent>();
             _mouseEvents = new List<TvConsoleMouseEvent>();
+            WindowEvent = null;
+
+        }
+
+        public void Clear()
+        {
+            _keyboardEvents.Clear();
+            _mouseEvents.Clear();
             WindowEvent = null;
         }
 

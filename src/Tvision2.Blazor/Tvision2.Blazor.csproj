@@ -14,6 +14,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\Tvision2.ConsoleDriver\Tvision2.ConsoleDriver.csproj" />
     <ProjectReference Include="..\Tvision2.Core\Tvision2.Core.csproj" />
   </ItemGroup>
 
@@ -22,6 +23,11 @@
     <Content Update="wwwroot\ts\tvision-blazor.ts">
       <SubType>Code</SubType>
     </Content>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="wwwroot\dist\" />
   </ItemGroup>
 
 </Project>

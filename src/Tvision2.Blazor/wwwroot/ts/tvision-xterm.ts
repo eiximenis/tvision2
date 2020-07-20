@@ -1,11 +1,7 @@
 ﻿import { Terminal } from 'xterm';
 
 const _terminal: Terminal = new Terminal();
-
-function bindTerminal(id: string): void {
-    _terminal.open(document.getElementById(id));
-}
-
+let _dotnetRef: DotnetRef | null = null;
 
 const TvisionXtermBridge = {
     write(data: string) {
@@ -14,6 +10,12 @@ const TvisionXtermBridge = {
 }
 
 
+function bindTerminal(id: string, dotnetRef: any): void {
+    _terminal.open(document.getElementById(id));
+    _dotnetRef = dotnetRef;
+
+    _terminal.onKey(key => _dotnetRef.invokeMethodAsync('OnKeyDown', key.key));
+}
 
 export { TvisionXtermBridge, bindTerminal }
 

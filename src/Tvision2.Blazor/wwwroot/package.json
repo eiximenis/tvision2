@@ -4,8 +4,8 @@
   "description": "Tvision blazor adapter (using xterm.js)",
   "main": "dist/tvision-blazor.js",
   "scripts": {
-    "dev": "parcel tvision-blazor.ts",
-    "build": "parcel build tvision-blazor.ts"
+    "dev": "parcel ts/tvision-blazor.ts",
+    "build": "parcel build ts/tvision-blazor.ts"
   },
   "author": "Eduard Tomàs",
   "license": "ISC",

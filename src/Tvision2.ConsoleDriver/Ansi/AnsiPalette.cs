@@ -5,7 +5,6 @@ using System.Text;
 using Tvision2.ConsoleDriver.Ansi;
 using Tvision2.ConsoleDriver.ColorDefinitions;
 using Tvision2.ConsoleDriver.Common;
-using Tvision2.ConsoleDriver.Win32;
 using Tvision2.Core;
 using Tvision2.Core.Colors;
 

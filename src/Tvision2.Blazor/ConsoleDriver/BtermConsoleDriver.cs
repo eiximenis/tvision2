@@ -1,22 +1,25 @@
 ﻿
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Security.Principal;
 using System.Text;
+using Tvision2.ConsoleDriver.Ansi;
+using Tvision2.ConsoleDriver.Common;
 using Tvision2.Core.Colors;
 using Tvision2.Core.Render;
 using Tvision2.Engine.Console;
 using Tvision2.Events;
 
-namespace Tvision2.ConsoleDriver.BlazorTerm
+namespace Tvision2.ConsoleDriver.Blazor
 {
+
     public class BtermConsoleDriver : IConsoleDriver
     {
-        private readonly BlazorTermColorManager _colorManager;
+        private readonly AnsiColorManager _colorManager;
+        private readonly BtermEventReceiver _eventReceiver;
         private IJSRuntime _jsRuntime;
         private bool _bound;
 
@@ -24,9 +27,10 @@ namespace Tvision2.ConsoleDriver.BlazorTerm
 
         public TvBounds ConsoleBounds => new TvBounds().Grow(24, 80);
 
-        public BtermConsoleDriver()
+        public BtermConsoleDriver(AnsiColorManager colorManager)
         {
-            _colorManager = new BlazorTermColorManager();
+            _colorManager = colorManager;
+            _eventReceiver = new BtermEventReceiver();
             _bound = false;
         }
 
@@ -39,7 +43,9 @@ namespace Tvision2.ConsoleDriver.BlazorTerm
 
         public ITvConsoleEvents ReadEvents()
         {
-            return TvConsoleEvents.Empty;
+            var events = _eventReceiver.CurrentEvents;
+            _eventReceiver.DeleteAllEventsOnNextCycle();
+            return events;
         }
 
         public void SetCursorAt(int x, int y)
@@ -50,8 +56,10 @@ namespace Tvision2.ConsoleDriver.BlazorTerm
 
         public void BindToTerminal(string id, IJSRuntime jsRuntime)
         {
+
             _jsRuntime = jsRuntime;
-            ((IJSInProcessRuntime)_jsRuntime).InvokeVoid("tv$.bindTerminal", id);
+            var jsEventReceiverRef = DotNetObjectReference.Create(_eventReceiver);
+            ((IJSInProcessRuntime)_jsRuntime).InvokeVoid("tv$.bindTerminal", id, jsEventReceiverRef);
             _bound = true;
 
         }

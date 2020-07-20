@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Tvision2.ConsoleDriver.BlazorTerm;
+using Tvision2.ConsoleDriver.Blazor;
 using Tvision2.Core;
 using Tvision2.Core.Engine;
 using Tvision2.Engine.Console;

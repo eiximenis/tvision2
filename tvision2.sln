@@ -49,6 +49,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.BlazorDemo", "samp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Blazor", "src\Tvision2.Blazor\Tvision2.Blazor.csproj", "{C2E388C0-C288-4789-8075-4464F3624243}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.ConsoleDriver.Linux", "src\Tvision2.ConsoleDriver.Linux\Tvision2.ConsoleDriver.Linux.csproj", "{56A28A57-2E95-4592-A28C-842203DD4375}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.ConsoleDriver.Windows", "src\Tvision2.ConsoleDriver.Windows\Tvision2.ConsoleDriver.Windows.csproj", "{0391B3FC-8A2E-4419-A4D9-D153B0EFB0B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.ConsoleDriver.All", "src\Tvision2.ConsoleDriver.All\Tvision2.ConsoleDriver.All.csproj", "{3732387A-6184-4266-AFEF-8E39A2E80912}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +137,18 @@ Global
 		{C2E388C0-C288-4789-8075-4464F3624243}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2E388C0-C288-4789-8075-4464F3624243}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2E388C0-C288-4789-8075-4464F3624243}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56A28A57-2E95-4592-A28C-842203DD4375}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56A28A57-2E95-4592-A28C-842203DD4375}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56A28A57-2E95-4592-A28C-842203DD4375}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56A28A57-2E95-4592-A28C-842203DD4375}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0391B3FC-8A2E-4419-A4D9-D153B0EFB0B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0391B3FC-8A2E-4419-A4D9-D153B0EFB0B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0391B3FC-8A2E-4419-A4D9-D153B0EFB0B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0391B3FC-8A2E-4419-A4D9-D153B0EFB0B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3732387A-6184-4266-AFEF-8E39A2E80912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3732387A-6184-4266-AFEF-8E39A2E80912}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3732387A-6184-4266-AFEF-8E39A2E80912}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3732387A-6184-4266-AFEF-8E39A2E80912}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
