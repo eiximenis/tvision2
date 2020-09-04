@@ -37,9 +37,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.ControlsGallery", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.TrueColor", "samples\Tvision2.TrueColor\Tvision2.TrueColor.csproj", "{106DE7A7-33E0-444A-8339-7778602849CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.Controls.Tests", "tests\Tvision2.Controls.Tests\Tvision2.Controls.Tests.csproj", "{B844E0BC-4EBF-481C-A936-20D896DFEF73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Controls.Tests", "tests\Tvision2.Controls.Tests\Tvision2.Controls.Tests.csproj", "{B844E0BC-4EBF-481C-A936-20D896DFEF73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.Xunit", "src\Tvision2.Xunit\Tvision2.Xunit.csproj", "{9EA03DE6-69B5-4668-B4C0-6D42D8F3DE76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Xunit", "src\Tvision2.Xunit\Tvision2.Xunit.csproj", "{9EA03DE6-69B5-4668-B4C0-6D42D8F3DE76}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Blazor", "Blazor", "{7EA4F227-9CBC-4922-A525-452B86D8102B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Blazor", "Blazor", "{525F9278-A2D7-4A2B-A247-E1DBCDC20836}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.BlazorDemo", "samples\Tvision2.BlazorDemo\Tvision2.BlazorDemo.csproj", "{92056400-8AFF-4F4B-94E3-572FBDBD9A4D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.Blazor", "src\Tvision2.Blazor\Tvision2.Blazor.csproj", "{C2E388C0-C288-4789-8075-4464F3624243}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.ConsoleDriver.Linux", "src\Tvision2.ConsoleDriver.Linux\Tvision2.ConsoleDriver.Linux.csproj", "{56A28A57-2E95-4592-A28C-842203DD4375}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.ConsoleDriver.Windows", "src\Tvision2.ConsoleDriver.Windows\Tvision2.ConsoleDriver.Windows.csproj", "{0391B3FC-8A2E-4419-A4D9-D153B0EFB0B0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.ConsoleDriver.All", "src\Tvision2.ConsoleDriver.All\Tvision2.ConsoleDriver.All.csproj", "{3732387A-6184-4266-AFEF-8E39A2E80912}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.MidnightCommander.Common", "Samples\Tvision2.MidnightCommander.Common\Tvision2.MidnightCommander.Common.csproj", "{C2497931-35DE-4D1A-9C0D-07B57BBADA73}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.BlazorDemo.Server", "samples\Tvision2.BlazorDemo.Server\Tvision2.BlazorDemo.Server.csproj", "{E98AF730-18FC-42B6-A16D-A1F5C075BAF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +133,34 @@ Global
 		{9EA03DE6-69B5-4668-B4C0-6D42D8F3DE76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9EA03DE6-69B5-4668-B4C0-6D42D8F3DE76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9EA03DE6-69B5-4668-B4C0-6D42D8F3DE76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92056400-8AFF-4F4B-94E3-572FBDBD9A4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92056400-8AFF-4F4B-94E3-572FBDBD9A4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92056400-8AFF-4F4B-94E3-572FBDBD9A4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92056400-8AFF-4F4B-94E3-572FBDBD9A4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2E388C0-C288-4789-8075-4464F3624243}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2E388C0-C288-4789-8075-4464F3624243}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2E388C0-C288-4789-8075-4464F3624243}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2E388C0-C288-4789-8075-4464F3624243}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56A28A57-2E95-4592-A28C-842203DD4375}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56A28A57-2E95-4592-A28C-842203DD4375}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56A28A57-2E95-4592-A28C-842203DD4375}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56A28A57-2E95-4592-A28C-842203DD4375}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0391B3FC-8A2E-4419-A4D9-D153B0EFB0B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0391B3FC-8A2E-4419-A4D9-D153B0EFB0B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0391B3FC-8A2E-4419-A4D9-D153B0EFB0B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0391B3FC-8A2E-4419-A4D9-D153B0EFB0B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3732387A-6184-4266-AFEF-8E39A2E80912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3732387A-6184-4266-AFEF-8E39A2E80912}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3732387A-6184-4266-AFEF-8E39A2E80912}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3732387A-6184-4266-AFEF-8E39A2E80912}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2497931-35DE-4D1A-9C0D-07B57BBADA73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2497931-35DE-4D1A-9C0D-07B57BBADA73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2497931-35DE-4D1A-9C0D-07B57BBADA73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2497931-35DE-4D1A-9C0D-07B57BBADA73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E98AF730-18FC-42B6-A16D-A1F5C075BAF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E98AF730-18FC-42B6-A16D-A1F5C075BAF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E98AF730-18FC-42B6-A16D-A1F5C075BAF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E98AF730-18FC-42B6-A16D-A1F5C075BAF9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -126,6 +172,11 @@ Global
 		{25CEE6D9-0F67-4E31-BEC4-19069AE2C575} = {1FFF334B-6239-454C-8B05-991DC83C0D5A}
 		{106DE7A7-33E0-444A-8339-7778602849CC} = {1FFF334B-6239-454C-8B05-991DC83C0D5A}
 		{B844E0BC-4EBF-481C-A936-20D896DFEF73} = {31E0103B-CAA7-43A4-89C3-BEE4C29A6363}
+		{525F9278-A2D7-4A2B-A247-E1DBCDC20836} = {1FFF334B-6239-454C-8B05-991DC83C0D5A}
+		{92056400-8AFF-4F4B-94E3-572FBDBD9A4D} = {525F9278-A2D7-4A2B-A247-E1DBCDC20836}
+		{C2E388C0-C288-4789-8075-4464F3624243} = {7EA4F227-9CBC-4922-A525-452B86D8102B}
+		{C2497931-35DE-4D1A-9C0D-07B57BBADA73} = {1FFF334B-6239-454C-8B05-991DC83C0D5A}
+		{E98AF730-18FC-42B6-A16D-A1F5C075BAF9} = {525F9278-A2D7-4A2B-A247-E1DBCDC20836}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF2528A0-913B-4BF1-9136-4E8723945398}

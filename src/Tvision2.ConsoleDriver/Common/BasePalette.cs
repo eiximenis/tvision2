@@ -9,7 +9,7 @@ using Tvision2.Core.Colors;
 
 namespace Tvision2.ConsoleDriver.Common
 {
-    abstract  class BasePalette
+    public abstract  class BasePalette
     {
         private TvColor?[] _colors;
         private readonly Dictionary<string, int> _colorIndexes;

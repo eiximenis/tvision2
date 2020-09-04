@@ -44,7 +44,7 @@ namespace Tvision2.Core.Engine
             var bounds = ConsoleDriver.ConsoleBounds;
             _currentConsole = new VirtualConsole(bounds.Rows, bounds.Cols);
             var hookContext = new HookContext(this);
-            _eventHookManager = new EventHookManager(_options.HookTypes ?? Enumerable.Empty<Type>(), _options.AfterUpdates ?? Enumerable.Empty<Action>(), hookContext, ServiceProvider);
+            _eventHookManager = new EventHookManager(_options.HookTypes ?? Enumerable.Empty<Type>(), _options.AfterUpdates ?? Enumerable.Empty<Func<Task>>(), hookContext, ServiceProvider);
             foreach (var afterCreateTask in _options.AfterCreateInvokers)
             {
                 afterCreateTask.Invoke(this, ServiceProvider);
@@ -77,7 +77,7 @@ namespace Tvision2.Core.Engine
                 _eventHookManager.ProcessEvents(evts);
                 _ui.Update(evts);
                 PerformDrawOperations(force: false);
-                _eventHookManager.ProcessAfterUpdateActions();
+                await _eventHookManager.ProcessAfterUpdateActions();
                 // TODO: At this point we still have all events in evts, but:
                 //  1. No clue of which events had been processed (should annotate that)
                 //  2. Don't do anything with remaining events. A list of pluggable "remaining events handler" could be implemented
@@ -87,6 +87,10 @@ namespace Tvision2.Core.Engine
                 {
                     await Task.Delay(TimeSpan.FromTicks(TIME_PER_FRAME - ellapsed), cancellationToken);
                 }
+                else
+                {
+                    await Task.Delay(10);
+                }                
                 _watcher.Reset();
             }
         }
@@ -101,7 +105,6 @@ namespace Tvision2.Core.Engine
         private bool FlushToRealConsole()
         {
             var flushed = false;
-
             if (_currentConsole.IsDirty)
             {
                 flushed = true;

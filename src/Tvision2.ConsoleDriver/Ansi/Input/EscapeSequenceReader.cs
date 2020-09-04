@@ -128,6 +128,16 @@ namespace Tvision2.ConsoleDriver.Ansi.Input
             _count++;
         }
 
+        public void PushFullSequence(ReadOnlySpan<char> sequence)
+        {
+            Start();
+            for (var idx = 0; idx < sequence.Length; idx++)
+            {
+                _currentSequence[idx] = sequence[idx];
+            }
+            _count = sequence.Length;
+        }
+
         public void Start()
         {
             Array.Clear(_currentSequence, 0, _currentSequence.Length);

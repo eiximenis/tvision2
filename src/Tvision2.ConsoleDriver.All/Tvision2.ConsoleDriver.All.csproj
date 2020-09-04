@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(NetStandardTargetVersion)</TargetFramework>
+    <PackageLicenseUrl>$(PackageLicenseUrl)</PackageLicenseUrl>
+    <PackageProjectUrl>$(PackageProjectUrl)</PackageProjectUrl>
+    <Description>Tvision2 Console Drivers</Description>
+    <PackageTags>Tvision2;Controls;TUI;Console</PackageTags>
+    <Version>$(Tvision2ConsoleDriverVersion)</Version>
+    <RepositoryUrl>$(RepositoryUrl)</RepositoryUrl>
+    <Authors>$(Authors)</Authors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tvision2.ConsoleDriver\Tvision2.ConsoleDriver.csproj" />
+    <ProjectReference Include="..\Tvision2.Core\Tvision2.Core.csproj" />
+    <ProjectReference Include="..\Tvision2.ConsoleDriver.Linux\Tvision2.ConsoleDriver.Linux.csproj" />
+    <ProjectReference Include="..\Tvision2.ConsoleDriver.Windows\Tvision2.ConsoleDriver.Windows.csproj" />
+  </ItemGroup>
+</Project>
