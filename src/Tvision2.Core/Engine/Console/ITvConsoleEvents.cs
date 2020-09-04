@@ -16,5 +16,7 @@ namespace Tvision2.Events
         void Add(TvConsoleKeyboardEvent @event);
         void Add(TvConsoleMouseEvent @event);
         void SetWindowEvent(TvWindowEvent @event);
+
+        ITvConsoleEvents Clone();
     }
 }

@@ -3,7 +3,7 @@
 namespace Tvision2.MidnightCommander.Stores
 {
 
-    class GlobalStore : TvStore<GlobalState>
+    public class GlobalStore : TvStore<GlobalState>
     {
         public GlobalStore() : base(new GlobalState())
         {

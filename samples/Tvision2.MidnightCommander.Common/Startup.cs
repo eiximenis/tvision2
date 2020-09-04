@@ -145,18 +145,11 @@ namespace Tvision2.MidnightCommander
 
             //tui.UI.Add(window);
 
-            _dialogManager.ShowDialog(dialog);
+            //_dialogManager.ShowDialog(dialog);
+            _storeSelector.GetStore<FileList>("left").Dispatch(new TvAction<string>("FETCH_DIR", "C:\\"));
+            _storeSelector.GetStore<FileList>("right").Dispatch(new TvAction<string>("FETCH_DIR", "D:\\"));
 
-            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                _storeSelector.GetStore<FileList>("left").Dispatch(new TvAction<string>("FETCH_DIR", "/"));
-                _storeSelector.GetStore<FileList>("right").Dispatch(new TvAction<string>("FETCH_DIR", "/home/eiximenis"));
-            }
-            else
-            {
-                _storeSelector.GetStore<FileList>("left").Dispatch(new TvAction<string>("FETCH_DIR", "C:\\"));
-                _storeSelector.GetStore<FileList>("right").Dispatch(new TvAction<string>("FETCH_DIR", "D:\\"));
-            }
+
 
 
             return Task.CompletedTask;

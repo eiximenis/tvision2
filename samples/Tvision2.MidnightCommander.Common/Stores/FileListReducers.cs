@@ -1,12 +1,13 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Tvision2.Statex;
 
 namespace Tvision2.MidnightCommander.Stores
 {
-    internal static class FileListReducers
+    public static class FileListReducers
     {
-        public static FileList FileListActions(FileList state, TvAction action)
+        public static Task<FileList> FileListActions(FileList state, TvAction action)
         {
             if (action.Name == "FETCH_DIR")
             {
@@ -21,11 +22,11 @@ namespace Tvision2.MidnightCommander.Stores
                     FullName = f.FullName
                 });
 
-                return new FileList(folder.FullName, items.ToArray());
+                return Task.FromResult(new FileList(folder.FullName, items.ToArray()));
             }
             if (action.Name == "FETCH_INFO")
             {
-                return state;
+                return Task.FromResult(state);
             }
 
             if (action.Name == "FETCH_BACK")
@@ -41,19 +42,19 @@ namespace Tvision2.MidnightCommander.Stores
                     FullName = f.FullName
                 });
 
-                return new FileList(folder.FullName, items.ToArray());
+                return Task.FromResult(new FileList(folder.FullName, items.ToArray()));
             }
 
-            return state;
+            return Task.FromResult(state);
         }
-        public static GlobalState FileActions(GlobalState state, TvAction action)
+        public static Task<GlobalState> FileActions(GlobalState state, TvAction action)
         {
             if (action.Name == "BEGIN_RENAME")
             {
-                return state;
+                return Task.FromResult(state);
             }
 
-            return state;
+            return Task.FromResult(state);
         }
     }
 }

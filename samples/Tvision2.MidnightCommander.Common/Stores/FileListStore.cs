@@ -5,7 +5,7 @@ using Tvision2.Statex;
 
 namespace Tvision2.MidnightCommander.Stores
 {
-    class FileListStore : TvStore<FileList>
+    public class FileListStore : TvStore<FileList>
     {
         public FileListStore(FileList state) : base(state)
         {   

@@ -44,7 +44,6 @@ namespace Tvision2.ConsoleDriver.Blazor
         public ITvConsoleEvents ReadEvents()
         {
             var events = _eventReceiver.CurrentEvents;
-            _eventReceiver.DeleteAllEventsOnNextCycle();
             return events;
         }
 
@@ -90,7 +89,7 @@ namespace Tvision2.ConsoleDriver.Blazor
         {
             internal static string CursorAt(int x, int y)
             {
-                return string.Format("\x1b[{0};{1}H", y, x);
+                return string.Format("\x1b[{0};{1}H", y + 1, x + 1);
             }
         }
     }

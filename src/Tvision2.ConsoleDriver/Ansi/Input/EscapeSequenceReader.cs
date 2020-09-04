@@ -133,9 +133,9 @@ namespace Tvision2.ConsoleDriver.Ansi.Input
             Start();
             for (var idx = 0; idx < sequence.Length; idx++)
             {
-                _currentSequence[_count] = sequence[idx];
-                _count++;
+                _currentSequence[idx] = sequence[idx];
             }
+            _count = sequence.Length;
         }
 
         public void Start()

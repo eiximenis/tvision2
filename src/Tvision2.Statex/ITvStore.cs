@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Tvision2.Statex
 {
@@ -9,7 +10,7 @@ namespace Tvision2.Statex
         Type StateType { get; }
         void Dispatch(TvAction action);
 
-        void Cycle();
+        Task Cycle();
     }
 
     public interface ITvStore<TState> : ITvStore
@@ -21,6 +22,6 @@ namespace Tvision2.Statex
     public interface ITvConfigurableStore<TState> : ITvStore<TState>
         where TState : class
     {
-        ITvConfigurableStore<TState> AddReducer(Func<TState, TvAction, TState> reducer);
+        ITvConfigurableStore<TState> AddReducer(Func<TState, TvAction, Task<TState>> reducer);
     }
 }

@@ -1,25 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <RazorLangVersion>3.0</RazorLangVersion>
+    <TargetFramework>net5.0</TargetFramework>
+    <RuntimeIdentifier>browser-wasm</RuntimeIdentifier>
+    <UseBlazorWebAssembly>true</UseBlazorWebAssembly>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0-preview.6.20312.15" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="5.0.0-preview.6.20312.15" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.0-preview.6.20312.15" PrivateAssets="all" />
-    <PackageReference Include="System.Net.Http.Json" Version="5.0.0-preview.6.20305.6" />
+
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0-preview.8.20414.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.0-preview.8.20414.8" PrivateAssets="all" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0-preview.8.20407.11" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Tvision2.Blazor\Tvision2.Blazor.csproj" />
-    <ProjectReference Include="..\..\src\Tvision2.Controls.Styles.Mc\Tvision2.Controls.Styles.Mc.csproj" />
-    <ProjectReference Include="..\..\src\Tvision2.Controls\Tvision2.Controls.csproj" />
-    <ProjectReference Include="..\..\src\Tvision2.Debug\Tvision2.Debug.csproj" />
-    <ProjectReference Include="..\..\src\Tvision2.Dialogs\Tvision2.Dialogs.csproj" />
-    <ProjectReference Include="..\..\src\Tvision2.Layouts\Tvision2.Layouts.csproj" />
-    <ProjectReference Include="..\..\src\Tvision2.Viewports\Tvision2.Viewports.csproj" />    
+    <ProjectReference Include="..\Tvision2.MidnightCommander.Common\Tvision2.MidnightCommander.Common.csproj" />
   </ItemGroup>
 
 </Project>

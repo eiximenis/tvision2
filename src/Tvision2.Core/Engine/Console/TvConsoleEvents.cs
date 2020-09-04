@@ -23,6 +23,18 @@ namespace Tvision2.Events
         public TvWindowEvent WindowEvent { get; private set; }
 
         public bool HasEvents => _keyboardEvents.Any(e => !e.IsHandled) || _mouseEvents.Any() || WindowEvent != null;
+
+        public ITvConsoleEvents Clone()
+        {
+            var clone = new TvConsoleEvents();
+
+            clone._keyboardEvents.AddRange(_keyboardEvents);
+            clone._mouseEvents.AddRange(_mouseEvents);
+            clone.WindowEvent = WindowEvent;
+            return clone;
+  
+        }
+
         public bool HasKeyboardEvents => _keyboardEvents.Any(e => !e.IsHandled);
         public bool HasWindowEvent => WindowEvent != null;
 
@@ -33,13 +45,6 @@ namespace Tvision2.Events
             _mouseEvents = new List<TvConsoleMouseEvent>();
             WindowEvent = null;
 
-        }
-
-        public void Clear()
-        {
-            _keyboardEvents.Clear();
-            _mouseEvents.Clear();
-            WindowEvent = null;
         }
 
         public TvConsoleKeyboardEvent AcquireFirstKeyboard(Func<TvConsoleKeyboardEvent, bool> filter, bool autoHandle)
@@ -88,5 +93,7 @@ namespace Tvision2.Events
         {
             throw new InvalidOperationException("Unsupported on the TvConsoleEvents.Empty instance");
         }
+
+        public ITvConsoleEvents Clone() => TvConsoleEvents.Empty;
     }
 }

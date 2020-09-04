@@ -2,7 +2,7 @@
 
 namespace Tvision2.MidnightCommander.Stores
 {
-    internal class FileList
+    public class FileList
     {
 
         public string CurrentFolder { get; }

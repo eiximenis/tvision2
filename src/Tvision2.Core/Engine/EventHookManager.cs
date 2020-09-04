@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Tvision2.Core.Hooks;
 using Tvision2.Events;
 
@@ -10,9 +11,9 @@ namespace Tvision2.Core.Engine
     {
         private readonly List<(Guid Id, IEventHook hook)> _hooks;
         private readonly HookContext _context;
-        private readonly List<Action> _postUpdateActions;
+        private readonly List<Func<Task>> _postUpdateActions;
 
-        public EventHookManager(IEnumerable<Type> hookTypes, IEnumerable<Action> afterUpdates, HookContext context, IServiceProvider serviceProvider)
+        public EventHookManager(IEnumerable<Type> hookTypes, IEnumerable<Func<Task>> afterUpdates, HookContext context, IServiceProvider serviceProvider)
         {
             _hooks = new List<(Guid, IEventHook)>();
 
@@ -36,11 +37,11 @@ namespace Tvision2.Core.Engine
             }
         }
 
-        public void ProcessAfterUpdateActions()
+        public async Task ProcessAfterUpdateActions()
         {
             foreach (var action in _postUpdateActions)
             {
-                action();
+                await action();
             }
         }
 

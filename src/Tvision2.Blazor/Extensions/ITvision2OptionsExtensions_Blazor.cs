@@ -24,7 +24,6 @@ namespace Tvision2.Core
                 sc.AddSingleton<IConsoleDriver>(driver);
                 sc.AddSingleton<IColorManager>(colorManager);
             });
-
             return tv2;
         }
     }

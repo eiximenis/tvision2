@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Tvision2.Statex
 {
@@ -34,11 +35,11 @@ namespace Tvision2.Statex
 
         ITvStore ITvStoreSelector.GetStore(string name) => _stores[name];
 
-        internal void DoDispatchAllActions()
+        internal async Task DoDispatchAllActions()
         {
             foreach (var store in _stores.Values)
             {
-                store.Cycle();
+                await store.Cycle();
             }
 
         }

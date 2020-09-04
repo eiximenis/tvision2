@@ -5,7 +5,7 @@
   "main": "dist/tvision-blazor.js",
   "scripts": {
     "dev": "parcel ts/tvision-blazor.ts",
-    "build": "parcel build ts/tvision-blazor.ts"
+    "build": "parcel build ts/tvision-blazor.ts --public-url /_content/Tvision2.Blazor/dist/"
   },
   "author": "Eduard Tomàs",
   "license": "ISC",

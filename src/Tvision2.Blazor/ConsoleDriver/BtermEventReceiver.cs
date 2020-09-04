@@ -1,4 +1,5 @@
 ﻿using Microsoft.JSInterop;
+using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Diagnostics;
 using Tvision2.ConsoleDriver.Ansi;
@@ -13,38 +14,38 @@ namespace Tvision2.ConsoleDriver.Blazor
         private readonly EscapeSequenceReader _secuenceReader;
         private char ESC = '\u001b';
         private TvConsoleEvents _events;
-        private bool _needToClearEvents;
+        private readonly object _syncLock;
 
         public BtermEventReceiver()
         {
             _inputSequences = new XtermSequences();
             _secuenceReader = new EscapeSequenceReader();
             _secuenceReader.AddSequences(_inputSequences.GetSequences());
+            _syncLock = new object();
             _events = null;
-            _needToClearEvents = false;
         }
 
         public ITvConsoleEvents CurrentEvents
         {
             get
             {
-                if (_needToClearEvents)
-                {
-                    _events = null;
-                    _needToClearEvents = false;
-                }
-                return _events ?? TvConsoleEvents.Empty;
+                return _events?.Clone() ?? TvConsoleEvents.Empty;
             }
+        }
+
+        [JSInvokable]
+        public void OnResize(int cols, int rows)
+        {
+
+            _events = _events ?? new TvConsoleEvents();
+            _events.SetWindowEvent(new TvWindowEvent(cols, rows));
         }
 
         [JSInvokable]
         public void OnKeyDown(string key)
         {
-            if (_needToClearEvents || _events == null)
-            {
-                _events = new TvConsoleEvents();
-                _needToClearEvents = false;
-            }
+
+            _events = _events ?? new TvConsoleEvents();
 
             Debug.WriteLine("+++++ KEY " + key);
             if (key[0] == ESC)
@@ -55,38 +56,41 @@ namespace Tvision2.ConsoleDriver.Blazor
                 {
                     _events.Add(new AnsiConsoleKeyboardEvent(node.KeyInfo));
                 }
+                else
+                {
+                    Debug.WriteLine("++++++ SEQ IGNORED: " + key);
+                }
             }
             else
             {
                 var data = (int)key[0];
+                AnsiConsoleKeyboardEvent evt = null;
                 switch (data)
                 {
                     case 9:
-                        _events.Add(new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo('\t', ConsoleKey.Tab, false, false, false)));
+                        evt = new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo('\t', ConsoleKey.Tab, false, false, false));
                         break;
                     case 13:
-                        _events.Add(new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false)));
+                        evt = new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false));
                         break;
                     case 127:
-                        _events.Add(new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo((char)data, ConsoleKey.Backspace, false, false, false)));
+                        evt = new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo((char)data, ConsoleKey.Backspace, false, false, false));
                         break;
                     default:
                         if (data < 26)        // 1 is ^A ... 26 is ^Z. Note that 9 is also ^I and ^M is 13 both already handled before
                         {
-                            _events.Add(new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo((char)(data - 1 + 'A'), ConsoleKey.A + data - 1, false, false, true)));
+                            evt = new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo((char)(data - 1 + 'A'), ConsoleKey.A + data - 1, false, false, true));
                         }
                         else
                         {
-                            _events.Add(new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo((char)data, (ConsoleKey)data, false, false, false)));
+                            evt = new AnsiConsoleKeyboardEvent(new ConsoleKeyInfo((char)data, (ConsoleKey)data, false, false, false));
                         }
                         break;
                 }
+
+                _events.Add(evt);
             }
         }
 
-        public void DeleteAllEventsOnNextCycle()
-        {
-            _needToClearEvents = _events != null;
-        }
     }
 }

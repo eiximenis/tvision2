@@ -1,7 +1,7 @@
 ﻿import { Terminal } from 'xterm';
 
 const _terminal: Terminal = new Terminal();
-let _dotnetRef: DotnetRef | null = null;
+let _dotnetRef: any | null = null;
 
 const TvisionXtermBridge = {
     write(data: string) {
@@ -15,6 +15,7 @@ function bindTerminal(id: string, dotnetRef: any): void {
     _dotnetRef = dotnetRef;
 
     _terminal.onKey(key => _dotnetRef.invokeMethodAsync('OnKeyDown', key.key));
+    _terminal.onResize((cols, rows) => _dotnetRef.invokeMethodAsync('OnResize', cols, rows));
 }
 
 export { TvisionXtermBridge, bindTerminal }
