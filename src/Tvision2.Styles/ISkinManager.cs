@@ -1,6 +1,6 @@
 ﻿using Tvision2.Core.Render;
 
-namespace Tvision2.Controls.Styles
+namespace Tvision2.Styles
 {
     public interface ISkinManager
     {

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Tvision2.Controls.Backgrounds;
-using Tvision2.Controls.Styles;
 using Tvision2.Core.Colors;
-using Tvision2.Core.Render;
+using Tvision2.Styles;
+using Tvision2.Styles.Backgrounds;
 
 namespace Tvision2.Controls.List
 {

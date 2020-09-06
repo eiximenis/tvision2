@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using Tvision2.Controls.Behavior;
-using Tvision2.Controls.Styles;
 using Tvision2.Core.Components.Behaviors;
-using Tvision2.Core.Engine;
-using Tvision2.Core.Render;
 using Tvision2.Events;
 
 namespace Tvision2.Controls.Menu

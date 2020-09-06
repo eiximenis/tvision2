@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Tvision2.Core.Hooks;
 
@@ -11,10 +12,20 @@ namespace Tvision2.Core
         private readonly Tvision2Options _options;
         public ITvision2Options Options => _options;
 
+        private readonly List<string> _setupSteps;
+
         
         public Tvision2Setup()
         {
             _options = new Tvision2Options();
+            _setupSteps = new List<string>();
+        }
+
+        public bool HasSetupStep(string step) => _setupSteps.Contains(step);
+
+        public void AddSetupStep(string step)
+        {
+            if (!HasSetupStep(step)) _setupSteps.Add(step);
         }
 
         public abstract void ConfigureServices(Action<IServiceCollection> configureDelegate);

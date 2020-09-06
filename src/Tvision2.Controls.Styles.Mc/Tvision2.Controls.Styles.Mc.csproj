@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Tvision2.Controls\Tvision2.Controls.csproj" />
     <ProjectReference Include="..\Tvision2.Core\Tvision2.Core.csproj" />
+    <ProjectReference Include="..\Tvision2.Styles\Tvision2.Styles.csproj" />
   </ItemGroup>
 
 </Project>

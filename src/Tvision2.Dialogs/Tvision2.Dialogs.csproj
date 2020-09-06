@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Tvision2.Controls\Tvision2.Controls.csproj" />
     <ProjectReference Include="..\Tvision2.Layouts\Tvision2.Layouts.csproj" />
+    <ProjectReference Include="..\Tvision2.Styles\Tvision2.Styles.csproj" />
   </ItemGroup>
 
 </Project>

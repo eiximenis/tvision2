@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using Tvision2.Core.Colors;
 
-namespace Tvision2.Controls.Styles
+namespace Tvision2.Styles
 {
     class StyleEntryBuilder : IStyleEntryBuilder
     {

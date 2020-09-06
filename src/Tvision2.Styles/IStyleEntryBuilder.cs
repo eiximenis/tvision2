@@ -1,9 +1,8 @@
 ﻿using System;
-using Tvision2.Controls.Backgrounds;
 using Tvision2.Core;
 using Tvision2.Core.Colors;
 
-namespace Tvision2.Controls.Styles
+namespace Tvision2.Styles
 {
 
     public interface IStyleBuilder

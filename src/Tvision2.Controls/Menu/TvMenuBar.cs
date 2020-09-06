@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using Tvision2.Controls.Styles;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Controls.Extensions;
-using Tvision2.Core.Components;
 using System.Linq;
 
 namespace Tvision2.Controls.Menu

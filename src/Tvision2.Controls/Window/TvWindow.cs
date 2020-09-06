@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Tvision2.Controls.Drawers;
-using Tvision2.Controls.Styles;
 using Tvision2.Core.Components;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Controls.Extensions;
-using System.Reflection;
 
 namespace Tvision2.Controls.Window
 {

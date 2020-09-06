@@ -5,11 +5,11 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Tvision2.Controls.Behavior;
 using Tvision2.Controls.Drawers;
-using Tvision2.Controls.Styles;
 using Tvision2.Core.Components;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
+using Tvision2.Styles;
 
 namespace Tvision2.Controls
 {

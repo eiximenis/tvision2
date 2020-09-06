@@ -6,7 +6,6 @@ using Tvision2.Controls.ActivityIndicator;
 using Tvision2.Controls.Label;
 using Tvision2.Controls.List;
 using Tvision2.Controls.Menu;
-using Tvision2.Controls.Styles;
 using Tvision2.Controls.Textbox;
 using Tvision2.Core;
 using Tvision2.Core.Components;
@@ -19,6 +18,7 @@ using Tvision2.Layouts.Stack;
 using Tvision2.MidnightCommander.Stores;
 using Tvision2.Statex;
 using Tvision2.Statex.Controls;
+using Tvision2.Styles;
 
 namespace Tvision2.MidnightCommander
 {

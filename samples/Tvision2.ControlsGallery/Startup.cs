@@ -10,6 +10,7 @@ using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Dialogs;
 using Tvision2.Layouts;
+using Tvision2.Styles;
 
 namespace Tvision2.ControlsGallery
 {

@@ -1,9 +1,9 @@
 using System;
-using Tvision2.Controls.Backgrounds;
 using Tvision2.Core.Colors;
 using Tvision2.Core.Render;
+using Tvision2.Styles.Backgrounds;
 
-namespace Tvision2.Controls.Styles
+namespace Tvision2.Styles
 {
     public class StyleEntry
     {

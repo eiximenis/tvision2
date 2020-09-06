@@ -4,7 +4,7 @@ using System.Text;
 using Tvision2.Core.Colors;
 using Tvision2.Core.Render;
 
-namespace Tvision2.Controls.Backgrounds
+namespace Tvision2.Styles.Backgrounds
 {
     public class SolidColorBackgroundProvider : IBackgroundProvider
     {

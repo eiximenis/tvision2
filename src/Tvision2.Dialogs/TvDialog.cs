@@ -1,12 +1,12 @@
 ﻿using System;
 using Tvision2.Controls;
 using Tvision2.Controls.Drawers;
-using Tvision2.Controls.Styles;
 using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Controls.Extensions;
 using System.Collections.Generic;
+using Tvision2.Styles;
 
 namespace Tvision2.Dialogs
 {

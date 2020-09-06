@@ -1,6 +1,4 @@
 ﻿using System;
-using Tvision2.Controls.Styles;
-using Tvision2.Core.Render;
 
 namespace Tvision2.Controls.Label
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Tvision2.Core.Colors;
 
-namespace Tvision2.Controls.Styles
+namespace Tvision2.Styles
 {
     public class SkinBuilder : ISkinBuilder
     {

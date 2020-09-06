@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Tvision2.Controls;
-using Tvision2.Controls.Styles;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
+using Tvision2.Styles;
 
 namespace Tvision2.Dialogs
 {

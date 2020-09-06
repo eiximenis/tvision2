@@ -1,6 +1,7 @@
-﻿using Tvision2.Controls.Backgrounds;
-using Tvision2.Core;
+﻿using Tvision2.Core;
 using Tvision2.Core.Colors;
+using Tvision2.Styles;
+using Tvision2.Styles.Backgrounds;
 
 namespace Tvision2.Controls.Styles
 {

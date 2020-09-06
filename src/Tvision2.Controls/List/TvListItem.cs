@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Tvision2.Controls.Styles;
-using Tvision2.Core.Colors;
+using Tvision2.Styles;
 
 namespace Tvision2.Controls.List
 {

@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Tvision2.Controls.Button;
-using Tvision2.Controls.Styles;
 using Tvision2.Core.Render;
+using Tvision2.Styles;
 
 namespace Tvision2.Dialogs
 {
