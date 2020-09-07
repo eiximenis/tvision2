@@ -2,6 +2,7 @@
 using System;
 using Tvision2.Core;
 using Tvision2.Core.Colors;
+using Tvision2.Core.Engine;
 using Tvision2.Styles;
 
 namespace Tvision2.DependencyInjection
@@ -12,6 +13,7 @@ namespace Tvision2.DependencyInjection
         public static Tvision2Setup AddStyles(this Tvision2Setup setup, Action<ISkinManagerBuilder> skinOptions = null)
         {
             setup.ConfigureServices(sc => sc.AddScoped<ISkinManager, SkinManager>());
+            setup.ConfigureServices(sc => sc.AddScoped<StyledRenderContextAdatper>());
             setup.AddSetupStep(stylesSetupStep);
 
             setup.Options.AfterCreateInvoke((engine, sp) =>
@@ -26,6 +28,9 @@ namespace Tvision2.DependencyInjection
                 {
                     FillDefaultSkinManager(skinManager, colorManager);
                 }
+
+                var styledAdapter = sp.GetRequiredService<StyledRenderContextAdatper>();
+                styledAdapter.AttachTo(engine.UI as ComponentTree);
             });
 
             return setup;

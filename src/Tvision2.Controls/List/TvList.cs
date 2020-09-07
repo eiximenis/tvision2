@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Tvision2.Controls.Drawers;
 using Tvision2.Core;
 using Tvision2.Core.Components;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Render;
-using Tvision2.Controls.Extensions;
-using System.Diagnostics;
+using Tvision2.Styles.Extensions;
 
 namespace Tvision2.Controls.List
 {
@@ -63,7 +61,7 @@ namespace Tvision2.Controls.List
 
         protected override void OnDraw(RenderContext<ListState<TItem>> context)
         {
-            var selectedAttr = Metadata.IsFocused ? CurrentStyle.AlternateFocused : CurrentStyle.Alternate;
+            var selectedAttr = Metadata.IsFocused ? CurrentStyle.AlternateActive : CurrentStyle.Alternate;
             var viewport = context.Viewport;
             var numitems = State.Count;
                 State.ItemsView.Adjust(viewport.Bounds.Rows - 2);

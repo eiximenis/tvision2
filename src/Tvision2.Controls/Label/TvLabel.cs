@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Tvision2.Controls.Behavior;
-using Tvision2.Core.Components;
 using Tvision2.Core.Render;
-using Tvision2.Controls.Extensions;
+using Tvision2.Styles.Extensions;
 
 namespace Tvision2.Controls.Label
 {
@@ -40,7 +36,7 @@ namespace Tvision2.Controls.Label
             var state = context.State;
             var currentcols = context.Viewport.Bounds.Cols;
             var focused = Metadata.IsFocused;
-            var pairIdx = focused ? CurrentStyle.Focused : CurrentStyle.Standard;
+            var pairIdx = focused ? CurrentStyle.Active : CurrentStyle.Standard;
             var value = state.Text.ToString() ?? "";
             context.Fill(pairIdx);
             context.DrawStringAt(value, TvPoint.Zero, pairIdx);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
-using Tvision2.Controls.Extensions;
+using Tvision2.Styles.Extensions;
 using System.Linq;
 
 namespace Tvision2.Controls.Menu
@@ -44,8 +44,8 @@ namespace Tvision2.Controls.Menu
             var coordx = 0;
             var optidx = 0;
 
-            var selectedItemPairIdx = Metadata.IsFocused ? CurrentStyle.Focused : CurrentStyle.Standard;
-            var selectedItemAlternatePairidx = Metadata.IsFocused ? CurrentStyle.AlternateFocused : CurrentStyle.Alternate;
+            var selectedItemPairIdx = Metadata.IsFocused ? CurrentStyle.Active : CurrentStyle.Standard;
+            var selectedItemAlternatePairidx = Metadata.IsFocused ? CurrentStyle.AlternateActive : CurrentStyle.Alternate;
 
             foreach (var option in State.Entries)
             {

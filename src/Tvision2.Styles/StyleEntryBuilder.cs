@@ -27,9 +27,9 @@ namespace Tvision2.Styles
         public Style Build()
         {
             _style.Standard = _standard;
-            _style.Focused = _focused ?? _standard;
+            _style.Active = _focused ?? _standard;
             _style.Alternate = _alternate ?? _standard;
-            _style.AlternateFocused = _alternateFocused ?? _standard;
+            _style.AlternateActive = _alternateFocused ?? _standard;
             foreach (var custom in _customDefinitions)
             {
                 _style.SetupCustomValue(custom.Key, custom.Value);
@@ -69,7 +69,7 @@ namespace Tvision2.Styles
             return this;
         }
 
-        public IStyleEntryBuilder DesiredCustom(string name, Action<StyleDefintionOptions> optionsAction)
+        public IStyleEntryBuilder Desired(string name, Action<StyleDefintionOptions> optionsAction)
         {
             var def = BuildDefinition(optionsAction);
             _customDefinitions.Add(name, def);

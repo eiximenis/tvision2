@@ -13,7 +13,7 @@ namespace Tvision2.Styles
 
         private TvColor? _fixedBackground;
 
-
+        public bool IsBackgroundFixed { get => _fixedBackground.HasValue; }
 
         public StyleEntry(TvColor foreground, IBackgroundProvider background, CharacterAttributeModifiers modifiers)
         {

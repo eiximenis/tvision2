@@ -26,8 +26,8 @@ namespace Tvision2.Styles
             _currentSkin = skins.ContainsKey(string.Empty) ? string.Empty : skins.Keys.First();
         }
 
+        public ISkin GetDefaultSkin() => _skins["Default"];
         public ISkin GetSkin(string name) => _skins[name];
-
         public ISkin CurrentSkin => _skins[_currentSkin];
     }
 

@@ -18,7 +18,7 @@ namespace Tvision2.Styles
         IStyleEntryBuilder DesiredFocused(Action<StyleDefintionOptions> optionsAction);
         IStyleEntryBuilder DesiredAlternate(Action<StyleDefintionOptions> optionsAction);
         IStyleEntryBuilder DesiredAlternateFocused(Action<StyleDefintionOptions> optionsAction);
-        IStyleEntryBuilder DesiredCustom(string name, Action<StyleDefintionOptions> optionsAction);
+        IStyleEntryBuilder Desired(string name, Action<StyleDefintionOptions> optionsAction);
 
     }
 

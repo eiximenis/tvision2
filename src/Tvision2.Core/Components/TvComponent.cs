@@ -143,11 +143,11 @@ namespace Tvision2.Core.Components
 
         protected internal abstract void Update(UpdateContext ctx);
 
-        protected abstract void DoDraw(VirtualConsole console, ComponentTreeNode parent);
+        protected abstract void DoDraw(VirtualConsole console, ComponentTreeNode node);
 
-        protected internal void Draw(VirtualConsole console, ComponentTreeNode parent)
+        protected internal void Draw(VirtualConsole console, ComponentTreeNode node)
         {
-            DoDraw(console, parent);
+            DoDraw(console, node);
             NeedToRedraw = RedrawNeededAction.None;
         }
 
@@ -303,11 +303,11 @@ namespace Tvision2.Core.Components
         }
 
 
-        protected override void DoDraw(VirtualConsole console, ComponentTreeNode parent)
+        protected override void DoDraw(VirtualConsole console, ComponentTreeNode node)
         {
             foreach (var vpnk in _viewports)
             {
-                var context = new RenderContext<T>(vpnk.Value, console,  parent, NeedToRedraw, State);
+                var context = new RenderContext<T>(vpnk.Value, console,  node, NeedToRedraw, State);
                 var adaptativeDrawers = GetAdaptativeDrawersForViewport(vpnk.Key);
                 var viewportDrawed = false;
                 foreach (var drawer in adaptativeDrawers)

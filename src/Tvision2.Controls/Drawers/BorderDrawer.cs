@@ -1,7 +1,7 @@
 ﻿using Tvision2.Core.Components.Draw;
 using Tvision2.Core.Render;
-using Tvision2.Controls.Extensions;
 using Tvision2.Styles;
+using Tvision2.Styles.Extensions;
 
 namespace Tvision2.Controls.Drawers
 {
@@ -20,7 +20,7 @@ namespace Tvision2.Controls.Drawers
         {
 
             var viewport = context.Viewport;
-            var colorIdx = _metadata.IsFocused ? _style.Focused : _style.Standard;
+            var colorIdx = _metadata.IsFocused ? _style.Active : _style.Standard;
             var columns = viewport.Bounds.Cols;
             var rows = viewport.Bounds.Rows;
             if (rows > 2 && columns > 2)

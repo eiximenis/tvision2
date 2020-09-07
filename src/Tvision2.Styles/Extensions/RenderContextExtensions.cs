@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Tvision2.Core.Render;
-using Tvision2.Styles;
 
-namespace Tvision2.Controls.Extensions
+namespace Tvision2.Styles.Extensions
 {
     public static class RenderContextExtensions
     {
@@ -58,6 +55,22 @@ namespace Tvision2.Controls.Extensions
                     }
                 }
             }
+        }
+
+        public static StyledRenderContext<T> Styled<T>(this RenderContext<T> ctx, string style = null)
+        {
+            var adapter = ctx.GetTag<StyledRenderContextAdatper>();
+            if (adapter != null)
+            {
+                return new StyledRenderContext<T>(ctx, adapter, style ?? "Default");
+            }
+            throw new InvalidOperationException("Styles are not enabled.");
+        }
+
+        public static ISkinManager GetSkinManager(this RenderContext ctx)
+        {
+            var adapter = ctx.GetTag<StyledRenderContextAdatper>();
+            return adapter?.SkinManager ?? throw new InvalidOperationException("Styles are not enabled.");
         }
     }
 }

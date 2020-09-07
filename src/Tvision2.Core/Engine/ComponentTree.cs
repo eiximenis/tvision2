@@ -632,7 +632,7 @@ namespace Tvision2.Core.Engine
             {
                 if (cdata.Data.Status == TvComponentStatus.Running)
                 {
-                    cdata.Data.Component.Draw(console, cdata.Parent);
+                    cdata.Data.Component.Draw(console, cdata);
                 }
             }
             DoPendingRemovalsPhase2();

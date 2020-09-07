@@ -12,15 +12,17 @@ namespace Tvision2.Core.Render
         public IViewport Viewport { get; private set; }
         ICursorContext CursorContext => this;
         private readonly ComponentTreeNode _parent;
+        private readonly ComponentTreeNode _node;
 
         public RedrawNeededAction RedrawNeededAction { get; }
 
 
-        public RenderContext(IViewport viewport, VirtualConsole console, ComponentTreeNode parent, RedrawNeededAction redrawAction)
+        public RenderContext(IViewport viewport, VirtualConsole console, ComponentTreeNode node, RedrawNeededAction redrawAction)
         {
             _console = console;
             Viewport = viewport;
-            _parent = parent;
+            _parent = node.Parent;
+            _node = node;
             RedrawNeededAction = redrawAction;
         }
 
@@ -101,14 +103,16 @@ namespace Tvision2.Core.Render
 
         public bool ComponentHasParent => _parent != null;
 
+        public T GetTag<T>() => _node.GetTag<T>();
+
     }
 
     public class RenderContext<T> : RenderContext
     {       
         public T State { get; }
 
-        public RenderContext(IViewport viewport, VirtualConsole console, ComponentTreeNode parent, RedrawNeededAction redrawAction, T state) : 
-            base(viewport, console, parent, redrawAction)
+        public RenderContext(IViewport viewport, VirtualConsole console, ComponentTreeNode node, RedrawNeededAction redrawAction, T state) : 
+            base(viewport, console, node, redrawAction)
         {
             State = state;
         }

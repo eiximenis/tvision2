@@ -17,6 +17,8 @@ namespace Tvision2.Styles
             _colorManager = colorManager;
         }
 
+        public ISkinManagerBuilder AddDefaultSkin(Action<ISkinBuilder> builderOptions) => AddSkin("Default", builderOptions);
+
         public ISkinManagerBuilder AddSkin(string name, Action<ISkinBuilder> builderOptions = null)
         {
             var skinBuilder = new SkinBuilder();

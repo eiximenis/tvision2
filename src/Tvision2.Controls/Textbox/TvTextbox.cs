@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Render;
-using Tvision2.Controls.Extensions;
+using Tvision2.Styles.Extensions;
 
 namespace Tvision2.Controls.Textbox
 {
@@ -37,7 +37,7 @@ namespace Tvision2.Controls.Textbox
 
         protected override void OnDraw(RenderContext<TextboxState> context)
         {
-            var pairIdx = Metadata.IsFocused ? CurrentStyle.Focused : CurrentStyle.Standard;
+            var pairIdx = Metadata.IsFocused ? CurrentStyle.Active : CurrentStyle.Standard;
             context.DrawChars(' ', context.Viewport.Bounds.Cols, TvPoint.Zero, pairIdx);
             if (!string.IsNullOrEmpty(State.Text))
             {

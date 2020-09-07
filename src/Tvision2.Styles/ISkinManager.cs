@@ -4,6 +4,8 @@ namespace Tvision2.Styles
 {
     public interface ISkinManager
     {
+
+        ISkin GetDefaultSkin();
         ISkin GetSkin(string name);
         ISkin CurrentSkin { get; }
     }

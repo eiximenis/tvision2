@@ -16,18 +16,18 @@ namespace Tvision2.Styles
         }
 
         public StyleEntry Standard { get; internal set; }
-        public StyleEntry Focused { get; internal set; }
+        public StyleEntry Active { get; internal set; }
         public StyleEntry Alternate { get; internal set; }
-        public StyleEntry AlternateFocused { get; internal set; }
+        public StyleEntry AlternateActive { get; internal set; }
         public StyleEntry this[string name] => _customValues.TryGetValue(name, out StyleEntry result) ? result : Standard;
         internal void SetupCustomValue(string name, StyleEntry attr) => _customValues.Add(name, attr);
 
         public void Mix(Style styleDelta)
         {
             Standard?.Mix(styleDelta.Standard);
-            Focused.Mix(styleDelta.Focused);
+            Active.Mix(styleDelta.Active);
             Alternate.Mix(styleDelta.Alternate);
-            AlternateFocused.Mix(styleDelta.Focused);
+            AlternateActive.Mix(styleDelta.Active);
 
             
             foreach (var entry in styleDelta._customValues)

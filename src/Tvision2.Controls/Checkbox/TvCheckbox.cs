@@ -22,7 +22,7 @@ namespace Tvision2.Controls.Checkbox
 
         protected override void OnDraw(RenderContext<CheckboxState> context)
         {
-            var pairIdx = Metadata.IsFocused ? CurrentStyle.Focused : CurrentStyle.Standard;
+            var pairIdx = Metadata.IsFocused ? CurrentStyle.Active : CurrentStyle.Standard;
             var state = context.State;
             char value = ' ';
             switch (state.Checked)

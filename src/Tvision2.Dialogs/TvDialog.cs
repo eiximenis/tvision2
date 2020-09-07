@@ -4,9 +4,8 @@ using Tvision2.Controls.Drawers;
 using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
-using Tvision2.Controls.Extensions;
-using System.Collections.Generic;
 using Tvision2.Styles;
+using Tvision2.Styles.Extensions;
 
 namespace Tvision2.Dialogs
 {

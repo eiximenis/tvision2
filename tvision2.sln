@@ -61,6 +61,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.BlazorDemo.Server"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.Styles", "src\Tvision2.Styles\Tvision2.Styles.csproj", "{D55BDD1A-959E-4CE5-B07D-E3B7A427A716}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.StyledHelloWorld", "Samples\Tvision2.StyledHelloWorld\Tvision2.StyledHelloWorld.csproj", "{5536C302-45FF-452F-8671-D93CA936B734}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -167,6 +169,10 @@ Global
 		{D55BDD1A-959E-4CE5-B07D-E3B7A427A716}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D55BDD1A-959E-4CE5-B07D-E3B7A427A716}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D55BDD1A-959E-4CE5-B07D-E3B7A427A716}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5536C302-45FF-452F-8671-D93CA936B734}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5536C302-45FF-452F-8671-D93CA936B734}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5536C302-45FF-452F-8671-D93CA936B734}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5536C302-45FF-452F-8671-D93CA936B734}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -183,6 +189,7 @@ Global
 		{C2E388C0-C288-4789-8075-4464F3624243} = {7EA4F227-9CBC-4922-A525-452B86D8102B}
 		{C2497931-35DE-4D1A-9C0D-07B57BBADA73} = {1FFF334B-6239-454C-8B05-991DC83C0D5A}
 		{E98AF730-18FC-42B6-A16D-A1F5C075BAF9} = {525F9278-A2D7-4A2B-A247-E1DBCDC20836}
+		{5536C302-45FF-452F-8671-D93CA936B734} = {1FFF334B-6239-454C-8B05-991DC83C0D5A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF2528A0-913B-4BF1-9136-4E8723945398}
