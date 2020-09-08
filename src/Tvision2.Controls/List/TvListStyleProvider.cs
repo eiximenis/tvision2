@@ -26,6 +26,8 @@ namespace Tvision2.Controls.List
             _items = new List<ListStyleProviderItem>();
         }
 
+        public bool HasStyles { get => _style != null; }
+
         public IListStyleProvider<T> UseSkin(ISkin skinToUse)
         {
             _style = skinToUse["tvlist"];

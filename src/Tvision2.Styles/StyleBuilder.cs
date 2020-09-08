@@ -47,7 +47,7 @@ namespace Tvision2.Styles
 
             foreach (var builder in _builders.Where(b => b.predicate(cm)).Select(b => b.builder))
             {
-                var styleDelta = builder.Build();
+                var styleDelta = builder.BuildDelta();
                 style.Mix(styleDelta);
             }
             return style;

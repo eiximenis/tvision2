@@ -91,7 +91,7 @@ namespace Tvision2.Core.Components
             var key = _viewports.Any() ? Guid.NewGuid() : Guid.Empty;
             _viewports.Add(key, viewport);
             UpdateAdaptativeDrawersForUpdatedViewport(key, viewport);
-            _metadata?.OnViewportChanged(key, null, viewport);
+            _metadata?.RaiseViewportChanged(key, null, viewport);
             return key;
         }
         public IViewport Viewport => _viewports.TryGetValue(Guid.Empty, out IViewport value) ? value : null;
@@ -108,13 +108,13 @@ namespace Tvision2.Core.Components
             {
                 _viewports[guid] = newViewport;
                 UpdateAdaptativeDrawersForUpdatedViewport(guid, newViewport);
-                _metadata?.OnViewportChanged(guid, oldvp, newViewport);
+                _metadata?.RaiseViewportChanged(guid, oldvp, newViewport);
             }
             else if (addIfNotExists)
             {
                 _viewports.Add(guid, newViewport);
                 UpdateAdaptativeDrawersForUpdatedViewport(guid, newViewport);
-                _metadata?.OnViewportChanged(guid, null, newViewport);
+                _metadata?.RaiseViewportChanged(guid, null, newViewport);
             }
         }
 
@@ -135,6 +135,7 @@ namespace Tvision2.Core.Components
 
 
         public void AddDrawer(ITvDrawer drawer) => _defaultDrawers.Add(drawer);
+
 
         public void InsertDrawerAt(ITvDrawer drawer, int index)
         {
@@ -312,14 +313,16 @@ namespace Tvision2.Core.Components
                 var viewportDrawed = false;
                 foreach (var drawer in adaptativeDrawers)
                 {
-                    drawer?.Draw(context);
+                    var result = drawer.Draw(context);
+                    context.ApplyDrawResult(result);
                     viewportDrawed = true;
                 }
                 if (!viewportDrawed)
                 {
                     foreach (var drawer in _defaultDrawers)
                     {
-                        drawer?.Draw(context);
+                        var result = drawer.Draw(context);
+                        context.ApplyDrawResult(result);
                     }
                 }
             }

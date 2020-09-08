@@ -17,14 +17,16 @@ namespace Tvision2.Controls.Drawers
             _metadata = metadata;
         }
 
-        public void Draw(RenderContext<TState> context)
+        public DrawResult Draw(RenderContext<TState> context)
         {
             if (_metadata.IsFocused)
             {
                 _cursorAction(context, context.State);
             }
+
+            return DrawResult.Done;
         }
 
-        void ITvDrawer.Draw(RenderContext context) => Draw(context as RenderContext<TState>);
+        DrawResult ITvDrawer.Draw(RenderContext context) => Draw(context as RenderContext<TState>);
     }
 }

@@ -44,14 +44,25 @@ namespace Tvision2.Controls.List
             optionsAction?.Invoke(_options);
             _onItemClicked = new ActionChain<TItem>();
             _styleProvider = new TvListStyleProvider<TItem>();
-            _styleProvider.UseSkin(parameters.Skin);
+            if (parameters.Skin != null)
+            {
+                _styleProvider.UseSkin(parameters.Skin);
+            }
             _itemsCache = new TvListItemCache<TItem>(State.Columns, _styleProvider);
             State.SetCache(_itemsCache);
         }
 
+        protected override void PerformAdditionalSkinConfiguration(Styles.ISkinManager skinManager)
+        {
+            if (!_styleProvider.HasStyles)
+            {
+                _styleProvider.UseSkin(skinManager.CurrentSkin);
+            }
+        }
+
         protected override void AddCustomElements(TvComponent<ListState<TItem>> component)
         {
-            component.AddDrawer(new BorderDrawer(CurrentStyle, Metadata));
+            component.WithDoubleBorder("tvlist");
         }
 
         protected override IEnumerable<ITvBehavior<ListState<TItem>>> GetEventedBehaviors()
@@ -64,22 +75,22 @@ namespace Tvision2.Controls.List
             var selectedAttr = Metadata.IsFocused ? CurrentStyle.AlternateActive : CurrentStyle.Alternate;
             var viewport = context.Viewport;
             var numitems = State.Count;
-                State.ItemsView.Adjust(viewport.Bounds.Rows - 2);
-            for (var idx = 0; idx < viewport.Bounds.Rows - 2; idx++)
+            State.ItemsView.Adjust(viewport.Bounds.Rows);
+            for (var idx = 0; idx < viewport.Bounds.Rows; idx++)
             {
                 if (idx < State.ItemsView.NumItems)
                 {
                     var lenDrawn = 0;
                     var item = State.ItemsView[idx];
                     var selected = State.SelectedIndex == idx + State.ItemsView.From;
-                    var tvitem = _itemsCache.GetTvItemFor(item, idx + State.ItemsView.From, viewport.Bounds.Cols - 2 - State.ColumnsTotalFixedWidth);
+                    var tvitem = _itemsCache.GetTvItemFor(item, idx + State.ItemsView.From, viewport.Bounds.Cols - State.ColumnsTotalFixedWidth);
                     for (var column = 0; column < State.Columns.Length; column++)
                     {
                         var text = tvitem.Texts[column];
                         var attr = tvitem.Attributes[column];
                         if (selected)
                         {
-                            context.DrawStringAt(text, TvPoint.FromXY(1 + lenDrawn, idx + 1), selectedAttr);
+                            context.DrawStringAt(text, TvPoint.FromXY(lenDrawn, idx), selectedAttr);
                         }
                         else
                         {
@@ -87,21 +98,21 @@ namespace Tvision2.Controls.List
                             {
                                 attr = new Styles.StyleEntry(attr.Foreground, CurrentStyle.Standard.Background, attr.Attributes);
                             }
-                            context.DrawStringAt(text, TvPoint.FromXY(1 + lenDrawn, idx + 1), attr);
+                            context.DrawStringAt(text, TvPoint.FromXY(lenDrawn, idx), attr);
                         }
 
                         lenDrawn += text.Length;
                     }
-                    var remaining = viewport.Bounds.Cols - 2 - lenDrawn;
+                    var remaining = viewport.Bounds.Cols - lenDrawn;
                     if (remaining > 0)
                     {
-                        context.DrawChars(' ', remaining, TvPoint.FromXY(1 + lenDrawn, idx + 1), selected ? selectedAttr : CurrentStyle.Standard);
+                        context.DrawChars(' ', remaining, TvPoint.FromXY(lenDrawn, idx), selected ? selectedAttr : CurrentStyle.Standard);
                     }
                 }
                 else
                 {
                     var attr = CurrentStyle.Standard;
-                    context.DrawChars(' ', viewport.Bounds.Cols - 2, TvPoint.FromXY(1, idx + 1), attr);
+                    context.DrawChars(' ', viewport.Bounds.Cols, TvPoint.FromXY(0, idx), attr);
                 }
             }
         }

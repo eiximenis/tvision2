@@ -23,18 +23,19 @@ namespace Tvision2.StyledHelloWorld
             builder.UseTvision2(setup =>
             {
                 setup.UseDotNetConsoleDriver();
-                setup.AddStyles(sb => AddApplicationStyles(sb));
+                setup.AddStyles(AddApplicationStyles);
                 setup.Options.UseStartup((sp, tui) =>
                 {
                     engine = tui;
-                    helloWorld = new TvComponent<string>("Hello world");
+                    helloWorld = new TvComponent<string>("Hello world").WithDoubleBorder("text");
                     helloWorld.AddDrawer(ctx =>
                     {
                         ctx.Styled("text").DrawStringAt(ctx.State.PadRight(ctx.Viewport.Bounds.Cols), TvPoint.Zero);
+                        var alternateColors = ctx.GetSkinManager().CurrentSkin["text"].Alternate;
                     });
                     helloWorld.AddViewport(new Viewport(TvPoint.FromXY(10, 10), 1));
                     helloWorld.AddViewport(new Viewport(TvPoint.FromXY(10, 11), 5));
-                    helloWorld.AddViewport(new Viewport(TvPoint.FromXY(20, 13), 30));
+                    helloWorld.AddViewport(new Viewport(TvPoint.FromXY(20, 13), TvBounds.FromRowsAndCols(3, 30)));
 
                     tui.UI.Add(helloWorld);
                     return Task.CompletedTask;
@@ -47,7 +48,11 @@ namespace Tvision2.StyledHelloWorld
         {
             sb.AddDefaultSkin(skin =>  {
                 skin.AddBaseStyle(bs => bs.Default().DesiredStandard(sd => sd.UseBackground(TvColor.Red).UseForeground(TvColor.Black)));
-                skin.AddStyle("text", bs => bs.Default().DesiredStandard(sd => sd.UseBackground(TvColor.Blue).UseForeground(TvColor.Yellow)));
+                skin.AddStyle("text", bs => bs.Default()
+                    .DesiredStandard(sd => sd.UseBackground(TvColor.Blue).UseForeground(TvColor.Yellow))
+                    .DesiredAlternate(sd => sd.UseBackground(TvColor.Black).UseForeground(TvColor.White))
+                    .Desired("custom_name", sd => sd.UseBackground(TvColor.Yellow).UseForeground(TvColor.Black))
+                );
             });
         }
     }

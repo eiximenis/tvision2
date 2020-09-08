@@ -318,7 +318,7 @@ namespace Tvision2.Core.Engine
                     OnComponentRemoved(cmp, node);
                     if (node.HasParent)
                     {
-                        node.Parent.Data.OnChildRemoved(cmp, node);
+                        node.Parent.Data.RaiseChildUnmounted(cmp, node);
                     }
                 }
                 foreach (var node in subtree)
@@ -487,12 +487,17 @@ namespace Tvision2.Core.Engine
                 OnComponentAdded(addOptions.ComponentMetadata, nodeAdded);
                 if (nodeAdded.HasParent && addOptions.NotifyParentOnAdd)
                 {
-                    nodeAdded.Parent.Data.OnChildAdded(addOptions.ComponentMetadata, nodeAdded, addOptions);
+                    nodeAdded.Parent.Data.RaiseChildMounted(addOptions.ComponentMetadata, nodeAdded, addOptions);
                 }
                 addOptions.AfterAddAction?.Invoke(_engine);
                 nodeAdded.Data.Status = TvComponentStatus.Running;
             }
             OnTreeUpdated();
+
+            foreach (var optionsNodeAdded in addedNodesOptions)
+            {
+                optionsNodeAdded.Options.ComponentMetadata.RaiseTreeUpdatedByMount(this);
+            }
         }
 
         private void TryResolveCurrentPendingDependencies(TvComponent newComponentAdded)

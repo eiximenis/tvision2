@@ -8,7 +8,6 @@ namespace Tvision2.Styles
     public class SkinBuilder : ISkinBuilder
     {
         private readonly Dictionary<string, StyleBuilder> _stylesToBuild;
-        private const string DEFAULT_STYLE_NAME = "";
 
         public SkinBuilder()
         {
@@ -23,7 +22,7 @@ namespace Tvision2.Styles
             return skin;
         }
 
-        public ISkinBuilder AddBaseStyle(Action<IStyleBuilder> builderOptions) => AddStyle(DEFAULT_STYLE_NAME, builderOptions);
+        public ISkinBuilder AddBaseStyle(Action<IStyleBuilder> builderOptions) => AddStyle(Skin.DEFAULT_STYLE_NAME, builderOptions);
 
         public ISkinBuilder AddStyle(string name, Action<IStyleBuilder> builderOptions)
         {

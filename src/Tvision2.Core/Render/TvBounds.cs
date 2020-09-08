@@ -36,6 +36,8 @@ namespace Tvision2.Core.Render
         }
 
         public TvBounds Grow(int rowsToGrow, int colsToGrow) => new TvBounds(Rows + rowsToGrow, Cols + colsToGrow);
+
+        public TvBounds Reduce(TvBounds reduction) => new TvBounds(Rows - reduction.Rows, Cols - reduction.Cols);
         
         public override int GetHashCode()
         {

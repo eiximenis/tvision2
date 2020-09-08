@@ -10,6 +10,7 @@ using Tvision2.Core.Components.Behaviors;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Styles;
+using Tvision2.Styles.Extensions;
 
 namespace Tvision2.Controls
 {
@@ -19,7 +20,7 @@ namespace Tvision2.Controls
     {
         private readonly Lazy<TvControlMetadata> _metadata;
         public string ControlType { get; }
-        public IStyle CurrentStyle { get; }
+        public IStyle CurrentStyle { get; private set; }
         private TvComponent<TState> _component;
         public TvControlMetadata Metadata => _metadata.Value;
         public TState State { get; }
@@ -37,21 +38,22 @@ namespace Tvision2.Controls
 
             var initialState = creationParams.InitialState;
             var name = creationParams.Name;
+            var typename = GetType().Name.ToLowerInvariant();
+            var genericIdx = typename.IndexOf('`');
+            ControlType = genericIdx != -1 ? typename.Substring(0, genericIdx) : typename;
+            CurrentStyle = creationParams.Skin?.GetControlStyle(this);
             _component = new TvComponent<TState>(initialState, name ?? $"TvControl_<$>",
                 cfg =>
                 {
                     cfg.WhenComponentMounted(ctx => OnComponentMounted(ctx));
                     cfg.WhenComponentUnmounted(ctx => OnComponentUnmounted(ctx));
                     cfg.WhenComponentWillbeUnmounted(ctx => OnComponentWillbeUnmounted(ctx));
+                    cfg.WhenComponentTreeUpdatedByMount(ctx => OnComponentTreeUpdatedByMount(ctx));
                 });
 
             _metadata = new Lazy<TvControlMetadata>(() => new TvControlMetadata(this, creationParams, ConfigureMetadataOptions));
-            var typename = GetType().Name.ToLowerInvariant();
-            var genericIdx = typename.IndexOf('`');
-            ControlType = genericIdx != -1 ? typename.Substring(0, genericIdx) : typename;
-            CurrentStyle = creationParams.Skin.GetControlStyle(this);
-            State = initialState;
 
+            State = initialState;
 
             if (creationParams.AutoCreateViewport)
             {
@@ -65,6 +67,18 @@ namespace Tvision2.Controls
 
         }
 
+        private void OnComponentTreeUpdatedByMount(ComponentTreeUpdatedContext ctx)
+        {
+            if (CurrentStyle == null)
+            {
+                CurrentStyle = ctx.Component.GetStyle(ControlType);
+            }
+
+            PerformAdditionalSkinConfiguration(ctx.Component.GetSkinManager());
+        }
+
+
+        protected virtual void PerformAdditionalSkinConfiguration(ISkinManager skinManager) { }
         protected virtual void ConfigureMetadataOptions(TvControlMetadataOptions options) { }
 
         private Task<bool> OnComponentUnmounted(ComponentMoutingContext ctx)

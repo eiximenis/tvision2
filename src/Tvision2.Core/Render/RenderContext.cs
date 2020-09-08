@@ -1,6 +1,7 @@
 ﻿using System;
 using Tvision2.Core.Colors;
 using Tvision2.Core.Components;
+using Tvision2.Core.Components.Draw;
 using Tvision2.Core.Engine;
 
 namespace Tvision2.Core.Render
@@ -104,6 +105,14 @@ namespace Tvision2.Core.Render
         public bool ComponentHasParent => _parent != null;
 
         public T GetTag<T>() => _node.GetTag<T>();
+
+        internal void ApplyDrawResult(DrawResult result)
+        {
+            if (result != DrawResult.Done)
+            {
+                Viewport = new Viewport(Viewport.Position + result.Displacement, Viewport.Bounds.Reduce(result.BoundsAdjustement), Viewport.ZIndex, Viewport.Flow);
+            }
+        }
 
     }
 

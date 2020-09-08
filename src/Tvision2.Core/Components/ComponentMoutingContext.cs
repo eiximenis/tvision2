@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.FileProviders.Physical;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Tvision2.Core.Engine;
@@ -51,5 +52,16 @@ namespace Tvision2.Core.Components
             IsCancelled = false;
         }
 
+    }
+
+    public struct ComponentTreeUpdatedContext
+    {
+        public ComponentTree ComponentTree { get; }
+        public TvComponent Component { get; }
+        public ComponentTreeUpdatedContext(ComponentTree componentTree, TvComponent component)
+        {
+            ComponentTree = componentTree;
+            Component = component;
+        }
     }
 }

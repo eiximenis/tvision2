@@ -15,12 +15,16 @@ namespace Tvision2.Core.Components.Draw
             _drawFunc = drawFunc;
         }
 
-        public void Draw(RenderContext<T> context) => _drawFunc.Invoke(context);
-
-
-        void ITvDrawer.Draw(RenderContext context)
+        public DrawResult Draw(RenderContext<T> context)
         {
-            Draw(context as RenderContext<T>);
+            _drawFunc.Invoke(context);
+            return DrawResult.Done;
+        }
+
+
+        DrawResult ITvDrawer.Draw(RenderContext context)
+        {
+            return Draw(context as RenderContext<T>);
         }
     }
 
@@ -39,11 +43,15 @@ namespace Tvision2.Core.Components.Draw
             _drawFunc = drawFunc;
         }
 
-        public void Draw(RenderContext<T> context) => _drawFunc.Invoke(context, _options);
-
-        void ITvDrawer.Draw(RenderContext context)
+        public DrawResult Draw(RenderContext<T> context)
         {
-            Draw(context as RenderContext<T>);
+            _drawFunc.Invoke(context, _options);
+            return DrawResult.Done;
+        }
+
+        DrawResult ITvDrawer.Draw(RenderContext context)
+        {
+            return Draw(context as RenderContext<T>);
         }
     }
 }

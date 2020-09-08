@@ -49,5 +49,6 @@ namespace Tvision2.Core.Render
                 return containerViewport.InnerViewport(innerViewport.Position + displacement, innerViewport.Bounds);
             }
         }
+
     }
 }

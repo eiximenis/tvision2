@@ -24,10 +24,10 @@ namespace Tvision2.Styles
 
         public void Mix(Style styleDelta)
         {
-            Standard?.Mix(styleDelta.Standard);
+            Standard.Mix(styleDelta.Standard);
             Active.Mix(styleDelta.Active);
             Alternate.Mix(styleDelta.Alternate);
-            AlternateActive.Mix(styleDelta.Active);
+            AlternateActive.Mix(styleDelta.AlternateActive);
 
             
             foreach (var entry in styleDelta._customValues)

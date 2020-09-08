@@ -37,11 +37,9 @@ namespace Tvision2.ControlsGallery
                 state.AddValue(new DropDownValue("1", "One"));
                 state.AddValue(new DropDownValue("2", "Two"));
                 state.AddValue(new DropDownValue("3", "Three"));
-            })
-            .UseSkin(_skinManager.CurrentSkin).UseViewport(new Viewport(TvPoint.FromXY(10, 10), TvBounds.FromRowsAndCols(5,10), Layer.Standard)));
+            }).UseViewport(new Viewport(TvPoint.FromXY(10, 10), TvBounds.FromRowsAndCols(5,10), Layer.Standard)));
             var button = new TvButton(
-                TvButton.CreationParametersBuilder(s => s.Text = "Click Me!")
-                .UseSkin(_skinManager.CurrentSkin).UseViewport(new Viewport(TvPoint.FromXY(22, 10), 15)));
+                TvButton.CreationParametersBuilder(s => s.Text = "Click Me!").UseViewport(new Viewport(TvPoint.FromXY(22, 10), 15)));
 
             button.OnClick.Add(state =>
             {
@@ -59,7 +57,6 @@ namespace Tvision2.ControlsGallery
                 {
                     var label = new TvLabel(TvLabel
                         .CreationParametersBuilder(s => s.Text = "Hello " + comboState.SelectedValue)
-                        .UseSkin(_skinManager.CurrentSkin)
                         .UseViewport(new Viewport(TvPoint.Zero, 18)));
                     dlg.Add(label);
                 });

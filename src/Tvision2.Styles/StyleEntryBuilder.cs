@@ -7,38 +7,53 @@ using Tvision2.Core.Colors;
 
 namespace Tvision2.Styles
 {
-    class StyleEntryBuilder : IStyleEntryBuilder
+    class StyleEntryBuilder : IStyleEntryBuilder, IStyleAdditionalEntriesBuilder
     {
         public readonly Style _style;
 
         private readonly IDictionary<string, StyleEntry> _customDefinitions;
         private StyleEntry _standard;
-        private StyleEntry _focused;
+        private StyleEntry _active;
         private StyleEntry _alternate;
-        private StyleEntry _alternateFocused;
+        private StyleEntry _alternateActive;
 
         public StyleEntryBuilder()
         {
-            _style = new Style();
             _customDefinitions = new Dictionary<string, StyleEntry>();
         }
 
 
         public Style Build()
         {
-            _style.Standard = _standard;
-            _style.Active = _focused ?? _standard;
-            _style.Alternate = _alternate ?? _standard;
-            _style.AlternateActive = _alternateFocused ?? _standard;
+            var style = new Style();
+            style.Standard = _standard;
+            style.Active = _active ?? _standard;
+            style.Alternate = _alternate ?? _standard;
+            style.AlternateActive = _alternateActive ?? style.Active;
             foreach (var custom in _customDefinitions)
             {
-                _style.SetupCustomValue(custom.Key, custom.Value);
+                style.SetupCustomValue(custom.Key, custom.Value);
             }
 
-            return _style;
+            return style;
         }
 
-        public IStyleEntryBuilder DesiredStandard(Action<StyleDefintionOptions> optionsAction)
+        public Style BuildDelta()
+        {
+            var delta = new Style();
+            delta.Standard = _standard;
+            delta.Active = _active;
+            delta.Alternate = _alternate;
+            delta.AlternateActive = _alternateActive;
+            foreach (var custom in _customDefinitions)
+            {
+                delta.SetupCustomValue(custom.Key, custom.Value);
+            }
+
+            return delta;
+        }
+
+        public IStyleAdditionalEntriesBuilder DesiredStandard(Action<StyleDefintionOptions> optionsAction)
         {
             _standard = BuildDefinition(optionsAction);
             return this;
@@ -51,25 +66,25 @@ namespace Tvision2.Styles
             return new StyleEntry(options.ForeColor, options.Background, options.Modifiers);
         }
 
-        public IStyleEntryBuilder DesiredFocused(Action<StyleDefintionOptions> optionsAction)
+        public IStyleAdditionalEntriesBuilder DesiredFocused(Action<StyleDefintionOptions> optionsAction)
         {
-            _focused = BuildDefinition(optionsAction);
+            _active = BuildDefinition(optionsAction);
             return this;
         }
 
-        public IStyleEntryBuilder DesiredAlternate(Action<StyleDefintionOptions> optionsAction)
+        public IStyleAdditionalEntriesBuilder DesiredAlternate(Action<StyleDefintionOptions> optionsAction)
         {
             _alternate = BuildDefinition(optionsAction);
             return this;
         }
 
-        public IStyleEntryBuilder DesiredAlternateFocused(Action<StyleDefintionOptions> optionsAction)
+        public IStyleAdditionalEntriesBuilder DesiredAlternateFocused(Action<StyleDefintionOptions> optionsAction)
         {
-            _alternateFocused = BuildDefinition(optionsAction);
+            _alternateActive = BuildDefinition(optionsAction);
             return this;
         }
 
-        public IStyleEntryBuilder Desired(string name, Action<StyleDefintionOptions> optionsAction)
+        public IStyleAdditionalEntriesBuilder Desired(string name, Action<StyleDefintionOptions> optionsAction)
         {
             var def = BuildDefinition(optionsAction);
             _customDefinitions.Add(name, def);

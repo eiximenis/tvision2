@@ -44,10 +44,9 @@ namespace Tvision2.DependencyInjection
 
         private static void FillDefaultSkinManager(SkinManager sm, IColorManager cm)
         {
-            // TODO: Create a default skin manager.
-
+            // TODO: Create a default skin manager (single style black over white).
             var skinBuilder = new SkinManagerBuilder(cm);
-            skinBuilder.AddSkin(string.Empty);
+            skinBuilder.AddDefaultSkin(sb => sb.AddBaseStyle(s => s.Default().DesiredStandard(sd => sd.UseForeground(TvColor.White).UseBackground(TvColor.Black))));
             skinBuilder.Fill(sm);
         }
 

@@ -17,6 +17,10 @@
         {
         }
 
+        public Viewport(TvPoint point, TvBounds bounds) : this(point, bounds, Layer.Standard, FlowModel.None)
+        {
+        }
+
         public Viewport(TvPoint point, TvBounds bounds, Layer zindex, FlowModel flow = FlowModel.None)
         {
             Position = point;

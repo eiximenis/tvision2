@@ -16,9 +16,10 @@ namespace Tvision2.Debug
             _attribute = new CharacterAttribute(new TvColorPair(fore, back), CharacterAttributeModifiers.Normal);
         }
 
-        public void Draw(RenderContext context)
+        public DrawResult Draw(RenderContext context)
         {
             context.Fill(_attribute);
+            return DrawResult.Done;
         }
     }
 }

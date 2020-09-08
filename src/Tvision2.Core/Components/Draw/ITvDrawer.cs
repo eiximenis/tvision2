@@ -5,11 +5,11 @@ namespace Tvision2.Core.Components.Draw
 
     public interface ITvDrawer
     {
-        void Draw(RenderContext context);
+        DrawResult Draw(RenderContext context);
     }
 
     public interface ITvDrawer<T>  : ITvDrawer
     {
-        void Draw(RenderContext<T> context);
+        DrawResult Draw(RenderContext<T> context);
     }
 }
