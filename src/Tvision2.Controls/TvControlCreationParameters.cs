@@ -37,20 +37,35 @@ namespace Tvision2.Controls
 
     }
 
-    public class TvControlCreationParameters<TState> : TvControlCreationParameters
+    public class TvControlCreationParameters<TState, TOptions> : TvControlCreationParameters
         where TState : IDirtyObject
     {
 
         public TState InitialState { get; }
+        public TOptions Options { get;  }
 
-        public TvControlCreationParameters(ISkin skin, IViewport viewport, TState initialState, string name = null) : base(skin, viewport, name)
+        public TvControlCreationParameters(ISkin skin, IViewport viewport, TState initialState, TOptions options,  string name = null) : base(skin, viewport, name)
         {
             InitialState = initialState;
+            Options = options;
         }
 
-        public TvControlCreationParameters(ISkin skin, TvPoint position, TState initialState, string name = null) : base(skin, position, name)
+        public TvControlCreationParameters(ISkin skin, TvPoint position, TState initialState, TOptions options, string name = null) : base(skin, position, name)
         {
             InitialState = initialState;
+            Options = options;
         }
+
+    }
+
+    public class TvControlCreationParameters<TState> : TvControlCreationParameters<TState, EmptyControlOptions>
+    where TState : IDirtyObject
+    {
+        public TvControlCreationParameters(ISkin skin, IViewport viewport, TState initialState, string name = null)
+            : base(skin, viewport, initialState, new EmptyControlOptions(), name)
+        { }
+        public TvControlCreationParameters(ISkin skin, TvPoint position, TState initialState, string name = null)
+            : base(skin, position, initialState, new EmptyControlOptions(), name)
+        { }
     }
 }

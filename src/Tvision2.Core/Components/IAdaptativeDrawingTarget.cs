@@ -15,5 +15,6 @@ namespace Tvision2.Core.Components
     {
         IAdaptativeDrawingTarget<T> AddDrawer(ITvDrawer<T> drawer);
         IAdaptativeDrawingTarget<T> AddDrawer(Action<RenderContext<T>> drawer);
+        IAdaptativeDrawingTarget<T> AddDrawer<U>(ITvDrawer<U> drawer, Func<T, U> stateConverter);
     }
 }

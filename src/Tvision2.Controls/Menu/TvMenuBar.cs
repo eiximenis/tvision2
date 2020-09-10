@@ -8,6 +8,9 @@ using System.Linq;
 
 namespace Tvision2.Controls.Menu
 {
+
+    public class TvMenuBarParamsBuilder : TvControlCreationBuilder<TvMenuBar, MenuState> { }
+
     public class TvMenuBar : TvControl<MenuState>
     {
 
@@ -17,7 +20,7 @@ namespace Tvision2.Controls.Menu
         private ITuiEngine _engine;
         private TvMenu _currentMenu;
 
-        public TvMenuBar(ITvControlCreationParametersBuilder<MenuState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : this(parameters.Build(), optionsAction) { }
+        public static ITvControlOptionsBuilder<TvMenuBar, MenuState> UseParams() => new TvMenuBarParamsBuilder();
 
 
         public TvMenuBar(TvControlCreationParameters<MenuState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : base(parameters)
@@ -29,10 +32,7 @@ namespace Tvision2.Controls.Menu
             _engine = null;
             _currentMenu = null;
         }
-        public static ITvControlCreationParametersBuilder<MenuState> CreationParametersBuilder(IEnumerable<string> options)
-        {
-            return TvControlCreationParametersBuilder.ForState<MenuState>(() => new MenuState(options));
-        }
+
 
         protected override void ConfigureMetadataOptions(TvControlMetadataOptions options)
         {
@@ -97,9 +97,12 @@ namespace Tvision2.Controls.Menu
             var entry = state.SelectedEntry;
             if (!entry.ChildEntries.Any()) return;
 
-            _currentMenu = new TvMenu(TvMenu.CreationParametersBuilder(entry.ChildEntries.Select(e => e.Text))
-                .UseViewport(new Viewport(TvPoint.FromXY(10, 1), TvBounds.FromRowsAndCols(10, 20), Layer.Top))
-                .UseSkin(_creationParameters.Skin));
+
+            var menuParams = TvMenu.UseParams().WithState(new MenuState(entry.ChildEntries.Select(e => e.Text)))
+                .Configure(c => c.UseViewport(new Viewport(TvPoint.FromXY(10, 1), TvBounds.FromRowsAndCols(10, 20), Layer.Top))
+                .UseSkin(_creationParameters.Skin))
+                .Build();
+            _currentMenu = new TvMenu(menuParams);
             _engine.UI.AddAsChild(_currentMenu, this);
         }
 

@@ -32,14 +32,20 @@ namespace Tvision2.ControlsGallery
         async Task ITvisionAppStartup.Startup(ITuiEngine tui)
         {
 
-            var combo = new TvDropdown(TvDropdown.CreationParametersBuilder(state =>
-            {
-                state.AddValue(new DropDownValue("1", "One"));
-                state.AddValue(new DropDownValue("2", "Two"));
-                state.AddValue(new DropDownValue("3", "Three"));
-            }).UseViewport(new Viewport(TvPoint.FromXY(10, 10), TvBounds.FromRowsAndCols(5,10), Layer.Standard)));
+            var ddParams = TvDropdown.UseParams()
+                .WithState(state =>
+                {
+                    state.AddValue(new DropDownValue("1", "One"));
+                    state.AddValue(new DropDownValue("2", "Two"));
+                    state.AddValue(new DropDownValue("3", "Three"));
+                })
+                .Configure(c => c.UseViewport(new Viewport(TvPoint.FromXY(10, 10), TvBounds.FromRowsAndCols(5, 10), Layer.Standard)))
+                .Build();
+
+
+            var combo = new TvDropdown(ddParams);
             var button = new TvButton(
-                TvButton.CreationParametersBuilder(s => s.Text = "Click Me!").UseViewport(new Viewport(TvPoint.FromXY(22, 10), 15)));
+                TvButton.UseParams().WithState(ButtonState.FromText("Click Me!")).Configure(c => c.UseViewport(new Viewport(TvPoint.FromXY(22, 10), 15))).Build());
 
             button.OnClick.Add(state =>
             {
@@ -55,9 +61,12 @@ namespace Tvision2.ControlsGallery
             var dialog = _dialogManager.CreateDialog(_layoutManager.ViewportFactory.FullViewport().CreateCentered(20, 5),
                 dlg =>
                 {
-                    var label = new TvLabel(TvLabel
-                        .CreationParametersBuilder(s => s.Text = "Hello " + comboState.SelectedValue)
-                        .UseViewport(new Viewport(TvPoint.Zero, 18)));
+                    var labelParams = TvLabel.UseParams()
+                        .WithState(LabelState.FromText("Hello " + comboState.SelectedValue))
+                        .Configure(c => c.UseViewport(new Viewport(TvPoint.Zero, 18)))
+                        .Build();
+
+                    var label = new TvLabel(labelParams);
                     dlg.Add(label);
                 });
 

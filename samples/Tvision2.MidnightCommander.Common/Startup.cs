@@ -49,18 +49,26 @@ namespace Tvision2.MidnightCommander
             mainStackPanel.Layout.Add("1", "*", "3");
             var listFilesGrid = new TvGrid(new GridState(1, 2));
             mainStackPanel.At(1).Add(listFilesGrid);
-            var textbox = new TvTextbox(TvTextbox.CreationParametersBuilder().UseSkin(skin).UseViewport(null));
-            var actind = new TvActivityIndicator(TvActivityIndicator.CreationParametersBuilder().UseSkin(skin).UseViewport(new Viewport(TvPoint.FromXY(0, 22), TvBounds.FromRowsAndCols(1, 1), Layer.Standard)));
+
+            var textboxParams = TvTextbox.UseParams().WithDefaultState().Configure(c => c.UseViewport(null)).Build();
+            var textbox = new TvTextbox(textboxParams);
+
+            var activityParams = TvActivityIndicator.UseParams().WithDefaultState().Configure(c => c.UseViewport(new Viewport(TvPoint.FromXY(0, 22), TvBounds.FromRowsAndCols(1, 1), Layer.Standard))).Build();
+            var actind = new TvActivityIndicator(activityParams);
             tui.UI.Add(actind);
 
 
-            var left = new TvList<FileItem>(TvList.CreationParametersBuilder(
-                    () => ListState<FileItem>
+            var leftParams = TvList.UseParams<FileItem>()
+                .WithState(() => ListState<FileItem>
                         .From(Enumerable.Empty<FileItem>())
                         .AddFixedColumn(fi => fi.IsDirectory ? "*" : " ", width: 2)
                         .AddColumn(fi => fi.Name)
                         .Build())
-                    .UseSkin(skin).UseViewport(new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(1, 10), Layer.Standard)));
+                .Configure(c => c.UseViewport(new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(1, 10), Layer.Standard)))
+                .Build();
+
+
+            var left = new TvList<FileItem>(leftParams);
 
             left.StyleProvider
                 .Use(Core.Colors.TvColor.Red)
@@ -75,8 +83,10 @@ namespace Tvision2.MidnightCommander
                 .When(f => (f.FileAttributes & System.IO.FileAttributes.Hidden) == System.IO.FileAttributes.Hidden)
                 .AppliesToColumn(1);
 
-            var menu = new TvMenuBar(TvMenuBar.CreationParametersBuilder(new[] { "_Left", "_Edit", "_Command", "_Options", "_Help", "_Right" })
-                .UseSkin(skin), opt =>
+
+            var menuParams = TvMenuBar.UseParams().WithState(new MenuState(new[] { "_Left", "_Edit", "_Command", "_Options", "_Help", "_Right" })).Build();
+
+            var menu = new TvMenuBar(menuParams, opt =>
                  {
                      opt.ItemsSpacedBy(4);
                      opt.UseHotKey(System.ConsoleKey.F9);
@@ -92,8 +102,11 @@ namespace Tvision2.MidnightCommander
             //var label = new TvLabel(skin, new Viewport(new TvPoint.FromXY(0, 0), 9, 1, 0), new LabelState() { Text = "In Window" });
             //window.State.UI.Add(label);
 
-            var label = new TvLabel(TvLabel.CreationParametersBuilder(s => s.Text = "In Window")
-                .UseSkin(skin).UseViewport(new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(1, 9), Layer.Standard)));
+            var labelParams = TvLabel.UseParams().WithState(LabelState.FromText("In Window"))
+                .Configure(c => c.UseViewport(new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(1, 9), Layer.Standard)))
+                .Build();
+
+            var label = new TvLabel(labelParams);
 
             var dialog = _dialogManager.CreateDialog
                     (dvpf.Create(vpf => vpf.FullViewport().CreateCentered(20, 10)),

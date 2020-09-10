@@ -7,17 +7,16 @@ using Tvision2.Styles.Extensions;
 
 namespace Tvision2.Controls.Button
 {
+
+    public class TvButtonParamsBuilder : TvControlCreationBuilder<TvButton, ButtonState> { }
+
     public class TvButton : TvControl<ButtonState>
     {
         private readonly ActionChain<ButtonState> _onClick;
         public IActionChain<ButtonState> OnClick => _onClick;
 
-        public static ITvControlCreationParametersBuilder<ButtonState> CreationParametersBuilder(Action<ButtonState> stateCfg = null)
-        {
-            return TvControlCreationParametersBuilder.ForDefaultState<ButtonState>(stateCfg);
-        }
+        public static ITvControlOptionsBuilder<TvButton, ButtonState> UseParams() => new TvButtonParamsBuilder();
 
-        public TvButton(ITvControlCreationParametersBuilder<ButtonState> parameters) : this(parameters.Build()) { }
         public TvButton(TvControlCreationParameters<ButtonState> parameters) : base(parameters)
         {
             _onClick = new ActionChain<ButtonState>();

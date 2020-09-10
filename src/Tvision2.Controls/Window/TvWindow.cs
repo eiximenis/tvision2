@@ -10,12 +10,12 @@ using Tvision2.Styles.Extensions;
 
 namespace Tvision2.Controls.Window
 {
+    class TvWindowParamsBuilder : TvControlCreationBuilder<TvWindow, WindowState> { }
+
     public class TvWindow : TvControl<WindowState>
     {
-        public TvWindow(ITvControlCreationParametersBuilder<WindowState> parameters) : base(parameters.Build()) { }
-        public TvWindow(TvControlCreationParameters<WindowState> parameters) : base(parameters)
-        {
-        }
+        public static ITvControlOptionsBuilder<TvWindow, WindowState> UseParams() => new TvWindowParamsBuilder();
+        public TvWindow(TvControlCreationParameters<WindowState> parameters) : base(parameters) { }
 
         private ITuiEngine _engine;
 

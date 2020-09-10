@@ -10,6 +10,9 @@ using Tvision2.Styles;
 
 namespace Tvision2.Controls.Dropdown
 {
+
+    public class TvDropDownParamsBuilder : TvControlCreationBuilder<TvDropdown, DropdownState> { }
+
     public class TvDropdown : TvControl<DropdownState>
     {
         private TvList<DropDownValue> _list;
@@ -21,12 +24,9 @@ namespace Tvision2.Controls.Dropdown
         internal bool HasListDisplayed { get; private set; }
         private bool _hidingList;
 
-        public static ITvControlCreationParametersBuilder<DropdownState> CreationParametersBuilder(Action<DropdownState> stateCfg = null)
-        {
-            return TvControlCreationParametersBuilder.ForDefaultState<DropdownState>(stateCfg);
-        }
 
-        public TvDropdown(ITvControlCreationParametersBuilder<DropdownState> parameters) : this(parameters.Build()) { }
+        public static ITvControlOptionsBuilder<TvDropdown, DropdownState> UseParams() => new TvDropDownParamsBuilder();
+
         public TvDropdown(TvControlCreationParameters<DropdownState> parameters) : base(parameters)
         {
             _hidingList = false;
@@ -50,9 +50,15 @@ namespace Tvision2.Controls.Dropdown
                     Transformer = x => x.Text
                 });
 
-                var listParams = TvControlCreationParametersBuilder.ForState(initialState)
-                    .UseViewport(viewport).UseSkin(_skin)
-                    .UseControlName("_list");
+
+                var listParams = TvList.UseParams<DropDownValue>()
+                    .WithState(initialState)
+                    .Configure(c => c
+                        .UseViewport(viewport)
+                        .UseSkin(_skin)
+                        .UseControlName("_list"))
+                    .Build();
+
                 _list = new TvList<DropDownValue>(listParams, opt => { });
                 _list.Metadata.OnFocusLost.Add(ListLostFocus);
             }
@@ -60,8 +66,14 @@ namespace Tvision2.Controls.Dropdown
             if (_label == null)
             {
                 var labelViewport = new Viewport(viewport.Position, viewport.Bounds.SingleRow(), viewport.ZIndex);
-                var labelParameters = new TvControlCreationParameters<LabelState>(_skin, labelViewport,
-                    new LabelState() { Text = "value" }, Name + "_label");
+                var labelParameters = TvLabel.UseParams()
+                    .WithState(new LabelState() { Text = "value" })
+                    .Configure(c => c
+                        .UseSkin(_skin)
+                        .UseViewport(labelViewport)
+                        .UseControlName(Name + "_label"))
+                    .Build();
+
                 _label = new TvLabel(labelParameters);
             }
 

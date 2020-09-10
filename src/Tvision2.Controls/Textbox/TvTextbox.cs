@@ -6,24 +6,12 @@ using Tvision2.Styles.Extensions;
 
 namespace Tvision2.Controls.Textbox
 {
+
+    class TvTextboxParamsBuilder : TvControlCreationBuilder<TvTextbox, TextboxState> { }
     public class TvTextbox : TvControl<TextboxState>
     {
 
-        public static ITvControlCreationParametersBuilder<TextboxState> CreationParametersBuilder(Action<TextboxState> stateConfig = null)
-        {
-            if (stateConfig != null) {
-                return TvControlCreationParametersBuilder.ForState<TextboxState>(() =>
-                {
-                var state = new TextboxState();
-                stateConfig(state);
-                return state;
-                });
-            }
-
-            return TvControlCreationParametersBuilder.ForDefaultState<TextboxState>();
-        }
-
-        public TvTextbox(ITvControlCreationParametersBuilder<TextboxState> parameters) : this (parameters.Build()) { }
+        public static ITvControlOptionsBuilder<TvTextbox, TextboxState> UseParams() => new TvTextboxParamsBuilder();
 
         public TvTextbox(TvControlCreationParameters<TextboxState> parameters) : base(parameters)
         {

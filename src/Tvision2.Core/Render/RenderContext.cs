@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Dynamic;
 using Tvision2.Core.Colors;
 using Tvision2.Core.Components;
 using Tvision2.Core.Components.Draw;
@@ -7,104 +8,24 @@ using Tvision2.Core.Engine;
 namespace Tvision2.Core.Render
 {
 
-    public class RenderContext : ICursorContext
+    public class RenderContextData
     {
-        protected readonly VirtualConsole _console;
-        public IViewport Viewport { get; private set; }
-        ICursorContext CursorContext => this;
-        private readonly ComponentTreeNode _parent;
-        private readonly ComponentTreeNode _node;
+        internal VirtualConsole Console {get;}
+        internal IViewport Viewport { get; private set; }
 
-        public RedrawNeededAction RedrawNeededAction { get; }
+        internal ComponentTreeNode Parent { get; }
+        internal ComponentTreeNode Node { get; }
 
-
-        public RenderContext(IViewport viewport, VirtualConsole console, ComponentTreeNode node, RedrawNeededAction redrawAction)
+        internal RedrawNeededAction RedrawNeededAction { get; }
+        
+        public RenderContextData(IViewport viewport, VirtualConsole console, ComponentTreeNode node, RedrawNeededAction redrawAction)
         {
-            _console = console;
             Viewport = viewport;
-            _parent = node.Parent;
-            _node = node;
+            Console = console;
+            Parent = node.Parent;
+            Node = node;
             RedrawNeededAction = redrawAction;
         }
-
-        public void DrawStringAt(string value, TvPoint location, TvColorPair colors)
-        {
-            if (Viewport.Flow == FlowModel.None)
-            {
-                ViewportHelperNoneFlow.DrawStringAt(value, location, new CharacterAttribute(colors), Viewport, _console);
-            }
-            else
-            {
-                ViewportHelperLineBreakFlow.DrawStringAt(value, location, new CharacterAttribute(colors), Viewport, _console);
-            }
-        }
-
-        public void DrawStringAt(string value, TvPoint location, CharacterAttribute attr)
-        {
-            if (Viewport.Flow == FlowModel.None)
-            {
-                ViewportHelperNoneFlow.DrawStringAt(value, location, attr, Viewport, _console);
-            }
-            else
-            {
-                ViewportHelperLineBreakFlow.DrawStringAt(value, location, attr, Viewport, _console);
-            }
-        }
-
-        public void DrawChars(char value, int count, TvPoint location, TvColorPair colors)
-        {
-            if (Viewport.Flow == FlowModel.None)
-            {
-                ViewportHelperNoneFlow.DrawChars(value, count, location, new CharacterAttribute(colors), Viewport, _console);
-            }
-            else
-            {
-                ViewportHelperLineBreakFlow.DrawChars(value, count, location, new CharacterAttribute(colors), Viewport, _console);
-            }
-        }
-
-        public void DrawChars(char value, int count, TvPoint location, CharacterAttribute attribute)
-        {
-            if (Viewport.Flow == FlowModel.None)
-            {
-                ViewportHelperNoneFlow.DrawChars(value, count, location, attribute, Viewport, _console);
-            }
-            else
-            {
-                ViewportHelperLineBreakFlow.DrawChars(value, count, location, attribute, Viewport, _console);
-            }
-        }
-
-        public void Clear()
-        {
-            ViewportHelper.Clear(Viewport, _console);
-        }
-
-        public void Fill(CharacterAttribute attr)
-        {
-            ViewportHelper.Fill(attr, Viewport, _console);
-        }
-
-        void ICursorContext.SetCursorAt(int left, int top)
-        {
-            var point = ViewportHelperNoneFlow.ViewPointToConsolePoint(TvPoint.FromXY(left, top), Viewport.Position);
-            _console.Cursor.MoveTo(point.Left, point.Top);
-        }
-
-        void ICursorContext.HideCursor()
-        {
-            _console.Cursor.Hide();
-        }
-
-        public TRootState GetRootState<TRootState>() =>
-            ((TvComponent<TRootState>)_parent.Root.Data.Component).State;
-
-        public TParentState GetParentState<TParentState>() =>
-            ((TvComponent<TParentState>)_parent.Data.Component).State;
-
-        public bool ComponentHasParent => _parent != null;
-
-        public T GetTag<T>() => _node.GetTag<T>();
 
         internal void ApplyDrawResult(DrawResult result)
         {
@@ -113,6 +34,108 @@ namespace Tvision2.Core.Render
                 Viewport = new Viewport(Viewport.Position + result.Displacement, Viewport.Bounds.Reduce(result.BoundsAdjustement), Viewport.ZIndex, Viewport.Flow);
             }
         }
+
+    }
+
+    public class RenderContext : ICursorContext
+    {
+        
+        public IViewport Viewport { get => _data.Viewport; }
+        ICursorContext CursorContext => this;
+        protected readonly RenderContextData _data;
+        public RedrawNeededAction RedrawNeededAction { get => _data.RedrawNeededAction; }
+
+
+        public RenderContext(IViewport viewport, VirtualConsole console, ComponentTreeNode node, RedrawNeededAction redrawAction)
+        {
+            _data = new RenderContextData(viewport, console, node, redrawAction);
+        }
+
+        protected RenderContext(RenderContextData data)
+        {
+            _data = data;
+        }
+
+        public void DrawStringAt(string value, TvPoint location, TvColorPair colors)
+        {
+            if (Viewport.Flow == FlowModel.None)
+            {
+                ViewportHelperNoneFlow.DrawStringAt(value, location, new CharacterAttribute(colors), Viewport, _data.Console);
+            }
+            else
+            {
+                ViewportHelperLineBreakFlow.DrawStringAt(value, location, new CharacterAttribute(colors), Viewport, _data.Console);
+            }
+        }
+
+        public void DrawStringAt(string value, TvPoint location, CharacterAttribute attr)
+        {
+            if (Viewport.Flow == FlowModel.None)
+            {
+                ViewportHelperNoneFlow.DrawStringAt(value, location, attr, Viewport, _data.Console);
+            }
+            else
+            {
+                ViewportHelperLineBreakFlow.DrawStringAt(value, location, attr, Viewport, _data.Console);
+            }
+        }
+
+        public void DrawChars(char value, int count, TvPoint location, TvColorPair colors)
+        {
+            if (Viewport.Flow == FlowModel.None)
+            {
+                ViewportHelperNoneFlow.DrawChars(value, count, location, new CharacterAttribute(colors), Viewport, _data.Console);
+            }
+            else
+            {
+                ViewportHelperLineBreakFlow.DrawChars(value, count, location, new CharacterAttribute(colors), Viewport, _data.Console);
+            }
+        }
+
+        public void DrawChars(char value, int count, TvPoint location, CharacterAttribute attribute)
+        {
+            if (Viewport.Flow == FlowModel.None)
+            {
+                ViewportHelperNoneFlow.DrawChars(value, count, location, attribute, Viewport, _data.Console);
+            }
+            else
+            {
+                ViewportHelperLineBreakFlow.DrawChars(value, count, location, attribute, Viewport, _data.Console);
+            }
+        }
+
+        public void Clear()
+        {
+            ViewportHelper.Clear(Viewport, _data.Console);
+        }
+
+        public void Fill(CharacterAttribute attr)
+        {
+            ViewportHelper.Fill(attr, Viewport, _data.Console);
+        }
+
+        void ICursorContext.SetCursorAt(int left, int top)
+        {
+            var point = ViewportHelperNoneFlow.ViewPointToConsolePoint(TvPoint.FromXY(left, top), Viewport.Position);
+            _data.Console.Cursor.MoveTo(point.Left, point.Top);
+        }
+
+        void ICursorContext.HideCursor()
+        {
+            _data.Console.Cursor.Hide();
+        }
+
+        public TRootState GetRootState<TRootState>() =>
+            ((TvComponent<TRootState>)_data.Parent.Root.Data.Component).State;
+
+        public TParentState GetParentState<TParentState>() =>
+            ((TvComponent<TParentState>)_data.Parent.Data.Component).State;
+
+        public bool ComponentHasParent => _data.Parent != null;
+
+        public T GetTag<T>() => _data.Node.GetTag<T>();
+
+        internal void ApplyDrawResult(DrawResult result) => _data.ApplyDrawResult(result);
 
     }
 
@@ -126,5 +149,14 @@ namespace Tvision2.Core.Render
             State = state;
         }
 
+        private RenderContext(RenderContextData data, T state) : base(data)
+        {
+            State = state;
+        }
+
+        public RenderContext<U> AsRenderContext<U>(Func<T, U> mapper)
+        {
+            return new RenderContext<U>(_data, mapper(State));
+        }
     }
 }

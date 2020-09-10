@@ -4,25 +4,15 @@ using Tvision2.Styles.Extensions;
 
 namespace Tvision2.Controls.Label
 {
-    public class TvLabel : TvControl<LabelState>
+
+
+    public class TvLabelParamsBuilder : TvControlCreationBuilder<TvLabel, LabelState, ITvLabelOptionsBuilder, ILabelOptions, TvLabelOptions> { }
+
+    public class TvLabel : TvControl<LabelState, ILabelOptions>
     {
+        public static ITvControlOptionsBuilder<TvLabel, LabelState, ITvLabelOptionsBuilder, ILabelOptions, TvLabelOptions> UseParams() => new TvLabelParamsBuilder();
 
-        public static ITvControlCreationParametersBuilder<LabelState> CreationParametersBuilder(Action<LabelState> stateConfig = null)
-        {
-            if (stateConfig != null)
-            {
-                return TvControlCreationParametersBuilder.ForState<LabelState>(() =>
-                {
-                    var state = new LabelState();
-                    stateConfig(state);
-                    return state;
-                });
-            }
-
-            return TvControlCreationParametersBuilder.ForDefaultState<LabelState>();
-        }
-        public TvLabel(ITvControlCreationParametersBuilder<LabelState> parameters) : this(parameters.Build()) { }
-        public TvLabel(TvControlCreationParameters<LabelState> parameters) : base(parameters)
+        public TvLabel(TvControlCreationParameters<LabelState, ILabelOptions> parameters) : base(parameters)
         {
         }
 

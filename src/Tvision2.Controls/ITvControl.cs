@@ -11,6 +11,7 @@ namespace Tvision2.Controls
     }
 
     public interface ITvControl<TState> : ITvControl
+         where TState : IDirtyObject
     {
         new TvComponent<TState> AsComponent();
     }

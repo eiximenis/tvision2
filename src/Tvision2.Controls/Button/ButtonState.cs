@@ -6,6 +6,8 @@ namespace Tvision2.Controls.Button
 {
     public class ButtonState : IDirtyObject
     {
+        public static ButtonState FromText(string value) => new ButtonState() { Text = value };
+
         public bool IsDirty { get; private set; }
 
         void IDirtyObject.Validate() => IsDirty = false;

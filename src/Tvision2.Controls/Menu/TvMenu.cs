@@ -8,13 +8,13 @@ using Tvision2.Styles;
 
 namespace Tvision2.Controls.Menu
 {
+    public class TvMenuParamsBuilder : TvControlCreationBuilder<TvMenu, MenuState> { }
     public class TvMenu : TvControl<MenuState>
     {
         private readonly TvMenuBarOptions _options;
         private TvList<MenuEntry> _list;
         private readonly ISkin _skin;
 
-        public TvMenu(ITvControlCreationParametersBuilder<MenuState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : this(parameters.Build(), optionsAction) { }
         public TvMenu(TvControlCreationParameters<MenuState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : base(parameters)
         {
             _options = new TvMenuBarOptions();
@@ -23,10 +23,8 @@ namespace Tvision2.Controls.Menu
         }
 
 
-        public static ITvControlCreationParametersBuilder<MenuState> CreationParametersBuilder(IEnumerable<string> options)
-        {
-            return TvControlCreationParametersBuilder.ForState<MenuState>(() => new MenuState(options));
-        }
+
+        public static ITvControlOptionsBuilder<TvMenu, MenuState> UseParams() => new TvMenuParamsBuilder();
 
         protected override IEnumerable<ITvBehavior<MenuState>> GetEventedBehaviors()
         {
@@ -43,15 +41,15 @@ namespace Tvision2.Controls.Menu
         protected override void OnViewportCreated(IViewport viewport)
         {
 
-            var builder = TvList.CreationParametersBuilder<MenuEntry>(
-                    () => ListState<MenuEntry>
+            var listParams = TvList.UseParams<MenuEntry>()
+                .WithState(() => ListState<MenuEntry>
                         .From(State.Entries)
                         .AddColumn(me => me.Text)
-                        .Build());
-            builder.UseSkin(_skin);
-            builder.UseViewport(viewport);
+                        .Build())
+                .Configure(c => c.UseSkin(_skin).UseViewport(viewport))
+                .Build();
             //builder.UseTopLeftPosition(viewport.Position);
-            _list = new TvList<MenuEntry>(builder);
+            _list = new TvList<MenuEntry>(listParams);
             _list.AsComponent()
                .Metadata.OnComponentMounted
                .AddOnce(ctx =>

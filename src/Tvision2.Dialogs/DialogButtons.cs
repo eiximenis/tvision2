@@ -19,18 +19,18 @@ namespace Tvision2.Dialogs
 
         public void AddCancelButton()
         {
-            CancelButton = new TvButton(TvButton.CreationParametersBuilder(s =>
-            {
-                s.Text = "Cancel";
-            }).UseSkin(_skin).UseViewport(Viewport.NullViewport));
+            var cparams = TvButton.UseParams().WithState(ButtonState.FromText("Cancel"))
+                .Configure(c => c.UseSkin(_skin).UseViewport(Viewport.NullViewport))
+                .Build();
+            CancelButton = new TvButton(cparams);
         }
 
         public void AddOkButton()
         {
-            OkButton = new TvButton(TvButton.CreationParametersBuilder(s =>
-            {
-                s.Text = "Ok";
-            }).UseSkin(_skin).UseViewport(Viewport.NullViewport));
+            var okparams = TvButton.UseParams().WithState(ButtonState.FromText("Ok"))
+                .Configure(c => c.UseSkin(_skin).UseViewport(Viewport.NullViewport))
+                .Build();
+            OkButton = new TvButton(okparams);
         }
 
         public IEnumerator<TvButton> GetEnumerator()

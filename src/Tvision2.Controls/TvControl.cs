@@ -15,7 +15,10 @@ using Tvision2.Styles.Extensions;
 namespace Tvision2.Controls
 {
 
-    public abstract class TvControl<TState> : ITvControl<TState>
+
+    public class EmptyControlOptions { }
+
+    public abstract class TvControl<TState, TIOptions> : ITvControl<TState>
         where TState : IDirtyObject
     {
         private readonly Lazy<TvControlMetadata> _metadata;
@@ -24,6 +27,7 @@ namespace Tvision2.Controls
         private TvComponent<TState> _component;
         public TvControlMetadata Metadata => _metadata.Value;
         public TState State { get; }
+        public TIOptions Options { get; }
         public string Name => AsComponent().Name;
 
         public enum ControlCanBeUnmounted
@@ -33,7 +37,7 @@ namespace Tvision2.Controls
         }
 
 
-        public TvControl(TvControlCreationParameters<TState> creationParams)
+        public TvControl(TvControlCreationParameters<TState, TIOptions> creationParams)
         {
 
             var initialState = creationParams.InitialState;
@@ -42,10 +46,11 @@ namespace Tvision2.Controls
             var genericIdx = typename.IndexOf('`');
             ControlType = genericIdx != -1 ? typename.Substring(0, genericIdx) : typename;
             CurrentStyle = creationParams.Skin?.GetControlStyle(this);
-            _component = new TvComponent<TState>(initialState, name ?? $"TvControl_<$>",
+            Options = creationParams.Options;
+            _component = new TvComponent<TState>(creationParams.InitialState, name ?? $"TvControl_<$>",
                 cfg =>
                 {
-                    cfg.WhenComponentMounted(ctx => OnComponentMounted(ctx));
+                    cfg.WhenComponentMounted(ctx => OnComponentMounted(ctx, Options));
                     cfg.WhenComponentUnmounted(ctx => OnComponentUnmounted(ctx));
                     cfg.WhenComponentWillbeUnmounted(ctx => OnComponentWillbeUnmounted(ctx));
                     cfg.WhenComponentTreeUpdatedByMount(ctx => OnComponentTreeUpdatedByMount(ctx));
@@ -94,7 +99,7 @@ namespace Tvision2.Controls
         {
         }
 
-        private Task<bool> OnComponentMounted(ComponentMoutingContext ctx)
+        private Task<bool> OnComponentMounted(ComponentMoutingContext ctx, TIOptions options)
         {
             if (Metadata.ViewportAutoCreated)
             {
@@ -104,6 +109,7 @@ namespace Tvision2.Controls
 
             var ctree = ctx.OwnerEngine.GetControlsTree() as ControlsTree;
             ctx.Node.SetTag<TvControlMetadata>(Metadata);
+            ctx.Node.SetTag<TIOptions>(options);
             Metadata.Attach(ctree, ctx.Node);
             AddElements();
             OnControlMounted(ctx.OwnerEngine);
@@ -192,5 +198,11 @@ namespace Tvision2.Controls
 
         TvComponent ITvControl.AsComponent() => _component;
 
+    }
+
+
+    public abstract class TvControl<TState> : TvControl<TState, EmptyControlOptions>  where TState : IDirtyObject 
+    {
+        public TvControl(TvControlCreationParameters<TState, EmptyControlOptions> creationParams) : base (creationParams) {  }
     }
 }

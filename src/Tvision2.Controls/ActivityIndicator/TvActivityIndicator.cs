@@ -4,29 +4,16 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Controls.ActivityIndicator
 {
+
+    class TvActivityIndicatorParamsBuilder : TvControlCreationBuilder<TvActivityIndicator, ActivityIndicatorState> { }
     public class TvActivityIndicator : TvControl<ActivityIndicatorState>
     {
         private static readonly char[] _chars = new[] { '|', '/', '-', '\\' };
         private int _ticks;
         private int _idx;
 
+        public static ITvControlOptionsBuilder<TvActivityIndicator, ActivityIndicatorState> UseParams() => new TvActivityIndicatorParamsBuilder();
 
-        public static ITvControlCreationParametersBuilder<ActivityIndicatorState> CreationParametersBuilder(Action<ActivityIndicatorState> stateConfig = null)
-        {
-            if (stateConfig != null)
-            {
-                return TvControlCreationParametersBuilder.ForState<ActivityIndicatorState>(() =>
-                {
-                    var state = new ActivityIndicatorState();
-                    stateConfig(state);
-                    return state;
-                });
-            }
-
-            return TvControlCreationParametersBuilder.ForDefaultState<ActivityIndicatorState>();
-        }
-
-        public TvActivityIndicator(ITvControlCreationParametersBuilder<ActivityIndicatorState> parameters) : this(parameters.Build()) { }
         public TvActivityIndicator(TvControlCreationParameters<ActivityIndicatorState> parameters) : base(parameters)
         {
             _ticks = 0;

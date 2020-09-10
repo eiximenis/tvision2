@@ -272,13 +272,15 @@ namespace Tvision2.Core.Components
             return this;
         }
 
-        IAdaptativeDrawingTarget<T> IAdaptativeDrawingTarget<T>.AddDrawer(Action<RenderContext<T>> action)
-        {
-            return ((IAdaptativeDrawingTarget<T>)this).AddDrawer(new ActionDrawer<T>(action));
-        }
+        IAdaptativeDrawingTarget<T> IAdaptativeDrawingTarget<T>.AddDrawer<U>(ITvDrawer<U> drawer, Func<T, U> stateConverter) =>
+            ((IAdaptativeDrawingTarget<T>)this).AddDrawer(new MapperDrawer<T, U>(drawer, stateConverter));
 
+        IAdaptativeDrawingTarget<T> IAdaptativeDrawingTarget<T>.AddDrawer(Action<RenderContext<T>> action) =>
+            ((IAdaptativeDrawingTarget<T>)this).AddDrawer(new ActionDrawer<T>(action));
 
         public TvComponent<T> AddDrawer(Action<RenderContext<T>> action) => AddDrawer(new ActionDrawer<T>(action));
+
+        public TvComponent<T> AddDrawer<U>(ITvDrawer<U> drawer, Func<T, U> stateConverter) => AddDrawer(new MapperDrawer<T, U>(drawer, stateConverter));
 
         public TvComponent<T> AddDrawer(ITvDrawer<T> drawer)
         {

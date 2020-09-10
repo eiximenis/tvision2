@@ -66,6 +66,11 @@ namespace Tvision2.Controls.List
             IsDirty = true;
         }
 
+        public ListState()
+        {
+            _values = new List<T>();
+            Columns = Array.Empty<TvListColumnSpec<T>>();
+        }
 
         public ListState(IEnumerable<T> values, params TvListColumnSpec<T>[] columns)
         {

@@ -7,9 +7,13 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Controls.Checkbox
 {
+
+    public class TvCheckboxParamsBuilder : TvControlCreationBuilder<TvCheckbox, CheckboxState> { }
     public class TvCheckbox : TvControl<CheckboxState>
     {
-        public TvCheckbox(ITvControlCreationParametersBuilder<CheckboxState> parameters) : this(parameters.Build()) { }
+
+        public static ITvControlOptionsBuilder<TvCheckbox, CheckboxState> UseParams() => new TvCheckboxParamsBuilder();
+
         public TvCheckbox(TvControlCreationParameters<CheckboxState> parameters) : base(parameters)
         {
             RequestCursorManagement((ctx, _) => ctx.SetCursorAt(1,0));

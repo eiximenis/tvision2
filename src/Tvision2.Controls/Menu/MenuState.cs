@@ -12,6 +12,12 @@ namespace Tvision2.Controls.Menu
 
         private readonly List<MenuEntry> _options;
 
+        public MenuState()
+        {
+            _selectedIndex = 0;
+            _options = new List<MenuEntry>();
+        }
+
         public MenuState(IEnumerable<string> options)
         {
             _selectedIndex = 0;
