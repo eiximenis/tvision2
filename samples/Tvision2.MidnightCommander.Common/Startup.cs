@@ -84,13 +84,11 @@ namespace Tvision2.MidnightCommander
                 .AppliesToColumn(1);
 
 
-            var menuParams = TvMenuBar.UseParams().WithState(new MenuState(new[] { "_Left", "_Edit", "_Command", "_Options", "_Help", "_Right" })).Build();
+            var menuParams = TvMenuBar.UseParams()
+                .Options(o => o.ItemsSpacedBy(4).UseHotKey(System.ConsoleKey.F9))
+                .WithState(new MenuState(new[] { "_Left", "_Edit", "_Command", "_Options", "_Help", "_Right" })).Build();
 
-            var menu = new TvMenuBar(menuParams, opt =>
-                 {
-                     opt.ItemsSpacedBy(4);
-                     opt.UseHotKey(System.ConsoleKey.F9);
-                 });
+            var menu = new TvMenuBar(menuParams);
             mainStackPanel.At(0).Add(menu);
 
             menu.State["Left"].AddChild("_Exit");

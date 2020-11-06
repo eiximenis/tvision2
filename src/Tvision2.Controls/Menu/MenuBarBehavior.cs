@@ -9,12 +9,12 @@ namespace Tvision2.Controls.Menu
     {
 
         
-        private readonly TvMenuBarOptions _options;
+        private readonly ITvMenuBarOptions _options;
 
         [OwnerControl]
         public TvMenuBar Owner { get; set; }
 
-        public MenuBarBehavior(TvMenuBarOptions options)
+        public MenuBarBehavior(ITvMenuBarOptions options)
         {
             _options = options;
         }

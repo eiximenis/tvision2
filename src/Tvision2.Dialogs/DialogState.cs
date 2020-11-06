@@ -46,6 +46,7 @@ namespace Tvision2.Dialogs
             _buttons.AddOkButton();
             _buttons.AddCancelButton();
             var viewport = _myDialog.AsComponent().Viewport.Layer(Layer.Top);
+            
             _mainPanel = new TvStackPanel($"{_prefixNames}_MainPanel");
             _mainPanel.Layout.Add("1", "*");
             _mainPanel.AsComponent().AddViewport(new Viewport(viewport.Position + TvPoint.FromXY(1, 1), TvBounds.FromRowsAndCols(viewport.Bounds.Rows -2, viewport.Bounds.Cols - 2), viewport.ZIndex));

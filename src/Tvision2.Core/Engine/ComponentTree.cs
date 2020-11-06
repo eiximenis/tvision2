@@ -112,8 +112,16 @@ namespace Tvision2.Core.Engine
         public ComponentTreeNode Add(TvComponentMetadata cdata)
         {
             var node = new ComponentTreeNode(cdata, this);
-            _childs.Add(cdata.Id, node);
-            return node;
+            if (!_childs.ContainsKey(cdata.Id))
+            {
+                _childs.Add(cdata.Id, node);
+                return node;
+            }
+            else
+            {
+                return _childs[cdata.Id];
+            }
+            
         }
 
         public ComponentTreeNode Find(Guid id)
@@ -281,7 +289,7 @@ namespace Tvision2.Core.Engine
             foreach (var kvp in toDelete)
             {
                 var subtree = kvp.Value.SubTree();
-                var canBeUnmounted = subtree.Any(c => c.Data.CanBeUnmountedFrom(_engine));
+                var canBeUnmounted = subtree.All(c => c.Data.CanBeUnmountedFrom(_engine));
                 if (canBeUnmounted)
                 {
                     _pendingRemovalsPhase2.Add(kvp.Key, kvp.Value);

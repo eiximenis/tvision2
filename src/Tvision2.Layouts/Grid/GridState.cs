@@ -14,5 +14,7 @@ namespace Tvision2.Layouts.Grid
             Rows = rows;
             Cols = cols;
         }
+
+        public static GridState FromRowsAndColumns(int rows, int columns) => new GridState(rows, columns);
     }
 }

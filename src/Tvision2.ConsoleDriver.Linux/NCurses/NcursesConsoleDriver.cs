@@ -32,7 +32,6 @@ namespace Tvision2.ConsoleDriver
         public void Init()
         {
             ConsoleBounds = TvBounds.FromRowsAndCols(Console.WindowHeight, Console.WindowWidth);
-
             Curses.setlocale(6, "");
             Curses.initscr();
             _colorDriver.Init();
@@ -42,6 +41,11 @@ namespace Tvision2.ConsoleDriver
             var stdscr = Window.Standard;
             Curses.nodelay(stdscr.Handle, bf: true);
             Curses.keypad(stdscr.Handle, bf: true);
+        }
+
+        public void End()
+        {
+            Curses.endwin();
         }
 
         public ITvConsoleEvents ReadEvents()

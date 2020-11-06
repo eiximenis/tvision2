@@ -87,16 +87,17 @@ namespace Tvision2.Layouts.Grid
                 var ctrRow = kvpChild.Key.Row;
                 var ctrCol = kvpChild.Key.Column;
                 var child = kvpChild.Value;
-                var viewport = CalculateViewportFor(myViewport, ctrRow, ctrCol, cellHeight, cellWidth);
+                var viewport = CalculateViewportFor(myViewport, ctrRow, ctrCol, cellHeight, cellWidth, child.Viewport);
                 child.UpdateViewport(viewport, addIfNotExists: true);
             }
 
         }
 
-        private IViewport CalculateViewportFor(IViewport myViewport, int ctrRow, int ctrCol, int cellHeight, int cellWidth)
+        private IViewport CalculateViewportFor(IViewport myViewport, int ctrRow, int ctrCol, int cellHeight, int cellWidth, IViewport childViewport)
         {
-            var startCol = ctrCol * cellWidth;
-            var startRow = ctrRow * cellHeight;
+            var innerViewport = childViewport ?? Viewport.NullViewport;
+            var startCol = ctrCol * cellWidth; //  + innerViewport.Position.Left;                // Only 1st time!!! (TODO)
+            var startRow = ctrRow * cellHeight; // + innerViewport.Position.Top;                // Only 1st time!!! (TODO)
 
             return myViewport.InnerViewport(TvPoint.FromXY(startCol, startRow), TvBounds.FromRowsAndCols(cellHeight, cellWidth));
 

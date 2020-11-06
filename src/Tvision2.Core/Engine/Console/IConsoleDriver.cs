@@ -18,5 +18,7 @@ namespace Tvision2.Engine.Console
         TvBounds ConsoleBounds { get; } 
         void SetCursorVisibility(bool isVisible);
         void ProcessWindowEvent(TvWindowEvent windowEvent);
+
+        void End() { }
     }
 }

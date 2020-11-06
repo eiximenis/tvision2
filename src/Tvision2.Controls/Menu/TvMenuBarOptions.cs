@@ -3,14 +3,23 @@
 namespace Tvision2.Controls.Menu
 {
 
-    public interface ITvMenuBarOptions
+
+    public interface ITvMenuBarOptionsBuilder
     {
-        ITvMenuBarOptions ItemsSpacedBy(int charcount);
-        ITvMenuBarOptions UseHotKey(ConsoleKey key);
-        ITvMenuBarOptions UseSelectKey(ConsoleKey key);
+        ITvMenuBarOptionsBuilder ItemsSpacedBy(int charcount);
+        ITvMenuBarOptionsBuilder UseHotKey(ConsoleKey key);
+        ITvMenuBarOptionsBuilder UseSelectKey(ConsoleKey key);
     }
 
-    public class TvMenuBarOptions : ITvMenuBarOptions
+    public interface ITvMenuBarOptions
+    {
+
+        public int SpaceBetweenItems { get; }
+        public ConsoleKey Hotkey { get; }
+        public ConsoleKey SelectKey { get; }
+    }
+
+    public class TvMenuBarOptions : ITvMenuBarOptions, ITvMenuBarOptionsBuilder
     {
         public int SpaceBetweenItems { get; private set; }
         public ConsoleKey Hotkey  {get; private set; }
@@ -24,18 +33,18 @@ namespace Tvision2.Controls.Menu
             SelectKey = ConsoleKey.Enter;
         }
 
-        ITvMenuBarOptions ITvMenuBarOptions.ItemsSpacedBy(int charcount)
+        ITvMenuBarOptionsBuilder ITvMenuBarOptionsBuilder.ItemsSpacedBy(int charcount)
         {
             SpaceBetweenItems = charcount;
             return this;
         }
 
-        ITvMenuBarOptions ITvMenuBarOptions.UseHotKey(ConsoleKey key)
+        ITvMenuBarOptionsBuilder ITvMenuBarOptionsBuilder.UseHotKey(ConsoleKey key)
         {
             Hotkey = key;
             return this;
         }
-        ITvMenuBarOptions ITvMenuBarOptions.UseSelectKey(ConsoleKey key)
+        ITvMenuBarOptionsBuilder ITvMenuBarOptionsBuilder.UseSelectKey(ConsoleKey key)
         {
             SelectKey= key;
             return this;

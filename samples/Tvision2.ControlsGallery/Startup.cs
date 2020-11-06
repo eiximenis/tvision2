@@ -11,49 +11,47 @@ using Tvision2.Core.Render;
 using Tvision2.Dialogs;
 using Tvision2.Layouts;
 using Tvision2.Styles;
+using Tvision2.Viewports;
 
 namespace Tvision2.ControlsGallery
 {
     public class Startup : ITvisionAppStartup
     {
 
-        private readonly ISkinManager _skinManager;
         private readonly ILayoutManager _layoutManager;
         private readonly IDialogManager _dialogManager;
+        private readonly IViewportFactory _vpFactory;
 
-        public Startup(ISkinManager skinManager, ILayoutManager layoutManager, IDialogManager dialogManager)
+        public Startup(ILayoutManager layoutManager, IDialogManager dialogManager, IViewportFactory vpFactory)
         {
-            _skinManager = skinManager;
             _layoutManager = layoutManager;
             _dialogManager = dialogManager;
+            _vpFactory = vpFactory;
         }
 
 
         async Task ITvisionAppStartup.Startup(ITuiEngine tui)
         {
 
-            var ddParams = TvDropdown.UseParams()
-                .WithState(state =>
-                {
-                    state.AddValue(new DropDownValue("1", "One"));
-                    state.AddValue(new DropDownValue("2", "Two"));
-                    state.AddValue(new DropDownValue("3", "Three"));
-                })
-                .Configure(c => c.UseViewport(new Viewport(TvPoint.FromXY(10, 10), TvBounds.FromRowsAndCols(5, 10), Layer.Standard)))
-                .Build();
+            var mainGrid = ControlsFactory.CreateGrid(_vpFactory);
 
+            var label = ControlsFactory.CreateLabel();
+            mainGrid.At(0, 1).Add(label.AsComponent());
+                
+            var combo = ControlsFactory.CreateDropDown();
+            mainGrid.At(1, 0).Add(combo.AsComponent());
 
-            var combo = new TvDropdown(ddParams);
-            var button = new TvButton(
-                TvButton.UseParams().WithState(ButtonState.FromText("Click Me!")).Configure(c => c.UseViewport(new Viewport(TvPoint.FromXY(22, 10), 15))).Build());
+            var button = ControlsFactory.CreateButton();
 
+            mainGrid.At(1, 1).Add(button.AsComponent());
+            
             button.OnClick.Add(state =>
             {
                 ShowDialog(state, combo.State);
                 tui.UI.Remove(combo);
             });
-            tui.UI.Add(combo);
-            tui.UI.Add(button);
+            
+            tui.UI.Add(mainGrid);
         }
 
         private Task<bool> ShowDialog(ButtonState btnstate, DropdownState comboState)

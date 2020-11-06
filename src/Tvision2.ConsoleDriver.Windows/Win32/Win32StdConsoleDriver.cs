@@ -15,6 +15,8 @@ namespace Tvision2.ConsoleDriver
         private const int CP_TOUSE = 65001;     // UTF8
         private readonly IntPtr _hstdin;
         private readonly IntPtr _hstdout;
+        private IntPtr _hout;
+        private IntPtr _hin;
         private readonly WindowsConsoleDriverOptions _options;
         private readonly Win32StdColorManager _colorManager;
         private CONSOLE_CURSOR_INFO _initialCursorInfo;
@@ -37,6 +39,8 @@ namespace Tvision2.ConsoleDriver
             _colorManager = new Win32StdColorManager();
             _hstdin = ConsoleNative.GetStdHandle(STDIN);
             _hstdout = ConsoleNative.GetStdHandle(STDOUT);
+            _hout = IntPtr.Zero;
+            _hin = IntPtr.Zero;
             _options = options;
             ConsoleNative.SetConsoleCP(CP_TOUSE);
             ConsoleNative.SetConsoleOutputCP(CP_TOUSE);
@@ -45,7 +49,7 @@ namespace Tvision2.ConsoleDriver
 
             SetConsoleMode(options, dwOutModes, dwInputModes);
             //ConsoleNative.SetConsoleMode(_hstdin, (uint)(ConsoleInputModes.ENABLE_MOUSE_INPUT | ConsoleInputModes.ENABLE_WINDOW_INPUT | ConsoleInputModes.ENABLE_VIRTUAL_TERMINAL_INPUT));
-            
+
         }
 
         private void SetConsoleMode(ConsoleDriverOptions options, uint currentOutModes, uint currentInputModes)
@@ -66,17 +70,45 @@ namespace Tvision2.ConsoleDriver
                 Bottom = (short)requestedRows,
                 Right = (short)requestedCols
             };
+
+
+            var hbuffer = ConsoleNative.CreateConsoleScreenBuffer(AccessMode.GENERIC_READ | AccessMode.GENERIC_WRITE, ShareMode.FILE_SHARE_READ | ShareMode.FILE_SHARE_WRITE, IntPtr.Zero, ScreenBufferFlags.CONSOLE_TEXTMODE_BUFFER, IntPtr.Zero);
+
+            if (hbuffer != HandleNative.INVALID_HANDLE_VALUE)
+            {
+                _hout = hbuffer;
+                _hin = hbuffer;
+                ConsoleNative.SetConsoleActiveScreenBuffer(_hout);
+            }
+            else
+            {
+                _hout = _hstdout;
+                _hin = _hstdin;
+            }
+
             if (_options.WindowOptions.Cols > 0 || _options.WindowOptions.Rows > 0)
             {
-                ConsoleNative.SetConsoleWindowInfo(_hstdout, true, ref rect);
+                ConsoleNative.SetConsoleWindowInfo(_hout, true, ref rect);
             }
-            ConsoleNative.SetConsoleScreenBufferSize(_hstdout, new COORD((short)(rect.Right + 1), (short)(rect.Bottom + 1)));
+
+            ConsoleNative.SetConsoleScreenBufferSize(_hout, new COORD((short)(rect.Right + 1), (short)(rect.Bottom + 1)));
+
 
             CONSOLE_CURSOR_INFO cursorInfo;
-            ConsoleNative.GetConsoleCursorInfo(_hstdout, out cursorInfo);
+            ConsoleNative.GetConsoleCursorInfo(_hout, out cursorInfo);
             _initialCursorInfo = cursorInfo;
 
             ConsoleBounds = GetConsoleWindowSize();
+        }
+
+
+        public void End()
+        {
+            if (_hout != _hstdout)
+            {
+                ConsoleNative.SetConsoleActiveScreenBuffer(_hstdout);
+                HandleNative.CloseHandle(_hout);
+            }
         }
 
         public ITvConsoleEvents ReadEvents()
@@ -105,21 +137,21 @@ namespace Tvision2.ConsoleDriver
         {
             var coord = new COORD((short)x, (short)y);
             var winattr = _colorManager.AttributeToWin32Colors(attribute);
-            ConsoleNative.FillConsoleOutputAttribute(_hstdout, (ushort)winattr, (uint)count, coord, out var numAttrWritten);
-            ConsoleNative.FillConsoleOutputCharacter(_hstdout, (char)character, (uint)count, coord, out var numWritten);
+            ConsoleNative.FillConsoleOutputAttribute(_hout, (ushort)winattr, (uint)count, coord, out var numAttrWritten);
+            ConsoleNative.FillConsoleOutputCharacter(_hout, (char)character, (uint)count, coord, out var numWritten);
         }
 
 
         public void SetCursorAt(int x, int y)
         {
-            ConsoleNative.SetConsoleCursorPosition(_hstdout, new COORD((short)x, (short)y));
+            ConsoleNative.SetConsoleCursorPosition(_hout, new COORD((short)x, (short)y));
         }
 
 
         public void SetCursorVisibility(bool isVisible)
         {
             var info = new CONSOLE_CURSOR_INFO(isVisible, _initialCursorInfo.Size);
-            ConsoleNative.SetConsoleCursorInfo(_hstdout, ref info);
+            ConsoleNative.SetConsoleCursorInfo(_hout, ref info);
         }
 
         public void ProcessWindowEvent(TvWindowEvent windowEvent)

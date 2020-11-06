@@ -9,26 +9,25 @@ using System.Linq;
 namespace Tvision2.Controls.Menu
 {
 
-    public class TvMenuBarParamsBuilder : TvControlCreationBuilder<TvMenuBar, MenuState> { }
+    public class TvMenuBarParamsBuilder : TvControlCreationBuilder<TvMenuBar, MenuState, ITvMenuBarOptionsBuilder, ITvMenuBarOptions, TvMenuBarOptions> { }
 
-    public class TvMenuBar : TvControl<MenuState>
+    public class TvMenuBar : TvControl<MenuState, ITvMenuBarOptions>
     {
 
-        private readonly TvMenuBarOptions _options;
+        private readonly ITvMenuBarOptions _options;
         private Guid _hookGuid;
         protected readonly TvControlCreationParameters _creationParameters;
         private ITuiEngine _engine;
         private TvMenu _currentMenu;
 
-        public static ITvControlOptionsBuilder<TvMenuBar, MenuState> UseParams() => new TvMenuBarParamsBuilder();
+        public static ITvControlOptionsBuilder<TvMenuBar, MenuState, ITvMenuBarOptionsBuilder, ITvMenuBarOptions, TvMenuBarOptions> UseParams() => new TvMenuBarParamsBuilder();
 
 
-        public TvMenuBar(TvControlCreationParameters<MenuState> parameters, Action<ITvMenuBarOptions> optionsAction = null) : base(parameters)
+        public TvMenuBar(TvControlCreationParameters<MenuState, ITvMenuBarOptions> parameters) : base(parameters)
         {
             _creationParameters = parameters;
             _hookGuid = Guid.Empty;
-            _options = new TvMenuBarOptions();
-            optionsAction?.Invoke(_options);
+            _options = parameters.Options;
             _engine = null;
             _currentMenu = null;
         }
@@ -69,7 +68,7 @@ namespace Tvision2.Controls.Menu
 
         protected override IEnumerable<ITvBehavior<MenuState>> GetEventedBehaviors()
         {
-            yield return new MenuBarBehavior(_options);
+            yield return new MenuBarBehavior(Options);
         }
 
         protected override void OnControlMounted(ITuiEngine engine)
