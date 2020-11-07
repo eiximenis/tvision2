@@ -132,7 +132,7 @@ namespace Tvision2.Core.Render
         {
             for (var idx = 0; idx < _buffer.Length; idx++)
             {
-                _buffer[idx] = new ConsoleCharacter(' ', new CharacterAttribute(new TvColorPair(_bgDefault, _bgDefault)), Layer.Min)
+                _buffer[idx] = new ConsoleCharacter(' ', new CharacterAttribute(new TvColorPair(_bgDefault, _bgDefault)), Layer.Min);
             }
             IsDirty = false;
         }
