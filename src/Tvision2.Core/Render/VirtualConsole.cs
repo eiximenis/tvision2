@@ -17,6 +17,8 @@ namespace Tvision2.Core.Render
 
         private ConsoleCharacter[] _buffer;
         private DirtyStatus[] _dirtyMap;
+        private TvColor _bgDefault;
+
         public VirtualConsoleUpdateActions UpdateActions { get; }
         public int Width { get; private set; }
         public int Height { get; private set; }
@@ -25,10 +27,11 @@ namespace Tvision2.Core.Render
 
         public VirtualConsoleCursor Cursor { get; private set; }
 
-        public VirtualConsole(int height, int width)
+        public VirtualConsole(int height, int width, TvColor defaultBack)
         {
             Width = width;
             Height = height;
+            _bgDefault = defaultBack;
             InitData();
         }
 
@@ -129,7 +132,7 @@ namespace Tvision2.Core.Render
         {
             for (var idx = 0; idx < _buffer.Length; idx++)
             {
-                _buffer[idx] = new ConsoleCharacter(' ', new CharacterAttribute(), Layer.Min);
+                _buffer[idx] = new ConsoleCharacter(' ', new CharacterAttribute(new TvColorPair(_bgDefault, _bgDefault)), Layer.Min)
             }
             IsDirty = false;
         }
@@ -175,8 +178,8 @@ namespace Tvision2.Core.Render
                 for (var col = initcol; col <= maxcol; col++)
                 {
                     var idx = col + (Width * row);
-                    // _buffer[idx] = new ConsoleCharacter('^', new CharacterAttribute(new TvColorPair(TvColor.Red, TvColor.Green)), Layer.Min);
-                    _buffer[idx] = _buffer[idx].ToLayer(Layer.Min);         // Review THIS
+                    // _buffer[idx] = new ConsoleCharacter('^', new CharacterAttribute(new TvColorPair(TvColor.Red, TvColor.Green)), Layer.Min);            // The mega debug
+                    _buffer[idx] = new ConsoleCharacter(' ', new CharacterAttribute(new TvColorPair(_bgDefault, _bgDefault)), Layer.Min);
                     _dirtyMap[idx] = DirtyStatus.Dirty;
                 }
             }

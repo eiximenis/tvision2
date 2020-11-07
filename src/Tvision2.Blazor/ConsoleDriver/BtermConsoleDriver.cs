@@ -20,6 +20,7 @@ namespace Tvision2.ConsoleDriver.Blazor
     {
         private readonly AnsiColorManager _colorManager;
         private readonly BtermEventReceiver _eventReceiver;
+        private readonly BlazorConsoleDriverOptions _options;
         private IJSRuntime _jsRuntime;
         private bool _bound;
 
@@ -27,10 +28,11 @@ namespace Tvision2.ConsoleDriver.Blazor
 
         public TvBounds ConsoleBounds => new TvBounds().Grow(24, 80);
 
-        public BtermConsoleDriver(AnsiColorManager colorManager)
+        public BtermConsoleDriver(BlazorConsoleDriverOptions options, AnsiColorManager colorManager)
         {
             _colorManager = colorManager;
             _eventReceiver = new BtermEventReceiver();
+            _options = options;
             _bound = false;
         }
 
@@ -40,6 +42,8 @@ namespace Tvision2.ConsoleDriver.Blazor
         public void ProcessWindowEvent(TvWindowEvent windowEvent)
         {
         }
+
+        public TvColor DefaultBackground { get => _options.DefaultBackColor; }
 
         public ITvConsoleEvents ReadEvents()
         {

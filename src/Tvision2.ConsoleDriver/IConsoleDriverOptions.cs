@@ -1,11 +1,11 @@
 ﻿using System;
+using Tvision2.Core.Colors;
 
 namespace Tvision2.ConsoleDriver
 {
     public interface IConsoleDriverOptions
     {
-        IConsoleDriverOptions UseBackColor(ConsoleColor backColor);
-        IConsoleDriverOptions UseForegroundColor(ConsoleColor foreColor);
+        IConsoleDriverOptions UseBackColor(TvColor bakColor);
 
         IConsoleDriverOptions SetupWindow(Action<IConsoleWindowOptions> options);
         IConsoleDriverOptions EnableMouse();

@@ -18,6 +18,8 @@ namespace Tvision2.ConsoleDriver
         public IColorManager ColorManager => _colorManager;
         public TvBounds ConsoleBounds { get; private set; }
 
+        public TvColor DefaultBackground { get => _options.DefaultBackColor; }
+
         public DotNetConsoleDriver(ConsoleDriverOptions options, DotNetColorManager colorManager)
         {
             _options = options;

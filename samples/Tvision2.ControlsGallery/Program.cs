@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using Tvision2.Controls.Styles;
 using Tvision2.Core;
+using Tvision2.Core.Colors;
 using Tvision2.Core.Engine;
 using Tvision2.DependencyInjection;
 
@@ -16,7 +17,8 @@ namespace Tvision2.ControlsGallery
             var builder = new HostBuilder();
             builder.UseTvision2(setup =>
             {
-                setup.UsePlatformConsoleDriver()
+                setup.UsePlatformConsoleDriver(options => options.Configure(c => c
+                    .UseBackColor(TvColor.Yellow)))
                     .UseViewportManager()
                     .UseLayoutManager()
                     .AddTvDialogs()

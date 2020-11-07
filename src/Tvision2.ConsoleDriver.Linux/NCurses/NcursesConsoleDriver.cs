@@ -23,6 +23,8 @@ namespace Tvision2.ConsoleDriver
         public IColorManager ColorManager => _colorDriver;
         public TvBounds ConsoleBounds { get; private set; }
 
+        public TvColor DefaultBackground { get => _options.DefaultBackColor; }
+
         public NcursesConsoleDriver(LinuxConsoleDriverOptions options, NcursesColorManager colorDriver)
         {
             _options = options;

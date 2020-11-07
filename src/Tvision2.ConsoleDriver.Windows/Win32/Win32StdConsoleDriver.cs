@@ -24,6 +24,8 @@ namespace Tvision2.ConsoleDriver
         public IColorManager ColorManager => _colorManager;
         public TvBounds ConsoleBounds { get; private set; }
 
+        public TvColor DefaultBackground { get => _options.DefaultBackColor; }
+
         private TvBounds GetConsoleWindowSize()
         {
             CONSOLE_SCREEN_BUFFER_INFO csbi;

@@ -36,6 +36,7 @@ namespace Tvision2.ConsoleDriver.Ansi
             get => _colorManager;
         }
 
+        public TvColor DefaultBackground { get => _options.DefaultBackColor; }
 
         public AnsiLinuxConsoleDriver(LinuxConsoleDriverOptions options, AnsiColorManager colorManager)
         {

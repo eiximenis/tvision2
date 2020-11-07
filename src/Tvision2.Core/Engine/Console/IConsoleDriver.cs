@@ -15,7 +15,9 @@ namespace Tvision2.Engine.Console
         void SetCursorAt(int x, int y);
         ITvConsoleEvents ReadEvents();
         void Init();
-        TvBounds ConsoleBounds { get; } 
+        TvBounds ConsoleBounds { get; }
+        TvColor DefaultBackground { get; }
+
         void SetCursorVisibility(bool isVisible);
         void ProcessWindowEvent(TvWindowEvent windowEvent);
 

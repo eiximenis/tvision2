@@ -17,7 +17,7 @@ namespace Tvision2.Core
             var options = new BlazorConsoleDriverOptions();
             config?.Invoke(options);
             var colorManager = new AnsiColorManager(options.PaletteOptions);
-            var driver = new BtermConsoleDriver(colorManager);
+            var driver = new BtermConsoleDriver(options, colorManager);
             tv2.Options.UseConsoleDriver(driver);
             tv2.ConfigureServices(sc =>
             {

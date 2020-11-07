@@ -42,7 +42,7 @@ namespace Tvision2.Core.Engine
         {
             ConsoleDriver.Init();
             var bounds = ConsoleDriver.ConsoleBounds;
-            _currentConsole = new VirtualConsole(bounds.Rows, bounds.Cols);
+            _currentConsole = new VirtualConsole(bounds.Rows, bounds.Cols, ConsoleDriver.DefaultBackground);
             var hookContext = new HookContext(this);
             _eventHookManager = new EventHookManager(_options.HookTypes ?? Enumerable.Empty<Type>(), _options.AfterUpdates ?? Enumerable.Empty<Func<Task>>(), hookContext, ServiceProvider);
             foreach (var afterCreateTask in _options.AfterCreateInvokers)

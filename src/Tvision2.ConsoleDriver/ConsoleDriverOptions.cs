@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Tvision2.Core.Colors;
 
 namespace Tvision2.ConsoleDriver
 {
@@ -14,16 +15,14 @@ namespace Tvision2.ConsoleDriver
 
     public class ConsoleDriverOptions : IConsoleDriverOptions
     {
-        public ConsoleColor DefaultBackColor { get; private set; }
-        public ConsoleColor DefaultForeColor { get; private set; }
+        public TvColor DefaultBackColor { get; private set; }
         public ConsoleWindowOptions WindowOptions { get; }
 
         public ConsoleItemActionRequested MouseActionRequested { get; private set; }
 
         public ConsoleDriverOptions()
         {
-            DefaultBackColor = ConsoleColor.Black;
-            DefaultBackColor = ConsoleColor.White;
+            DefaultBackColor = TvColor.Black;
             WindowOptions = new ConsoleWindowOptions();
             MouseActionRequested = ConsoleItemActionRequested.None;
         }
@@ -39,16 +38,9 @@ namespace Tvision2.ConsoleDriver
             return this;
         }
 
-
-        IConsoleDriverOptions IConsoleDriverOptions.UseBackColor(ConsoleColor backColor)
+        IConsoleDriverOptions IConsoleDriverOptions.UseBackColor(TvColor backColor)
         {
             DefaultBackColor = backColor;
-            return this;
-        }
-
-        IConsoleDriverOptions IConsoleDriverOptions.UseForegroundColor(ConsoleColor foreColor)
-        {
-            DefaultForeColor = foreColor;
             return this;
         }
 
