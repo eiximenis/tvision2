@@ -55,13 +55,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.ConsoleDriver.Wind
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.ConsoleDriver.All", "src\Tvision2.ConsoleDriver.All\Tvision2.ConsoleDriver.All.csproj", "{3732387A-6184-4266-AFEF-8E39A2E80912}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.MidnightCommander.Common", "Samples\Tvision2.MidnightCommander.Common\Tvision2.MidnightCommander.Common.csproj", "{C2497931-35DE-4D1A-9C0D-07B57BBADA73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.MidnightCommander.Common", "samples\Tvision2.MidnightCommander.Common\Tvision2.MidnightCommander.Common.csproj", "{C2497931-35DE-4D1A-9C0D-07B57BBADA73}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvision2.BlazorDemo.Server", "samples\Tvision2.BlazorDemo.Server\Tvision2.BlazorDemo.Server.csproj", "{E98AF730-18FC-42B6-A16D-A1F5C075BAF9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.Styles", "src\Tvision2.Styles\Tvision2.Styles.csproj", "{D55BDD1A-959E-4CE5-B07D-E3B7A427A716}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.StyledHelloWorld", "Samples\Tvision2.StyledHelloWorld\Tvision2.StyledHelloWorld.csproj", "{5536C302-45FF-452F-8671-D93CA936B734}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvision2.StyledHelloWorld", "samples\Tvision2.StyledHelloWorld\Tvision2.StyledHelloWorld.csproj", "{5536C302-45FF-452F-8671-D93CA936B734}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
