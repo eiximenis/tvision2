@@ -14,7 +14,7 @@ jobs:
     - name: Use .NET Core SDK 
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.300
+        dotnet-version: 5.0.100
     - name: dotnet build
       run: dotnet build tvision2.sln -c $BUILD_CONFIG 
     - name: dotnet pack [Tvision2 Console Driver]
