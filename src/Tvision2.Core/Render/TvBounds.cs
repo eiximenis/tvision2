@@ -16,6 +16,8 @@ namespace Tvision2.Core.Render
             Cols = cols;
         }
 
+        public int Length() => Rows * Cols;
+
         public static TvBounds FromRowsAndCols(int rows, int cols) => new TvBounds(rows, cols);
 
         public TvBounds SingleRow() => new TvBounds(1, Cols);

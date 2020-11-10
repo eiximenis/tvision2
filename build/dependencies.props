@@ -1,18 +1,18 @@
 <Project>
   <PropertyGroup Label="SDK Versions">
-    <NetStandardTargetVersion>netstandard2.1</NetStandardTargetVersion>
-    <NetCoreTargetVersion>netcoreapp3.1</NetCoreTargetVersion>
+    <NetStandardTargetVersion>net5.0</NetStandardTargetVersion>
+    <NetCoreTargetVersion>net5.0</NetCoreTargetVersion>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="Package Versions">
-    <MicrosoftExtensionsDependencyInjectionAbstractionsVersion>3.1.3</MicrosoftExtensionsDependencyInjectionAbstractionsVersion>
-    <MicrosoftExtensionsHostingVersion>3.1.3</MicrosoftExtensionsHostingVersion>
+    <MicrosoftExtensionsDependencyInjectionAbstractionsVersion>5.0.0</MicrosoftExtensionsDependencyInjectionAbstractionsVersion>
+    <MicrosoftExtensionsHostingVersion>5.0.0</MicrosoftExtensionsHostingVersion>
     <FluentAssertionsVersion>5.10.3</FluentAssertionsVersion>
-    <MicrosoftNETTestSdkVersion>16.5.0</MicrosoftNETTestSdkVersion>
+    <MicrosoftNETTestSdkVersion>16.8.0</MicrosoftNETTestSdkVersion>
     <XunitVersion>2.4.1</XunitVersion>
-    <XunitRunnerVisualStudioVersion>2.4.1</XunitRunnerVisualStudioVersion>
-    <CoverletCollectorVersion>1.2.1</CoverletCollectorVersion>
+    <XunitRunnerVisualStudioVersion>2.4.3</XunitRunnerVisualStudioVersion>
+    <CoverletCollectorVersion>1.3.0</CoverletCollectorVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="CLI Tools Versions">
@@ -31,6 +31,7 @@
     <Tvision2StatexControlsVersion>1.0.0$(VersionSuffix)</Tvision2StatexControlsVersion>
     <Tvision2ViewportsVersion>1.0.0$(VersionSuffix)</Tvision2ViewportsVersion>
     <Tvision2DialogsVersion>1.0.0$(VersionSuffix)</Tvision2DialogsVersion>
+    <Tvision2StylesVersion>1.0.0$(VersionSuffix)</Tvision2StylesVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="Package information">

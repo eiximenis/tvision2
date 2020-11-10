@@ -14,7 +14,7 @@ jobs:
     - name: Use .NET Core SDK 
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.300
+        dotnet-version: 5.0
         source-url: https://nuget.pkg.github.com/eiximenis/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}} 
@@ -22,10 +22,20 @@ jobs:
       run: dotnet build tvision2.sln -c $BUILD_CONFIG 
     - name: dotnet pack [Tvision2 Console Driver]
       run: dotnet pack ./src/Tvision2.ConsoleDriver/Tvision2.ConsoleDriver.csproj -o ./artifacts -c $BUILD_CONFIG --version-suffix $VERSION_SUFFIX --no-build --include-source --include-symbols
-    - name: dotnet pack [TVision2 Core]
-      run: dotnet pack ./src/Tvision2.Core/Tvision2.Core.csproj -o ./artifacts -c $BUILD_CONFIG --version-suffix $VERSION_SUFFIX --no-build --include-source --include-symbols
+    - name: dotnet pack [Tvision2 Console Driver All]
+      run: dotnet pack ./src/Tvision2.ConsoleDriver.All/Tvision2.ConsoleDriver.All.csproj -o ./artifacts -c $BUILD_CONFIG --version-suffix $VERSION_SUFFIX --no-build --include-source --include-symbols
+    - name: dotnet pack [Tvision2 Console Driver Linux]
+      run: dotnet pack ./src/Tvision2.ConsoleDriver.Linux/Tvision2.ConsoleDriver.Linux.csproj -o ./artifacts -c $BUILD_CONFIG --version-suffix $VERSION_SUFFIX --no-build --include-source --include-symbols
+    - name: dotnet pack [Tvision2 Console Driver Windows]
+      run: dotnet pack ./src/Tvision2.ConsoleDriver.Linux/Tvision2.ConsoleDriver.Windows.csproj -o ./artifacts -c $BUILD_CONFIG --version-suffix $VERSION_SUFFIX --no-build --include-source --include-symbols
     - name: dotnet pack [TvControls]
       run: dotnet pack ./src/Tvision2.Controls/Tvision2.Controls.csproj -o ./artifacts -c $BUILD_CONFIG --version-suffix $VERSION_SUFFIX --no-build --include-source --include-symbols
+    - name: dotnet pack [TvControls Styles Mc]
+      run: dotnet pack ./src/Tvision2.Controls.Styles.Mc/Tvision2.Controls.Styles.Mc.csproj -o ./artifacts -c $BUILD_CONFIG --version-suffix $VERSION_SUFFIX --no-build --include-source --include-symbols
+    - name: dotnet pack [TVision2 Core]
+      run: dotnet pack ./src/Tvision2.Core/Tvision2.Core.csproj -o ./artifacts -c $BUILD_CONFIG --version-suffix $VERSION_SUFFIX --no-build --include-source --include-symbols
+    - name: dotnet pack [TVision2 Debug]
+      run: dotnet pack ./src/Tvision2.Debug/Tvision2.Debug.csproj -o ./artifacts -c $BUILD_CONFIG --version-suffix $VERSION_SUFFIX --no-build --include-source --include-symbols
     - name: dotnet pack [TvDialogs]
       run: dotnet pack ./src/Tvision2.Dialogs/Tvision2.Dialogs.csproj -o ./artifacts -c $BUILD_CONFIG --version-suffix $VERSION_SUFFIX --no-build --include-source --include-symbols
     - name: dotnet pack [TvLayouts]
@@ -34,7 +44,9 @@ jobs:
       run: dotnet pack ./src/Tvision2.Statex/Tvision2.Statex.csproj -o ./artifacts -c $BUILD_CONFIG --version-suffix $VERSION_SUFFIX --no-build --include-source --include-symbols
     - name: dotnet pack [TvStatex Controls]
       run: dotnet pack ./src/Tvision2.Statex.Controls/Tvision2.Statex.Controls.csproj -o ./artifacts -c $BUILD_CONFIG --version-suffix $VERSION_SUFFIX --no-build --include-source --include-symbols
-    - name: dotnet pack [TvStatex Controls]
+    - name: dotnet pack [TVision2 Styles]
+      run: dotnet pack ./src/Tvision2.Styles/Tvision2.Styles.csproj -o ./artifacts -c $BUILD_CONFIG --version-suffix $VERSION_SUFFIX --no-build --include-source --include-symbols
+    - name: dotnet pack [TVision2 Viewports]
       run: dotnet pack ./src/Tvision2.Viewports/Tvision2.Viewports.csproj -o ./artifacts -c $BUILD_CONFIG --version-suffix $VERSION_SUFFIX --no-build --include-source --include-symbols
     - name: Publish on Github Packages
       run: dotnet nuget push  '*.nupkg'  --skip-duplicate 

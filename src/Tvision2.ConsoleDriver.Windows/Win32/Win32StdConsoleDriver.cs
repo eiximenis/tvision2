@@ -30,7 +30,7 @@ namespace Tvision2.ConsoleDriver
         {
             CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-            ConsoleNative.GetConsoleScreenBufferInfo(_hstdout, out csbi);
+            ConsoleNative.GetConsoleScreenBufferInfo(_hout, out csbi);
             var columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
             var rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
             return TvBounds.FromRowsAndCols(rows, columns);
@@ -73,9 +73,7 @@ namespace Tvision2.ConsoleDriver
                 Right = (short)requestedCols
             };
 
-
             var hbuffer = ConsoleNative.CreateConsoleScreenBuffer(AccessMode.GENERIC_READ | AccessMode.GENERIC_WRITE, ShareMode.FILE_SHARE_READ | ShareMode.FILE_SHARE_WRITE, IntPtr.Zero, ScreenBufferFlags.CONSOLE_TEXTMODE_BUFFER, IntPtr.Zero);
-
             if (hbuffer != HandleNative.INVALID_HANDLE_VALUE)
             {
                 _hout = hbuffer;
@@ -93,6 +91,7 @@ namespace Tvision2.ConsoleDriver
                 ConsoleNative.SetConsoleWindowInfo(_hout, true, ref rect);
             }
 
+
             ConsoleNative.SetConsoleScreenBufferSize(_hout, new COORD((short)(rect.Right + 1), (short)(rect.Bottom + 1)));
 
 
@@ -101,6 +100,13 @@ namespace Tvision2.ConsoleDriver
             _initialCursorInfo = cursorInfo;
 
             ConsoleBounds = GetConsoleWindowSize();
+            Cls();
+        }
+        private void Cls()
+        {
+            ConsoleNative.FillConsoleOutputCharacter(_hout, ' ', (uint)ConsoleBounds.Length(), new COORD(0, 0), out uint lpCharsWritten);
+            var backAttr = Win32ConsoleColor.ForeConsoleColorToAttribute(_options.DefaultBackColor) | Win32ConsoleColor.BackConsoleColorToAttribute(_options.DefaultBackColor);
+            ConsoleNative.FillConsoleOutputAttribute(_hout, (ushort)backAttr, (uint)ConsoleBounds.Length(), new COORD(0, 0), out uint lpAttrsWritten);
         }
 
 
