@@ -55,10 +55,13 @@ namespace Tvision2.ConsoleDriver
             var code = Curses.get_wch(out int wch);
             TvConsoleEvents events = null;
 
-            if (code == Curses.OK)
+            Console.Write(wch.ToString());
+
+            if (code == Curses.OK)                                              // Standard Key pressed
             {
                 events = new TvConsoleEvents();
                 var alt = false;
+
                 if (wch == EscKey) // Esc key read, we treat as Alt
                 {
                     alt = true;
@@ -70,14 +73,11 @@ namespace Tvision2.ConsoleDriver
                         alt = false;
                     }
                 }
-
                 events.Add(new NCursesConsoleKeyboardEvent(wch, alt: alt));
-                events.Add(new NCursesConsoleKeyboardEvent(wch, alt: alt));
-
                 return events;
             }
 
-            else if (code == Curses.KEY_CODE_YES)
+            else if (code == Curses.KEY_CODE_YES)               // Special Key pressed
             {
                 events = new TvConsoleEvents();
                 if (wch == Curses.KeyMouse)
@@ -88,7 +88,6 @@ namespace Tvision2.ConsoleDriver
 
                 else
                 {
-                    events.Add(new NCursesConsoleKeyboardEvent(wch, alt: false));
                     events.Add(new NCursesConsoleKeyboardEvent(wch, alt: false));
                     return events;
                 }

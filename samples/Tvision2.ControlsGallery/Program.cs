@@ -18,7 +18,7 @@ namespace Tvision2.ControlsGallery
             builder.UseTvision2(setup =>
             {
                 setup.UsePlatformConsoleDriver(options => options.Configure(c => c
-                    .UseBackColor(TvColor.Yellow)))
+                    .UseBackColor(TvColor.Yellow)).OnLinux(l => l.UseNCurses()))
                     .UseViewportManager()
                     .UseLayoutManager()
                     .AddTvDialogs()
