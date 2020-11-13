@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using Tvision2.ConsoleDriver;
 using Tvision2.ConsoleDriver.Ansi;
 using Tvision2.ConsoleDriver.Common;
+using Tvision2.ConsoleDriver.Linux.NCurses;
 using Tvision2.Core.Colors;
 using Tvision2.Engine.Console;
 
@@ -22,6 +24,7 @@ namespace Tvision2.Core
 
         public static Tvision2Setup UseNcursesConsoleDriver(this Tvision2Setup tv2, LinuxConsoleDriverOptions options)
         {
+            NativeLibrary.SetDllImportResolver(typeof(NcursesConsoleDriver).Assembly,NCursesResolver.ResolveLibrary);
             var colorManager = new NcursesColorManager(options.PaletteOptions);
             var driver = new NcursesConsoleDriver(options, colorManager);
             tv2.Options.UseConsoleDriver(driver);

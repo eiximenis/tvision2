@@ -16,6 +16,8 @@ namespace Tvision2.Events.NCurses
             switch (_wch)
             {
                 case Curses.KeyDown: return ConsoleKey.DownArrow;
+                case Curses.KeyLeft: return ConsoleKey.LeftArrow;
+                case Curses.KeyRight: return ConsoleKey.RightArrow;
                 case Curses.KeyUp: return ConsoleKey.UpArrow;
                 case Curses.KeyBackspace: return ConsoleKey.Backspace;
                 case Curses.KeyF1: return ConsoleKey.F1;
@@ -28,6 +30,7 @@ namespace Tvision2.Events.NCurses
                 case Curses.KeyF8: return ConsoleKey.F8;
                 case Curses.KeyF9: return ConsoleKey.F9;
                 case Curses.KeyF10: return ConsoleKey.F10;
+                case 32: return ConsoleKey.Spacebar;
                 case 27: return ConsoleKey.Escape;
                 case 13: return ConsoleKey.Enter;
                 case 9: return ConsoleKey.Tab;

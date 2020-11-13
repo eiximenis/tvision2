@@ -30,7 +30,7 @@ namespace Tvision2.BlazorDemo
                     .UseLayoutManager()
                     .AddTvDialogs()
                     .AddTvision2Startup<Startup>()
-                    .AddTvControls(sk => sk.AddMcStyles())
+                    .AddTvControls(options => options.ConfigureSkins(sk => sk.AddMcStyles()))
                     .AddStateManager(sm =>
                     {
                         var ls = sm.AddStore<FileListStore, FileList>("left", new FileListStore(FileList.Empty));

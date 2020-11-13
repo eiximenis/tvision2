@@ -6,35 +6,34 @@ using Tvision2.Core.Colors;
 namespace Tvision2.ConsoleDriver
 {
 
-    public enum ConsoleItemActionRequested
+    public enum MouseStatus
     {
-        None,
-        TryEnable,
-        TryDisable
+        Disabled,
+        Enabled
     }
-
+    
     public class ConsoleDriverOptions : IConsoleDriverOptions
     {
         public TvColor DefaultBackColor { get; private set; }
         public ConsoleWindowOptions WindowOptions { get; }
 
-        public ConsoleItemActionRequested MouseActionRequested { get; private set; }
+        public MouseStatus MouseStatusDesired { get; private set; }
 
         public ConsoleDriverOptions()
         {
             DefaultBackColor = TvColor.Black;
             WindowOptions = new ConsoleWindowOptions();
-            MouseActionRequested = ConsoleItemActionRequested.None;
+            MouseStatusDesired = MouseStatus.Disabled;
         }
 
         IConsoleDriverOptions IConsoleDriverOptions.EnableMouse()
         {
-            MouseActionRequested = ConsoleItemActionRequested.TryEnable;
+            MouseStatusDesired = MouseStatus.Enabled;
             return this;
         }
         IConsoleDriverOptions IConsoleDriverOptions.DisableMouse()
         {
-            MouseActionRequested = ConsoleItemActionRequested.TryDisable;
+            MouseStatusDesired = MouseStatus.Disabled;
             return this;
         }
 

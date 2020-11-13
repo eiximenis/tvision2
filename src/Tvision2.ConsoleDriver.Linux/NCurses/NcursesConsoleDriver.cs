@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Xml;
 using Tvision2.ConsoleDriver.Common;
+using Tvision2.ConsoleDriver.Linux.NCurses;
 using Tvision2.Core.Colors;
 using Tvision2.Core.Render;
 using Tvision2.Engine.Console;
@@ -22,9 +24,7 @@ namespace Tvision2.ConsoleDriver
 
         public IColorManager ColorManager => _colorDriver;
         public TvBounds ConsoleBounds { get; private set; }
-
         public TvColor DefaultBackground { get => _options.DefaultBackColor; }
-
         public NcursesConsoleDriver(LinuxConsoleDriverOptions options, NcursesColorManager colorDriver)
         {
             _options = options;
@@ -34,6 +34,7 @@ namespace Tvision2.ConsoleDriver
         public void Init()
         {
             ConsoleBounds = TvBounds.FromRowsAndCols(Console.WindowHeight, Console.WindowWidth);
+            
             Curses.setlocale(6, "");
             Curses.initscr();
             _colorDriver.Init();
@@ -43,6 +44,15 @@ namespace Tvision2.ConsoleDriver
             var stdscr = Window.Standard;
             Curses.nodelay(stdscr.Handle, bf: true);
             Curses.keypad(stdscr.Handle, bf: true);
+            if (_options.MouseStatusDesired == MouseStatus.Enabled)
+            {
+                TryEnableMouse();
+            }            
+        }
+
+        private void TryEnableMouse()
+        {
+            Curses.mousemask(Event.AllEvents, out var oldEvents);
         }
 
         public void End()
@@ -55,47 +65,57 @@ namespace Tvision2.ConsoleDriver
             var code = Curses.get_wch(out int wch);
             TvConsoleEvents events = null;
 
-            Console.Write(wch.ToString());
-
-            if (code == Curses.OK)                                              // Standard Key pressed
+            switch (code)
             {
-                events = new TvConsoleEvents();
-                var alt = false;
-
-                if (wch == EscKey) // Esc key read, we treat as Alt
+                case Curses.OK when wch == 3:
                 {
-                    alt = true;
-                    Curses.timeout(100);
-                    var code2 = Curses.get_wch(out wch);
-                    if (code2 == Curses.ERR)
+                    events = new TvConsoleEvents();
+                    events.Signal(TvConsoleSignal.Sigint);
+                    break;
+                }
+                case Curses.OK:
+                {
+                    events = new TvConsoleEvents();
+                    var alt = false;
+
+                    if (wch == EscKey) // Esc key read, we treat as Alt
                     {
-                        wch = EscKey;
-                        alt = false;
+                        alt = true;
+                        Curses.timeout(100);
+                        var code2 = Curses.get_wch(out wch);
+                        if (code2 == Curses.ERR)
+                        {
+                            wch = EscKey;
+                            alt = false;
+                        }
                     }
+                    events.Add(new NCursesConsoleKeyboardEvent(wch, alt: alt));
+                    break;
                 }
-                events.Add(new NCursesConsoleKeyboardEvent(wch, alt: alt));
-                return events;
-            }
-
-            else if (code == Curses.KEY_CODE_YES)               // Special Key pressed
-            {
-                events = new TvConsoleEvents();
-                if (wch == Curses.KeyMouse)
+                case Curses.KEY_CODE_YES when wch == Curses.KeyMouse:
                 {
-                    Curses.getmouse(out Curses.MouseEvent ev);
-                    return TvConsoleEvents.Empty;
+                    if (Curses.getmouse(out Curses.MouseEvent ev) == Curses.OK)
+                    {
+                        events = new TvConsoleEvents();
+                        events.Add(CursesMouseEventToTvisionMouseEvent(in ev));
+                    }
+                    
+                    break;
                 }
-
-                else
+                case Curses.KEY_CODE_YES:
                 {
+                    events = new TvConsoleEvents();
                     events.Add(new NCursesConsoleKeyboardEvent(wch, alt: false));
-                    return events;
+                    break;
                 }
-
-                return events;
             }
+            return events ??  TvConsoleEvents.Empty;
+        }
 
-            return TvConsoleEvents.Empty;
+        private TvConsoleMouseEvent CursesMouseEventToTvisionMouseEvent(in MouseEvent ev)
+        {
+            var states = (TvMouseButtonStates) ev.ButtonState;                // TvMouseButtonStates have same values as Curses.States
+            return new TvConsoleMouseEvent(ev.X, ev.Y, states);
         }
 
 

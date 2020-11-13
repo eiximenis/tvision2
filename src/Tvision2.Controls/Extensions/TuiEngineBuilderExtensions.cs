@@ -12,12 +12,17 @@ namespace Tvision2.DependencyInjection
     public static class TvControlsTuiEngineBuilderExtensions
     {
 
-        public static Tvision2Setup AddTvControls(this Tvision2Setup setup, Action<ISkinManagerBuilder> skinOptions = null)
+
+        public static Tvision2Setup AddTvControls(this Tvision2Setup setup, Action<IControlsOptions> controlsOptionsAction = null)
         {
 
+            var options = new TvControlsOptions();
+
+            controlsOptionsAction?.Invoke(options);
+            
             if (!setup.HasStylesEnabled())
             {
-                setup.AddStyles(skinOptions);
+                setup.AddStyles(options.SkinOptions);
             }
 
             setup.ConfigureServices(sc =>
@@ -26,9 +31,21 @@ namespace Tvision2.DependencyInjection
 
             });
 
+            if (options.MouseManagerEnabled)
+            {
+                setup.AddHook<MouseChangeFocusEventHook>();
+            }
+            
             setup.AddHook<ChangeFocusEventHook>();
 
             return setup;
+            
         }
+    }
+
+    public interface IControlsOptions
+    {
+        IControlsOptions ConfigureSkins(Action<ISkinManagerBuilder> options);
+        IControlsOptions EnableMouseManager();
     }
 }

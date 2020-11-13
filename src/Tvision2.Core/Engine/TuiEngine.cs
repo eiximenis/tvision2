@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Tvision2.Core.Hooks;
 using Tvision2.Core.Render;
 using Tvision2.Engine.Console;
+using Tvision2.Events;
 
 namespace Tvision2.Core.Engine
 {
@@ -63,7 +64,8 @@ namespace Tvision2.Core.Engine
             }
 
             PerformDrawOperations(force: true);
-            while (!cancellationToken.IsCancellationRequested)
+            var running = true;
+            while (!cancellationToken.IsCancellationRequested && running)
             {
                 _watcher.Start();
                 var evts = _eventPumper.ReadEvents();
@@ -90,9 +92,17 @@ namespace Tvision2.Core.Engine
                 else
                 {
                     await Task.Delay(10);
-                }                
+                }
+
+                if (evts.CurrentSignal == TvConsoleSignal.Sigint)
+                {
+                    running = false;
+                }
+                
                 _watcher.Reset();
             }
+
+            ConsoleDriver.End();
         }
 
         private void PerformDrawOperations(bool force)

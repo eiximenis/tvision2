@@ -84,7 +84,7 @@ namespace Tvision2.Controls.Styles
                     );
 
                     style
-                        .When(p =>  p.ColorMode ==ColorMode.Direct ||  p.ColorMode == ColorMode.Palettized )
+                        .When(p =>  p.ColorMode ==ColorMode.Direct )
                         .DesiredStandard(o =>
                             o.UseBackground(() => new VerticalGradientBackgroundProvider(
                                 TvColor.FromRGB(255, 128, 128), TvColor.FromRGB(128, 255, 255)))

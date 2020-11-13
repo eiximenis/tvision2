@@ -17,8 +17,12 @@ namespace Tvision2.ControlsGallery
             var builder = new HostBuilder();
             builder.UseTvision2(setup =>
             {
-                setup.UsePlatformConsoleDriver(options => options.Configure(c => c
-                    .UseBackColor(TvColor.Yellow)).OnLinux(l => l.UseNCurses()))
+                setup.UsePlatformConsoleDriver(options => 
+                        options.Configure(c => c
+                            .EnableMouse()    
+                            .UseBackColor(TvColor.Yellow))
+                            .OnLinux(l => l
+                                .UseNCurses()))
                     .UseViewportManager()
                     .UseLayoutManager()
                     .AddTvDialogs()
@@ -27,7 +31,7 @@ namespace Tvision2.ControlsGallery
                     //    opt.UseDebugFilter(c => c.Name.StartsWith("TvControl"));
                     //})
                     .AddTvision2Startup<Startup>()
-                    .AddTvControls(sk => sk.AddMcStyles());
+                    .AddTvControls(options => options.EnableMouseManager().ConfigureSkins(sk => sk.AddMcStyles()));
             }).UseConsoleLifetime();
             await builder.RunTvisionConsoleApp();
         }

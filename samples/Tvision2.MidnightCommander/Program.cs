@@ -88,7 +88,7 @@ namespace Tvision2.MidnightCommander
                     //    opt.UseDebugFilter(c => c.Name.StartsWith("TvControl"));
                     //})
                     .AddTvision2Startup<Startup>()
-                    .AddTvControls(sk => sk.AddMcStyles())
+                    .AddTvControls(options => options.ConfigureSkins(sk => sk.AddMcStyles()))
                     .AddStateManager(sm =>
                     {
                         var ls = sm.AddStore<FileListStore, FileList>("left", new FileListStore(FileList.Empty));

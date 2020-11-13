@@ -41,6 +41,7 @@ namespace Tvision2.Events
 
         public TvConsoleEvents()
         {
+            CurrentSignal = TvConsoleSignal.None;
             _keyboardEvents = new List<TvConsoleKeyboardEvent>();
             _mouseEvents = new List<TvConsoleMouseEvent>();
             WindowEvent = null;
@@ -61,6 +62,14 @@ namespace Tvision2.Events
         public void Add(TvConsoleKeyboardEvent @event) => _keyboardEvents.Add(@event);
         public void Add(TvConsoleMouseEvent @event) => _mouseEvents.Add(@event);
 
+        public TvConsoleSignal CurrentSignal { get; private set; }
+
+        public void Signal(TvConsoleSignal signal)
+        {
+            CurrentSignal = signal;
+        }
+        
+        
     }
 
     class TvConsoleEventsEmpty : ITvConsoleEvents
@@ -95,5 +104,7 @@ namespace Tvision2.Events
         }
 
         public ITvConsoleEvents Clone() => TvConsoleEvents.Empty;
+
+        public TvConsoleSignal CurrentSignal { get; } = TvConsoleSignal.None;
     }
 }

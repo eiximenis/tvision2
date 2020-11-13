@@ -119,6 +119,8 @@ namespace Tvision2.ConsoleDriver
             }
         }
 
+
+        private Win32MouseButtons _mouseButtonsPressed = Win32MouseButtons.None;
         public ITvConsoleEvents ReadEvents()
         {
             ConsoleNative.GetNumberOfConsoleInputEvents(_hstdin, out var numEvents);
@@ -128,7 +130,7 @@ namespace Tvision2.ConsoleDriver
                 Span<INPUT_RECORD> buffer = stackalloc INPUT_RECORD[(int)numEvents];
                 var byteBuf = MemoryMarshal.AsBytes(buffer);
                 ConsoleNative.ReadConsoleInput(_hstdin, ref MemoryMarshal.GetReference(byteBuf), numEvents, out var eventsRead);
-                return new TvConsoleEvents().Add(buffer);
+                return new TvConsoleEvents().AddWin32Events(buffer, ref _mouseButtonsPressed);
             }
             else
             {
