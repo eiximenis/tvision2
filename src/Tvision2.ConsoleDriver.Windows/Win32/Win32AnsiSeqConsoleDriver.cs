@@ -49,8 +49,22 @@ namespace Tvision2.ConsoleDriver
         }
 
 
+        private void SetConsoleMode(ConsoleDriverOptions options)
+        {
+            ConsoleNative.GetConsoleMode(_hstdout, out uint dwOutModes);
+            ConsoleNative.GetConsoleMode(_hstdin, out uint dwInputModes);
+
+            if (options.MouseStatusDesired == MouseStatus.Enabled)
+            {
+
+                ConsoleNative.SetConsoleMode(_hstdin, (uint)ConsoleInputModes.ENABLE_EXTENDED_FLAGS | (uint)ConsoleInputModes.ENABLE_MOUSE_INPUT | (uint)ConsoleInputModes.ENABLE_WINDOW_INPUT);
+            }
+
+        }
+
         public void Init()
         {
+            SetConsoleMode(_options);
             ConsoleBounds = GetConsoleWindowSize();
 
             /*
@@ -78,7 +92,7 @@ namespace Tvision2.ConsoleDriver
             Console.Write("\x1b[2J");
         }
 
-        private Win32MouseButtons _mouseButtonsPressed = Win32MouseButtons.None;
+        private readonly Win32EventsProcessor _eventsProcessor = new Win32EventsProcessor();
         public ITvConsoleEvents ReadEvents()
         {
             ConsoleNative.GetNumberOfConsoleInputEvents(_hstdin, out var numEvents);
@@ -88,7 +102,8 @@ namespace Tvision2.ConsoleDriver
                 Span<INPUT_RECORD> buffer = stackalloc INPUT_RECORD[(int)numEvents];
                 var byteBuf = MemoryMarshal.AsBytes(buffer);
                 ConsoleNative.ReadConsoleInput(_hstdin, ref MemoryMarshal.GetReference(byteBuf), numEvents, out var eventsRead);
-                return new TvConsoleEvents().AddWin32Events(buffer, ref _mouseButtonsPressed);
+                return _eventsProcessor.AddWin32Events(new TvConsoleEvents(), buffer);
+
             }
             else
             {

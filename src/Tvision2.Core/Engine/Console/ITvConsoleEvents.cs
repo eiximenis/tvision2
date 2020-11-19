@@ -17,5 +17,9 @@ namespace Tvision2.Events
         void SetWindowEvent(TvWindowEvent @event);
         ITvConsoleEvents Clone();
         TvConsoleSignal CurrentSignal { get; }
+
+        TvConsoleMouseEvent MouseLeftButtonClick { get; }
+        TvConsoleMouseEvent MouseLeftButtonDown { get; }
+
     }
 }

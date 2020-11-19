@@ -23,6 +23,16 @@ namespace Tvision2.Core.Render
             return (x2o >= x1 && x1o <= x2) && (y2o >= y1 && y1o <= y2);
         }
 
+        public static bool ContainsPoint(this IViewport vp, TvPoint point)
+        {
+            var x1 = vp.Position.Left;
+            var y1 = vp.Position.Top;
+            var x2 = x1 + vp.Bounds.Cols;
+            var y2 = y1 + vp.Bounds.Rows;
+
+            return (point.Left >= x1 && point.Left <= x2 && point.Top >= y1 && point.Top <= y2);
+        }
+
         public static IViewport Layer(this IViewport viewport, Layer layer, int zIndexDisplacement = 0) 
             => new Viewport(viewport.Position, viewport.Bounds, layer.Move(zIndexDisplacement));
         public static IViewport InnerViewport(this IViewport containerViewport, TvPoint pos, TvBounds bounds)

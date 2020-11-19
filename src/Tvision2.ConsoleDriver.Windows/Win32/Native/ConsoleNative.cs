@@ -535,7 +535,8 @@ namespace Tvision2.ConsoleDriver.Win32
         ENABLE_PROCESSED_INPUT = 0x0001,
         ENABLE_QUICK_EDIT_MODE = 0x0040,
         ENABLE_WINDOW_INPUT = 0x0008,
-        ENABLE_VIRTUAL_TERMINAL_INPUT = 0x0200
+        ENABLE_VIRTUAL_TERMINAL_INPUT = 0x0200,
+        ENABLE_EXTENDED_FLAGS = 0x0080
     }
 
     internal enum ConsoleOutputModes : uint

@@ -51,6 +51,10 @@ namespace Tvision2.Core.Render
 
         public static bool operator >(Layer one, Layer two) => one._value > two._value;
         public static bool operator <(Layer one, Layer two) => one._value < two._value;
+
+        public static bool operator >=(Layer one, Layer two) => one._value >= two._value;
+        public static bool operator <=(Layer one, Layer two) => one._value <= two._value;
+
         public static bool operator ==(Layer one, Layer two) => one._value == two._value;
         public static bool operator !=(Layer one, Layer two) => one._value != two._value;
 

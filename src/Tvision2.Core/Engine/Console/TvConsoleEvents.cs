@@ -21,6 +21,9 @@ namespace Tvision2.Events
         public IEnumerable<TvConsoleKeyboardEvent> KeyboardEvents => _keyboardEvents.Where(e => !e.IsHandled);
         public IEnumerable<TvConsoleMouseEvent> MouseEvents => _mouseEvents;
         public TvWindowEvent WindowEvent { get; private set; }
+        public TvConsoleMouseEvent MouseLeftButtonClick { get; private set; }
+        public TvConsoleMouseEvent MouseLeftButtonDown { get; private set; }
+
 
         public bool HasEvents => _keyboardEvents.Any(e => !e.IsHandled) || _mouseEvents.Any() || WindowEvent != null;
 
@@ -32,7 +35,7 @@ namespace Tvision2.Events
             clone._mouseEvents.AddRange(_mouseEvents);
             clone.WindowEvent = WindowEvent;
             return clone;
-  
+
         }
 
         public bool HasKeyboardEvents => _keyboardEvents.Any(e => !e.IsHandled);
@@ -60,7 +63,19 @@ namespace Tvision2.Events
 
         public void SetWindowEvent(TvWindowEvent @event) => WindowEvent = @event;
         public void Add(TvConsoleKeyboardEvent @event) => _keyboardEvents.Add(@event);
-        public void Add(TvConsoleMouseEvent @event) => _mouseEvents.Add(@event);
+        public void Add(TvConsoleMouseEvent @event)
+        {
+            _mouseEvents.Add(@event);
+            if ((@event.ButtonStates & TvMouseButtonStates.LeftButtonClicked) == TvMouseButtonStates.LeftButtonClicked)
+            {
+                MouseLeftButtonClick = @event;
+            }
+
+            if ((@event.ButtonStates & TvMouseButtonStates.LeftButtonPressed) == TvMouseButtonStates.LeftButtonPressed)
+            {
+                MouseLeftButtonDown = @event;
+            }
+        }
 
         public TvConsoleSignal CurrentSignal { get; private set; }
 
@@ -68,8 +83,9 @@ namespace Tvision2.Events
         {
             CurrentSignal = signal;
         }
-        
-        
+
+
+
     }
 
     class TvConsoleEventsEmpty : ITvConsoleEvents
@@ -84,7 +100,10 @@ namespace Tvision2.Events
 
         public IEnumerable<TvConsoleMouseEvent> MouseEvents => Enumerable.Empty<TvConsoleMouseEvent>();
 
-        public TvWindowEvent WindowEvent => null;
+
+        public TvWindowEvent WindowEvent { get; } =  null;
+        public TvConsoleMouseEvent MouseLeftButtonClick { get; } = null;
+        public TvConsoleMouseEvent MouseLeftButtonDown { get; } = null;
 
         public TvConsoleKeyboardEvent AcquireFirstKeyboard(Func<TvConsoleKeyboardEvent, bool> filter, bool autoHandle) => null;
 
@@ -107,4 +126,5 @@ namespace Tvision2.Events
 
         public TvConsoleSignal CurrentSignal { get; } = TvConsoleSignal.None;
     }
+
 }

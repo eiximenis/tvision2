@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Tvision2.Controls.Extensions;
 using Tvision2.Core.Engine;
+using Tvision2.Core.Render;
 
 namespace Tvision2.Controls
 {
@@ -84,6 +85,29 @@ namespace Tvision2.Controls
             {
                 return _componentsTree.NodesList.FirstOrDefault(node => node.ControlMetadata()?.ControlId == id)?.ControlMetadata();
             }
+        }
+
+        public TvControlMetadata LocateControlAt(TvPoint pos)
+        {
+
+            var layer = Layer.Bottom;
+            TvControlMetadata selected = null;
+
+            foreach (var cmdata in _controls)
+            {
+                var ccomp = cmdata.Control.AsComponent();
+                var vp = ccomp.Viewport;
+                if (vp.ContainsPoint(pos))
+                {
+                    if (vp.ZIndex >= layer)
+                    {
+                        selected = cmdata;
+                        layer = vp.ZIndex;
+                    }
+                }
+            }
+
+            return selected;
         }
 
 

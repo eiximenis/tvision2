@@ -1,7 +1,9 @@
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks.Sources;
 using Tvision2.Core.Hooks;
+using Tvision2.Core.Render;
 using Tvision2.Events;
 
 namespace Tvision2.Controls.Hooks
@@ -14,17 +16,22 @@ namespace Tvision2.Controls.Hooks
 
         public void ProcessEvents(ITvConsoleEvents events, HookContext context)
         {
-
-            foreach (var evt in events.MouseEvents)
+            /*
+            foreach (var evt in events.MouseEvents.Where(me => me.ButtonStates != TvMouseButtonStates.None))
             {
                 Debug.WriteLine($"Mouse Evt. States: {evt.ButtonStates} X: {evt.X} Y: {evt.Y}. Cttl: {evt.CtrlPressed} Alt: {evt.AltPressed} Shift: {evt.ShiftPressed}");
             }
-            
-            var b1down =
-                events.MouseEvents.FirstOrDefault(me => me.ButtonStates == TvMouseButtonStates.LeftButtonPressed);
+            */
+
+            var b1down = events.MouseLeftButtonDown;
             if (b1down != null)
             {
-                b1down.Handle();
+                var pos = TvPoint.FromXY(b1down.X, b1down.Y);
+                var selectedControl = _ctree.LocateControlAt(pos);
+                if (selectedControl != null)
+                {
+                    _ctree.Focus(selectedControl);
+                }
             }
         }
     }

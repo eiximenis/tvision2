@@ -22,8 +22,22 @@ namespace Tvision2.Controls.Button
             evt.Handle();
             _onClickAction?.Invoke();
             return true;
+        }
+    }
 
+    public class ButtonMouseBehavior : MouseBehavior<ButtonState>
+    {
+        private readonly Action _onClickAction;
+        public ButtonMouseBehavior(Action onClickAction) : base (new MouseBehaviorOptions()) => _onClickAction = onClickAction;
+
+
+        protected override bool OnMouseClick(TvConsoleMouseEvent evt, BehaviorContext<ButtonState> updateContext)
+        {
+            evt.Handle();
+            _onClickAction?.Invoke();
+            return true;
         }
 
     }
+
 }

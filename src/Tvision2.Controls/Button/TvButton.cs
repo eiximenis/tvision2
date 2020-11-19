@@ -26,6 +26,7 @@ namespace Tvision2.Controls.Button
         protected override IEnumerable<ITvBehavior<ButtonState>> GetEventedBehaviors()
         {
             yield return new ButtonBehavior(() => _onClick.Invoke(State) );
+            yield return new ButtonMouseBehavior(() => _onClick.Invoke(State));
         }
 
         protected override void OnDraw(RenderContext<ButtonState> context)

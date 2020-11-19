@@ -9,10 +9,16 @@ namespace Tvision2.Events
         public int X { get; }
         public int Y { get; }
         public bool CtrlPressed { get; }
-        public bool AltPressed { get;  }
-        public bool ShiftPressed { get;  }
-        public  TvMouseButtonStates ButtonStates { get; }
+        public bool AltPressed { get; }
+        public bool ShiftPressed { get; }
+        public TvMouseButtonStates ButtonStates { get; }
         public bool IsHandled { get; private set; }
+        public bool IsDoubleClickEvent { get; }
+
+        public bool IsClickEvent { get; }
+        public bool IsPressedEvent { get; }
+        public bool IsReleasedEvent { get; }
+
 
         public TvConsoleMouseEvent(int x, int y, TvMouseButtonStates buttonStates)
         {
@@ -20,11 +26,32 @@ namespace Tvision2.Events
             X = x;
             Y = y;
             ButtonStates = buttonStates;
-            AltPressed = (buttonStates | TvMouseButtonStates.AltKey) == TvMouseButtonStates.AltKey;
-            CtrlPressed = (buttonStates | TvMouseButtonStates.CtrlKey) == TvMouseButtonStates.CtrlKey;
-            ShiftPressed = (buttonStates | TvMouseButtonStates.ShiftKey) == TvMouseButtonStates.ShiftKey;
+            AltPressed = (buttonStates & TvMouseButtonStates.AltKey) == TvMouseButtonStates.AltKey;
+            CtrlPressed = (buttonStates & TvMouseButtonStates.CtrlKey) == TvMouseButtonStates.CtrlKey;
+            ShiftPressed = (buttonStates & TvMouseButtonStates.ShiftKey) == TvMouseButtonStates.ShiftKey;
+
+            IsDoubleClickEvent = (ButtonStates & TvMouseButtonStates.LeftButtonDoubleClicked) == TvMouseButtonStates.LeftButtonDoubleClicked ||
+                   (ButtonStates & TvMouseButtonStates.RightButtonDoubleClicked) == TvMouseButtonStates.RightButtonClicked ||
+                   (ButtonStates & TvMouseButtonStates.SecondLeftButtonDoubleClicked) == TvMouseButtonStates.SecondLeftButtonDoubleClicked ||
+                   (ButtonStates & TvMouseButtonStates.ThirdLeftButtonDoubleClicked) == TvMouseButtonStates.ThirdLeftButtonDoubleClicked;
+
+            IsClickEvent = (ButtonStates & TvMouseButtonStates.LeftButtonClicked) == TvMouseButtonStates.LeftButtonClicked ||
+                   (ButtonStates & TvMouseButtonStates.RightButtonClicked) == TvMouseButtonStates.RightButtonClicked ||
+                   (ButtonStates & TvMouseButtonStates.SecondLeftButtonClicked) == TvMouseButtonStates.SecondLeftButtonClicked ||
+                   (ButtonStates & TvMouseButtonStates.ThirdLeftButtonClicked) == TvMouseButtonStates.ThirdLeftButtonClicked;
+
+            IsPressedEvent = (ButtonStates & TvMouseButtonStates.LeftButtonPressed) == TvMouseButtonStates.LeftButtonPressed ||
+                   (ButtonStates & TvMouseButtonStates.RightButtonPressed) == TvMouseButtonStates.RightButtonPressed ||
+                   (ButtonStates & TvMouseButtonStates.SecondLeftButtonPressed) == TvMouseButtonStates.SecondLeftButtonPressed ||
+                   (ButtonStates & TvMouseButtonStates.ThirdLeftButtonPressed) == TvMouseButtonStates.ThirdLeftButtonPressed;
+
+            IsReleasedEvent = (ButtonStates & TvMouseButtonStates.LeftButtonReleased) == TvMouseButtonStates.LeftButtonReleased ||
+                   (ButtonStates & TvMouseButtonStates.RightButtonReleased) == TvMouseButtonStates.RightButtonReleased ||
+                   (ButtonStates & TvMouseButtonStates.SecondLeftButtonReleased) == TvMouseButtonStates.SecondLeftButtonReleased ||
+                   (ButtonStates & TvMouseButtonStates.ThirdLeftButtonReleased) == TvMouseButtonStates.ThirdLeftButtonReleased;
+
         }
-        
+
         public void Handle() => IsHandled = true;
     }
 

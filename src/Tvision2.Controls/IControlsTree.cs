@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Tvision2.Core.Render;
 
 namespace Tvision2.Controls
 {
@@ -23,5 +24,7 @@ namespace Tvision2.Controls
 
 
         event EventHandler<FocusChangedEventArgs> FocusChanged;
+
+        TvControlMetadata LocateControlAt(TvPoint pos);
     }
 }

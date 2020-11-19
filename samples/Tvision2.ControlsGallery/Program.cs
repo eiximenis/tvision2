@@ -21,6 +21,7 @@ namespace Tvision2.ControlsGallery
                         options.Configure(c => c
                             .EnableMouse()    
                             .UseBackColor(TvColor.Yellow))
+                            .OnWindows(w => w.UseAnsi())
                             .OnLinux(l => l
                                 .UseNCurses()))
                     .UseViewportManager()
