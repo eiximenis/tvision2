@@ -17,7 +17,7 @@ namespace Tvision2.ControlsGallery
         {
             var grid = TvGrid.With().Rows(2).Columns(2).Name("MainGrid")
                 .Viewport(new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(8, 50)))
-                .AlignChilds(ChildAlignment.None)
+                .WithOptions(opt => opt.UseBorder())
                 .Create();
             return grid;
         }

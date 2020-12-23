@@ -29,18 +29,17 @@ namespace Tvision2.Layouts.Grid
         private ComponentTree _tree;
         public TvComponent AsComponent() => _component;
         public static TvGridBuilder With() => new TvGridBuilder();
+        private readonly TvGridOptions _options;
 
-
-        private ChildAlignment _defaultAlignment;
         private int _currentRow;
         private int _currentCol;
         private ChildAlignment _currentAlignment;
 
 
-        public TvGrid(GridState state, string name, ChildAlignment defaultAlignment)
+        public TvGrid(GridState state, TvGridOptions options, string name)
         {
-            _defaultAlignment = defaultAlignment;
-            _currentAlignment = _defaultAlignment;
+            _options = options ?? new TvGridOptions();
+            _currentAlignment = _options.DefaultAlignment;
             _pendingAdds = new List<TvComponent>();
             _isMounted = false;
             _state = state;
@@ -52,10 +51,19 @@ namespace Tvision2.Layouts.Grid
                     cfg.WhenComponentMounted(ctx => OnComponentMounted(ctx));
                 });
             Name = _component.Name;
+            if (_options.HasBorder)
+            {
+                _component.AddDrawer(ctx => OnDrawBorder(ctx));
+            }
+
             _component.Metadata.ViewportChanged += OnViewportChanged;
             _childs = new TvGridComponentTree();
         }
 
+        private void OnDrawBorder(RenderContext<GridState> ctx)
+        {
+            int i = 0;
+        }
 
         private void OnComponentMounted(ComponentMoutingContext ctx)
         {
@@ -125,10 +133,10 @@ namespace Tvision2.Layouts.Grid
             var innerViewport = childViewport ?? Viewport.NullViewport;
 
             TvPoint cellPos = TvPoint.FromXY(ctrCol * cellWidth, ctrRow * cellHeight);
-            TvBounds cellBounds = TvBounds.FromRowsAndCols(cellHeight, cellWidth);
-            TvPoint childDisplacement = entry.ViewportOriginal ? childViewport.Position : TvPoint.Zero;
-            
-          
+            TvBounds cellBounds = _options.HasBorder ? TvBounds.FromRowsAndCols(cellHeight - 2, cellWidth - 2) : TvBounds.FromRowsAndCols(cellHeight, cellWidth);
+            TvPoint childDisplacement = entry.ViewportOriginal ? childViewport.Position : (_options.HasBorder ? TvPoint.FromXY(1, 1) : TvPoint.Zero);
+
+
             var viewport = alignment switch
             {
                 ChildAlignment.None => myViewport.InnerViewport(cellPos + childDisplacement, innerViewport.Bounds),
@@ -160,7 +168,7 @@ namespace Tvision2.Layouts.Grid
                 _pendingAdds.Add(child);
             }
 
-            _currentAlignment = _defaultAlignment;
+            _currentAlignment = _options.DefaultAlignment;
         }
 
         public bool Remove(TvComponent component) => _childs.Remove(component);

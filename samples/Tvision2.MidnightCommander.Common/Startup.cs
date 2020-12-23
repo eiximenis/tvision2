@@ -47,7 +47,7 @@ namespace Tvision2.MidnightCommander
             mainStackPanel.AsComponent().AddViewport(dvpf.Create(vpf => vpf.FullViewport()));
             tui.UI.Add(mainStackPanel);
             mainStackPanel.Layout.Add("1", "*", "3");
-            var listFilesGrid = new TvGrid(new GridState(1, 2), "FilesGrid", ChildAlignment.None);
+            var listFilesGrid = new TvGrid(new GridState(1, 2), null, "FilesGrid");
             mainStackPanel.At(1).Add(listFilesGrid);
 
             var textboxParams = TvTextbox.UseParams().WithDefaultState().Configure(c => c.UseViewport(null)).Build();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Tvision2.Core.Render;
@@ -14,7 +15,7 @@ namespace Tvision2.Layouts.Grid
         private int _cols;
         private string _name;
         private IViewport _viewport;
-        private ChildAlignment _alignment;
+        private TvGridOptions _options;
 
         public TvGridBuilder()
         {
@@ -22,7 +23,7 @@ namespace Tvision2.Layouts.Grid
             _rows = 1;
             _cols = 1;
             _viewport = null;
-            _alignment = ChildAlignment.None;
+            _options = new TvGridOptions();
         }
 
         public TvGridBuilder Rows(int rows)
@@ -49,15 +50,17 @@ namespace Tvision2.Layouts.Grid
             return this;
         }
 
-        public TvGridBuilder AlignChilds(ChildAlignment alignment)
+        public TvGridBuilder WithOptions(Action<ITvGridOptions> optionsAction)
         {
-            _alignment = alignment;
+            optionsAction?.Invoke(_options);
             return this;
         }
 
+
+
         public TvGrid Create()
         {
-            var grid = new TvGrid(GridState.FromRowsAndColumns(_rows, _cols), _name ?? $"Grid_{Guid.NewGuid()}", _alignment);
+            var grid = new TvGrid(GridState.FromRowsAndColumns(_rows, _cols), _options, _name ?? $"Grid_{Guid.NewGuid()}");
             if (_viewport != null)
             {
                 grid.AsComponent().AddViewport(_viewport);
