@@ -3,34 +3,48 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
+using System.Xml.Serialization;
 using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 
 namespace Tvision2.Layouts.Grid
 {
-    public class TvGrid : ITvContainer, IComponentsCollection
+
+    public interface IGridContainer
+    {
+        public void Add(TvComponent child);
+        public IGridContainer WithAlignment(ChildAlignment alignment);
+    }
+
+    public class TvGrid : ITvContainer, IGridContainer
     {
         private readonly TvComponent<GridState> _component;
-        private readonly TvGridComponentTree _ui;
+        private readonly TvGridComponentTree _childs;
         private readonly GridState _state;
         public string Name { get; }
-
         private bool _isMounted;
         private readonly List<TvComponent> _pendingAdds;
         private ComponentTree _tree;
-
         public TvComponent AsComponent() => _component;
+        public static TvGridBuilder With() => new TvGridBuilder();
 
-        public TvGrid() : this(new GridState(1, 1), null)
+
+        private ChildAlignment _defaultAlignment;
+        private int _currentRow;
+        private int _currentCol;
+        private ChildAlignment _currentAlignment;
+
+
+        public TvGrid(GridState state, string name, ChildAlignment defaultAlignment)
         {
-        }
-        public TvGrid(GridState state, string name = null)
-        {
+            _defaultAlignment = defaultAlignment;
+            _currentAlignment = _defaultAlignment;
             _pendingAdds = new List<TvComponent>();
             _isMounted = false;
             _state = state;
-            _component = new TvComponent<GridState>(_state, name ?? $"TvGrid_{Guid.NewGuid()}",
+            _component = new TvComponent<GridState>(_state, name,
                 cfg =>
                 {
                     cfg.WhenChildMounted(ctx => ResizeRowsAndCols());
@@ -39,8 +53,9 @@ namespace Tvision2.Layouts.Grid
                 });
             Name = _component.Name;
             _component.Metadata.ViewportChanged += OnViewportChanged;
-            _ui = new TvGridComponentTree();
+            _childs = new TvGridComponentTree();
         }
+
 
         private void OnComponentMounted(ComponentMoutingContext ctx)
         {
@@ -64,10 +79,17 @@ namespace Tvision2.Layouts.Grid
         }
 
 
-        public IComponentsCollection At(int row, int col)
+        public IGridContainer At(int row, int col)
         {
-            _ui.CurrentRow = row;
-            _ui.CurrentColumn = col;
+            _currentRow = row;
+            _currentCol = col;
+            return this;
+        }
+
+
+        IGridContainer IGridContainer.WithAlignment(ChildAlignment alignment)
+        {
+            _currentAlignment = alignment;
             return this;
         }
 
@@ -82,36 +104,53 @@ namespace Tvision2.Layouts.Grid
             var cellHeight = myViewport.Bounds.Rows / _state.Rows;
             var cellWidth = myViewport.Bounds.Cols / _state.Cols;
 
-            foreach (var kvpChild in _ui.Values)
+            foreach (var kvpChild in _childs.Values)
             {
                 var ctrRow = kvpChild.Key.Row;
                 var ctrCol = kvpChild.Key.Column;
-                var child = kvpChild.Value;
-                var viewport = CalculateViewportFor(myViewport, ctrRow, ctrCol, cellHeight, cellWidth, child.Viewport);
-                child.UpdateViewport(viewport, addIfNotExists: true);
+                var childComponent = kvpChild.Value.Component;
+                if (childComponent.Viewport != null)
+                {
+                    var viewport = CalculateViewportFor(myViewport, ctrRow, ctrCol, cellHeight, cellWidth, kvpChild.Value);
+                    childComponent.UpdateViewport(viewport, addIfNotExists: false);
+                }
             }
-
         }
 
-        private IViewport CalculateViewportFor(IViewport myViewport, int ctrRow, int ctrCol, int cellHeight, int cellWidth, IViewport childViewport)
+        private IViewport CalculateViewportFor(IViewport myViewport, int ctrRow, int ctrCol, int cellHeight, int cellWidth, TvGridComponentTreeEntry entry)
         {
+            var childViewport = entry.Component.Viewport;
+
+            var alignment = entry.Alignment;
             var innerViewport = childViewport ?? Viewport.NullViewport;
-            var startCol = ctrCol * cellWidth; //  + innerViewport.Position.Left;                // Only 1st time!!! (TODO)
-            var startRow = ctrRow * cellHeight; // + innerViewport.Position.Top;                // Only 1st time!!! (TODO)
 
-            return myViewport.InnerViewport(TvPoint.FromXY(startCol, startRow), TvBounds.FromRowsAndCols(cellHeight, cellWidth));
+            TvPoint cellPos = TvPoint.FromXY(ctrCol * cellWidth, ctrRow * cellHeight);
+            TvBounds cellBounds = TvBounds.FromRowsAndCols(cellHeight, cellWidth);
+            TvPoint childDisplacement = entry.ViewportOriginal ? childViewport.Position : TvPoint.Zero;
+            
+          
+            var viewport = alignment switch
+            {
+                ChildAlignment.None => myViewport.InnerViewport(cellPos + childDisplacement, innerViewport.Bounds),
+                ChildAlignment.StretchHorizontal => myViewport.InnerViewport(cellPos + TvPoint.FromXY(0, childDisplacement.Top), TvBounds.FromRowsAndCols(cellBounds.Rows, innerViewport.Bounds.Cols)),
+                ChildAlignment.StretchVertical => myViewport.InnerViewport(cellPos + TvPoint.FromXY(childDisplacement.Left, 0), TvBounds.FromRowsAndCols(innerViewport.Bounds.Rows, cellBounds.Cols)),
+                _ => new Viewport(cellPos, cellBounds, childViewport.ZIndex, childViewport.Flow)
+            };
 
+            entry.ViewportOriginal = false;
+
+            return viewport;
         }
 
 
         private void DoPendingAdd(TvComponent cmpToAdd)
         {
-            _tree.AddAsChild(cmpToAdd, AsComponent(), cfg => cfg.DoNotNotifyParentOnAdd());
+            _tree.AddAsChild(cmpToAdd, AsComponent());
         }
 
-        void IComponentsCollection.Add(TvComponent child)
+        void IGridContainer.Add(TvComponent child)
         {
-            _ui.Add(child);
+            _childs.Set(_currentCol, _currentRow, child, _currentAlignment);
             if (_isMounted)
             {
                 _tree.AddAsChild(child, AsComponent());
@@ -120,17 +159,15 @@ namespace Tvision2.Layouts.Grid
             {
                 _pendingAdds.Add(child);
             }
+
+            _currentAlignment = _defaultAlignment;
         }
 
-        bool IComponentsCollection.Remove(TvComponent component) => _ui.Remove(component);
+        public bool Remove(TvComponent component) => _childs.Remove(component);
 
-        void IComponentsCollection.Clear() => _ui.Clear();
+        public void Clear() => _childs.Clear();
 
-        int IComponentsCollection.Count => _ui.Count;
-
-        IEnumerator<TvComponent> IEnumerable<TvComponent>.GetEnumerator() => _ui.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => _ui.GetEnumerator();
+        public int Count { get => _childs.Count; }
 
     }
 }

@@ -34,24 +34,30 @@ namespace Tvision2.ControlsGallery
         {
 
             var mainGrid = ControlsFactory.CreateGrid(_vpFactory);
+            tui.UI.Add(mainGrid);
 
-            var label = ControlsFactory.CreateLabel();
-            mainGrid.At(0, 1).Add(label.AsComponent());
-                
+            /*
             var combo = ControlsFactory.CreateDropDown();
-            mainGrid.At(1, 0).Add(combo.AsComponent());
+            mainGrid.At(row: 1, col: 0).Add(combo.AsComponent());
 
             var button = ControlsFactory.CreateButton();
 
-            mainGrid.At(1, 1).Add(button.AsComponent());
-            
+            mainGrid.At(row: 1, col: 1).WithAlignment(ChildAlignment.Fill).Add(button.AsComponent());
+
             button.OnClick.Add(state =>
             {
                 ShowDialog(state, combo.State);
                 tui.UI.Remove(combo);
             });
-            
-            tui.UI.Add(mainGrid);
+
+            */
+
+
+            mainGrid.At(row: 0, col: 0).Add(ControlsFactory.CreateButton("Button 1", 1).AsComponent());
+            mainGrid.At(row: 0, col: 1).WithAlignment(ChildAlignment.StretchHorizontal).Add(ControlsFactory.CreateButton("Button 2", 2).AsComponent());
+            mainGrid.At(row: 1, col: 0).WithAlignment(ChildAlignment.StretchVertical).Add(ControlsFactory.CreateButton("Button 3", 3).AsComponent());
+            mainGrid.At(row: 1, col: 1).WithAlignment(ChildAlignment.Fill).Add(ControlsFactory.CreateButton("Button 4", 4).AsComponent());
+
         }
 
         private Task<bool> ShowDialog(ButtonState btnstate, DropdownState comboState)

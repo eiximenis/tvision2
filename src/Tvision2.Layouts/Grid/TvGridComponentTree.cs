@@ -7,31 +7,41 @@ using Tvision2.Core.Engine;
 
 namespace Tvision2.Layouts.Grid
 {
-    internal class TvGridComponentTree : IComponentsCollection
+    internal class TvGridComponentTreeEntry
     {
-        private readonly Dictionary<(int Row, int Column), TvComponent> _childs;
-        public int Count { get => _childs.Count; }
-        public int CurrentRow { get; set; }
-        public int CurrentColumn { get; set; }
+        public TvComponent Component { get; }
+        public ChildAlignment Alignment { get; set; }
 
-        public IEnumerable<KeyValuePair<(int Row, int Column), TvComponent>> Values => _childs;
+        public bool ViewportOriginal { get; set; }
+
+        public TvGridComponentTreeEntry(TvComponent component, ChildAlignment childAlignment)
+        {
+            Component = component;
+            Alignment = childAlignment;
+            ViewportOriginal = true;
+        }
+    }
+
+    internal class TvGridComponentTree
+    {
+        private readonly Dictionary<(int Row, int Column), TvGridComponentTreeEntry> _childs;
+        public int Count { get => _childs.Count; }
+
+        public IEnumerable<KeyValuePair<(int Row, int Column), TvGridComponentTreeEntry>> Values => _childs;
 
         public TvGridComponentTree()
         {
-            _childs = new Dictionary<(int Row, int Column), TvComponent>();
-            CurrentColumn = 0;
-            CurrentRow = 0;
+            _childs = new Dictionary<(int Row, int Column), TvGridComponentTreeEntry>();
         }
 
-        public IEnumerable<TvComponent> Components => _childs.Values;
 
 
-        public void Add(TvComponent component)
+        public void Set(int col, int row, TvComponent component, ChildAlignment alignment)
         {
-            _childs.Add((CurrentRow, CurrentColumn), component);
+            _childs.Add((row, col), new TvGridComponentTreeEntry(component, alignment));
         }
 
-        public TvComponent GetComponent(string name) => _childs.Values.FirstOrDefault(c => c.Name == name);
+        public TvComponent GetComponent(string name) => _childs.Values.FirstOrDefault(c => c.Component.Name == name)?.Component;
 
         public bool Remove(TvComponent component)
         {
@@ -39,7 +49,7 @@ namespace Tvision2.Layouts.Grid
 
             foreach (var child in _childs)
             {
-                if (child.Value == component)
+                if (child.Value.Component == component)
                 {
                     keyToDelete = child.Key;
                     break;
@@ -59,9 +69,7 @@ namespace Tvision2.Layouts.Grid
             _childs.Clear();
         }
 
-        public IEnumerator<TvComponent> GetEnumerator() => _childs.Values.GetEnumerator();
-
-       IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public IEnumerator<TvComponent> GetEnumerator() => _childs.Values.Select(v => v.Component).GetEnumerator();
 
 
     }

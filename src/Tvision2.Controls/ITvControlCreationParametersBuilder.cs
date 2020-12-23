@@ -13,7 +13,7 @@ namespace Tvision2.Controls
         ITvControlCreationParametersBuilder<TState> UseSkin(ISkin skin);
         ITvControlCreationParametersBuilder<TState> ConfigureState(Action<TState> stateConfiguration);
         ITvControlCreationParametersBuilder<TState> UseViewport(IViewport viewport);
-        ITvControlCreationParametersBuilder<TState> UseTopLeftPosition(TvPoint position);
+        ITvControlCreationParametersBuilder<TState> RequestBounds();
         ITvControlCreationParametersBuilder<TState> UseControlName(string name);
     }
 

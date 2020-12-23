@@ -20,7 +20,7 @@ namespace Tvision2.ControlsGallery
                 setup.UsePlatformConsoleDriver(options => 
                         options.Configure(c => c
                             .EnableMouse()    
-                            .UseBackColor(TvColor.Yellow))
+                            .UseBackColor(TvColor.Black))
                             .OnWindows(w => w.UseAnsi())
                             .OnLinux(l => l
                                 .UseNCurses()))

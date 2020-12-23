@@ -10,6 +10,12 @@ namespace Tvision2.Core.Render
         public int Rows { get; }
         public int Cols { get; }
 
+        public void Deconstruct (out int rows, out int cols)
+        {
+            rows = Rows;
+            cols = Cols;
+        }
+
         private TvBounds(int rows, int cols)
         {
             Rows = rows;

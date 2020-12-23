@@ -47,7 +47,7 @@ namespace Tvision2.MidnightCommander
             mainStackPanel.AsComponent().AddViewport(dvpf.Create(vpf => vpf.FullViewport()));
             tui.UI.Add(mainStackPanel);
             mainStackPanel.Layout.Add("1", "*", "3");
-            var listFilesGrid = new TvGrid(new GridState(1, 2));
+            var listFilesGrid = new TvGrid(new GridState(1, 2), "FilesGrid", ChildAlignment.None);
             mainStackPanel.At(1).Add(listFilesGrid);
 
             var textboxParams = TvTextbox.UseParams().WithDefaultState().Configure(c => c.UseViewport(null)).Build();
@@ -76,7 +76,7 @@ namespace Tvision2.MidnightCommander
                 .AppliesToColumn(1);
 
             var right = new TvList<FileItem>(new TvControlCreationParameters<ListState<FileItem>>(skin, new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(1, 10), Layer.Standard),
-                new ListState<FileItem>(Enumerable.Empty<FileItem>(), new TvListColumnSpec<FileItem>() { Transformer = f => f.Name })));
+                new ListState<FileItem>(Enumerable.Empty<FileItem>(), new TvListColumnSpec<FileItem>() { Transformer = f => f.Name }), mustCreateViewport: false));
 
             right.StyleProvider
                 .Use(Core.Colors.TvColor.Red, Core.Colors.TvColor.Blue)
@@ -146,8 +146,8 @@ namespace Tvision2.MidnightCommander
                     .Dispatch((s, args) => new TvAction<FileItem>("FETCH_INFO", args));
             });
 
-            listFilesGrid.At(0, 0).Add(left);
-            listFilesGrid.At(0, 1).Add(right);
+            listFilesGrid.At(0, 0).Add(left.AsComponent());
+            listFilesGrid.At(0, 1).Add(right.AsComponent());
             var bottom = new TvStackPanel("BottomContainer");
             bottom.Layout.Add(new LayoutSize());
             bottom.At(0).Add(textbox);

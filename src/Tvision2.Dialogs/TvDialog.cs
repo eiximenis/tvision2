@@ -14,7 +14,7 @@ namespace Tvision2.Dialogs
        internal TvDialog(ISkin skin, IViewport viewport, IComponentTree owner, string name = null)
             : base(new TvControlCreationParameters<DialogState>(
                 skin, viewport.Layer(Layer.Top, -1),
-                new DialogState(skin, name ?? $"TvDialog_{Guid.NewGuid()}")))
+                new DialogState(skin, name ?? $"TvDialog_{Guid.NewGuid()}"), mustCreateViewport: false))
         {
             State.Init(this, owner);
         }

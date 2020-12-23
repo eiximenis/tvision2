@@ -22,6 +22,11 @@ namespace Tvision2.Controls.Button
             _onClick = new ActionChain<ButtonState>();
         }
 
+        protected override IViewport CalculateViewport(IViewport initialViewport)
+        {
+            return initialViewport.WithBounds(TvBounds.FromRowsAndCols(1, State.Text.Length + 2));
+        }
+
 
         protected override IEnumerable<ITvBehavior<ButtonState>> GetEventedBehaviors()
         {
@@ -33,7 +38,8 @@ namespace Tvision2.Controls.Button
         {
             var focused = Metadata.IsFocused;
             var styleToUse = focused ? CurrentStyle.Active : CurrentStyle.Standard;
-            var value = $"[ {State.Text.ToString()} ]";
+            context.Fill(styleToUse);
+            var value = $"[{State.Text.ToString()}]";
             context.DrawStringAt(value, TvPoint.Zero, styleToUse);
         }
     }

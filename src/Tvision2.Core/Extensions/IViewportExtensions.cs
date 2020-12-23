@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.PortableExecutable;
 using System.Text;
 
 namespace Tvision2.Core.Render
@@ -35,6 +36,9 @@ namespace Tvision2.Core.Render
 
         public static IViewport Layer(this IViewport viewport, Layer layer, int zIndexDisplacement = 0) 
             => new Viewport(viewport.Position, viewport.Bounds, layer.Move(zIndexDisplacement));
+
+        // InnerViewport
+        // Given a "container viewport" creates a child viewport included in this viewport in the given pos and with given maximum bounds
         public static IViewport InnerViewport(this IViewport containerViewport, TvPoint pos, TvBounds bounds)
         {
             var vppos = pos + containerViewport.Position;
@@ -58,6 +62,11 @@ namespace Tvision2.Core.Render
             {
                 return containerViewport.InnerViewport(innerViewport.Position + displacement, innerViewport.Bounds);
             }
+        }
+
+        public static IViewport WithBounds(this IViewport viewport, TvBounds newBounds)
+        {
+            return new Viewport(viewport.Position, newBounds, viewport.ZIndex, viewport.Flow);
         }
 
     }

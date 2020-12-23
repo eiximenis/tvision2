@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Tvision2.Layouts.Grid
 {
+
     public class GridState
     {
         public int Rows { get; private set; }

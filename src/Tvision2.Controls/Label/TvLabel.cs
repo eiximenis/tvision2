@@ -21,6 +21,11 @@ namespace Tvision2.Controls.Label
             options.IsFocused().Never();
         }
 
+        protected override IViewport CalculateViewport(IViewport initialViewport)
+        {
+            return initialViewport.WithBounds(TvBounds.FromRowsAndCols(1, State.Text?.Length ?? 0));
+        }
+
         protected override void OnDraw(RenderContext<LabelState> context)
         {
             var state = context.State;

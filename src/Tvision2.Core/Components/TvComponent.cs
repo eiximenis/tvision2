@@ -98,6 +98,7 @@ namespace Tvision2.Core.Components
         public IViewport GetViewport(Guid guid) => _viewports.TryGetValue(guid, out IViewport value) ? value : null;
         public IEnumerable<KeyValuePair<Guid, IViewport>> Viewports => _viewports;
 
+
         public IEnumerable<IBehaviorMetadata> BehaviorsMetadatas => _behaviorsMetadata;
 
         public void UpdateViewport(IViewport newViewport, bool addIfNotExists = false) => UpdateViewport(Guid.Empty, newViewport, addIfNotExists);

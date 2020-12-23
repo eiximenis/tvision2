@@ -5,6 +5,7 @@ using Tvision2.Controls.Button;
 using Tvision2.Controls.Dropdown;
 using Tvision2.Controls.Label;
 using Tvision2.Core.Render;
+using Tvision2.Layouts;
 using Tvision2.Layouts.Grid;
 using Tvision2.Viewports;
 
@@ -14,8 +15,10 @@ namespace Tvision2.ControlsGallery
     {
         public static TvGrid CreateGrid(IViewportFactory viewportFactory)
         {
-            var grid = new TvGrid(GridState.FromRowsAndColumns(3, 4));
-            grid.AsComponent().AddViewport(viewportFactory.FullViewport());
+            var grid = TvGrid.With().Rows(2).Columns(2).Name("MainGrid")
+                .Viewport(new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(8, 50)))
+                .AlignChilds(ChildAlignment.None)
+                .Create();
             return grid;
         }
 
@@ -34,17 +37,17 @@ namespace Tvision2.ControlsGallery
             return combo;
         }
 
-        public static TvButton CreateButton()
+        public static TvButton CreateButton(string text, int idx)
         {
             var button = new TvButton(
-                TvButton.UseParams().WithState(ButtonState.FromText("Click Me!")).Configure(c => c.UseControlName("button").UseViewport(new Viewport(TvPoint.FromXY(22, 10), 15))).Build()); ;
+                TvButton.UseParams().WithState(ButtonState.FromText(text)).Configure(c => c.UseControlName($"button_{idx}")).Build());
 
             return button;
         }
 
         public static TvLabel CreateLabel()
         {
-            var lparams = TvLabel.UseParams().WithState(LabelState.FromText("Tvision2 Controls")).Configure(c => c.UseViewport(Viewport.NullViewport)).Build();
+            var lparams = TvLabel.UseParams().WithState(LabelState.FromText("I am just a label")).Build();
             return new TvLabel(lparams);
         }
     }

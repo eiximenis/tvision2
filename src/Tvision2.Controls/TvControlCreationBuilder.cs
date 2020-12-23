@@ -119,11 +119,11 @@ namespace Tvision2.Controls
 
 
     public class TvControlCreationBuilder<TControl, TState> :
-    ITvControlOptionsBuilder<TControl, TState>,
-    ITvControlParamsConfigurerBuilder<TControl, TState>,
-    ITvControlParamsBuilder<TState>
-    where TControl : TvControl<TState>
-    where TState : IDirtyObject, new()
+        ITvControlOptionsBuilder<TControl, TState>,
+        ITvControlParamsConfigurerBuilder<TControl, TState>,
+        ITvControlParamsBuilder<TState>
+        where TControl : TvControl<TState>
+        where TState : IDirtyObject, new()
     {
         private TvControlCreationParametersBuilder<TState> _creationParamsBuilder;
 

@@ -50,7 +50,7 @@ namespace Tvision2.Controls
             _component = new TvComponent<TState>(creationParams.InitialState, name ?? $"TvControl_<$>",
                 cfg =>
                 {
-                    cfg.WhenComponentMounted(ctx => OnComponentMounted(ctx, Options));
+                    cfg.WhenComponentMounted(ctx => OnComponentMounted(ctx, creationParams));
                     cfg.WhenComponentUnmounted(ctx => OnComponentUnmounted(ctx));
                     cfg.WhenComponentWillbeUnmounted(ctx => OnComponentWillbeUnmounted(ctx));
                     cfg.WhenComponentTreeUpdatedByMount(ctx => OnComponentTreeUpdatedByMount(ctx));
@@ -60,17 +60,13 @@ namespace Tvision2.Controls
 
             State = initialState;
 
-            if (creationParams.AutoCreateViewport)
-            {
-                Metadata.ViewportAutoCreated = true;
-            }
-            else
+            if (!creationParams.AutoSetBounds)
             {
                 _component.AddViewport(creationParams.Viewport);
-                Metadata.ViewportAutoCreated = false;
             }
-
         }
+
+        protected virtual IViewport CalculateViewport(IViewport initialViewport) => throw new InvalidOperationException($"This control (type {GetType().Name} do not support autocreating viewports.");
 
         private void OnComponentTreeUpdatedByMount(ComponentTreeUpdatedContext ctx)
         {
@@ -99,11 +95,13 @@ namespace Tvision2.Controls
         {
         }
 
-        private Task<bool> OnComponentMounted(ComponentMoutingContext ctx, TIOptions options)
+        private Task<bool> OnComponentMounted(ComponentMoutingContext ctx, TvControlCreationParameters<TState, TIOptions>  cparams )
         {
-            if (Metadata.ViewportAutoCreated)
+            var options = cparams.Options;
+
+            if (cparams.AutoSetBounds)
             {
-                CreateAndSetViewport();
+                CreateAndSetViewport(cparams.Viewport);
             }
             OnViewportCreated(AsComponent().Viewport);
 
@@ -130,17 +128,12 @@ namespace Tvision2.Controls
         }
 
         protected virtual ControlCanBeUnmounted OnControlWillbeUnmounted(ITuiEngine ownerEngine) => ControlCanBeUnmounted.Yes;
-        private void CreateAndSetViewport()
+        private void CreateAndSetViewport(IViewport initialViewport)
         {
-            _component.AddViewport(CalculateViewport());
+            _component.AddViewport(CalculateViewport(initialViewport));
         }
 
         protected virtual void OnViewportCreated(IViewport viewport) { }
-
-        protected virtual IViewport CalculateViewport()
-        {
-            throw new InvalidOperationException($"This control (type {GetType().Name} do not support autocreating viewports.");
-        }
 
 
         private void AddElements()
