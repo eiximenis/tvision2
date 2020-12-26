@@ -3,24 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tvision2.Styles;
 
 namespace Tvision2.Layouts.Grid
 {
     public interface ITvGridOptions
     {
         ITvGridOptions UseDefaultAlignment(ChildAlignment alignment);
-        ITvGridOptions UseBorder();          // TODO: Change by border style (thin, thick... lets see)
+        ITvGridOptions UseBorder(BorderValue border);
 
     }
 
     public class TvGridOptions : ITvGridOptions 
     {
         public ChildAlignment DefaultAlignment { get; private set; }
-        public bool HasBorder { get; private set; }
+        public BorderValue Border { get; private set; }
 
         public TvGridOptions()
         {
-            HasBorder = false;
+            Border = BorderValue.None();
             DefaultAlignment = ChildAlignment.None;
         }
 
@@ -30,9 +31,9 @@ namespace Tvision2.Layouts.Grid
             return this;
         }
 
-        ITvGridOptions ITvGridOptions.UseBorder()
+        ITvGridOptions ITvGridOptions.UseBorder(BorderValue border)
         {
-            HasBorder = true;
+            Border = border;
             return this;
         }
 

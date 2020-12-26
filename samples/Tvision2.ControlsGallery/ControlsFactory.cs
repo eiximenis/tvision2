@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using Tvision2.Controls.Button;
 using Tvision2.Controls.Dropdown;
@@ -7,6 +8,7 @@ using Tvision2.Controls.Label;
 using Tvision2.Core.Render;
 using Tvision2.Layouts;
 using Tvision2.Layouts.Grid;
+using Tvision2.Styles;
 using Tvision2.Viewports;
 
 namespace Tvision2.ControlsGallery
@@ -17,8 +19,9 @@ namespace Tvision2.ControlsGallery
         {
             var grid = TvGrid.With().Rows(2).Columns(2).Name("MainGrid")
                 .Viewport(new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(8, 50)))
-                .WithOptions(opt => opt.UseBorder())
+                .WithOptions(opt => opt.UseBorder(BorderValue.FromHorizontalAndVertical(BorderType.Double, BorderType.Single)))
                 .Create();
+
             return grid;
         }
 
