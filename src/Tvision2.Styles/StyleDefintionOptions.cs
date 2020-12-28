@@ -6,15 +6,15 @@ namespace Tvision2.Styles
 {
     public class StyleDefintionOptions
     {
-        internal TvColor ForeColor { get; private set; }
-        internal IBackgroundProvider Background { get; private set; } 
+        internal IColorProvider Foreground { get; private set; }
+        internal IColorProvider Background { get; private set; } 
 
         internal CharacterAttributeModifiers Modifiers { get; private set; }
 
         public StyleDefintionOptions()
         {
             Modifiers = CharacterAttributeModifiers.Normal;
-            ForeColor = TvColor.Black;
+            Foreground = new SolidColorBackgroundProvider(TvColor.White);
             Background = SolidColorBackgroundProvider.BlackBackground;
         }
 
@@ -26,7 +26,7 @@ namespace Tvision2.Styles
 
         public StyleDefintionOptions UseForeground(TvColor fore)
         {
-            ForeColor = fore;
+            Foreground = new SolidColorBackgroundProvider(fore);
             return this;
         }
 
@@ -36,9 +36,15 @@ namespace Tvision2.Styles
             return this;
         }
 
-        public StyleDefintionOptions UseBackground<TB>(Func<TB> builder) where TB : IBackgroundProvider
+        public StyleDefintionOptions UseBackground<TB>(Func<TB> builder) where TB : IColorProvider
         {
             Background = builder.Invoke();
+            return this;
+        }
+
+        public StyleDefintionOptions UseForegound<TF>(Func<TF> builder) where TF : IColorProvider
+        {
+            Foreground = builder.Invoke();
             return this;
         }
     }

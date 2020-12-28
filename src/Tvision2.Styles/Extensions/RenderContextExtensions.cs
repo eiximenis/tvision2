@@ -7,7 +7,7 @@ namespace Tvision2.Styles.Extensions
     {
         public static void DrawChars(this RenderContext context, char value, int count, TvPoint location, StyleEntry style)
         {
-            if (style.Background.IsFixedBackgroundColor)
+            if (style.IsBackgroundFixed)
             {
                 context.DrawChars(value, count, location, style.ToCharacterAttribute(location, context.Viewport.Bounds));
             }
@@ -23,7 +23,7 @@ namespace Tvision2.Styles.Extensions
 
         public static void DrawStringAt(this RenderContext context, string value, TvPoint location, StyleEntry style)
         {
-            if (style.Background.IsFixedBackgroundColor)
+            if (style.IsBackgroundFixed)
             {
                 context.DrawStringAt(value, location, style.ToCharacterAttribute(location, context.Viewport.Bounds));
             }
@@ -39,7 +39,7 @@ namespace Tvision2.Styles.Extensions
 
         public static void Fill(this RenderContext context, StyleEntry style)
         {
-            if (style.Background.IsFixedBackgroundColor)
+            if (style.IsBackgroundFixed)
             {
                 context.Fill(style.ToCharacterAttribute(TvPoint.Zero, context.Viewport.Bounds));
             }

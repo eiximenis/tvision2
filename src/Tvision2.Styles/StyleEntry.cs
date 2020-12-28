@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using Tvision2.Core.Colors;
 using Tvision2.Core.Render;
 using Tvision2.Styles.Backgrounds;
@@ -7,40 +8,43 @@ namespace Tvision2.Styles
 {
     public class StyleEntry
     {
-        public TvColor Foreground { get; private set; }
-        public IBackgroundProvider Background { get; private set; }
+        private IColorProvider ForegroundProvider { get; set; }
+        private IColorProvider BackgroundProvider { get; set; }
         public CharacterAttributeModifiers Attributes { get; private set; }
 
         private TvColor? _fixedBackground;
+        private TvColor? _fixedForeground;
 
         public bool IsBackgroundFixed { get => _fixedBackground.HasValue; }
+        public bool IsForegroundFixed { get => _fixedForeground.HasValue;  }
 
-        public StyleEntry(TvColor foreground, IBackgroundProvider background, CharacterAttributeModifiers modifiers)
+        public StyleEntry(IColorProvider foreground, IColorProvider background, CharacterAttributeModifiers modifiers)
         {
-            Foreground = foreground;
-            Background = background;
+            ForegroundProvider = foreground;
+            BackgroundProvider = background;
             Attributes = modifiers;
-
-            EvaluateIfBackgroundIsFixedColor();
+            EvaluateProvidersAreFixedColor();
         }
 
-        private void EvaluateIfBackgroundIsFixedColor()
+        private void EvaluateProvidersAreFixedColor()
         {
-            _fixedBackground = null;
-
-            if (Background?.IsFixedBackgroundColor == true)
+            if (ForegroundProvider?.IsFixedColor == true)
             {
-                _fixedBackground = Background.GetColorFor(0, 0, TvBounds.Empty);
+                _fixedForeground = ForegroundProvider.GetColorFor(0, 0, TvBounds.Empty);
+            }
+
+            if (BackgroundProvider?.IsFixedColor == true)
+            {
+                _fixedBackground = BackgroundProvider.GetColorFor(0, 0, TvBounds.Empty);
             }
 
         }
 
         public CharacterAttribute ToCharacterAttribute(TvPoint location, TvBounds bounds)
         {
-            var pair = new TvColorPair(Foreground, _fixedBackground.HasValue ?
-                _fixedBackground.Value :
-                Background.GetColorFor(location.Top, location.Left, bounds));
-
+            var fore = _fixedForeground.HasValue ? _fixedForeground.Value : ForegroundProvider.GetColorFor(location.Top, location.Left, bounds);
+            var back = _fixedBackground.HasValue ? _fixedBackground.Value : BackgroundProvider.GetColorFor(location.Top, location.Left, bounds);
+            var pair = new TvColorPair(fore,back);
             return new CharacterAttribute(pair, Attributes);
         }
 
@@ -51,12 +55,15 @@ namespace Tvision2.Styles
                 return;
             }
 
-            Foreground = other.Foreground;
-            if (other.Background != null)
+            if (other.ForegroundProvider != null)
             {
-                Background = other.Background;
-                EvaluateIfBackgroundIsFixedColor();
+                ForegroundProvider = other.ForegroundProvider;
             }
+            if (other.BackgroundProvider != null)
+            {
+                BackgroundProvider = other.BackgroundProvider;
+            }
+            EvaluateProvidersAreFixedColor();
             Attributes |= other.Attributes;
 
         }

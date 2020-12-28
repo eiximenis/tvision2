@@ -15,7 +15,7 @@ namespace Tvision2.Layouts.Grid
         private int _cols;
         private string _name;
         private IViewport _viewport;
-        private TvGridOptions _options;
+        private readonly TvGridOptions _options;
 
         public TvGridBuilder()
         {

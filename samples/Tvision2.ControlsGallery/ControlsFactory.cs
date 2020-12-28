@@ -5,6 +5,7 @@ using System.Text;
 using Tvision2.Controls.Button;
 using Tvision2.Controls.Dropdown;
 using Tvision2.Controls.Label;
+using Tvision2.Core.Colors;
 using Tvision2.Core.Render;
 using Tvision2.Layouts;
 using Tvision2.Layouts.Grid;
@@ -15,11 +16,11 @@ namespace Tvision2.ControlsGallery
 {
     public static class ControlsFactory
     {
-        public static TvGrid CreateGrid(IViewportFactory viewportFactory)
+        public static TvGrid CreateGrid(IViewportFactory viewportFactory, ISkinManager sk)
         {
             var grid = TvGrid.With().Rows(2).Columns(2).Name("MainGrid")
                 .Viewport(new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(8, 50)))
-                .WithOptions(opt => opt.UseBorder(BorderValue.FromHorizontalAndVertical(BorderType.Double, BorderType.Single)))
+                .WithOptions(opt => opt.UseBorder(BorderValue.FromHorizontalAndVertical(BorderType.Double, BorderType.Single), sk.CurrentSkin["tvgrid"]))
                 .Create();
 
             return grid;
@@ -40,10 +41,10 @@ namespace Tvision2.ControlsGallery
             return combo;
         }
 
-        public static TvButton CreateButton(string text, int idx)
+        public static TvButton CreateButton(string text, int idx, ISkinManager sk)
         {
             var button = new TvButton(
-                TvButton.UseParams().WithState(ButtonState.FromText(text)).Configure(c => c.UseControlName($"button_{idx}")).Build());
+                TvButton.UseParams().WithState(ButtonState.FromText(text)).Configure(c => c.UseSkin(sk.GetSkin("Mc")).UseControlName($"button_{idx}")).Build());
 
             return button;
         }

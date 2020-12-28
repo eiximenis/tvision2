@@ -6,12 +6,12 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Styles.Backgrounds
 {
-    public class VerticalGradientBackgroundProvider : IBackgroundProvider
+    public class VerticalGradientBackgroundProvider : IColorProvider
     {
         private readonly TvColor _from;
         private readonly TvColor _to;
 
-        public bool IsFixedBackgroundColor => false;
+        public bool IsFixedColor => false;
 
         public VerticalGradientBackgroundProvider(TvColor from, TvColor to)
         {

@@ -9,7 +9,7 @@ namespace Tvision2.Styles
 {
     class StyleEntryBuilder : IStyleEntryBuilder, IStyleAdditionalEntriesBuilder
     {
-        public readonly Style _style;
+        private readonly Style _style;
 
         private readonly IDictionary<string, StyleEntry> _customDefinitions;
         private StyleEntry _standard;
@@ -63,7 +63,7 @@ namespace Tvision2.Styles
         {
             var options = new StyleDefintionOptions();
             optionsAction.Invoke(options);
-            return new StyleEntry(options.ForeColor, options.Background, options.Modifiers);
+            return new StyleEntry(options.Foreground, options.Background, options.Modifiers);
         }
 
         public IStyleAdditionalEntriesBuilder DesiredFocused(Action<StyleDefintionOptions> optionsAction)

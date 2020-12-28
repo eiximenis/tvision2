@@ -6,6 +6,7 @@ using Tvision2.Controls.Dropdown;
 using Tvision2.Controls.Label;
 using Tvision2.Controls.Styles;
 using Tvision2.Core;
+using Tvision2.Core.Colors;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Dialogs;
@@ -21,19 +22,21 @@ namespace Tvision2.ControlsGallery
         private readonly ILayoutManager _layoutManager;
         private readonly IDialogManager _dialogManager;
         private readonly IViewportFactory _vpFactory;
+        private readonly ISkinManager _skinManager;
 
-        public Startup(ILayoutManager layoutManager, IDialogManager dialogManager, IViewportFactory vpFactory)
+        public Startup(ILayoutManager layoutManager, IDialogManager dialogManager, IViewportFactory vpFactory, ISkinManager skinManager)
         {
             _layoutManager = layoutManager;
             _dialogManager = dialogManager;
             _vpFactory = vpFactory;
+            _skinManager = skinManager;
         }
 
 
         async Task ITvisionAppStartup.Startup(ITuiEngine tui)
         {
 
-            var mainGrid = ControlsFactory.CreateGrid(_vpFactory);
+            var mainGrid = ControlsFactory.CreateGrid(_vpFactory, _skinManager);
             tui.UI.Add(mainGrid);
 
             /*
@@ -53,10 +56,10 @@ namespace Tvision2.ControlsGallery
             */
 
 
-            mainGrid.At(row: 0, col: 0).Add(ControlsFactory.CreateButton("Button 1", 1).AsComponent());
-            mainGrid.At(row: 0, col: 1).WithAlignment(ChildAlignment.StretchHorizontal).Add(ControlsFactory.CreateButton("Button 2", 2).AsComponent());
-            mainGrid.At(row: 1, col: 0).WithAlignment(ChildAlignment.StretchVertical).Add(ControlsFactory.CreateButton("Button 3", 3).AsComponent());
-            mainGrid.At(row: 1, col: 1).WithAlignment(ChildAlignment.Fill).Add(ControlsFactory.CreateButton("Button 4", 4).AsComponent());
+            mainGrid.At(row: 0, col: 0).Add(ControlsFactory.CreateButton("Button 1", 1, _skinManager).AsComponent());
+            mainGrid.At(row: 0, col: 1).WithAlignment(ChildAlignment.StretchHorizontal).Add(ControlsFactory.CreateButton("Button 2", 2, _skinManager).AsComponent());
+            mainGrid.At(row: 1, col: 0).WithAlignment(ChildAlignment.StretchVertical).Add(ControlsFactory.CreateButton("Button 3", 3, _skinManager).AsComponent());
+            mainGrid.At(row: 1, col: 1).WithAlignment(ChildAlignment.Fill).Add(ControlsFactory.CreateButton("Button 4", 4, _skinManager).AsComponent());
 
         }
 

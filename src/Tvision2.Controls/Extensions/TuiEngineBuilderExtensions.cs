@@ -17,10 +17,9 @@ namespace Tvision2.DependencyInjection
         {
 
             var options = new TvControlsOptions();
-
             controlsOptionsAction?.Invoke(options);
-            
-            if (!setup.HasStylesEnabled())
+
+            if (options.SkinOptions != null)
             {
                 setup.AddStyles(options.SkinOptions);
             }

@@ -6,10 +6,10 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Styles.Backgrounds
 {
-    public interface IBackgroundProvider
+    public interface IColorProvider
     {
 
-        bool IsFixedBackgroundColor { get; }
+        bool IsFixedColor { get; }
         TvColor GetColorFor(int row, int col, TvBounds bounds);
     }
 }

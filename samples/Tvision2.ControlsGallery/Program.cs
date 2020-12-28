@@ -7,6 +7,7 @@ using Tvision2.Core;
 using Tvision2.Core.Colors;
 using Tvision2.Core.Engine;
 using Tvision2.DependencyInjection;
+using Tvision2.Styles.Backgrounds;
 
 namespace Tvision2.ControlsGallery
 {
@@ -17,15 +18,26 @@ namespace Tvision2.ControlsGallery
             var builder = new HostBuilder();
             builder.UseTvision2(setup =>
             {
-                setup.UsePlatformConsoleDriver(options => 
+                setup.UsePlatformConsoleDriver(options =>
                         options.Configure(c => c
-                            .EnableMouse()    
+                            .EnableMouse()
                             .UseBackColor(TvColor.Black))
-                            .OnWindows(w => w.UseAnsi())
+                            .OnWindows(w => w.UseAnsi().EnableTrueColor())
                             .OnLinux(l => l
                                 .UseNCurses()))
                     .UseViewportManager()
                     .UseLayoutManager()
+                    .AddStyles(
+                        sk => sk.AddDefaultSkin(smb =>
+                        {
+                            smb.AddStyle("tvgrid", sb =>
+                            {
+                                sb.Default().DesiredStandard(s => 
+                                    s.UseForeground(TvColor.Green)
+                                     .UseBackground(() => new VerticalGradientBackgroundProvider(TvColor.FromRGB(0, 255, 255), TvColor.FromRGB(128, 20, 20))));
+                            });
+                        })
+                    )
                     .AddTvDialogs()
                     //.UseDebug(opt =>
                     //{

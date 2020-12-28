@@ -6,14 +6,14 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Styles.Backgrounds
 {
-    public class SolidColorBackgroundProvider : IBackgroundProvider
+    public class SolidColorBackgroundProvider : IColorProvider
     {
         public static SolidColorBackgroundProvider BlackBackground = new SolidColorBackgroundProvider(TvColor.Black);
 
         private readonly TvColor _color;
         public SolidColorBackgroundProvider(TvColor color) => _color = color;
 
-        public bool IsFixedBackgroundColor => true;
+        public bool IsFixedColor => true;
 
         public TvColor GetColorFor(int row, int col, TvBounds bounds) => _color;
     }

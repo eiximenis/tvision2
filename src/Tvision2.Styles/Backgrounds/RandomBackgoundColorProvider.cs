@@ -6,9 +6,9 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Styles.Backgrounds
 {
-    public class RandomBackgoundColorProvider : IBackgroundProvider
+    public class RandomBackgoundColorProvider : IColorProvider
     {
-        public bool IsFixedBackgroundColor => false;
+        public bool IsFixedColor => false;
 
         public TvColor GetColorFor(int row, int col, TvBounds bounds)
         {

@@ -38,7 +38,7 @@ namespace Tvision2.Controls.List
         {
             _items.Add(new ListStyleProviderItem()
             {
-                Style = new StyleEntry(fore, null, CharacterAttributeModifiers.Normal)
+                Style = new StyleEntry(new SolidColorBackgroundProvider(fore), null, CharacterAttributeModifiers.Normal)
             });
 
             return this;
@@ -48,7 +48,7 @@ namespace Tvision2.Controls.List
         {
             _items.Add(new ListStyleProviderItem()
             {
-                Style = new StyleEntry(fore, new SolidColorBackgroundProvider(back),CharacterAttributeModifiers.Normal)
+                Style = new StyleEntry(new SolidColorBackgroundProvider(fore), new SolidColorBackgroundProvider(back),CharacterAttributeModifiers.Normal)
             });
             return this;
         }

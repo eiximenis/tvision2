@@ -11,6 +11,7 @@ using Tvision2.Core.Colors;
 using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
+using Tvision2.Styles.Extensions;
 
 namespace Tvision2.Layouts.Grid
 {
@@ -99,19 +100,18 @@ namespace Tvision2.Layouts.Grid
         private void OnDrawBorder(RenderContext<GridState> ctx)
         {
             var (borderHor, borderVer) = _options.Border;
-
-
+            var attr = _options.BorderAttribute;
             for (var row = 0; row < ctx.Viewport.Bounds.Rows; row++)
             {
                 if (RowHasHorizontalBorder(row))
                 {
-                    ctx.DrawChars('=', ctx.Viewport.Bounds.Cols, TvPoint.FromXY(0, row), new CharacterAttribute(new TvColorPair(TvColor.Red, TvColor.Blue)));
+                    ctx.DrawChars('=', ctx.Viewport.Bounds.Cols, TvPoint.FromXY(0, row), attr);
                 }
                 for (var col = 0; col < ctx.Viewport.Bounds.Cols; col ++)
                 {
                     if (ColHasVerticalBorder(col))
                     {
-                        ctx.DrawChars('|', 1, TvPoint.FromXY(col, row), new CharacterAttribute(new TvColorPair(TvColor.Red, TvColor.Blue)));
+                        ctx.DrawChars('|', 1, TvPoint.FromXY(col, row), attr);
                     }
                 }
             }

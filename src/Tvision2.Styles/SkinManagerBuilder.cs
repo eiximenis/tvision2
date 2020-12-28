@@ -37,7 +37,7 @@ namespace Tvision2.Styles
         {
             if (_skinsToBuild.ContainsKey(name))
             {
-                throw new ArgumentException($"Style name {name} duplicated.", nameof(name));
+                throw new ArgumentException($"Skin name {name} duplicated.", nameof(name));
             }
 
             _skinsToBuild.Add(name, skinToBuild);

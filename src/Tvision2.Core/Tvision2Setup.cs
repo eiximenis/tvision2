@@ -12,21 +12,23 @@ namespace Tvision2.Core
         private readonly Tvision2Options _options;
         public ITvision2Options Options => _options;
 
-        private readonly List<string> _setupSteps;
+        private readonly Dictionary<string, object> _setupSteps;
 
         
         public Tvision2Setup()
         {
             _options = new Tvision2Options();
-            _setupSteps = new List<string>();
+            _setupSteps = new Dictionary<string, object>();
         }
 
-        public bool HasSetupStep(string step) => _setupSteps.Contains(step);
+        public bool HasSetupStep(string step) => _setupSteps.ContainsKey(step);
 
-        public void AddSetupStep(string step)
+        public void AddSetupStep<T>(string step, T value)
         {
-            if (!HasSetupStep(step)) _setupSteps.Add(step);
+            if (!HasSetupStep(step)) _setupSteps.Add(step, value);
         }
+
+        public T GetSetupStep<T>(string step) => _setupSteps.TryGetValue(step, out var data) ? (T)data : default;
 
         public abstract void ConfigureServices(Action<IServiceCollection> configureDelegate);
 
