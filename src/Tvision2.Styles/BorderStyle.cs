@@ -11,7 +11,6 @@ namespace Tvision2.Styles
     public enum BorderType
     {
         None = 0,
-        Space = 1,
         Fill = 2,
         Double = 3,
         Single = 4
@@ -52,6 +51,21 @@ namespace Tvision2.Styles
         public BorderType Vertical
         {
             get => (BorderType)(_value & 0b00001111);
+        }
+
+        public override int GetHashCode()
+        {
+            return _value.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is BorderValue bv)
+            {
+                return bv._value == _value;
+            }
+
+            return base.Equals(obj);
         }
 
 

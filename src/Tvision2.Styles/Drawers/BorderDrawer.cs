@@ -1,4 +1,6 @@
-﻿using Tvision2.Core.Components.Draw;
+﻿using System.Collections.Concurrent;
+using System.Reflection;
+using Tvision2.Core.Components.Draw;
 using Tvision2.Core.Render;
 using Tvision2.Styles;
 using Tvision2.Styles.Extensions;
@@ -8,10 +10,14 @@ namespace Tvision2.Styles.Drawers
     public class BorderDrawer : ITvDrawer
     {
         private readonly IStyle _style;
+        private readonly BorderValue _border;
+        private readonly char[] _borderSet;
 
-        public BorderDrawer(IStyle style)
+        public BorderDrawer(IStyle style, BorderValue border)
         {
             _style = style;
+            _border = border;
+            _borderSet = BorderSets.GetBorderSet(_border);
         }
 
         public DrawResult Draw(RenderContext context)
@@ -21,21 +27,38 @@ namespace Tvision2.Styles.Drawers
             var entry = _style.Standard;
             var columns = viewport.Bounds.Cols;
             var rows = viewport.Bounds.Rows;
-            if (rows > 2 && columns > 2)
+
+            var minrows = _border.HasHorizontalBorder ? 2 : 0;
+            var mincols = _border.HasVerticalBorder ? 2 : 0;
+
+
+            if (rows > minrows && columns > mincols)
             {
-                context.DrawChars('\u2554', 1, TvPoint.Zero, entry);
-                context.DrawChars('\u2557', 1, TvPoint.FromXY(columns - 1, 0), entry);
-                context.DrawChars('\u2550', columns - 2, TvPoint.FromXY(1, 0), entry);
-                for (var row = 1; row < rows - 1; row++)
+                var displacement = TvPoint.FromXY(_border.HasVerticalBorder ? 1 : 0, _border.HasHorizontalBorder ? 1 : 0);
+                var adjustement = TvBounds.FromRowsAndCols(_border.HasHorizontalBorder ? 2 : 0, _border.HasVerticalBorder ? 2 : 0);
+
+
+                if (_border.HasHorizontalBorder)
                 {
-                    context.DrawChars('\u2551', 1, TvPoint.FromXY(0, row), entry);
-                    context.DrawChars('\u2551', 1, TvPoint.FromXY(columns - 1, row), entry);
+                    context.DrawChars(_borderSet[BorderSets.Entries.TOPLEFT], 1, TvPoint.Zero, entry);
+                    context.DrawChars(_borderSet[BorderSets.Entries.TOPRIGHT], 1, TvPoint.FromXY(columns - 1, 0), entry);
+                    context.DrawChars(_borderSet[BorderSets.Entries.HORIZONTAL], columns - 2, TvPoint.FromXY(1, 0), entry);
+                    context.DrawChars(_borderSet[BorderSets.Entries.BOTTOMLEFT], 1, TvPoint.FromXY(0, rows - 1), entry);
+                    context.DrawChars(_borderSet[BorderSets.Entries.BOTTOMRIGHT], 1, TvPoint.FromXY(columns - 1, rows - 1), entry);
+                    context.DrawChars(_borderSet[BorderSets.Entries.HORIZONTAL], columns - 2, TvPoint.FromXY(1, rows - 1), entry);
+                }
+                if (_border.HasVerticalBorder)
+                {
+                    var startRow = _border.HasHorizontalBorder ? 1 : 0;
+                    var endrow = _border.HasHorizontalBorder ? rows - 1 : rows - 2;
+                    for (var row = startRow; row < endrow; row++)
+                    {
+                        context.DrawChars(_borderSet[BorderSets.Entries.VERTICAL], 1, TvPoint.FromXY(0, row), entry);
+                        context.DrawChars(_borderSet[BorderSets.Entries.VERTICAL], 1, TvPoint.FromXY(columns - 1, row), entry);
+                    }
                 }
 
-                context.DrawChars('\u255a', 1, TvPoint.FromXY(0, rows - 1), entry);
-                context.DrawChars('\u255d', 1, TvPoint.FromXY(columns - 1, rows - 1), entry);
-                context.DrawChars('\u2550', columns - 2, TvPoint.FromXY(1, rows - 1), entry);
-                return new DrawResult(TvPoint.FromXY(1, 1), TvBounds.FromRowsAndCols(2, 2));
+                return new DrawResult(displacement, adjustement);
             }
             return DrawResult.Done;
         }
