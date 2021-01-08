@@ -10,7 +10,7 @@ namespace Tvision2.Core.Render
         public int Rows { get; }
         public int Cols { get; }
 
-        public void Deconstruct (out int rows, out int cols)
+        public void Deconstruct(out int rows, out int cols)
         {
             rows = Rows;
             cols = Cols;
@@ -18,15 +18,16 @@ namespace Tvision2.Core.Render
 
         private TvBounds(int rows, int cols)
         {
-            Rows = rows;
-            Cols = cols;
+            Rows = rows >= 0 ? rows : 0;
+            Cols = cols >= 0 ? cols : 0;
         }
 
         public int Length() => Rows * Cols;
 
         public static TvBounds FromRowsAndCols(int rows, int cols) => new TvBounds(rows, cols);
 
-        public TvBounds SingleRow() => new TvBounds(1, Cols);
+        public TvBounds SingleRow() => new TvBounds(Rows > 0 ? 1 : 0, Cols);
+        public TvBounds SingleColumn() => new TvBounds(Rows, Cols > 0 ? 1 : 0);
 
         public bool HigherThan(TvBounds other) => Rows > other.Rows;
         public bool HigherOrEqualThan(TvBounds other) => Rows >= other.Rows;
@@ -46,7 +47,7 @@ namespace Tvision2.Core.Render
         public TvBounds Grow(int rowsToGrow, int colsToGrow) => new TvBounds(Rows + rowsToGrow, Cols + colsToGrow);
 
         public TvBounds Reduce(TvBounds reduction) => new TvBounds(Rows - reduction.Rows, Cols - reduction.Cols);
-        
+
         public override int GetHashCode()
         {
             return (Cols << 16) & (Rows);
@@ -54,5 +55,10 @@ namespace Tvision2.Core.Render
 
         public static bool operator ==(TvBounds first, TvBounds second) => first.Equals(second);
         public static bool operator !=(TvBounds first, TvBounds second) => !first.Equals(second);
+
+        public static TvBounds Min(TvBounds first, TvBounds second)
+        {
+            return TvBounds.FromRowsAndCols(first.Rows <= second.Rows ? first.Rows : second.Rows, first.Cols <= second.Cols ? first.Cols : second.Cols);
+        }
     }
 }

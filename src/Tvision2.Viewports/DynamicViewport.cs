@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Tvision2.Core.Colors;
 using Tvision2.Core.Render;
 
 namespace Tvision2.Viewports
@@ -72,10 +73,12 @@ namespace Tvision2.Viewports
             return new DynamicViewport(_factory, _creator, _viewport.MoveTo(newPos));
         }
 
-        public IViewport ResizeTo(int cols, int rows)
+        public IViewport ResizeToNewColsAndRows(int cols, int rows)
         {
-            return new DynamicViewport(_factory, _creator, _viewport.ResizeTo(cols, rows));
+            return new DynamicViewport(_factory, _creator, _viewport.ResizeToNewColsAndRows(cols, rows));
         }
+
+        public IViewport ResizeTo(TvBounds bounds) => ResizeToNewColsAndRows(bounds.Cols, bounds.Cols);
 
         public IViewport Translate(TvPoint translation)
         {

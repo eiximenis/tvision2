@@ -21,8 +21,7 @@ namespace Tvision2.Core.Render
 
         private readonly int _value;
         private Layer(int value) => _value = value;
-
-        public static Layer FromRaw(short value) => new Layer((int)value);
+        
         public static Layer Standard => new Layer((int)LayerValues.Standard);
         public static Layer Top => new Layer((int)LayerValues.Top);
         public static Layer Min => new Layer((int)LayerValues.Min);

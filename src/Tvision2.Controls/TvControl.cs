@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -30,6 +31,8 @@ namespace Tvision2.Controls
         public TIOptions Options { get; }
         public string Name => AsComponent().Name;
 
+        public ISkin Skin { get; }
+
         public enum ControlCanBeUnmounted
         {
             Yes = 0,
@@ -45,6 +48,7 @@ namespace Tvision2.Controls
             var typename = GetType().Name.ToLowerInvariant();
             var genericIdx = typename.IndexOf('`');
             ControlType = genericIdx != -1 ? typename.Substring(0, genericIdx) : typename;
+            Skin = creationParams.Skin;
             CurrentStyle = creationParams.Skin?.GetControlStyle(this);
             Options = creationParams.Options;
             _component = new TvComponent<TState>(creationParams.InitialState, name ?? $"TvControl_<$>",
@@ -72,7 +76,7 @@ namespace Tvision2.Controls
         {
             if (CurrentStyle == null)
             {
-                CurrentStyle = ctx.Component.GetStyle(ControlType);
+                CurrentStyle = ctx.Component.GetStyle(ControlType, Skin);
             }
 
             PerformAdditionalSkinConfiguration(ctx.Component.GetSkinManager());
@@ -97,6 +101,9 @@ namespace Tvision2.Controls
 
         private Task<bool> OnComponentMounted(ComponentMoutingContext ctx, TvControlCreationParameters<TState, TIOptions>  cparams )
         {
+
+            Debug.WriteLine($"Component {ctx.Component.Name} OnComponentMounted");
+
             var options = cparams.Options;
 
             if (cparams.AutoSetBounds)

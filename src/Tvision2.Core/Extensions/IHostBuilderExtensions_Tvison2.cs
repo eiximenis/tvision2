@@ -11,7 +11,7 @@ namespace Microsoft.Extensions.Hosting
 {
     public static class IHostBuilderExtensions_Tvison2
     {
-        public static IHostBuilder UseTvision2(this IHostBuilder builder, Action<Tvision2Setup> optionsSetup = null)
+        public static IHostBuilder UseTvision2(this IHostBuilder builder, Action<Tvision2Setup>? optionsSetup = null)
         {
             var setup = new Tvision2SetupForConsoleApp(builder);
             builder.Properties.Add(Tvision2Options.PropertyKey, setup.Options);

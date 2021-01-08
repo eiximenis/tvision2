@@ -17,8 +17,8 @@ namespace Tvision2.Statex.Controls.Behaviors
         where TStatex : class
     {
         private readonly ITvStoreSelector _storeSelector;
-        private StatexControlOptions<TControl, TControlState, TStatex> _options;
-        private TStatex _currentStatex;
+        private StatexControlOptions<TControl, TControlState, TStatex>? _options;
+        private TStatex? _currentStatex;
 
         public StatexBehavior(ITvStoreSelector storeSelector)
         {
@@ -56,8 +56,8 @@ namespace Tvision2.Statex.Controls.Behaviors
                     store.Dispatch(action as TvAction);
                 };
 
-                var command = Activator.CreateInstance(commandType, @delegate, creator.Predicate) as IAction;
-                var chain = creator.CommandMember.GetValue(control) as IActionChain;
+                var command = (Activator.CreateInstance(commandType, @delegate, creator.Predicate) as IAction)!;
+                var chain = (creator.CommandMember.GetValue(control) as IActionChain)!;
                 chain.Add(command);
             }
         }

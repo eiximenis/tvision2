@@ -35,7 +35,7 @@ namespace Tvision2.Controls.Menu
         protected override void ConfigureMetadataOptions(TvControlMetadataOptions options)
         {
             options.AvoidDrawControl();
-            options.IsFocused().Never();
+            options.FocusedWhen().Never();
         }
 
         protected override void OnViewportCreated(IViewport viewport)

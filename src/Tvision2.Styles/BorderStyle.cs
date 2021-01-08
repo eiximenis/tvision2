@@ -36,8 +36,10 @@ namespace Tvision2.Styles
         public bool HasVerticalBorder { get => (_value & 0b11110000) != 0; }
         public bool HasHorizontalBorder { get => (_value & 0b00001111) != 0; }
 
+        public bool HasBorder { get => _value != 0; }
 
-        public void Deconstruct (out BorderType horizontal, out BorderType vertical)
+
+        public void Deconstruct(out BorderType horizontal, out BorderType vertical)
         {
             horizontal = Horizontal;
             vertical = Vertical;

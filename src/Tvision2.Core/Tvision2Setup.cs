@@ -28,7 +28,7 @@ namespace Tvision2.Core
             if (!HasSetupStep(step)) _setupSteps.Add(step, value);
         }
 
-        public T GetSetupStep<T>(string step) => _setupSteps.TryGetValue(step, out var data) ? (T)data : default;
+        public T? GetSetupStep<T>(string step) => _setupSteps.TryGetValue(step, out var data) ? (T)data : default;
 
         public abstract void ConfigureServices(Action<IServiceCollection> configureDelegate);
 

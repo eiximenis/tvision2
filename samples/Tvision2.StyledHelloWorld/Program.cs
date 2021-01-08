@@ -17,16 +17,16 @@ namespace Tvision2.StyledHelloWorld
         static async Task Main(string[] args)
         {
             var builder = new HostBuilder();
-            ITuiEngine engine = null;
-            TvComponent<string> helloWorld = null;
-            TvComponent<string> helloWorld2= null;
-            TvComponent<string> helloWorld3 = null;
-            TvComponent<string> helloWorld4 = null;
-            TvComponent<string> helloWorld5 = null;
-            TvComponent<string> helloWorld6 = null;
-            TvComponent<string> helloWorld7 = null;
-            TvComponent<string> helloWorld8 = null;
-            TvComponent<string> helloWorld9 = null;
+            ITuiEngine? engine = null;
+            TvComponent<string>? helloWorld = null;
+            TvComponent<string>? helloWorld2= null;
+            TvComponent<string>? helloWorld3 = null;
+            TvComponent<string>? helloWorld4 = null;
+            TvComponent<string>? helloWorld5 = null;
+            TvComponent<string>? helloWorld6 = null;
+            TvComponent<string>? helloWorld7 = null;
+            TvComponent<string>? helloWorld8 = null;
+            TvComponent<string>? helloWorld9 = null;
 
             builder.UseTvision2(setup =>
             {

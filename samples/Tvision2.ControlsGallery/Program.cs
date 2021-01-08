@@ -25,6 +25,7 @@ namespace Tvision2.ControlsGallery
                             .OnWindows(w => w.UseAnsi().EnableTrueColor())
                             .OnLinux(l => l
                                 .UseNCurses()))
+                    //.UseDebug()
                     .UseViewportManager()
                     .UseLayoutManager()
                     .AddStyles(
@@ -32,9 +33,10 @@ namespace Tvision2.ControlsGallery
                         {
                             smb.AddStyle("tvgrid", sb =>
                             {
-                                sb.Default().DesiredStandard(s => 
-                                    s.UseForeground(TvColor.Green)
-                                     .UseBackground(() => new VerticalGradientBackgroundProvider(TvColor.FromRGB(0, 255, 255), TvColor.FromRGB(128, 20, 20))));
+                                sb.Default().DesiredStandard(s =>
+                                    s.UseForeground(TvColor.White)
+                                    .UseBackground(TvColor.Black));
+                                     //.UseBackground(() => new VerticalGradientBackgroundProvider(TvColor.FromRGB(0, 255, 255), TvColor.FromRGB(128, 20, 20))));
                             });
                         })
                     )

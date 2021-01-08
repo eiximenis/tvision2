@@ -1,4 +1,6 @@
-﻿namespace Tvision2.Core.Render
+﻿using Tvision2.Core.Components.Draw;
+
+namespace Tvision2.Core.Render
 {
     public sealed class Viewport : IViewport
     {
@@ -31,8 +33,8 @@
 
 
 
-
-        public IViewport ResizeTo(int cols, int rows) => new Viewport(Position, TvBounds.FromRowsAndCols(rows, cols), ZIndex, Flow);
+        public IViewport ResizeTo(TvBounds bounds) => ResizeToNewColsAndRows(bounds.Cols, bounds.Rows);
+        public IViewport ResizeToNewColsAndRows(int cols, int rows) => new Viewport(Position, TvBounds.FromRowsAndCols(rows, cols), ZIndex, Flow);
         public IViewport Grow(int ncols, int nrows) => new Viewport(Position, Bounds.Grow(nrows, ncols), ZIndex, Flow);
 
         public IViewport MoveTo(TvPoint newPos) => new Viewport(newPos, Bounds, ZIndex, Flow);
@@ -40,8 +42,6 @@
         public IViewport Translate(TvPoint translation) => new Viewport(Position + translation, Bounds, ZIndex, Flow);
 
         public IViewport Clone() => new Viewport(Position, Bounds, ZIndex, Flow);
-
-
 
         public override bool Equals(object obj)
         {

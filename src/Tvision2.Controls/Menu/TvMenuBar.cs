@@ -35,7 +35,7 @@ namespace Tvision2.Controls.Menu
 
         protected override void ConfigureMetadataOptions(TvControlMetadataOptions options)
         {
-            options.IsFocused().OnlyWhenAnyChildHasFocus();
+            options.FocusedWhen().OnlyAnyChildHasFocus();
         }
 
         protected override void OnDraw(RenderContext<MenuState> context)

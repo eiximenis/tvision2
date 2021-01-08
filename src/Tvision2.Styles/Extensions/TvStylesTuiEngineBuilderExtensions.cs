@@ -12,7 +12,7 @@ namespace Tvision2.DependencyInjection
     public static class TvStylesTuiEngineBuilderExtensions
     {
         private const string stylesSetupStep = "TvStyles";
-        public static Tvision2Setup AddStyles(this Tvision2Setup setup, Action<ISkinManagerBuilder> skinOptions = null)
+        public static Tvision2Setup AddStyles(this Tvision2Setup setup, Action<ISkinManagerBuilder>? skinOptions = null)
         {
             if (!setup.HasSetupStep(stylesSetupStep))           // Ensure typres are only registered once
             {
@@ -33,7 +33,7 @@ namespace Tvision2.DependencyInjection
                     }
 
                     var styledAdapter = sp.GetRequiredService<StyledRenderContextAdatper>();
-                    styledAdapter.AttachTo(engine.UI as ComponentTree);
+                    styledAdapter.AttachTo((ComponentTree)engine.UI);
                 });
             }
 

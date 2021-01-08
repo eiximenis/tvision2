@@ -9,13 +9,13 @@ namespace Tvision2.Core
         private readonly Func<TData, ActionResult> _action;
         private readonly Func<TData, bool> _predicate;
 
-        public DelegateAction(Func<TData, ActionResult> action, Func<TData, bool> predicate = null)
+        public DelegateAction(Func<TData, ActionResult> action, Func<TData, bool>? predicate = null)
         {
             _action = action;
             _predicate = predicate;
         }
 
-        public DelegateAction(Action<TData> action, Func<TData, bool> predicate = null)
+        public DelegateAction(Action<TData> action, Func<TData, bool>? predicate = null)
         {
             _action = d =>
             {

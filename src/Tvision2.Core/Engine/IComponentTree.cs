@@ -22,9 +22,9 @@ namespace Tvision2.Core.Engine
         event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
         event EventHandler TreeUpdated;
 
-        TvComponentMetadata Add(TvComponent component, Action<AddComponentOptions> addOptions = null);
+        TvComponentMetadata Add(TvComponent component, Action<AddComponentOptions>? addOptions = null);
         TvComponentMetadata AddAfter(TvComponent componentToAdd, TvComponent componentBefore);
-        TvComponentMetadata AddAsChild(TvComponent componentToAdd, TvComponent parent, Action<IAddChildComponentOptions> options = null);
+        TvComponentMetadata AddAsChild(TvComponent componentToAdd, TvComponent parent, Action<IAddChildComponentOptions>? options = null);
         bool Remove(TvComponent component);
 
         void Clear();

@@ -33,7 +33,7 @@ namespace Tvision2.Controls
         public TState InitialState { get; }
         public TOptions Options { get; }
 
-        public TvControlCreationParameters(ISkin skin, IViewport viewport, TState initialState, TOptions options, string name = null, bool mustCreateViewport = false) : base(skin, viewport, name, mustCreateViewport)
+        public TvControlCreationParameters(ISkin skin, IViewport viewport, TState initialState, TOptions options, string name = "", bool mustCreateViewport = false) : base(skin, viewport, name, mustCreateViewport)
         {
             InitialState = initialState;
             Options = options;
@@ -44,7 +44,7 @@ namespace Tvision2.Controls
     public class TvControlCreationParameters<TState> : TvControlCreationParameters<TState, EmptyControlOptions>
     where TState : IDirtyObject
     {
-        public TvControlCreationParameters(ISkin skin, IViewport viewport, TState initialState, string name = null, bool mustCreateViewport = false)
+        public TvControlCreationParameters(ISkin skin, IViewport viewport, TState initialState, string name = "", bool mustCreateViewport = false)
             : base(skin, viewport, initialState, new EmptyControlOptions(), name, mustCreateViewport)
         { }
     }

@@ -60,7 +60,7 @@ namespace Tvision2.Core.Components
 
         protected readonly List<IBehaviorMetadata> _behaviorsMetadata;
 
-        public TvComponent(string name, Action<IConfigurableComponentMetadata> configAction = null)
+        public TvComponent(string name, Action<IConfigurableComponentMetadata>? configAction = null)
         {
             ComponentId = Guid.NewGuid();
             _metadata = new TvComponentMetadata(this);
@@ -88,6 +88,7 @@ namespace Tvision2.Core.Components
 
         public Guid AddViewport(IViewport viewport)
         {
+            viewport = viewport ?? throw new ArgumentNullException(nameof(viewport));
             var key = _viewports.Any() ? Guid.NewGuid() : Guid.Empty;
             _viewports.Add(key, viewport);
             UpdateAdaptativeDrawersForUpdatedViewport(key, viewport);
@@ -107,9 +108,12 @@ namespace Tvision2.Core.Components
         {
             if (_viewports.TryGetValue(guid, out IViewport oldvp))
             {
-                _viewports[guid] = newViewport;
-                UpdateAdaptativeDrawersForUpdatedViewport(guid, newViewport);
-                _metadata?.RaiseViewportChanged(guid, oldvp, newViewport);
+                if (!newViewport.Equals(oldvp))
+                {
+                    _viewports[guid] = newViewport;
+                    UpdateAdaptativeDrawersForUpdatedViewport(guid, newViewport);
+                    _metadata?.RaiseViewportChanged(guid, oldvp, newViewport);
+                }
             }
             else if (addIfNotExists)
             {
@@ -220,7 +224,7 @@ namespace Tvision2.Core.Components
         }
 
 
-        public TvComponent(T initialState, string name = null, Action<IConfigurableComponentMetadata> configAction = null) : base(name, configAction)
+        public TvComponent(T initialState, string? name = null, Action<IConfigurableComponentMetadata>? configAction = null) : base(name, configAction)
         {
             NeedToRedraw = RedrawNeededAction.None;
             State = initialState;
@@ -237,7 +241,7 @@ namespace Tvision2.Core.Components
         }
 
 
-        public void AddBehavior<TB>(TB behavior, Action<BehaviorMetadata<T, TB>> metadataAction = null)
+        public void AddBehavior<TB>(TB behavior, Action<BehaviorMetadata<T, TB>>? metadataAction = null)
             where TB: ITvBehavior<T>
         {
             var metadata = new BehaviorMetadata<T, TB>(behavior);
@@ -246,7 +250,7 @@ namespace Tvision2.Core.Components
         }
 
 
-        public void AddBehavior<TB>(Action<FactoryBehaviorMetadata<TB, T>> metadataAction = null)
+        public void AddBehavior<TB>(Action<FactoryBehaviorMetadata<TB, T>>? metadataAction = null)
             where TB : ITvBehavior<T>
         {
             var metadata = new FactoryBehaviorMetadata<TB, T>();
@@ -311,6 +315,11 @@ namespace Tvision2.Core.Components
         {
             foreach (var vpnk in _viewports)
             {
+                if (vpnk.Value.Bounds.Length() == 0)            // If viewport has 0 rows or 0 cols we skip this viewport.
+                {
+                    continue;
+                }
+
                 var context = new RenderContext<T>(vpnk.Value, console,  node, NeedToRedraw, State);
                 var adaptativeDrawers = GetAdaptativeDrawersForViewport(vpnk.Key);
                 var viewportDrawed = false;

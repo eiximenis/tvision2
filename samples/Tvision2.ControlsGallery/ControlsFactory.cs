@@ -18,15 +18,15 @@ namespace Tvision2.ControlsGallery
     {
         public static TvGrid CreateGrid(IViewportFactory viewportFactory, ISkinManager sk)
         {
-            var grid = TvGrid.With().Rows(2).Columns(2).Name("MainGrid")
-                .Viewport(new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(8, 50)))
+            var grid = TvGrid.With().Rows(3).Columns(3).Name("MainGrid")
+                .Viewport(new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(12, 50)))
                 .WithOptions(opt => opt.UseBorder(BorderValue.FromHorizontalAndVertical(BorderType.Double, BorderType.Single), sk.CurrentSkin["tvgrid"]))
                 .Create();
 
             return grid;
         }
 
-        public static TvDropdown CreateDropDown()
+        public static TvDropdown CreateDropDown(ISkinManager sk)
         {
             var ddParams = TvDropdown.UseParams()
                 .WithState(state =>
@@ -34,8 +34,12 @@ namespace Tvision2.ControlsGallery
                     state.AddValue(new DropDownValue("1", "One"));
                     state.AddValue(new DropDownValue("2", "Two"));
                     state.AddValue(new DropDownValue("3", "Three"));
+                    state.AddValue(new DropDownValue("4", "Four"));
+                    state.AddValue(new DropDownValue("5", "Five"));
+                    state.AddValue(new DropDownValue("6", "Six"));
+                    state.AddValue(new DropDownValue("42", "Everything"));
                 })
-                .Configure(c => c.UseViewport(new Viewport(TvPoint.FromXY(10, 10), TvBounds.FromRowsAndCols(5, 10), Layer.Standard)))
+                .Configure(c => c.UseSkin(sk.GetSkin("Mc")).UseViewport(new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(5, 10), Layer.Standard)))
                 .Build();
             var combo = new TvDropdown(ddParams);
             return combo;

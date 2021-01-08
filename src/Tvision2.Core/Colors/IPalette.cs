@@ -12,7 +12,7 @@ namespace Tvision2.Core.Colors
         
         bool IsFull { get; }
 
-        int AddColor(TvColor color, string name = null);
+        int AddColor(TvColor color, string name);
 
         ColorMode ColorMode { get; }
         

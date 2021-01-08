@@ -55,12 +55,12 @@ namespace Tvision2.ControlsGallery
 
             */
 
-
-            mainGrid.At(row: 0, col: 0).Add(ControlsFactory.CreateButton("Button 1", 1, _skinManager).AsComponent());
-            mainGrid.At(row: 0, col: 1).WithAlignment(ChildAlignment.StretchHorizontal).Add(ControlsFactory.CreateButton("Button 2", 2, _skinManager).AsComponent());
-            mainGrid.At(row: 1, col: 0).WithAlignment(ChildAlignment.StretchVertical).Add(ControlsFactory.CreateButton("Button 3", 3, _skinManager).AsComponent());
-            mainGrid.At(row: 1, col: 1).WithAlignment(ChildAlignment.Fill).Add(ControlsFactory.CreateButton("Button 4", 4, _skinManager).AsComponent());
-
+           
+            mainGrid.AtRowCol(row: 0, col: 0).Add(ControlsFactory.CreateButton("Button 1", 1, _skinManager).AsComponent());
+            mainGrid.AtRowCol(row: 0, col: 1).WithAlignment(ChildAlignment.StretchHorizontal).Add(ControlsFactory.CreateButton("Button 2", 2, _skinManager).AsComponent());
+            mainGrid.AtRowCol(row: 1, col: 0).WithAlignment(ChildAlignment.StretchVertical).Add(ControlsFactory.CreateButton("Button 3", 3, _skinManager).AsComponent());
+            mainGrid.AtRowCol(row: 1, col: 1).WithAlignment(ChildAlignment.Fill).Add(ControlsFactory.CreateButton("Button 4", 4, _skinManager).AsComponent());
+            mainGrid.AtRowCol(row: 2, col: 0).Add(ControlsFactory.CreateDropDown(_skinManager).AsComponent());
         }
 
         private Task<bool> ShowDialog(ButtonState btnstate, DropdownState comboState)

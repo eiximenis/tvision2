@@ -57,7 +57,7 @@ namespace Tvision2.Styles.Extensions
             }
         }
 
-        public static StyledRenderContext<T> Styled<T>(this RenderContext<T> ctx, string style = null)
+        public static StyledRenderContext<T> Styled<T>(this RenderContext<T> ctx, string? style = null)
         {
             var adapter = ctx.GetTag<StyledRenderContextAdatper>();
             if (adapter != null)

@@ -18,7 +18,8 @@ namespace Tvision2.Core.Render
 
         FlowModel Flow { get; }
 
-        IViewport ResizeTo(int cols, int rows);
+        IViewport ResizeTo(TvBounds bounds);
+        IViewport ResizeToNewColsAndRows(int cols, int rows);
         IViewport Grow(int ncols, int nrows);
         IViewport MoveTo(TvPoint newPos);
         IViewport Translate(TvPoint translation);

@@ -146,8 +146,8 @@ namespace Tvision2.MidnightCommander
                     .Dispatch((s, args) => new TvAction<FileItem>("FETCH_INFO", args));
             });
 
-            listFilesGrid.At(0, 0).Add(left.AsComponent());
-            listFilesGrid.At(0, 1).Add(right.AsComponent());
+            listFilesGrid.AtRowCol(0, 0).Add(left.AsComponent());
+            listFilesGrid.AtRowCol(0, 1).Add(right.AsComponent());
             var bottom = new TvStackPanel("BottomContainer");
             bottom.Layout.Add(new LayoutSize());
             bottom.At(0).Add(textbox);

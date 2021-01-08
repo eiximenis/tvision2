@@ -9,7 +9,7 @@ namespace Tvision2.Core.Engine
 {
     public static class Tvision2SetupExtensions_Debug
     {
-        public static Tvision2Setup UseDebug(this Tvision2Setup setup, Action<ITvision2DebugOptions> optionsSetup = null)
+        public static Tvision2Setup UseDebug(this Tvision2Setup setup, Action<ITvision2DebugOptions>? optionsSetup = null)
         {
             setup.ConfigureServices(sc =>
             {

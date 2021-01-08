@@ -3,6 +3,7 @@
     <NetStandardTargetVersion>net5.0</NetStandardTargetVersion>
     <NetCoreTargetVersion>net5.0</NetCoreTargetVersion>
     <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Label="Package Versions">

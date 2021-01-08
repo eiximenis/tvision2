@@ -11,10 +11,26 @@ using Tvision2.Core.Colors;
 using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
+using Tvision2.Styles;
 using Tvision2.Styles.Extensions;
 
 namespace Tvision2.Layouts.Grid
 {
+
+    public interface IRowColSpecifier<T> where T : class
+    {
+        IRowSpecifier<T> Col(int index);
+        IColSpecifier<T> Row(int index);
+    }
+
+    public interface IColSpecifier<out T> where T : class
+    {
+        T Col(int index);
+    }
+    public interface IRowSpecifier<out T> where T: class
+    {
+        T Row(int index);
+    }
 
     public interface IGridContainer
     {
@@ -22,7 +38,7 @@ namespace Tvision2.Layouts.Grid
         public IGridContainer WithAlignment(ChildAlignment alignment);
     }
 
-    public class TvGrid : ITvContainer, IGridContainer
+    public class TvGrid : ITvContainer, IGridContainer, IRowColSpecifier<IGridContainer>, IColSpecifier<IGridContainer>, IRowSpecifier<IGridContainer>
     {
         private readonly TvComponent<GridState> _component;
         private readonly TvGridComponentTree _childs;
@@ -36,6 +52,7 @@ namespace Tvision2.Layouts.Grid
         private readonly TvGridOptions _options;
 
         private TvBounds[,] _cellBounds;
+        private readonly char[] _borderSet;
 
 
         private int _currentRow;
@@ -43,7 +60,7 @@ namespace Tvision2.Layouts.Grid
         private ChildAlignment _currentAlignment;
 
 
-        public TvGrid(GridState state, TvGridOptions options, string name)
+        public TvGrid(GridState state, TvGridOptions? options, string name)
         {
             _options = options ?? new TvGridOptions();
             _currentAlignment = _options.DefaultAlignment;
@@ -66,6 +83,10 @@ namespace Tvision2.Layouts.Grid
             _component.Metadata.ViewportChanged += OnViewportChanged;
             _childs = new TvGridComponentTree();
             _cellBounds = new TvBounds[state.Rows, state.Cols];
+            if (_options.Border.HasBorder)
+            {
+                _borderSet = BorderSets.GetBorderSet(_options.Border);
+            }
             RecalculateBounds();
         }
 
@@ -89,7 +110,7 @@ namespace Tvision2.Layouts.Grid
                 var remWidth = totalWidthForCells;
                 for (var col = 0; col < _state.Cols; col++)
                 {
-                    var thisColWidth =col == _state.Cols -1  ? remWidth : cellWidth;
+                    var thisColWidth = col == _state.Cols - 1 ? remWidth : cellWidth;
                     _cellBounds[row, col] = TvBounds.FromRowsAndCols(thisRowHeight, thisColWidth);
                     remWidth -= cellWidth;
                 }
@@ -99,23 +120,36 @@ namespace Tvision2.Layouts.Grid
 
         private void OnDrawBorder(RenderContext<GridState> ctx)
         {
-            var (borderHor, borderVer) = _options.Border;
-            var attr = _options.BorderAttribute;
+            var attr = _options.BorderAttribute;    
+            var maxcols = ctx.Viewport.Bounds.Cols - 1;
+            var maxrows = ctx.Viewport.Bounds.Rows - 1;
             for (var row = 0; row < ctx.Viewport.Bounds.Rows; row++)
             {
-                if (RowHasHorizontalBorder(row))
+                var horborder = RowHasHorizontalBorder(row);
+                if (horborder)
                 {
-                    ctx.DrawChars('=', ctx.Viewport.Bounds.Cols, TvPoint.FromXY(0, row), attr);
+                    ctx.DrawChars(_borderSet[BorderSets.Entries.HORIZONTAL], ctx.Viewport.Bounds.Cols, TvPoint.FromXY(0, row), attr);
                 }
-                for (var col = 0; col < ctx.Viewport.Bounds.Cols; col ++)
+                for (var col = 0; col < ctx.Viewport.Bounds.Cols; col++)
                 {
                     if (ColHasVerticalBorder(col))
                     {
-                        ctx.DrawChars('|', 1, TvPoint.FromXY(col, row), attr);
+                        var borderchar = (row, col) switch
+                        {
+                            (0, 0) => horborder ? _borderSet[BorderSets.Entries.TOPLEFT] : _borderSet[BorderSets.Entries.VERTICAL],
+                            var (r, c) when r == 0 && c == maxcols => horborder ? _borderSet[BorderSets.Entries.TOPRIGHT] : _borderSet[BorderSets.Entries.VERTICAL],
+                            (0, _) => horborder ? _borderSet[BorderSets.Entries.HORIZONTALDOWN] : _borderSet[BorderSets.Entries.VERTICAL],
+                            var (r, c) when c == 0 && r == maxrows => _borderSet[horborder ? BorderSets.Entries.BOTTOMLEFT : BorderSets.Entries.VERTICAL],
+                            var (r, c) when c == maxcols && r == maxrows => _borderSet[horborder ? BorderSets.Entries.BOTTOMRIGHT : BorderSets.Entries.VERTICAL],
+                            var (r, _) when r == maxrows => _borderSet[horborder ? BorderSets.Entries.HORIZONTALUP : BorderSets.Entries.VERTICAL],
+                            (_, 0) => _borderSet[horborder ? BorderSets.Entries.VERTICALLEFT : BorderSets.Entries.VERTICAL],
+                            var (_, c) when c == maxcols => _borderSet[horborder ? BorderSets.Entries.VERTICALRIGHT : BorderSets.Entries.VERTICAL],
+                            _ => _borderSet[horborder ? BorderSets.Entries.CROSS : BorderSets.Entries.VERTICAL],
+                        };
+                        ctx.DrawChars(borderchar, 1, TvPoint.FromXY(col, row), attr);
                     }
                 }
             }
-
 
             bool RowHasHorizontalBorder(int row)
             {
@@ -123,7 +157,7 @@ namespace Tvision2.Layouts.Grid
 
                 if (row == 0 || row == ctx.Viewport.Bounds.Rows - 1) return true;
                 var accrow = 0;
-                for (var hrow =0; hrow <_state.Rows; hrow++)
+                for (var hrow = 0; hrow < _state.Rows; hrow++)
                 {
                     accrow += _cellBounds[hrow, 0].Rows + 1;
                     if (row == accrow) return true;
@@ -153,7 +187,7 @@ namespace Tvision2.Layouts.Grid
             _isMounted = true;
 
             if (_pendingAdds.Any())
-            {
+            { 
                 foreach (var cmpToAdd in _pendingAdds)
                 {
                     DoPendingAdd(cmpToAdd);
@@ -170,13 +204,15 @@ namespace Tvision2.Layouts.Grid
         }
 
 
-        public IGridContainer At(int row, int col)
+        public IGridContainer AtRowCol(int row, int col)
         {
             _currentRow = row;
             _currentCol = col;
             return this;
         }
 
+
+        public IRowColSpecifier<IGridContainer> At() => this;
 
         IGridContainer IGridContainer.WithAlignment(ChildAlignment alignment)
         {
@@ -219,14 +255,14 @@ namespace Tvision2.Layouts.Grid
             TvBounds cellBounds = _cellBounds[ctrRow, ctrCol];
             var horDespl = _options.Border.HasHorizontalBorder ? 1 : 0;
             var verDespl = _options.Border.HasVerticalBorder ? 1 : 0;
-            TvPoint childDisplacement = entry.ViewportOriginal ? childViewport.Position : TvPoint.FromXY(horDespl, verDespl);
+            TvPoint childDisplacement = entry.ViewportOriginal ? innerViewport.Position  : TvPoint.FromXY(horDespl, verDespl);
 
             var viewport = alignment switch
             {
-                ChildAlignment.None => myViewport.InnerViewport(cellPos + childDisplacement, innerViewport.Bounds),
-                ChildAlignment.StretchHorizontal => myViewport.InnerViewport(cellPos + TvPoint.FromXY(0, childDisplacement.Top), TvBounds.FromRowsAndCols(cellBounds.Rows, innerViewport.Bounds.Cols)),
-                ChildAlignment.StretchVertical => myViewport.InnerViewport(cellPos + TvPoint.FromXY(childDisplacement.Left, 0), TvBounds.FromRowsAndCols(innerViewport.Bounds.Rows, cellBounds.Cols)),
-                _ => new Viewport(cellPos, cellBounds, childViewport.ZIndex, childViewport.Flow)
+                ChildAlignment.None => myViewport.InnerViewport(cellPos + childDisplacement, innerViewport.Bounds, cellBounds),
+                ChildAlignment.StretchHorizontal => myViewport.InnerViewport(cellPos + childDisplacement, TvBounds.FromRowsAndCols(cellBounds.Rows, innerViewport.Bounds.Cols), cellBounds),
+                ChildAlignment.StretchVertical => myViewport.InnerViewport(cellPos + childDisplacement, TvBounds.FromRowsAndCols(innerViewport.Bounds.Rows, cellBounds.Cols), cellBounds),
+                _ => new Viewport(cellPos + childDisplacement, cellBounds, innerViewport.ZIndex, innerViewport.Flow)
             };
 
             entry.ViewportOriginal = false;
@@ -259,7 +295,30 @@ namespace Tvision2.Layouts.Grid
 
         public void Clear() => _childs.Clear();
 
-        public int Count { get => _childs.Count; }
+        IRowSpecifier<IGridContainer> IRowColSpecifier<IGridContainer>.Col(int index)
+        {
+            _currentCol = index;
+            return this;
+        }
 
+        IColSpecifier<IGridContainer> IRowColSpecifier<IGridContainer>.Row(int index)
+        {
+            _currentRow = index;
+            return this;
+        }
+
+        IGridContainer IColSpecifier<IGridContainer>.Col(int index)
+        {
+            _currentCol = index;
+            return this;
+        }
+
+        IGridContainer IRowSpecifier<IGridContainer>.Row(int index)
+        {
+            _currentRow = index;
+            return this;
+        }
+
+        public int Count { get => _childs.Count; }
     }
 }

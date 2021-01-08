@@ -41,7 +41,7 @@ namespace Tvision2.Dialogs
 
         protected override void ConfigureMetadataOptions(TvControlMetadataOptions options)
         {
-            options.IsFocused().Never();
+            options.FocusedWhen().Never();
         }
 
         protected override void OnControlMounted(ITuiEngine owner)

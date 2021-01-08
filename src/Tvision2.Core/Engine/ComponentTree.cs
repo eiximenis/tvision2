@@ -406,7 +406,7 @@ namespace Tvision2.Core.Engine
             return componentToAdd.Metadata;
         }
 
-        public TvComponentMetadata AddAsChild(TvComponent componentToAdd, TvComponent parent, Action<IAddChildComponentOptions> options = null)
+        public TvComponentMetadata AddAsChild(TvComponent componentToAdd, TvComponent parent, Action<IAddChildComponentOptions>? options = null)
         {
             var addOptions = AddComponentOptions.AddAsChild(componentToAdd.Metadata, parent.Metadata);
             options?.Invoke(addOptions);
@@ -415,7 +415,7 @@ namespace Tvision2.Core.Engine
             return componentToAdd.Metadata;
         }
 
-        public TvComponentMetadata Add(TvComponent componentToAdd, Action<AddComponentOptions> addOptions = null)
+        public TvComponentMetadata Add(TvComponent componentToAdd, Action<AddComponentOptions>? addOptions = null)
         {
             var options = new AddComponentOptions(componentToAdd.Metadata);
             addOptions?.Invoke(options);

@@ -48,7 +48,7 @@ namespace Tvision2.ConsoleDriver.Common
             
         }
 
-        public int AddColor(TvColor color, string name = null)
+        public int AddColor(TvColor color, string name)
         {
             if (IsFull)
             {

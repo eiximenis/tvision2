@@ -17,7 +17,7 @@ namespace Tvision2.ConsoleDriver.Blazor
             PaletteOptions = new PaletteOptions() { TrueColorEnabled = true };
         }
 
-        IBlazorConsoleDriverOptions IBlazorConsoleDriverOptions.WithPalette(Action<IPaletteOptions> paletteOptionsAction = null)
+        IBlazorConsoleDriverOptions IBlazorConsoleDriverOptions.WithPalette(Action<IPaletteOptions>? paletteOptionsAction = null)
         {
             paletteOptionsAction?.Invoke(PaletteOptions);
             return this;
@@ -27,6 +27,6 @@ namespace Tvision2.ConsoleDriver.Blazor
 
     public interface IBlazorConsoleDriverOptions : IConsoleDriverOptions
     {
-        IBlazorConsoleDriverOptions WithPalette(Action<IPaletteOptions> paletteOptionsAction = null);
+        IBlazorConsoleDriverOptions WithPalette(Action<IPaletteOptions>? paletteOptionsAction = null);
     }
 }

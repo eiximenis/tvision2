@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Net.Security;
 using System.Threading;
+using Tvision2.Controls.Extensions;
 using Tvision2.Core;
 using Tvision2.Core.Engine;
 
@@ -53,7 +55,15 @@ namespace Tvision2.Controls
         public bool IsDirty { get; private set; }
         public bool CanFocus { get; private set; }
         public bool IsAttached { get => _ownerTree != null; }
+
+        public TvControlMetadata Parent { get; private set; }
         public ITvControl Control { get; }
+
+        public int TabLevel { get; private set; }
+
+        public int TabOrder { get; private set; }
+
+        public int TabGroup { get; private set; }
 
         public ComponentTreeNode ComponentNode { get; private set; }
 
@@ -87,7 +97,7 @@ namespace Tvision2.Controls
         }
 
 
-        public TvControlMetadata(ITvControl control, TvControlCreationParameters creationParameters, Action<TvControlMetadataOptions> optionsAction = null)
+        public TvControlMetadata(ITvControl control, TvControlCreationParameters creationParameters, Action<TvControlMetadataOptions>? optionsAction = null)
         {
             ComponentNode = null;
             CreationParameters = creationParameters;
@@ -96,6 +106,8 @@ namespace Tvision2.Controls
             Control = control;
             FocusTransferred = false;
             CanFocus = false;
+            TabOrder = -1;
+            TabGroup = -1;
             ControlId = control.AsComponent().ComponentId;
             _ownerTree = null;
             _options = new TvControlMetadataOptions();
@@ -107,6 +119,10 @@ namespace Tvision2.Controls
             CanFocus = false;
             _ownerTree = null;
             ComponentNode = null;
+            Parent = null;
+            TabGroup = -1;
+            TabOrder = 0;
+            TabLevel = 0;
         }
 
         internal void Attach(ControlsTree controlsTree, ComponentTreeNode node)
@@ -114,6 +130,20 @@ namespace Tvision2.Controls
             CanFocus = _options.CanHaveFocus;
             _ownerTree = controlsTree;
             ComponentNode = node;
+            var parentControl = node.GetParentControl();
+            if (parentControl != null)
+            {
+                TabGroup = parentControl.TabGroup;
+                TabOrder = 1;
+                TabLevel = node.Level;
+                Parent = parentControl;
+            }
+            else
+            {
+                TabGroup = controlsTree.GetNextTabGroup();
+                TabOrder = TabGroup;
+                TabLevel = 0;
+            }
         }
 
         public void Focus(bool force = false)

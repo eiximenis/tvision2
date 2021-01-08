@@ -9,14 +9,14 @@ namespace Tvision2.Controls
     abstract class TvControlCreationParametersBuilderBase<TState> : ITvControlCreationParametersBuilder<TState>
         where TState : IDirtyObject
     {
-        protected readonly Func<TState> _stateCreator;
+        protected readonly Func<TState>? _stateCreator;
         protected string _name;
-        protected readonly TState _initialState;
-        private IViewport _viewport;
+        protected readonly TState? _initialState;
+        private IViewport? _viewport;
         private bool _requestBounds;
 
-        public ISkin SkinToUse { get; private set; }
-        public Action<TState> StateConfigurator { get; private set; }
+        public ISkin? SkinToUse { get; private set; }
+        public Action<TState>? StateConfigurator { get; private set; }
 
 
         public bool BoundsRequested { get => _requestBounds || _viewport == null; }
@@ -33,6 +33,7 @@ namespace Tvision2.Controls
             _initialState = initialState;
             _viewport = null;
             _requestBounds = false;
+            _name = string.Empty;
         }
 
         public TvControlCreationParametersBuilderBase(Func<TState> stateCreator)
@@ -41,6 +42,7 @@ namespace Tvision2.Controls
             _initialState = default(TState);
             _viewport = null;
             _requestBounds = false;
+            _name = string.Empty;
         }
 
         public ITvControlCreationParametersBuilder<TState> UseSkin(ISkin skin)

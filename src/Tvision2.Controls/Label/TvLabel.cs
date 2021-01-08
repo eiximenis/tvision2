@@ -18,7 +18,7 @@ namespace Tvision2.Controls.Label
 
         protected override void ConfigureMetadataOptions(TvControlMetadataOptions options)
         {
-            options.IsFocused().Never();
+            options.FocusedWhen().Never();
         }
 
         protected override IViewport CalculateViewport(IViewport initialViewport)

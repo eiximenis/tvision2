@@ -25,7 +25,7 @@ namespace Tvision2.ConsoleDriver.ColorTranslators
                 return existingIndex;
             }
             
-            var index = palette.AddColor(rgbColor);
+            var index = palette.AddColor(rgbColor, rgbColor.ToString());
             _translatedColors.Add(rgbColor, index);
             return index;
         }

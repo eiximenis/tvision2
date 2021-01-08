@@ -48,13 +48,13 @@ namespace Tvision2.Controls.List
         {
             if (!_styleProvider.HasStyles)
             {
-                _styleProvider.UseSkin(skinManager.CurrentSkin);
+                _styleProvider.UseSkin(skinManager.GetDefaultSkin());
             }
         }
 
         protected override void AddCustomElements(TvComponent<ListState<TItem>> component)
         {
-            component.WithDoubleBorder("tvlist");
+            component.WithDoubleBorder("tvlist", Skin);
         }
 
         protected override IEnumerable<ITvBehavior<ListState<TItem>>> GetEventedBehaviors()

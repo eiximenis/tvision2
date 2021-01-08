@@ -38,7 +38,7 @@ namespace Tvision2.Layouts.Grid
 
         public void Set(int col, int row, TvComponent component, ChildAlignment alignment)
         {
-            _childs.Add((row, col), new TvGridComponentTreeEntry(component, alignment));
+            _childs.Add((Row: row, Column: col), new TvGridComponentTreeEntry(component, alignment));
         }
 
         public TvComponent GetComponent(string name) => _childs.Values.FirstOrDefault(c => c.Component.Name == name)?.Component;

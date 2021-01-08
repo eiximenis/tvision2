@@ -10,26 +10,28 @@ namespace Tvision2.Styles.Extensions
     {
 
 
-        public static TvComponent<T> WithBorder<T>(this TvComponent<T> component, BorderValue value, string styleToUse = null )
+        public static TvComponent<T> WithBorder<T>(this TvComponent<T> component, BorderValue value, string? styleToUse = null, ISkin? skinToUse = null )
         {
             if (value.HasHorizontalBorder || value.HasVerticalBorder)
             {
                 component.Metadata.OnTreeUpdatedByMount.AddOnce(mctx =>
                 {
-                    mctx.Component.InsertDrawerAt(new BorderDrawer(mctx.Component.GetStyle(styleToUse), value), 0);
+                    mctx.Component.InsertDrawerAt(new BorderDrawer(mctx.Component.GetStyle(styleToUse, skinToUse), value), 0);
                 });
             }
             return component;
 
         }
 
-        public static TvComponent<T> WithDoubleBorder<T>(this TvComponent<T> component, string styleToUse = null) => WithBorder(component, BorderValue.Double(), styleToUse);
-        public static TvComponent<T> WithSingleBorder<T>(this TvComponent<T> component, string styleToUse = null) => WithBorder(component, BorderValue.Single(), styleToUse);
+        public static TvComponent<T> WithDoubleBorder<T>(this TvComponent<T> component, string? styleToUse = null, ISkin? skinToUse = null) => WithBorder(component, BorderValue.Double(), styleToUse, skinToUse);
+        public static TvComponent<T> WithSingleBorder<T>(this TvComponent<T> component, string? styleToUse = null, ISkin? skinToUse = null) => WithBorder(component, BorderValue.Single(), styleToUse, skinToUse);
 
-        public static IStyle GetStyle (this TvComponent component, string defaultStyle = null)
+        public static IStyle GetStyle (this TvComponent component, string? defaultStyle = null, ISkin? skinToUse = null)
         {
             var adapter = component.Metadata.GetTag<StyledRenderContextAdatper>() ?? throw new InvalidOperationException("Styles are not enabled");
-            var style = adapter.SkinManager.CurrentSkin.GetStyleForComponent(component, defaultStyle);
+
+            var skin = skinToUse ?? adapter.SkinManager.GetDefaultSkin();
+            var style = skin.GetStyleForComponent(component, defaultStyle);
             return style;
         }
 

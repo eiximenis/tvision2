@@ -104,10 +104,10 @@ namespace Tvision2.ConsoleDriver.Ansi.Input
             }
         }
 
-        public SequenceNode  CheckSequence()
+        public SequenceNode?  CheckSequence()
         {
             var list = _sequences;
-            SequenceNode node = null;
+            SequenceNode? node = null;
             while (_currentIdx < _count)
             {
                 if (!list.TryGetValue((char) _currentSequence[_currentIdx], out node))

@@ -22,7 +22,7 @@ namespace Tvision2.Core.Engine
 
         private readonly ComponentTree _ui;
 
-        private VirtualConsole _currentConsole;
+        private VirtualConsole? _currentConsole;
         public IConsoleDriver ConsoleDriver { get; }
         public IEventHookManager EventHookManager  => _eventHookManager;
         public IComponentTree UI => _ui;

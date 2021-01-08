@@ -63,7 +63,7 @@ namespace Tvision2.ConsoleDriver
         public ITvConsoleEvents ReadEvents()
         {
             var code = Curses.get_wch(out int wch);
-            TvConsoleEvents events = null;
+            TvConsoleEvents? events = null;
 
             switch (code)
             {

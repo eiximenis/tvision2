@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Tvision2.Controls.Label;
 using Tvision2.Controls.List;
@@ -29,16 +30,30 @@ namespace Tvision2.Controls.Dropdown
 
         public TvDropdown(TvControlCreationParameters<DropdownState> parameters) : base(parameters)
         {
+            AsComponent().Metadata.ViewportChanged += OnViewportChanged;
             _hidingList = false;
             _skin = parameters.Skin;
             HasListDisplayed = false;
         }
 
+        private void OnViewportChanged(object sender, ViewportUpdatedEventArgs e)
+        {
+            if (_list == null) return;
 
+            var newvp = e.Current;
+
+            var listItems = _list.State.Values.Count();
+            var rows = listItems <= 5 ? listItems : 5;
+            var newlistvp = newvp.ResizeToNewColsAndRows(newvp.Bounds.Cols, rows).Layer(newvp.ZIndex, 1);
+            _list.AsComponent().UpdateViewport(newlistvp);
+            var labelvp = newvp.ResizeTo(newvp.Bounds.SingleRow());
+            _label.AsComponent().UpdateViewport(labelvp);
+        }
 
         private void ListLostFocus(TvFocusEventData arg)
         {
             HideList(focusToLabel: false);
+            _hidingList = false;
         }
 
         protected override void OnViewportCreated(IViewport viewport)
@@ -50,11 +65,12 @@ namespace Tvision2.Controls.Dropdown
                     Transformer = x => x.Text
                 });
 
+                var listvp = viewport.ResizeToNewColsAndRows(viewport.Bounds.Cols, 5).Layer(viewport.ZIndex, 1);
 
                 var listParams = TvList.UseParams<DropDownValue>()
                     .WithState(initialState)
                     .Configure(c => c
-                        .UseViewport(viewport)
+                        .UseViewport(listvp)
                         .UseSkin(_skin)
                         .UseControlName("_list"))
                     .Build();
@@ -101,7 +117,13 @@ namespace Tvision2.Controls.Dropdown
         protected override void ConfigureMetadataOptions(TvControlMetadataOptions options)
         {
             options.AvoidDrawControl();
-            options.IsFocused().WhenItselfOrAnyChildHasFocus();
+            options.FocusedWhen().ItselfOrAnyChildHasFocus();
+            options.WhenControlGainsFocus(OnDropDownFocused);
+        }
+
+        private void OnDropDownFocused()
+        {
+            _label.Metadata.Focus(force: true);
         }
 
         internal void DisplayList()

@@ -38,17 +38,27 @@ namespace Tvision2.Core.Render
             => new Viewport(viewport.Position, viewport.Bounds, layer.Move(zIndexDisplacement));
 
         // InnerViewport
-        // Given a "container viewport" creates a child viewport included in this viewport in the given pos and with given maximum bounds
-        public static IViewport InnerViewport(this IViewport containerViewport, TvPoint pos, TvBounds bounds)
+        // Given a "container viewport" creates a child viewport included in this viewport in the given pos and with given maximum bounds.
+        // The child viewport is cut to ensure that always fits in the container viewport
+        public static IViewport InnerViewport(this IViewport containerViewport, TvPoint pos, TvBounds desiredBounds, TvBounds? maxBounds = null)
         {
             var vppos = pos + containerViewport.Position;
             var displacement = pos;
-
+            
             var availableCols = containerViewport.Bounds.Cols - displacement.Left;
             var availableRows = containerViewport.Bounds.Rows - displacement.Top;
-            var vpCols = bounds.Cols < availableCols ? bounds.Cols : availableCols;
-            var vpRows = bounds.Rows < availableRows ? bounds.Rows : availableRows;
-            var vp = new Viewport(vppos, TvBounds.FromRowsAndCols(vpRows, vpCols), containerViewport.ZIndex);
+
+            var vpCols = desiredBounds.Cols < availableCols ? desiredBounds.Cols : availableCols;
+            var vpRows = desiredBounds.Rows < availableRows ? desiredBounds.Rows : availableRows;
+
+            var vpBounds = TvBounds.FromRowsAndCols(vpRows, vpCols);
+
+            if (maxBounds.HasValue)
+            {
+                vpBounds = TvBounds.Min(vpBounds, maxBounds.Value);
+            }
+
+            var vp = new Viewport(vppos, vpBounds, containerViewport.ZIndex);
             return vp;
         }
 

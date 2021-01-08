@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using Tvision2.Controls.Extensions;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
@@ -10,19 +11,21 @@ namespace Tvision2.Controls
     internal class ControlsTree : IControlsTree
     {
 
-        private TvControlMetadata _focused;
-        private TvControlMetadata _previousFocused;
+        private TvControlMetadata? _focused;
+        private TvControlMetadata? _previousFocused;
         public event EventHandler<FocusChangedEventArgs> FocusChanged;
         public IEnumerable<TvControlMetadata> ControlsMetadata => _controls;
-        private TvControlMetadata _controlWithFocusCaptured;
+        private TvControlMetadata? _controlWithFocusCaptured;
         private readonly IComponentTree _componentsTree;
         private readonly LinkedList<TvControlMetadata> _controls;
         private bool _needToMoveFocusWhenTreeUpdated;
+        private int _nextTabGroup;
 
         private LinkedList<TvControlMetadata> _responders;
 
         public ControlsTree(ITuiEngine engine)
         {
+            _nextTabGroup = -1;
             _needToMoveFocusWhenTreeUpdated = false;
             _controls = new LinkedList<TvControlMetadata>();
             _responders = _controls;
@@ -34,10 +37,18 @@ namespace Tvision2.Controls
             _componentsTree.TreeUpdated += OnComponentsTreeUpdated;
         }
 
+
+
         private void OnComponentsTreeUpdated(object sender, EventArgs e)
         {
             _controls.Clear();
-            var controls = _componentsTree.NodesList.Where(n => n.HasTag<TvControlMetadata>()).Select(n => n.GetTag<TvControlMetadata>());
+
+            var ctls = _componentsTree.NodesList.Where(n => (n.Data.Status == TvComponentStatus.Adding || n.Data.Status == TvComponentStatus.Running) && 
+                n.HasTag<TvControlMetadata>()).Select(n => n.GetTag<TvControlMetadata>()).GroupBy(m => m.TabGroup).OrderBy(m => m.Key);
+
+            var controls = ctls.SelectMany(c => c.OrderBy(ci => ci.TabLevel).ThenBy(ci => ci.TabOrder));
+
+            
             foreach (var control in controls)
             {
                 _controls.AddLast(control);
@@ -135,7 +146,7 @@ namespace Tvision2.Controls
             return TransferFocus(_focused, controlToFocus);
         }
 
-        public TvControlMetadata First() => _controls.First?.Value;
+        public TvControlMetadata? First() => _controls.First?.Value;
 
         public void CaptureFocus(TvControlMetadata control)
         {
@@ -174,7 +185,7 @@ namespace Tvision2.Controls
             return Focus(next);
         }
 
-
+        internal int GetNextTabGroup() => ++_nextTabGroup;
 
         private bool IsValidTargetForFocus(TvControlMetadata currentFocused, TvControlMetadata nextWanted)
         {
@@ -194,12 +205,12 @@ namespace Tvision2.Controls
             }
             if (toBeFocused != null)
             {
+                _previousFocused = _focused;
+                _focused = toBeFocused;
                 toBeUnfocused?.Unfocus();
                 toBeFocused.DoFocus();
                 OnFocusChanged(toBeUnfocused);
             }
-            _previousFocused = _focused;
-            _focused = toBeFocused;
             return true;
         }
 
