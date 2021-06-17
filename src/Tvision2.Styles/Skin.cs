@@ -18,7 +18,7 @@ namespace Tvision2.Styles
 
         public IStyle DefaultStyle
         {
-            get => _styles[DEFAULT_STYLE_NAME];
+            get => _styles[DEFAULT_STYLE_NAME];         // TODO: Ensure always is a DEFAULT_STYLE!
         }
 
         public IStyle this[string name]

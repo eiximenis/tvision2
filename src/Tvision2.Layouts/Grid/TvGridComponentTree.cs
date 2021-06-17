@@ -41,6 +41,11 @@ namespace Tvision2.Layouts.Grid
             _childs.Add((Row: row, Column: col), new TvGridComponentTreeEntry(component, alignment));
         }
 
+        public TvGridComponentTreeEntry? Get(int col, int row)
+        {
+            return _childs.TryGetValue((Row: row, Column: col), out var entry) ? entry: null;
+        }
+
         public TvComponent GetComponent(string name) => _childs.Values.FirstOrDefault(c => c.Component.Name == name)?.Component;
 
         public bool Remove(TvComponent component)

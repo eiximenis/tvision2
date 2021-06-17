@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Styles;
@@ -10,10 +11,16 @@ namespace Tvision2.Dialogs
         private readonly ISkinManager _skinManager;
         private readonly IComponentTree _ui;
 
-        public TvDialog DialogShown { get; private set; }
+        private readonly Stack<TvDialog> _dialogs;
+
+        public TvDialog? CurrentDialog
+        {
+            get => _dialogs.TryPeek(out var dialog) ? dialog : null;
+        }
 
         public DialogManager(ISkinManager skinManager, ITuiEngine engine)
-        { 
+        {
+            _dialogs = new Stack<TvDialog>();
             _skinManager = skinManager;
             _ui = engine.UI;
         }
@@ -35,17 +42,17 @@ namespace Tvision2.Dialogs
 
         public void CloseDialog()
         {
-            if (DialogShown != null)
+            if (CurrentDialog != null)
             {
-                DialogShown.Close();
-                DialogShown = null;
+                CurrentDialog.Close();
+                _dialogs.Pop();
             }
         }
 
         public void ShowDialog(TvDialog dialog)
         {
             _ui.Add(dialog);
-            DialogShown = dialog;
+            _dialogs.Push(dialog);
         }
     }
 }

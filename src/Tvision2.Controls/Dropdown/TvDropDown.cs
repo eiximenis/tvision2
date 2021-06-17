@@ -83,7 +83,7 @@ namespace Tvision2.Controls.Dropdown
             {
                 var labelViewport = new Viewport(viewport.Position, viewport.Bounds.SingleRow(), viewport.ZIndex);
                 var labelParameters = TvLabel.UseParams()
-                    .WithState(new LabelState() { Text = "value" })
+                    .WithState(new LabelState() { Text = "value \u25BC" })
                     .Configure(c => c
                         .UseSkin(_skin)
                         .UseViewport(labelViewport)

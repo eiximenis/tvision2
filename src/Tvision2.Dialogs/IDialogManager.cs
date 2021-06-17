@@ -7,7 +7,7 @@ namespace Tvision2.Dialogs
     {
         void ShowDialog(TvDialog dialog);
         TvDialog CreateDialog(IViewport viewport, Action<TvDialog> dialogSetup, string name = null);
-        TvDialog DialogShown { get; }
+        TvDialog? CurrentDialog { get; }
         void CloseDialog();
     }
 }

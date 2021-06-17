@@ -11,6 +11,7 @@ using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Dialogs;
 using Tvision2.Layouts;
+using Tvision2.Layouts.Grid;
 using Tvision2.Styles;
 using Tvision2.Viewports;
 
@@ -55,12 +56,23 @@ namespace Tvision2.ControlsGallery
 
             */
 
-           
-            mainGrid.AtRowCol(row: 0, col: 0).Add(ControlsFactory.CreateButton("Button 1", 1, _skinManager).AsComponent());
-            mainGrid.AtRowCol(row: 0, col: 1).WithAlignment(ChildAlignment.StretchHorizontal).Add(ControlsFactory.CreateButton("Button 2", 2, _skinManager).AsComponent());
-            mainGrid.AtRowCol(row: 1, col: 0).WithAlignment(ChildAlignment.StretchVertical).Add(ControlsFactory.CreateButton("Button 3", 3, _skinManager).AsComponent());
-            mainGrid.AtRowCol(row: 1, col: 1).WithAlignment(ChildAlignment.Fill).Add(ControlsFactory.CreateButton("Button 4", 4, _skinManager).AsComponent());
-            mainGrid.AtRowCol(row: 2, col: 0).Add(ControlsFactory.CreateDropDown(_skinManager).AsComponent());
+            mainGrid.AtRowCol(row: 0, col: 0).Add(ControlsFactory.CreateButton("Button 1", 1, _skinManager));
+            var btn2 = ControlsFactory.CreateButton("Button 2", 2, _skinManager);
+            mainGrid.AtRowCol(row: 0, col: 1).WithAlignment(ChildAlignment.StretchHorizontal).Add(btn2);
+            btn2.OnClick.Add(CreateDialogForButton);
+            mainGrid.AtRowCol(row: 1, col: 0).WithAlignment(ChildAlignment.StretchVertical).Add(ControlsFactory.CreateButton("Button 3", 3, _skinManager));
+            mainGrid.AtRowCol(row: 1, col: 1).WithAlignment(ChildAlignment.Fill).Add(ControlsFactory.CreateButton("Button 4", 4, _skinManager));
+            mainGrid.AtRowCol(row: 2, col: 0).Add(ControlsFactory.CreateDropDown(_skinManager));
+        }
+
+        private ActionResult CreateDialogForButton(ButtonState st)
+        {
+            var dialog = _dialogManager.CreateDialog(new Viewport(TvPoint.FromXY(10, 10), TvBounds.FromRowsAndCols(5, 10), Layer.Standard),
+                dlg => dlg.Add(ControlsFactory.CreateLabel($"{st.Text} pressed")));
+
+            _dialogManager.ShowDialog(dialog);
+
+            return ActionResult.Continue;
         }
 
         private Task<bool> ShowDialog(ButtonState btnstate, DropdownState comboState)

@@ -17,7 +17,7 @@ using Tvision2.Styles.Extensions;
 namespace Tvision2.Layouts.Grid
 {
 
-    public interface IRowColSpecifier<T> where T : class
+    public interface IRowColSpecifier<out T> where T : class
     {
         IRowSpecifier<T> Col(int index);
         IColSpecifier<T> Row(int index);
@@ -36,6 +36,7 @@ namespace Tvision2.Layouts.Grid
     {
         public void Add(TvComponent child);
         public IGridContainer WithAlignment(ChildAlignment alignment);
+        public TvComponent? Get();
     }
 
     public class TvGrid : ITvContainer, IGridContainer, IRowColSpecifier<IGridContainer>, IColSpecifier<IGridContainer>, IRowSpecifier<IGridContainer>
@@ -291,6 +292,9 @@ namespace Tvision2.Layouts.Grid
             _currentAlignment = _options.DefaultAlignment;
         }
 
+        TvComponent? IGridContainer.Get() => _childs.Get(_currentCol, _currentRow)?.Component;
+
+
         public bool Remove(TvComponent component) => _childs.Remove(component);
 
         public void Clear() => _childs.Clear();
@@ -318,6 +322,7 @@ namespace Tvision2.Layouts.Grid
             _currentRow = index;
             return this;
         }
+
 
         public int Count { get => _childs.Count; }
     }

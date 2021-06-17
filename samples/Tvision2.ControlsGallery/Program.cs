@@ -26,7 +26,7 @@ namespace Tvision2.ControlsGallery
                             .OnLinux(l => l
                                 .UseNCurses()))
                     //.UseDebug()
-                    .UseViewportManager()
+                    .UseViewportManager(opt => opt.EnableDynamicViewports())
                     .UseLayoutManager()
                     .AddStyles(
                         sk => sk.AddDefaultSkin(smb =>

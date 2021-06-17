@@ -19,7 +19,7 @@ namespace Tvision2.ControlsGallery
         public static TvGrid CreateGrid(IViewportFactory viewportFactory, ISkinManager sk)
         {
             var grid = TvGrid.With().Rows(3).Columns(3).Name("MainGrid")
-                .Viewport(new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(12, 50)))
+                .Viewport(viewportFactory.FullViewport())
                 .WithOptions(opt => opt.UseBorder(BorderValue.FromHorizontalAndVertical(BorderType.Double, BorderType.Single), sk.CurrentSkin["tvgrid"]))
                 .Create();
 
@@ -49,13 +49,12 @@ namespace Tvision2.ControlsGallery
         {
             var button = new TvButton(
                 TvButton.UseParams().WithState(ButtonState.FromText(text)).Configure(c => c.UseSkin(sk.GetSkin("Mc")).UseControlName($"button_{idx}")).Build());
-
             return button;
         }
 
-        public static TvLabel CreateLabel()
+        public static TvLabel CreateLabel(string text = null)
         {
-            var lparams = TvLabel.UseParams().WithState(LabelState.FromText("I am just a label")).Build();
+            var lparams = TvLabel.UseParams().WithState(LabelState.FromText(text ?? "I am just a label")).Build();
             return new TvLabel(lparams);
         }
     }

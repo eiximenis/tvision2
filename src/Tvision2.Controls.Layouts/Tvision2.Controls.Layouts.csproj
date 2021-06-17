@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(NetStandardTargetVersion)</TargetFramework>
+    <PackageLicenseUrl>$(PackageLicenseUrl)</PackageLicenseUrl>
+    <PackageProjectUrl>$(PackageProjectUrl)</PackageProjectUrl>
+    <Description>Tvision2 Controls support</Description>
+    <PackageTags>Tvision2;Controls;TUI;Console</PackageTags>
+    <Version>$(Tvision2ControlsVersion)</Version>
+    <RepositoryUrl>$(RepositoryUrl)</RepositoryUrl>
+    <Authors>$(Authors)</Authors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tvision2.Controls\Tvision2.Controls.csproj" />
+    <ProjectReference Include="..\Tvision2.Layouts\Tvision2.Layouts.csproj" />
+  </ItemGroup>
+
+
+</Project>

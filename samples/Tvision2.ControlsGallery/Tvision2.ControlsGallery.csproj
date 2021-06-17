@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Tvision2.ConsoleDriver.All\Tvision2.ConsoleDriver.All.csproj" />
+    <ProjectReference Include="..\..\src\Tvision2.Controls.Layouts\Tvision2.Controls.Layouts.csproj" />
     <ProjectReference Include="..\..\src\Tvision2.Controls.Styles.Mc\Tvision2.Controls.Styles.Mc.csproj" />
     <ProjectReference Include="..\..\src\Tvision2.Controls\Tvision2.Controls.csproj" />
     <ProjectReference Include="..\..\src\Tvision2.Core\Tvision2.Core.csproj" />

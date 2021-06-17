@@ -37,8 +37,8 @@ namespace Tvision2.Layouts
         }
 
 
-        public T Get<T>(string name) where T : class, ITvContainer =>
-            _containers.TryGetValue(name, out ITvContainer container) ? container as T : default(T);
+        public T? Get<T>(string name) where T : class, ITvContainer =>
+            _containers.TryGetValue(name, out var container) ? container as T : default;
 
     }
 }

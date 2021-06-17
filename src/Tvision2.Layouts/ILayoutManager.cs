@@ -7,7 +7,7 @@ namespace Tvision2.Layouts
 {
     public interface ILayoutManager
     {
-        T Get<T>(string name) where T : class, ITvContainer;
+        T? Get<T>(string name) where T : class, ITvContainer;
         IViewportFactory ViewportFactory { get; }
         IDynamicViewportFactory DynamicViewportFactory { get; }
     }
