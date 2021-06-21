@@ -52,5 +52,6 @@ namespace Tvision2.Styles
             }
             return style;
         }
+
     }
 }

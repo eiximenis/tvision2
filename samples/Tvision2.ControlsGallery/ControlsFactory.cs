@@ -39,7 +39,7 @@ namespace Tvision2.ControlsGallery
                     state.AddValue(new DropDownValue("6", "Six"));
                     state.AddValue(new DropDownValue("42", "Everything"));
                 })
-                .Configure(c => c.UseSkin(sk.GetSkin("Mc")).UseViewport(new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(5, 10), Layer.Standard)))
+                .Configure(c => c.UseViewport(new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(5, 10), Layer.Standard)))
                 .Build();
             var combo = new TvDropdown(ddParams);
             return combo;
@@ -48,13 +48,13 @@ namespace Tvision2.ControlsGallery
         public static TvButton CreateButton(string text, int idx, ISkinManager sk)
         {
             var button = new TvButton(
-                TvButton.UseParams().WithState(ButtonState.FromText(text)).Configure(c => c.UseSkin(sk.GetSkin("Mc")).UseControlName($"button_{idx}")).Build());
+                TvButton.UseParams().WithState(ButtonState.FromText(text)).Configure(c => c.UseControlName($"button_{idx}")).Build());
             return button;
         }
 
         public static TvLabel CreateLabel(string text = null)
         {
-            var lparams = TvLabel.UseParams().WithState(LabelState.FromText(text ?? "I am just a label")).Build();
+            var lparams = TvLabel.UseParams().WithState(LabelState.FromText(text ?? "I am just a label")).Configure(c => c.UseViewport(new Viewport(TvPoint.Zero, TvBounds.FromRowsAndCols(1,10)))).Build();
             return new TvLabel(lparams);
         }
     }

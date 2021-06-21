@@ -5,6 +5,7 @@ using Tvision2.Controls.Button;
 using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
+using Tvision2.Layouts;
 using Tvision2.Layouts.Canvas;
 using Tvision2.Layouts.Grid;
 using Tvision2.Layouts.Stack;
@@ -48,11 +49,11 @@ namespace Tvision2.Dialogs
             var viewport = _myDialog.AsComponent().Viewport.Layer(Layer.Top);
             
             _mainPanel = new TvStackPanel($"{_prefixNames}_MainPanel");
-            _mainPanel.Layout.Add("1", "*");
+            _mainPanel.Layout.Add("*", "1");
             _mainPanel.AsComponent().AddViewport(new Viewport(viewport.Position + TvPoint.FromXY(1, 1), TvBounds.FromRowsAndCols(viewport.Bounds.Rows -2, viewport.Bounds.Cols - 2), viewport.ZIndex));
             _bottomGrid = new TvGrid (new GridState(1, 2), null, $"{_prefixNames}_BottomGrid");
-            _bottomGrid.AtRowCol(0, 0).Add(_buttons.OkButton.AsComponent());
-            _bottomGrid.AtRowCol(0, 1).Add(_buttons.CancelButton.AsComponent());
+            _bottomGrid.AtRowCol(0, 0).WithAlignment(ChildAlignment.Fill).Add(_buttons.OkButton.AsComponent());
+            _bottomGrid.AtRowCol(0, 1).WithAlignment(ChildAlignment.Fill).Add(_buttons.CancelButton.AsComponent());
             _mainCanvas = new TvCanvas(_owner, $"{_prefixNames}_BodyCanvas");
             _mainCanvas.AsComponent().AddViewport(Viewport.NullViewport);
             _mainPanel.At(0).Add(_mainCanvas);

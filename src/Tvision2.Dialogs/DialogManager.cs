@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Styles;
+using Tvision2.Styles.Extensions;
 
 namespace Tvision2.Dialogs
 {
@@ -31,7 +32,8 @@ namespace Tvision2.Dialogs
             var dialogName = name ?? $"TvDialog_{Guid.NewGuid()}";
             var dialog = new TvDialog(_skinManager.CurrentSkin, dialogViewport, _ui, dialogName);
             dialogSetup.Invoke(dialog); 
-            
+
+
             foreach (var cmp in dialog.State.UI)
             {
                 cmp.UpdateViewport(cmp.Viewport.Layer(Layer.Top));

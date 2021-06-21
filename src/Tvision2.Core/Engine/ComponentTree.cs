@@ -238,6 +238,7 @@ namespace Tvision2.Core.Engine
         private readonly List<IViewport> _viewportsToClear;
         private readonly IServiceProvider _serviceProvider;
         private readonly ITuiEngine _engine;
+        public event EventHandler<TreeUpdatedEventArgs> ComponentMountingBegun;
         public event EventHandler<TreeUpdatedEventArgs> ComponentAdded;
         public event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
         public event EventHandler TreeUpdated;
@@ -490,6 +491,7 @@ namespace Tvision2.Core.Engine
                 var nodeAdded = optionsNodeAdded.Node;
                 TryResolveCurrentPendingDependencies(addOptions.ComponentMetadata.Component);
                 TryResolveNewComponentAddedDependencies(addOptions.ComponentMetadata);
+                OnComponentMountingBegun(addOptions.ComponentMetadata, nodeAdded);
                 addOptions.ComponentMetadata.MountedTo(_engine, this, nodeAdded, addOptions);
                 addOptions.ComponentMetadata.Component.Invalidate(InvalidateReason.FullDrawRequired);
                 OnComponentAdded(addOptions.ComponentMetadata, nodeAdded);
@@ -581,6 +583,12 @@ namespace Tvision2.Core.Engine
         {
             ComponentAdded?.Invoke(this, new TreeUpdatedEventArgs(metadata, node));
         }
+
+        private void OnComponentMountingBegun(TvComponentMetadata metadata, ComponentTreeNode node)
+        {
+            ComponentMountingBegun?.Invoke(this, new TreeUpdatedEventArgs(metadata, node));
+        }
+        
 
         private void OnComponentRemoved(TvComponentMetadata metadata, ComponentTreeNode node)
         {

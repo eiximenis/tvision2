@@ -42,5 +42,10 @@ namespace Tvision2.Controls.Button
             var value = $"[{State.Text.ToString()}]";
             context.DrawStringAt(value, TvPoint.Zero, styleToUse);
         }
+
+        public override string ToString()
+        {
+            return $"TvButton [{State.Text}] ({Name})";
+        }
     }
 }

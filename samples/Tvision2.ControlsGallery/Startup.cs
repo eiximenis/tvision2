@@ -37,6 +37,7 @@ namespace Tvision2.ControlsGallery
         async Task ITvisionAppStartup.Startup(ITuiEngine tui)
         {
 
+            _skinManager.ChangeCurrentSkin("Mc");
             var mainGrid = ControlsFactory.CreateGrid(_vpFactory, _skinManager);
             tui.UI.Add(mainGrid);
 
@@ -67,7 +68,7 @@ namespace Tvision2.ControlsGallery
 
         private ActionResult CreateDialogForButton(ButtonState st)
         {
-            var dialog = _dialogManager.CreateDialog(new Viewport(TvPoint.FromXY(10, 10), TvBounds.FromRowsAndCols(5, 10), Layer.Standard),
+            var dialog = _dialogManager.CreateDialog(new Viewport(TvPoint.FromXY(10, 10), TvBounds.FromRowsAndCols(8, 30), Layer.Standard),
                 dlg => dlg.Add(ControlsFactory.CreateLabel($"{st.Text} pressed")));
 
             _dialogManager.ShowDialog(dialog);

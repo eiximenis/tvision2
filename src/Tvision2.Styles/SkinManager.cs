@@ -41,7 +41,7 @@ namespace Tvision2.Styles
         {
             if (_skins.ContainsKey(key))
             {
-                _defaultSkinKey = key;
+                _currentSkinKey = key;
             }
             else
             {

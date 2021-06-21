@@ -31,7 +31,7 @@ namespace Tvision2.Controls
         public TIOptions Options { get; }
         public string Name => AsComponent().Name;
 
-        public ISkin Skin { get; }
+        public ISkin Skin { get; private set; }
 
         public enum ControlCanBeUnmounted
         {
@@ -48,7 +48,7 @@ namespace Tvision2.Controls
             var typename = GetType().Name.ToLowerInvariant();
             var genericIdx = typename.IndexOf('`');
             ControlType = genericIdx != -1 ? typename.Substring(0, genericIdx) : typename;
-            Skin = creationParams.Skin;
+            Skin = creationParams.Skin;                                             
             CurrentStyle = creationParams.Skin?.GetControlStyle(this);
             Options = creationParams.Options;
             _component = new TvComponent<TState>(creationParams.InitialState, name ?? $"TvControl_<$>",
@@ -59,6 +59,7 @@ namespace Tvision2.Controls
                     cfg.WhenComponentWillbeUnmounted(ctx => OnComponentWillbeUnmounted(ctx));
                     cfg.WhenComponentTreeUpdatedByMount(ctx => OnComponentTreeUpdatedByMount(ctx));
                 });
+
 
             _metadata = new Lazy<TvControlMetadata>(() => new TvControlMetadata(this, creationParams, ConfigureMetadataOptions));
 
@@ -74,10 +75,6 @@ namespace Tvision2.Controls
 
         private void OnComponentTreeUpdatedByMount(ComponentTreeUpdatedContext ctx)
         {
-            if (CurrentStyle == null)
-            {
-                CurrentStyle = ctx.Component.GetStyle(ControlType, Skin);
-            }
 
             PerformAdditionalSkinConfiguration(ctx.Component.GetSkinManager());
         }
@@ -103,6 +100,17 @@ namespace Tvision2.Controls
         {
 
             Debug.WriteLine($"Component {ctx.Component.Name} OnComponentMounted");
+
+            if (Skin == null)
+            {
+                Skin = _component.GetSkinManager().CurrentSkin;
+            }
+
+            if (CurrentStyle == null)
+            {
+                CurrentStyle = ctx.Component.GetStyle(ControlType, Skin);
+            }
+
 
             var options = cparams.Options;
 

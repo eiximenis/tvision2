@@ -125,7 +125,7 @@ namespace Tvision2.Controls
         where TControl : TvControl<TState>
         where TState : IDirtyObject, new()
     {
-        private TvControlCreationParametersBuilder<TState> _creationParamsBuilder;
+        private TvControlCreationParametersBuilder<TState>? _creationParamsBuilder;
 
 
         public ITvControlParamsConfigurerBuilder<TControl, TState> WithDefaultState() => WithState(new TState());
@@ -152,13 +152,13 @@ namespace Tvision2.Controls
 
         public ITvControlParamsBuilder<TState> Configure(Action<ITvControlCreationParametersBuilder<TState>> cpbAction)
         {
-            cpbAction?.Invoke(_creationParamsBuilder);
+            cpbAction?.Invoke(_creationParamsBuilder!);
             return this;
         }
 
         public TvControlCreationParameters<TState> Build()
         {
-            return _creationParamsBuilder.Build();
+            return _creationParamsBuilder!.Build();
         }
     }
 }

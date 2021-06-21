@@ -5,6 +5,7 @@ using Tvision2.Core.Components;
 using Tvision2.Core.Engine;
 using Tvision2.Core.Render;
 using Tvision2.Styles;
+using Tvision2.Styles.Drawers;
 using Tvision2.Styles.Extensions;
 
 namespace Tvision2.Dialogs
@@ -21,7 +22,7 @@ namespace Tvision2.Dialogs
 
         protected override void AddCustomElements(TvComponent<DialogState> component)
         {
-            // component.AddDrawer(new BorderDrawer(CurrentStyle, Metadata));
+            component.AddDrawer(new BorderDrawer(CurrentStyle, BorderValue.FromHorizontalAndVertical(BorderType.Double, BorderType.Double)));
         }
 
         protected override void OnDraw(RenderContext<DialogState> context)

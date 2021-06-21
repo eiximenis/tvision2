@@ -93,10 +93,7 @@ namespace Tvision2.Layouts.Canvas
         {
             if (e.Previous == Viewport.NullViewport)
             {
-                foreach (var child in _childs.Components)
-                {
-                    RepositionChildren(TvPoint.Zero);
-                }
+                RepositionChildren(TvPoint.Zero);
             }
             else
             {

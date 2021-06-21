@@ -16,10 +16,10 @@ namespace Tvision2.Styles
 
         public void AttachTo(ComponentTree componentTree)
         {
-            componentTree.ComponentAdded += OnComponentAdded;
+            componentTree.ComponentMountingBegun += OnComponentMountingBegun;
         }
 
-        private void OnComponentAdded(object sender, TreeUpdatedEventArgs e)
+        private void OnComponentMountingBegun(object sender, TreeUpdatedEventArgs e)
         {
             e.Node.SetTag(this);
         }

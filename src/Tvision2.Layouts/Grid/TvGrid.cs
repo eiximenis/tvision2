@@ -236,34 +236,45 @@ namespace Tvision2.Layouts.Grid
             {
                 var ctrRow = kvpChild.Key.Row;
                 var ctrCol = kvpChild.Key.Column;
+                var cellPosCol = 0;
+                for (var i = 0; i < ctrCol; i++)
+                {
+                    cellPosCol += (_cellBounds[ctrRow, i].Cols + (_options.Border.HasHorizontalBorder ? 1 : 0));
+                }
+                var cellPosRow = 0;
+                for (var i = 0; i< ctrRow; i++)
+                {
+                    cellPosRow += (_cellBounds[i, ctrCol].Rows + (_options.Border.HasVerticalBorder ? 1 : 0));
+                }
+
                 var childComponent = kvpChild.Value.Component;
                 if (childComponent.Viewport != null)
                 {
-                    var viewport = CalculateViewportFor(myViewport, ctrRow, ctrCol, cellHeight, cellWidth, kvpChild.Value);
+                    var viewport = CalculateViewportFor(myViewport, ctrRow, ctrCol, TvPoint.FromXY(cellPosCol, cellPosRow), kvpChild.Value);
                     childComponent.UpdateViewport(viewport, addIfNotExists: false);
                 }
             }
         }
 
-        private IViewport CalculateViewportFor(IViewport myViewport, int ctrRow, int ctrCol, int cellHeight, int cellWidth, TvGridComponentTreeEntry entry)
+        private IViewport CalculateViewportFor(IViewport myViewport, int ctrRow, int ctrCol, TvPoint cellPos, TvGridComponentTreeEntry entry)
         {
             var childViewport = entry.Component.Viewport;
 
             var alignment = entry.Alignment;
             var innerViewport = childViewport ?? Viewport.NullViewport;
 
-            TvPoint cellPos = TvPoint.FromXY(ctrCol * cellWidth, ctrRow * cellHeight);
+            cellPos = cellPos + myViewport.Position;
             TvBounds cellBounds = _cellBounds[ctrRow, ctrCol];
             var horDespl = _options.Border.HasHorizontalBorder ? 1 : 0;
             var verDespl = _options.Border.HasVerticalBorder ? 1 : 0;
-            TvPoint childDisplacement = entry.ViewportOriginal ? innerViewport.Position  : TvPoint.FromXY(horDespl, verDespl);
+            TvPoint childDisplacement = entry.ViewportOriginal ? innerViewport.Position + TvPoint.FromXY(horDespl, verDespl) : TvPoint.FromXY(horDespl, verDespl);
 
             var viewport = alignment switch
             {
                 ChildAlignment.None => myViewport.InnerViewport(cellPos + childDisplacement, innerViewport.Bounds, cellBounds),
                 ChildAlignment.StretchHorizontal => myViewport.InnerViewport(cellPos + childDisplacement, TvBounds.FromRowsAndCols(cellBounds.Rows, innerViewport.Bounds.Cols), cellBounds),
                 ChildAlignment.StretchVertical => myViewport.InnerViewport(cellPos + childDisplacement, TvBounds.FromRowsAndCols(innerViewport.Bounds.Rows, cellBounds.Cols), cellBounds),
-                _ => new Viewport(cellPos + childDisplacement, cellBounds, innerViewport.ZIndex, innerViewport.Flow)
+                _ => new Viewport(cellPos + childDisplacement, cellBounds, myViewport.ZIndex, innerViewport.Flow)
             };
 
             entry.ViewportOriginal = false;
