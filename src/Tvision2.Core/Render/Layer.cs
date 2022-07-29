@@ -66,5 +66,6 @@ namespace Tvision2.Core.Render
 
         public override int GetHashCode() => _value.GetHashCode();
 
+        public override string ToString() => Enum.GetName<LayerValues>((LayerValues)_value) ?? _value.ToString();
     }
 }

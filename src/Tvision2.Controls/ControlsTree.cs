@@ -123,10 +123,12 @@ namespace Tvision2.Controls
 
 
 
-        public TvControlMetadata NextControlForFocus(TvControlMetadata current)
+        // Returns the next control candidate to have focus. If no more controls, returns the 1st control again
+        // Note that if responders list has only one control, NextControlForFocus will return always this single control
+        public TvControlMetadata NextControlForFocus(TvControlMetadata? current)
         {
             var next = current != null ? _responders.Find(current)?.Next : null;
-            return next != null ? next.Value : _responders.First.Value;
+            return next != null ? next.Value : _responders.First.Value; 
         }
 
         public TvControlMetadata PreviousControlForFocus(TvControlMetadata current)
@@ -173,31 +175,38 @@ namespace Tvision2.Controls
                 return false;
             }
             var currentFocused = _focused;
-            var next = NextControlForFocus(_focused);
+
+            var next = NextControlForFocus(currentFocused);
+            var prev = next;
+
             while (!IsValidTargetForFocus(currentFocused, next) && next != currentFocused)
             {
                 next = NextControlForFocus(next);
+                if (next == prev)       // Control to focus is itself, who is already focused. Nothing to do.
+                {
+                    return false;              
+                }
+                prev = next;
             }
-            if (next.AcceptFocus(currentFocused) == false)
-            {
-                return false;
-            }
+
             return Focus(next);
         }
 
         internal int GetNextTabGroup() => ++_nextTabGroup;
 
+        // Returns if the control is a valid target for focus according its metadata.
         private bool IsValidTargetForFocus(TvControlMetadata currentFocused, TvControlMetadata nextWanted)
         {
             return nextWanted.AcceptFocus(currentFocused);
         }
+
         private void TryToSetInitialFocus()
         {
             var toBeFocused = _controls.FirstOrDefault(x => x.AcceptFocus(null));
             TransferFocus(null, toBeFocused);
         }
 
-        private bool TransferFocus(TvControlMetadata toBeUnfocused, TvControlMetadata toBeFocused)
+        private bool TransferFocus(TvControlMetadata? toBeUnfocused, TvControlMetadata? toBeFocused)
         {
             if (toBeUnfocused == toBeFocused)
             {
@@ -209,7 +218,7 @@ namespace Tvision2.Controls
                 _focused = toBeFocused;
                 toBeUnfocused?.Unfocus();
                 toBeFocused.DoFocus();
-                OnFocusChanged(toBeUnfocused);
+                OnFocusChanged(toBeUnfocused!);
             }
             return true;
         }

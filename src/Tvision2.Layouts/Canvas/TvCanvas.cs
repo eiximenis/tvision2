@@ -79,7 +79,7 @@ namespace Tvision2.Layouts.Canvas
 
         private void RepositionChildren(TvPoint displacement)
         {
-            if (_thisComponent.Viewport != null && _isMounted)
+            if (_thisComponent.Viewport != Viewport.NullViewport && _isMounted)
             {
                 foreach (var child in _childs.Components)
                 {

@@ -45,5 +45,7 @@ namespace Tvision2.Core.Render
 
         public static bool operator ==(TvPoint first, TvPoint second) => first.Equals(second);
         public static bool operator !=(TvPoint first, TvPoint second) => !first.Equals(second);
-    }
+
+        public override string ToString() => $"({Left},{Top})";
+    } 
 }

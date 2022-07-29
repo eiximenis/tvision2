@@ -34,17 +34,19 @@ namespace Tvision2.Core.Engine
         private readonly ActionChain<ComponentMoutingContext> _onComponentUnmounted;
         private readonly ActionChain<ComponentMountingCancellableContext> _onComponentWillBeUnmounted;
         private readonly ActionChain<ChildComponentMoutingContext> _onChildMounted;
-        private readonly ActionChain<ChildComponentMoutingContext> _onChildUnmounted;
+        private readonly ActionChain<ChildComponentUnmoutingContext> _onChildUnmounted;
         private readonly ActionChain<ComponentTreeUpdatedContext> _onComponentTreeUpdatedByMount;
+        private readonly ActionChain<ComponentMoutingContext> _onComponentMountingBegun;
 
 
         public IActionChain<ComponentMoutingContext> OnComponentMounted => _onComponentMounted;
         public IActionChain<ComponentMoutingContext> OnComponentUnmounted => _onComponentUnmounted;
         public IActionChain<ComponentMountingCancellableContext> OnComponentWillBeUnmounted => _onComponentWillBeUnmounted;
         public IActionChain<ChildComponentMoutingContext> OnChildMounted => _onChildMounted;
-        public IActionChain<ChildComponentMoutingContext> OnChildUnmounted => _onChildUnmounted;
-
+        public IActionChain<ChildComponentUnmoutingContext> OnChildUnmounted => _onChildUnmounted;
         public IActionChain<ComponentTreeUpdatedContext> OnTreeUpdatedByMount => _onComponentTreeUpdatedByMount;
+
+
 
         internal TvComponentMetadata(TvComponent component)
         {
@@ -53,7 +55,7 @@ namespace Tvision2.Core.Engine
             _onComponentUnmounted = new ActionChain<ComponentMoutingContext>();
             _onComponentWillBeUnmounted = new ActionChain<ComponentMountingCancellableContext>();
             _onChildMounted = new ActionChain<ChildComponentMoutingContext>();
-            _onChildUnmounted = new ActionChain<ChildComponentMoutingContext>();
+            _onChildUnmounted = new ActionChain<ChildComponentUnmoutingContext>();
             _onComponentTreeUpdatedByMount = new ActionChain<ComponentTreeUpdatedContext>();
             Status = TvComponentStatus.Dettached;
         }
@@ -86,7 +88,7 @@ namespace Tvision2.Core.Engine
             _onChildMounted.Add(childMountAction);
         }
 
-        void IConfigurableComponentMetadata.WhenChildUnmounted(Action<ChildComponentMoutingContext> childUndmountAction)
+        void IConfigurableComponentMetadata.WhenChildUnmounted(Action<ChildComponentUnmoutingContext> childUndmountAction)
         {
             _onChildUnmounted.Add(childUndmountAction);
         }
@@ -96,12 +98,15 @@ namespace Tvision2.Core.Engine
             _onComponentTreeUpdatedByMount.Add(componentTreeAction);
         }
 
+
+
         internal bool CanBeUnmountedFrom(ITuiEngine ownerEngine)
         {
             var ctx = new ComponentMountingCancellableContext(ownerEngine, this.Component);
             _onComponentWillBeUnmounted.Invoke(ctx);
             return !ctx.IsCancelled;
         }
+
 
         internal void MountedTo(ITuiEngine ownerEngine, ComponentTree tree, ComponentTreeNode node, AddComponentOptions optionsUsed)
         {
@@ -127,9 +132,9 @@ namespace Tvision2.Core.Engine
 
             _onChildMounted.Invoke(new ChildComponentMoutingContext(childMetadata.Component, childNode));
         }
-        internal void RaiseChildUnmounted(TvComponentMetadata childMetadata, ComponentTreeNode nodeRemoved)
+        internal void RaiseChildUnmounted(TvComponentMetadata childMetadata, ComponentTreeNode nodeRemoved, bool parentIsUnmountedToo)
         {
-            _onChildUnmounted.Invoke(new ChildComponentMoutingContext(childMetadata.Component, nodeRemoved));
+            _onChildUnmounted.Invoke(new ChildComponentUnmoutingContext(childMetadata.Component, nodeRemoved, parentIsUnmountedToo));
         }
 
         internal void RaiseTreeUpdatedByMount(ComponentTree ctree)

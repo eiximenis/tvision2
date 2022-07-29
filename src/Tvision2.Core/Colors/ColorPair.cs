@@ -13,7 +13,5 @@ namespace Tvision2.Core.Colors
             ForeGround = fore;
             Background = back;
         }
-
-
     }
 }

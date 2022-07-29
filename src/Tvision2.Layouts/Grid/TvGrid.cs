@@ -32,17 +32,12 @@ namespace Tvision2.Layouts.Grid
         T Row(int index);
     }
 
-    public interface IGridContainer
-    {
-        public void Add(TvComponent child);
-        public IGridContainer WithAlignment(ChildAlignment alignment);
-        public TvComponent? Get();
-    }
 
-    public class TvGrid : ITvContainer, IGridContainer, IRowColSpecifier<IGridContainer>, IColSpecifier<IGridContainer>, IRowSpecifier<IGridContainer>
+
+    public class TvGrid : ITvContainer, ICellContainer, IRowColSpecifier<ICellContainer>, IColSpecifier<ICellContainer>, IRowSpecifier<ICellContainer>
     {
         private readonly TvComponent<GridState> _component;
-        private readonly TvGridComponentTree _childs;
+        private readonly KeyedComponentsCollection<(int Row, int Column)> _childs;
         private readonly GridState _state;
         public static TvGridBuilder With() => new TvGridBuilder();
         public string Name { get; }
@@ -82,7 +77,7 @@ namespace Tvision2.Layouts.Grid
             }
 
             _component.Metadata.ViewportChanged += OnViewportChanged;
-            _childs = new TvGridComponentTree();
+            _childs = new KeyedComponentsCollection<(int Row, int Column)>();
             _cellBounds = new TvBounds[state.Rows, state.Cols];
             if (_options.Border.HasBorder)
             {
@@ -94,7 +89,7 @@ namespace Tvision2.Layouts.Grid
         private void RecalculateBounds()
         {
             var vport = AsComponent().Viewport;
-            if (vport == null) return;
+            if (vport == Viewport.NullViewport) return;
             var bounds = vport.Bounds;
 
             var totalWidthForCells = _options.Border.HasHorizontalBorder ? bounds.Cols - (_state.Cols + 1) : bounds.Cols;
@@ -205,7 +200,7 @@ namespace Tvision2.Layouts.Grid
         }
 
 
-        public IGridContainer AtRowCol(int row, int col)
+        public ICellContainer AtRowCol(int row, int col)
         {
             _currentRow = row;
             _currentCol = col;
@@ -213,9 +208,9 @@ namespace Tvision2.Layouts.Grid
         }
 
 
-        public IRowColSpecifier<IGridContainer> At() => this;
+        public IRowColSpecifier<ICellContainer> At() => this;
 
-        IGridContainer IGridContainer.WithAlignment(ChildAlignment alignment)
+        ICellContainer ICellContainer.WithAlignment(ChildAlignment alignment)
         {
             _currentAlignment = alignment;
             return this;
@@ -228,9 +223,6 @@ namespace Tvision2.Layouts.Grid
             {
                 return;
             }
-
-            var cellHeight = myViewport.Bounds.Rows / _state.Rows;
-            var cellWidth = myViewport.Bounds.Cols / _state.Cols;
 
             foreach (var kvpChild in _childs.Values)
             {
@@ -256,12 +248,11 @@ namespace Tvision2.Layouts.Grid
             }
         }
 
-        private IViewport CalculateViewportFor(IViewport myViewport, int ctrRow, int ctrCol, TvPoint cellPos, TvGridComponentTreeEntry entry)
+        private IViewport CalculateViewportFor(IViewport myViewport, int ctrRow, int ctrCol, TvPoint cellPos, KeyedComponentCollectionEntry entry)
         {
-            var childViewport = entry.Component.Viewport;
+            var innerViewport = entry.Component.Viewport;
 
             var alignment = entry.Alignment;
-            var innerViewport = childViewport ?? Viewport.NullViewport;
 
             cellPos = cellPos + myViewport.Position;
             TvBounds cellBounds = _cellBounds[ctrRow, ctrCol];
@@ -288,9 +279,9 @@ namespace Tvision2.Layouts.Grid
             _tree.AddAsChild(cmpToAdd, AsComponent());
         }
 
-        void IGridContainer.Add(TvComponent child)
+        void ICellContainer.Add(TvComponent child)
         {
-            _childs.Set(_currentCol, _currentRow, child, _currentAlignment);
+            _childs.Set((_currentRow, _currentCol), child, _currentAlignment);
             if (_isMounted)
             {
                 _tree.AddAsChild(child, AsComponent());
@@ -303,32 +294,32 @@ namespace Tvision2.Layouts.Grid
             _currentAlignment = _options.DefaultAlignment;
         }
 
-        TvComponent? IGridContainer.Get() => _childs.Get(_currentCol, _currentRow)?.Component;
+        TvComponent? ICellContainer.Get() => _childs.Get((_currentRow, _currentCol))?.Component;
 
 
         public bool Remove(TvComponent component) => _childs.Remove(component);
 
         public void Clear() => _childs.Clear();
 
-        IRowSpecifier<IGridContainer> IRowColSpecifier<IGridContainer>.Col(int index)
+        IRowSpecifier<ICellContainer> IRowColSpecifier<ICellContainer>.Col(int index)
         {
             _currentCol = index;
             return this;
         }
 
-        IColSpecifier<IGridContainer> IRowColSpecifier<IGridContainer>.Row(int index)
+        IColSpecifier<ICellContainer> IRowColSpecifier<ICellContainer>.Row(int index)
         {
             _currentRow = index;
             return this;
         }
 
-        IGridContainer IColSpecifier<IGridContainer>.Col(int index)
+        ICellContainer IColSpecifier<ICellContainer>.Col(int index)
         {
             _currentCol = index;
             return this;
         }
 
-        IGridContainer IRowSpecifier<IGridContainer>.Row(int index)
+        ICellContainer IRowSpecifier<ICellContainer>.Row(int index)
         {
             _currentRow = index;
             return this;

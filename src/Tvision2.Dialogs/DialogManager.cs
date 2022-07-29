@@ -26,19 +26,18 @@ namespace Tvision2.Dialogs
             _ui = engine.UI;
         }
 
-        public TvDialog CreateDialog(IViewport viewport, Action<TvDialog> dialogSetup, string name = null)
+        public TvDialog CreateDialog(IViewport viewport, Action<TvDialog> dialogSetup, string? name = null)
         {
             var dialogViewport = viewport.Layer(Layer.Top, -1);
             var dialogName = name ?? $"TvDialog_{Guid.NewGuid()}";
             var dialog = new TvDialog(_skinManager.CurrentSkin, dialogViewport, _ui, dialogName);
-            dialogSetup.Invoke(dialog); 
+            dialogSetup.Invoke(dialog);
 
-
-            foreach (var cmp in dialog.State.UI)
+            foreach (var cmp in dialog.UI)
             {
                 cmp.UpdateViewport(cmp.Viewport.Layer(Layer.Top));
             }
-            
+
             return dialog;
         }
 

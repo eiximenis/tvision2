@@ -16,7 +16,7 @@ namespace Tvision2.Core
 
         public void Invoke(TData item)
         {
-            if (!_guidedCommands.IsValueCreated)
+            if (!_guidedCommands.IsValueCreated || !_guidedCommands.Value.Any())
             {
                 return;
             }
@@ -81,7 +81,7 @@ namespace Tvision2.Core
         Guid IActionChain.Add(IAction action)
             => Add(action as IAction<TData> ?? throw new ArgumentException($"Is not a ICommand<{typeof(TData).Name}> object", nameof(action)));
 
-        Guid IActionChain.AddOnce(IAction action)
+        Guid IOnceActionChain.AddOnce(IAction action)
             => AddOnce(action as IAction<TData> ?? throw new ArgumentException($"Is not a ICommand<{typeof(TData).Name}> object", nameof(action)));
     }
 }

@@ -12,7 +12,7 @@ namespace Tvision2.Core.Engine
         void WhenComponentUnmounted(Action<ComponentMoutingContext> unmountAction);
         void WhenComponentWillbeUnmounted(Action<ComponentMountingCancellableContext> unmountAction);
         void WhenChildMounted(Action<ChildComponentMoutingContext> childMountAction);
-        void WhenChildUnmounted(Action<ChildComponentMoutingContext> childUndmountAction);
+        void WhenChildUnmounted(Action<ChildComponentUnmoutingContext> childUndmountAction);
         void WhenComponentTreeUpdatedByMount(Action<ComponentTreeUpdatedContext> componentTreeAction);
     }
 }

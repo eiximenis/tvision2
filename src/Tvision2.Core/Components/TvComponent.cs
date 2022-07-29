@@ -60,7 +60,7 @@ namespace Tvision2.Core.Components
 
         protected readonly List<IBehaviorMetadata> _behaviorsMetadata;
 
-        public TvComponent(string name, Action<IConfigurableComponentMetadata>? configAction = null)
+        public TvComponent(string? name, Action<IConfigurableComponentMetadata>? configAction = null)
         {
             ComponentId = Guid.NewGuid();
             _metadata = new TvComponentMetadata(this);
@@ -92,11 +92,11 @@ namespace Tvision2.Core.Components
             var key = _viewports.Any() ? Guid.NewGuid() : Guid.Empty;
             _viewports.Add(key, viewport);
             UpdateAdaptativeDrawersForUpdatedViewport(key, viewport);
-            _metadata?.RaiseViewportChanged(key, null, viewport);
+            _metadata?.RaiseViewportChanged(key, Render.Viewport.NullViewport, viewport);
             return key;
         }
-        public IViewport Viewport => _viewports.TryGetValue(Guid.Empty, out IViewport value) ? value : null;
-        public IViewport GetViewport(Guid guid) => _viewports.TryGetValue(guid, out IViewport value) ? value : null;
+        public IViewport Viewport => _viewports.TryGetValue(Guid.Empty, out IViewport value) ? value : Render.Viewport.NullViewport;
+        public IViewport GetViewport(Guid guid) => _viewports.TryGetValue(guid, out IViewport value) ? value : Render.Viewport.NullViewport;
         public IEnumerable<KeyValuePair<Guid, IViewport>> Viewports => _viewports;
 
 
@@ -108,7 +108,7 @@ namespace Tvision2.Core.Components
         {
             if (_viewports.TryGetValue(guid, out IViewport oldvp))
             {
-                if (!newViewport.Equals(oldvp))
+                if (!newViewport.Equals(oldvp)) 
                 {
                     _viewports[guid] = newViewport;
                     UpdateAdaptativeDrawersForUpdatedViewport(guid, newViewport);
@@ -119,7 +119,7 @@ namespace Tvision2.Core.Components
             {
                 _viewports.Add(guid, newViewport);
                 UpdateAdaptativeDrawersForUpdatedViewport(guid, newViewport);
-                _metadata?.RaiseViewportChanged(guid, null, newViewport);
+                _metadata?.RaiseViewportChanged(guid, Render.Viewport.NullViewport, newViewport);
             }
         }
 
@@ -224,7 +224,7 @@ namespace Tvision2.Core.Components
         }
 
 
-        public TvComponent(T initialState, string? name = null, Action<IConfigurableComponentMetadata>? configAction = null) : base(name, configAction)
+        public TvComponent(T initialState, string? name = null, Action<IConfigurableComponentMetadata>? configAction = null) : base(name , configAction)
         {
             NeedToRedraw = RedrawNeededAction.None;
             State = initialState;

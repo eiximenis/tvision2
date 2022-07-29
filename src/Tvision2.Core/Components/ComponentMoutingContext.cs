@@ -36,6 +36,23 @@ namespace Tvision2.Core.Components
         }
     }
 
+    public struct ChildComponentUnmoutingContext
+    {
+        public TvComponent Child { get; }
+        public ComponentTreeNode ChildNode { get; }
+
+        public bool ParentIsUnmountedToo { get; }
+
+        public ChildComponentUnmoutingContext(TvComponent child, ComponentTreeNode childNode, bool parentIsUnmountedToo)
+        {
+            Child = child;
+            ChildNode = childNode;
+            ParentIsUnmountedToo = parentIsUnmountedToo;
+        }
+
+        
+    }
+
     public struct ComponentMountingCancellableContext
     {
         public ITuiEngine OwnerEngine { get; }

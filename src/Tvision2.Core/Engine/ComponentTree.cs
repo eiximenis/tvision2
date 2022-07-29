@@ -243,9 +243,18 @@ namespace Tvision2.Core.Engine
         public event EventHandler<TreeUpdatedEventArgs> ComponentRemoved;
         public event EventHandler TreeUpdated;
 
+        private readonly ActionChain<IComponentTree> _onAddingIdleCycleActionChain;
+
         private List<OwnedComponentDependencyDescriptor> _pendingComponentDependencies;
 
         public IEnumerable<TvComponent> Components => NodesList.Select(node => node.Data.Component);
+
+        /// <summary>
+        /// Allows execution of actions that happens once the 1st time the component tree DO NOT add any item on its cycle.
+        /// 
+        /// This is useful on advanced scenarios when you add a hierarchy of controls that can be "distributed" in a successive add operations, and you want to do something when all components are effectively added.
+        /// </summary>
+        public IOnceActionChain<IComponentTree> OnAddingIdleCycle { get => _onAddingIdleCycleActionChain; }
 
         public IEnumerable<ComponentTreeNode> NodesList
         {
@@ -327,7 +336,9 @@ namespace Tvision2.Core.Engine
                     OnComponentRemoved(cmp, node);
                     if (node.HasParent)
                     {
-                        node.Parent.Data.RaiseChildUnmounted(cmp, node);
+                        var parent = node.Parent;
+                        var parentIsUnmountedToo = subtree.Contains(parent);
+                        node.Parent.Data.RaiseChildUnmounted(cmp, node, parentIsUnmountedToo);
                     }
                 }
                 foreach (var node in subtree)
@@ -398,6 +409,7 @@ namespace Tvision2.Core.Engine
             _engine = engine;
             _serviceProvider = serviceProvider;
             _pendingComponentDependencies = new List<OwnedComponentDependencyDescriptor>();
+            _onAddingIdleCycleActionChain = new ActionChain<IComponentTree>();
         }
 
         public TvComponentMetadata AddAfter(TvComponent componentToAdd, TvComponent componentBefore)
@@ -429,6 +441,7 @@ namespace Tvision2.Core.Engine
         {
             if (_pendingAdds.Count == 0)
             {
+                _onAddingIdleCycleActionChain.Invoke(this);
                 return;
             }
 
@@ -440,7 +453,7 @@ namespace Tvision2.Core.Engine
             foreach (var kvp in toAdd)
             {
                 var addOptions = kvp.Value;
-                ComponentTreeNode nodeAdded = null;
+                ComponentTreeNode? nodeAdded = null;
 
                 if (addOptions.ParentId != Guid.Empty)
                 {
@@ -491,6 +504,7 @@ namespace Tvision2.Core.Engine
                 var nodeAdded = optionsNodeAdded.Node;
                 TryResolveCurrentPendingDependencies(addOptions.ComponentMetadata.Component);
                 TryResolveNewComponentAddedDependencies(addOptions.ComponentMetadata);
+                Debug.WriteLine("Added Component " + addOptions.ComponentMetadata.Component.Name);
                 OnComponentMountingBegun(addOptions.ComponentMetadata, nodeAdded);
                 addOptions.ComponentMetadata.MountedTo(_engine, this, nodeAdded, addOptions);
                 addOptions.ComponentMetadata.Component.Invalidate(InvalidateReason.FullDrawRequired);

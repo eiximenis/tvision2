@@ -8,7 +8,12 @@ using Tvision2.Core.Render;
 
 namespace Tvision2.Layouts.Stack
 {
-    public class TvStackPanel : ITvContainer, IComponentsCollection
+
+
+
+
+
+    public class TvStackPanel : ITvContainer, ICellContainer
     {
         private readonly TvComponent<StackLayout> _thisComponent;
         private readonly KeyedComponentsCollection<int> _childs;
@@ -21,10 +26,14 @@ namespace Tvision2.Layouts.Stack
 
         public StackLayout Layout => _thisComponent.State;
 
-        int IComponentsCollection.Count => throw new NotImplementedException();
+        private ChildAlignment _currentAlignment;
+
+        private int _currentKey;
 
         public TvStackPanel(string name = null)
         {
+            _currentKey = 0;
+            _currentAlignment = ChildAlignment.None;
             _childs = new KeyedComponentsCollection<int>();
             _pendingAdds = new List<TvComponent>();
             _isMounted = false;
@@ -55,9 +64,12 @@ namespace Tvision2.Layouts.Stack
             }
         }
 
-        private void OnChildUnmounted(ChildComponentMoutingContext ctx)
+        private void OnChildUnmounted(ChildComponentUnmoutingContext ctx)
         {
-            RepositionChildren(TvPoint.Zero);
+            if (!ctx.ParentIsUnmountedToo)
+            {
+                RepositionChildren(TvPoint.Zero);
+            }
         }
 
         private void OnChildMounted(ChildComponentMoutingContext ctx)
@@ -65,12 +77,12 @@ namespace Tvision2.Layouts.Stack
             RepositionChildren(TvPoint.Zero);
         }
 
-        public IComponentsCollection At(int idx)
+        public ICellContainer At(int idx)
         {
             var layout = _thisComponent.State;
             if (layout.ItemsCount > idx)
             {
-                _childs.SetKey(idx);
+                _currentKey = idx;
                 return this;
             }
             else
@@ -85,22 +97,15 @@ namespace Tvision2.Layouts.Stack
         {
             if (_thisComponent.Viewport != null)
             {
-                var layout = _thisComponent.State;
                 var rowsUsed = 0;
-                if (layout.ItemsCount > 0)
+                foreach (var kvpChild in _childs.Values.OrderBy(k => k.Key))
                 {
-                    for (var layoutIdx = 0; layoutIdx < layout.ItemsCount; layoutIdx++)
-                    {
-                        var height = Layout.GetRealSize(Layout[layoutIdx], _thisComponent.Viewport.Bounds.Rows);
-                        var itemChilds = _childs.ComponentsForKey(layoutIdx);
-                        foreach (var childComponent in itemChilds)
-                        {
-                            var childvp = childComponent.Viewport;
-                            childComponent.UpdateViewport(_thisComponent.Viewport.TakeRows(height, rowsUsed), addIfNotExists: true);
-                        }
-                        rowsUsed += height;
-
-                    }
+                    var layoutIdx = kvpChild.Key;
+                    var childComponent = kvpChild.Value.Component;
+                    var height = Layout.GetRealSize(Layout[layoutIdx], _thisComponent.Viewport.Bounds.Rows);
+                    var newViewport = _thisComponent.Viewport.TakeRows(height, rowsUsed);
+                    childComponent.UpdateViewport(newViewport, addIfNotExists: true);
+                    rowsUsed += height;
                 }
             }
         }
@@ -130,9 +135,11 @@ namespace Tvision2.Layouts.Stack
             _tree.AddAsChild(cmpToAdd, AsComponent(), cfg => cfg.DoNotNotifyParentOnAdd());
         }
 
-        void IComponentsCollection.Add(TvComponent child)
+
+
+        void ICellContainer.Add(TvComponent child)
         {
-            _childs.Add(child);
+            _childs.Set(_currentKey, child, _currentAlignment);
             if (_isMounted)
             {
                 _tree.AddAsChild(child, AsComponent());
@@ -141,12 +148,15 @@ namespace Tvision2.Layouts.Stack
             {
                 _pendingAdds.Add(child);
             }
+            _currentAlignment = ChildAlignment.None;
         }
 
-        bool IComponentsCollection.Remove(TvComponent component) => _childs.Remove(component);
+        ICellContainer ICellContainer.WithAlignment(ChildAlignment alignment)
+        {
+            _currentAlignment = alignment;
+            return this;
+        }
 
-        IEnumerator<TvComponent> IEnumerable<TvComponent>.GetEnumerator() => _childs.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => _childs.GetEnumerator();
+        TvComponent? ICellContainer.Get() => _childs.Get(_currentKey)?.Component;
     }
 }

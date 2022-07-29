@@ -5,23 +5,24 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Tvision2.Controls.Tests
 {
-    public class controltree_should : IClassFixture<TuiFixture<TvControlsFixtureInitializer>>
+    public class ConntrolsTree_Should : IClassFixture<TuiFixture<TvControlsFixtureInitializer>>
     {
         private readonly TuiFixture<TvControlsFixtureInitializer> _context;
-        public controltree_should(TuiFixture<TvControlsFixtureInitializer> context)
+        private  IControlsTree? _controlsTree;
+        public ConntrolsTree_Should(TuiFixture<TvControlsFixtureInitializer> context)
         {
             _context = context;
+            _context.Run(sp =>
+            {
+                _controlsTree = sp.GetService<IControlsTree>();
+            });
         }
 
 
         [Fact]
-        public void add_controls_on_root()
+        public void Add_Controls_On_Root()
         {
-            _context.Run(sp =>
-            {
-                var tree = sp.GetService<IControlsTree>();
-   
-            });
+            
             Assert.False(true);
         }
     }

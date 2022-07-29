@@ -7,6 +7,6 @@ namespace Tvision2.Core.Components
 {
     public static class ComponentsListExensions_Layouts
     {
-        public static void Add(this IComponentsCollection cc, ITvContainer ctr) => cc.Add(ctr.AsComponent());
+        public static void Add(this ICellContainer cc, ITvContainer ctr) => cc.Add(ctr.AsComponent());
     }
 }

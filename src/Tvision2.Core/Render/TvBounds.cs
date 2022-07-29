@@ -60,5 +60,7 @@ namespace Tvision2.Core.Render
         {
             return TvBounds.FromRowsAndCols(first.Rows <= second.Rows ? first.Rows : second.Rows, first.Cols <= second.Cols ? first.Cols : second.Cols);
         }
+
+        public override string ToString() => $"({Rows}r x {Cols}c)";
     }
 }

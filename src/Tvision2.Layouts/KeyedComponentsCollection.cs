@@ -6,74 +6,75 @@ using Tvision2.Core.Components;
 
 namespace Tvision2.Layouts
 {
-    public class KeyedComponentsCollection<T> : IComponentsCollection
-        where T : struct
+    public class KeyedComponentCollectionEntry
     {
-        private Dictionary<T, ListComponentCollection> _myComponents;
+        public TvComponent Component { get; }
+        public ChildAlignment Alignment { get; set; }
 
-        public IEnumerable<TvComponent> ComponentsForKey(T key) 
-            => _myComponents.TryGetValue(key, out ListComponentCollection childTree) ? childTree.Components : Enumerable.Empty<TvComponent>();
+        public bool ViewportOriginal { get; set; }
 
-        public int Count => _myComponents.Count;
-
-        public IEnumerable<KeyValuePair<T, ListComponentCollection>> Items => _myComponents;
-
-        public T CurrentKey { get; private set; }
-
-        public void SetKey(T newkey)
+        public KeyedComponentCollectionEntry(TvComponent component, ChildAlignment childAlignment)
         {
-            CurrentKey = newkey;
+            Component = component;
+            Alignment = childAlignment;
+            ViewportOriginal = true;
         }
+    }
+
+    public class KeyedComponentsCollection<TK>
+        where TK : struct
+    {
+        private Dictionary<TK, KeyedComponentCollectionEntry> _childs;
+
+
+        public int Count => _childs.Count;
+
+        public IEnumerable<KeyValuePair<TK, KeyedComponentCollectionEntry>> Values => _childs;
+
+
 
         public KeyedComponentsCollection()
         {
-            _myComponents = new Dictionary<T, ListComponentCollection>();
+            _childs = new Dictionary<TK, KeyedComponentCollectionEntry>();
         }
 
 
-        public void Add(TvComponent componentToAdd)
+        public void Set(TK key, TvComponent componentToAdd, ChildAlignment alignment)
         {
-            if (_myComponents.ContainsKey(CurrentKey))
-            {
-                _myComponents[CurrentKey].Add(componentToAdd);
-            }
-            else
-            {
-                var child = new ListComponentCollection();
-                _myComponents.Add(CurrentKey, child);
-                child.Add(componentToAdd);
-            }
+
+            _childs.Add(key, new KeyedComponentCollectionEntry(componentToAdd, alignment));
         }
 
         public bool Remove(TvComponent component)
         {
-            foreach (var key in _myComponents.Keys)
-            {
-                var childTree = _myComponents[key];
-                if (childTree.Remove(component))
-                {
-                    if (!childTree.Components.Any())
-                    {
-                        _myComponents.Remove(key);
-                    }
+            TK? keyToDelete = null;
 
-                    return true;
+            foreach (var child in _childs)
+            {
+                if (child.Value.Component == component)
+                {
+                    keyToDelete = child.Key;
+                    break;
                 }
             }
+
+            if (keyToDelete.HasValue)
+            {
+                _childs.Remove(keyToDelete.Value);
+                return true;
+            }
+
             return false;
         }
 
         public void Clear()
         {
-            foreach (var child in _myComponents.Values)
-            {
-                child.Clear();
-            }
+            _childs.Clear();
         }
 
-        public IEnumerator<TvComponent> GetEnumerator() => _myComponents.Values.SelectMany(v => v).GetEnumerator();
+        public IEnumerator<TvComponent> GetEnumerator() => _childs.Values.Select(v => v.Component).GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public KeyedComponentCollectionEntry? Get(TK key) => _childs.TryGetValue(key, out var value) ? value : null;
 
 
     }

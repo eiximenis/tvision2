@@ -27,5 +27,13 @@ namespace Tvision2.Xunit
                 code.Invoke(scope.ServiceProvider);
             }
         }
+
+        public T GetOfType<T>()
+        {
+            using (var scope = ServiceProvider.CreateScope())
+            {
+                return scope.ServiceProvider.GetService<T>();
+            }
+        }
     }
 }
